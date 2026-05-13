@@ -4,7 +4,7 @@ import type { ResolvedUiTheme, UiThemeContextValue, UiThemeMode } from './types'
 
 export const UiThemeContext = createContext<UiThemeContextValue | null>(null);
 
-function resolveTheme(mode: UiThemeMode, systemDark: boolean): ResolvedUiTheme {
+export function resolveTheme(mode: UiThemeMode, systemDark: boolean): ResolvedUiTheme {
   if (mode === 'system') return systemDark ? 'dark' : 'light';
   return mode;
 }
