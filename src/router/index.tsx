@@ -1,4 +1,5 @@
 import { BasicLayout } from '@/layouts/BasicLayout';
+import RedesignPreview from '@/features/redesign-preview';
 import { LoginAuthType } from '@/native/interfaces/login_history';
 import { Application } from '@/pages/application';
 import ConfigPage from '@/pages/configPage';
@@ -51,6 +52,10 @@ const rootRoutes: RouteObject[] = [
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'redesign-preview',
+        element: <RedesignPreview />,
       },
       {
         path: 'configPage',
