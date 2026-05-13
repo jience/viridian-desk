@@ -41,6 +41,7 @@ build/hdp-deps/
 .eslintcache
 
 .superpowers/
+.worktrees/
 
 src/@types/i18next-resource.d.ts
 src-tauri/terminal-uuid
