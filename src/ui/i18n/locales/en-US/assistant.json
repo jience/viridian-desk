@@ -1,0 +1,7 @@
+{
+  "title": "Assistant",
+  "subtitle": "Status explanations, quick diagnostics, and local guidance.",
+  "quick.connectionHelp": "Connection troubleshooting",
+  "quick.openLogs": "Open diagnostic logs",
+  "quick.reportFault": "Submit a fault report"
+}

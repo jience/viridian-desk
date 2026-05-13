@@ -1,0 +1,14 @@
+{
+  "appName": "Viridian Desk",
+  "theme.light": "Light",
+  "theme.dark": "Dark",
+  "theme.system": "System",
+  "actions.open": "Open",
+  "actions.close": "Close",
+  "actions.cancel": "Cancel",
+  "actions.confirm": "Confirm",
+  "actions.save": "Save",
+  "actions.search": "Search",
+  "status.online": "Online",
+  "status.offline": "Offline"
+}

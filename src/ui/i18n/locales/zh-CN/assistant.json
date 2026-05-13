@@ -1,0 +1,7 @@
+{
+  "title": "助手",
+  "subtitle": "状态解释、快捷诊断和固定知识入口。",
+  "quick.connectionHelp": "连接失败怎么办",
+  "quick.openLogs": "查看诊断日志",
+  "quick.reportFault": "提交故障报告"
+}

@@ -1,0 +1,14 @@
+{
+  "appName": "Viridian Desk",
+  "theme.light": "淺色",
+  "theme.dark": "深色",
+  "theme.system": "跟隨系統",
+  "actions.open": "開啟",
+  "actions.close": "關閉",
+  "actions.cancel": "取消",
+  "actions.confirm": "確認",
+  "actions.save": "儲存",
+  "actions.search": "搜尋",
+  "status.online": "線上",
+  "status.offline": "離線"
+}

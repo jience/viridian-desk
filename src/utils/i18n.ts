@@ -7,13 +7,16 @@ import { LanguageType } from '@/native/interfaces/config';
 
 i18next
   .use(
-    resourcesToBackend((language: string) => {
+    resourcesToBackend((language: string, namespace: string) => {
       // 处理浏览器语言检测可能返回 'zh' 的情况，防止 Vite 报错 "Unknown variable dynamic import"
       if (language === 'zh') {
         return import('@/assets/locales/zh-CN.json');
       }
       if (language === 'en') {
         return import('@/assets/locales/en-US.json');
+      }
+      if (namespace === 'common' || namespace === 'assistant') {
+        return import(`@/ui/i18n/locales/${language}/${namespace}.json`);
       }
       // 仅加载支持的语言包
       if (Object.values(LanguageType).includes(language as LanguageType)) {
