@@ -5,26 +5,51 @@ import resourcesToBackend from 'i18next-resources-to-backend';
 import dayjs from 'dayjs';
 import { LanguageType } from '@/native/interfaces/config';
 
+const supportedLanguages = Object.values(LanguageType);
+
+const canonicalizeLanguage = (language: string): LanguageType => {
+  if (supportedLanguages.includes(language as LanguageType)) {
+    return language as LanguageType;
+  }
+
+  const normalizedLanguage = language.toLowerCase();
+
+  if (
+    normalizedLanguage === 'zh' ||
+    normalizedLanguage === 'zh-cn' ||
+    normalizedLanguage.startsWith('zh-hans')
+  ) {
+    return LanguageType.ZH_CN;
+  }
+  if (normalizedLanguage === 'zh-tw' || normalizedLanguage.startsWith('zh-hant')) {
+    return LanguageType.ZH_TW;
+  }
+  if (normalizedLanguage === 'en' || normalizedLanguage.startsWith('en-')) {
+    return LanguageType.EN_US;
+  }
+
+  return LanguageType.ZH_CN;
+};
+
 i18next
   .use(
     resourcesToBackend((language: string, namespace: string) => {
-      const normalizedLanguage =
-        language === 'zh' ? LanguageType.ZH_CN : language === 'en' ? LanguageType.EN_US : language;
+      const canonicalLanguage = canonicalizeLanguage(language);
 
       if (namespace === 'common' || namespace === 'assistant') {
-        return import(`@/ui/i18n/locales/${normalizedLanguage}/${namespace}.json`);
+        return import(`@/ui/i18n/locales/${canonicalLanguage}/${namespace}.json`);
       }
 
       // 处理浏览器语言检测可能返回 'zh' 的情况，防止 Vite 报错 "Unknown variable dynamic import"
-      if (normalizedLanguage === LanguageType.ZH_CN) {
+      if (canonicalLanguage === LanguageType.ZH_CN) {
         return import('@/assets/locales/zh-CN.json');
       }
-      if (normalizedLanguage === LanguageType.EN_US) {
+      if (canonicalLanguage === LanguageType.EN_US) {
         return import('@/assets/locales/en-US.json');
       }
       // 仅加载支持的语言包
-      if (Object.values(LanguageType).includes(normalizedLanguage as LanguageType)) {
-        return import(`@/assets/locales/${normalizedLanguage}.json`);
+      if (supportedLanguages.includes(canonicalLanguage)) {
+        return import(`@/assets/locales/${canonicalLanguage}.json`);
       }
       return Promise.resolve({});
     }),
@@ -35,6 +60,8 @@ i18next
     nsSeparator: false,
     debug: import.meta.env.DEV,
     fallbackLng: LanguageType.ZH_CN,
+    supportedLngs: supportedLanguages,
+    nonExplicitSupportedLngs: true,
     interpolation: {
       escapeValue: false, // React 已经自动防止 XSS，无需再次转义
     },
