@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --vd-color-bg: #f4f0e8;
+  --vd-color-panel: #fffdf7;
+  --vd-color-panel-subtle: #eee8dc;
+  --vd-color-rail: #24251f;
+  --vd-color-text: #20221d;
+  --vd-color-muted: #6f746b;
+  --vd-color-border: rgba(82, 72, 52, 0.14);
+  --vd-color-accent: #d9ff5c;
+  --vd-color-success: #37b56d;
+  --vd-color-warning: #d89f32;
+  --vd-color-danger: #cf4f45;
+  --vd-shadow-window: 0 28px 80px rgba(50, 45, 34, 0.18);
+  --vd-focus-ring: 0 0 0 3px rgba(217, 255, 92, 0.4);
+}
+
+:root[data-ui-theme='dark'] {
+  --vd-color-bg: #151917;
+  --vd-color-panel: #1c211f;
+  --vd-color-panel-subtle: #242b27;
+  --vd-color-rail: #0f1211;
+  --vd-color-text: #e9eee8;
+  --vd-color-muted: #8d978e;
+  --vd-color-border: rgba(255, 255, 255, 0.08);
+  --vd-color-accent: #6ee7b7;
+  --vd-color-success: #6ee7b7;
+  --vd-color-warning: #f5c76b;
+  --vd-color-danger: #f06b63;
+  --vd-shadow-window: 0 28px 80px rgba(10, 12, 11, 0.38);
+  --vd-focus-ring: 0 0 0 3px rgba(110, 231, 183, 0.32);
+}
+
+@theme inline {
+  --color-vd-bg: var(--vd-color-bg);
+  --color-vd-panel: var(--vd-color-panel);
+  --color-vd-panel-subtle: var(--vd-color-panel-subtle);
+  --color-vd-rail: var(--vd-color-rail);
+  --color-vd-text: var(--vd-color-text);
+  --color-vd-muted: var(--vd-color-muted);
+  --color-vd-border: var(--vd-color-border);
+  --color-vd-accent: var(--vd-color-accent);
+  --color-vd-success: var(--vd-color-success);
+  --color-vd-warning: var(--vd-color-warning);
+  --color-vd-danger: var(--vd-color-danger);
+}
+
+.vd-focus-ring {
+  outline: none;
+}
+
+.vd-focus-ring:focus-visible {
+  box-shadow: var(--vd-focus-ring);
+}
