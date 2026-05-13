@@ -1,0 +1,48 @@
+.page-transparent-select {
+  width: 130px;
+  &.ant-select-single {
+    height: 28px;
+  }
+  .ant-select-selector {
+    border: none !important;
+    background: var(--selector-container-bg) !important;
+    color: var(--selector-container-color) !important;
+  }
+}
+.ant-select {
+  background: var(--selector-container-bg);
+}
+
+.ant-select-dropdown {
+  padding: 8px 2px;
+  .ant-select-item {
+    width: auto;
+    margin: 0;
+    padding: 0 12px;
+    min-height: 28px;
+    line-height: 28px;
+    border-radius: 0px;
+
+    &.ant-select-item-option {
+      color: var(--menu-item-text-color);
+      font-size: 12px;
+    }
+  }
+  .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+    background-color: var(--menu-setting-hover);
+  }
+}
+
+.client-css-var.ant-select-css-var {
+  --ant-font-size: 12px;
+  --ant-select-internal_fixed_item_margin: 2px;
+  --ant-select-option-padding: 6.571428571428571px 12px;
+  --ant-select-option-font-size: 12px;
+  --ant-select-option-height: 32px;
+  --ant-select-single-item-height-lg: 40px;
+  --ant-select-multiple-item-height: 24px;
+  --ant-select-multiple-item-height-sm: 16px;
+  --ant-select-multiple-item-height-lg: 32px;
+  --ant-select-show-arrow-padding-inline-end: 15px;
+  --ant-select-select-affix-padding: 4px;
+}

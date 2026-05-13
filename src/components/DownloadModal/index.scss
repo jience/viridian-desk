@@ -1,0 +1,176 @@
+.download-update {
+  width: 480px !important;
+  border-radius: 4px;
+  overflow: hidden;
+
+  .ant-modal-container {
+    width: 480px;
+    background: var(--download-modal-bac-img);
+    background-size: 100% 100%;
+    padding: 0;
+  }
+
+  .ant-modal-body {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    padding: var(--download-modal-body-padding);
+  }
+
+  .ant-modal-footer {
+    background-color: transparent;
+    padding: var(--download-modal-footer-padding);
+  }
+
+  .latest-version-wrapper {
+    height: 210px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    .icon {
+      font-size: 40px;
+      color: #5ab55e;
+      margin-bottom: 12px;
+    }
+    .info {
+      font-size: 18px;
+      color: var(--download-modal-start-version-color);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .current-version {
+      font-size: 14px;
+      color: #7c98b6;
+      font-weight: 400;
+    }
+  }
+  .download-error-wrapper {
+    height: 210px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    .icon {
+      font-size: 40px;
+      color: red;
+      margin-bottom: 12px;
+    }
+    .info {
+      font-size: 18px;
+      color: var(--download-modal-start-version-color);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .error-message {
+      font-size: 14px;
+      color: #7c98b6;
+      font-weight: 400;
+      text-align: center;
+    }
+  }
+
+  .download-ready-wrapper {
+    height: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 16px;
+    row-gap: 24px;
+    width: 100%;
+
+    .version-info-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      align-self: stretch;
+
+      img {
+        width: 46px;
+      }
+
+      .version-info-start {
+        display: flex;
+        flex-direction: column;
+        .version {
+          font-size: 28px;
+          color: var(--download-modal-start-version-color);
+          font-weight: 700;
+        }
+        .version-desc {
+          font-size: 14px;
+          color: var(--download-modal-start-version-desc-color);
+          font-weight: 400;
+        }
+      }
+      .version-info-end {
+        display: flex;
+        flex-direction: column;
+        .version {
+          font-size: 28px;
+          color: var(--download-modal-end-version-color);
+          font-weight: 700;
+        }
+        .version-desc {
+          font-size: 14px;
+          color: var(--download-modal-end-version-desc-color);
+          font-weight: 400;
+        }
+      }
+    }
+
+    .update-msg {
+      width: 100%;
+      width: 400px;
+      max-height: 130px;
+      overflow-y: auto;
+      color: var(--download-modal-update-msg-color);
+    }
+  }
+
+  .download-progress-wrapper {
+    height: 240px;
+    width: 416px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .download-progress-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .download-progress-version {
+        display: flex;
+        align-items: center;
+        column-gap: 8px;
+        font-size: 16px;
+        color: var(--download-modal-start-version-color);
+        font-weight: 700;
+        .version-number {
+          color: #2491ff;
+        }
+      }
+      .download-progress-percent {
+        font-size: 16px;
+        color: var(--download-modal-start-version-color);
+        font-weight: 700;
+      }
+    }
+    .download-progress-time {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: #516f90;
+      font-weight: 400;
+      column-gap: 8px;
+    }
+    .current-version {
+      font-size: 14px;
+      color: #7c98b6;
+      text-align: right;
+      font-weight: 400;
+    }
+  }
+}

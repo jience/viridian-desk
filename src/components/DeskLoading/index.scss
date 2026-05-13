@@ -1,0 +1,63 @@
+.desk-loading-background-mask {
+  // background-color: transparent;
+  background-image: url('@/assets/images/app_layout_bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-clip: padding-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+  cursor: not-allowed;
+}
+.is_thin_no_drag .desk-loading-background-mask {
+  background-image: url('@/assets/images/app_layout_bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-clip: padding-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+  cursor: not-allowed;
+}
+.desk-loading-mid {
+  width: 120px;
+  height: 120px;
+  // background: rgba(51,71,91,0.60);
+  border-radius: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  // box-shadow: 0 1px 5px 0 rgba(0,0,0,0.20);
+  .image-container {
+    background: #fff;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+  }
+  .loading-image {
+    width: 55px;
+    height: 55px;
+  }
+
+  & span {
+    display: block;
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--list-content-color);
+    font-weight: 600;
+  }
+}

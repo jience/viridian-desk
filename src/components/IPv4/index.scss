@@ -1,0 +1,63 @@
+$prefix: archer;
+$ipv4-prefix-cls: archer-ipv4;
+
+.#{$ipv4-prefix-cls} {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  color: #cbd6e2;
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #cbd6e2;
+  border-radius: 3px;
+  transition:
+    border 0.3s,
+    box-shadow 0.3s;
+  height: 32px;
+
+  &:hover {
+    border-color: #74a8d6;
+  }
+
+  &.#{$ipv4-prefix-cls}-disabled {
+    .#{$prefix}-input-borderless.#{$prefix}-input-disabled,
+    .#{$prefix}-input-borderless.#{$prefix}-input-disabled + .ip-split {
+      background-color: #eaf0f6;
+      border-radius: 0;
+      height: 30px;
+    }
+  }
+
+  &.#{$ipv4-prefix-cls}-status-error {
+    border-color: #eb5f5c;
+  }
+
+  .ip-split {
+    width: 20px;
+    flex-grow: 1;
+    padding: 0;
+    border: 0;
+    font-size: 18px;
+    background-color: transparent;
+
+    &::placeholder {
+      color: #516f90;
+    }
+  }
+}
+
+.archer-form-item-has-error .#{$ipv4-prefix-cls} {
+  border-color: #eb5f5c;
+
+  &.#{$ipv4-prefix-cls}-focus {
+    border-color: #f78e88;
+    outline: 0;
+    box-shadow: 0 0 0 2px rgb(235 95 92 / 20%);
+  }
+}

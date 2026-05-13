@@ -1,0 +1,25 @@
+.novice-guidance {
+  width: 100%;
+  height: 100%;
+  z-index: 998;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  .options-wrapper {
+    z-index: 999;
+    position: absolute;
+    bottom: 24px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 24px;
+    .step-btn {
+      width: 100px;
+    }
+    .next-step {
+    }
+    .last-step {
+    }
+  }
+}

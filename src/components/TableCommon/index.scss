@@ -1,0 +1,54 @@
+.table-common-wrapper {
+  .slot-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+
+    .right-slot-box {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .row-detail-selected {
+    background-color: #e6f1fd;
+    border: 1px solid #c9e2fc;
+
+    td {
+      &:last-child {
+        position: relative;
+
+        &::before {
+          content: '✔';
+          color: white;
+          width: 14px;
+          height: 14px;
+          position: absolute;
+          top: -2px;
+          right: 0;
+          z-index: 100;
+          text-align: center;
+        }
+
+        &::after {
+          content: '';
+
+          text-align: end;
+          width: 0;
+          height: 0;
+          border-top: 24px solid #4d8cca;
+          border-left: 24px solid transparent;
+
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+      }
+    }
+  }
+}

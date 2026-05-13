@@ -1,0 +1,16 @@
+.control-window-content {
+  line-height: normal;
+  display: flex;
+  align-items: center;
+  column-gap: 14px;
+  i {
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    color: #7c98b6;
+    &.icon-minus {
+      font-size: 21px;
+    }
+  }
+}

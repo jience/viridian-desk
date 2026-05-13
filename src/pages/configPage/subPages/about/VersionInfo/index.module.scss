@@ -1,0 +1,21 @@
+.version-info-wrapper {
+  width: 100%;
+  .main-title {
+    display: flex;
+    column-gap: 4px;
+    .tag-wrapper {
+      display: flex;
+      :global(.ant-tag) {
+        margin-inline-end: 4px;
+      }
+    }
+  }
+  .sub-title-wrapper {
+    display: flex;
+    column-gap: 8px;
+    .sub-title-item {
+      display: flex;
+      column-gap: 4px;
+    }
+  }
+}

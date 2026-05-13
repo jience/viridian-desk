@@ -1,0 +1,66 @@
+.peripheralSetting {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  overflow-y: scroll;
+
+  /* IE 10+ */
+  /* Chrome Safari */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .centered {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .opt-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 28px;
+    margin-bottom: 12px;
+    width: 100%;
+
+    .archer-btn-normal,
+    .archer-btn-normal:focus {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .option-add-icon:hover {
+      background-color: var(--approval-add-hover-bg);
+      border-color: var(--approval-add-hover-bg);
+    }
+
+    .archer-btn.disabled,
+    .archer-btn[disabled] {
+      background-color: var(--desk-card-disabled-bg);
+      color: var(--menu-icon-color-disabled);
+      border: none;
+    }
+  }
+
+  .mainContent {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2px;
+
+    .emptyLayout {
+      width: 290px;
+    }
+  }
+}

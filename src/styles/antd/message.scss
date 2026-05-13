@@ -1,0 +1,65 @@
+//  antd message 样式覆盖
+.ant-message {
+  position: absolute;
+  bottom: 0;
+  top: auto !important;
+}
+.ant-message .ant-message-notice-wrapper .ant-message-notice-content {
+  background: transparent;
+  box-shadow: none;
+}
+.ant-message .ant-message-notice-content {
+  border-radius: 20px;
+  min-width: auto;
+  font-size: 14px;
+}
+
+.ant-message .ant-message-notice-content .ant-message-custom-content {
+  padding: 7px 9px;
+  border-radius: 20px;
+}
+
+.ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-error {
+  border: 1px solid rgba(249, 207, 206, 1);
+  border-radius: 20px;
+  background: #ffffff;
+  color: #33475b;
+  height: auto;
+
+  span {
+    line-height: unset;
+    word-break: break-all;
+  }
+}
+
+.ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-success {
+  border: 1px solid rgba(205, 232, 206, 1);
+  box-shadow: 0px 3px 18px 0px rgba(165, 165, 165, 0.22);
+  border-radius: 20px;
+  background: #ffffff;
+  color: #33475b;
+}
+
+.ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-info {
+  background: #ffffff;
+  border: 1px solid rgba(182, 217, 251, 1);
+  box-shadow: 0px 3px 18px 0px rgba(165, 165, 165, 0.22);
+  border-radius: 20px;
+  color: #33475b;
+}
+
+.ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-warning {
+  background: #ffffff;
+  border: 1px solid rgba(243, 222, 186, 1);
+  box-shadow: 0px 3px 18px 0px rgba(165, 165, 165, 0.22);
+  border-radius: 20px;
+  color: #33475b;
+}
+
+.ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-loading {
+  background: #ffffff;
+  border: 1px solid rgba(243, 222, 186, 1);
+  box-shadow: 0px 3px 18px 0px rgba(165, 165, 165, 0.22);
+  border-radius: 20px;
+  color: #33475b;
+}

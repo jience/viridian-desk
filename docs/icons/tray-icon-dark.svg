@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <!-- 深灰 V，在暗色任务栏上可见 -->
+  <polygon points="8,2 2,14 4.5,14 8,5.5" fill="#D4D4D8" />
+  <polygon points="8,2 14,14 11.5,14 8,5.5" fill="#D4D4D8" />
+</svg>

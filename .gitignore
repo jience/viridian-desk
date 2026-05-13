@@ -1,0 +1,44 @@
+# ide
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/pc-client.code-snippets
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# dependencies
+/node_modules
+*.local
+
+# production
+dist
+dist-ssr
+
+# env
+.env.local
+.env.development
+.env.production
+
+# build
+debbuild
+build/hdp-deps/
+
+.eslintcache
+
+src/@types/i18next-resource.d.ts
+src-tauri/terminal-uuid

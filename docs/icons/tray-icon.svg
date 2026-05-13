@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <!-- 未登录状态（灰色） -->
+  <polygon points="8,2 2,14 4,14 8,6" fill="#888888" />
+  <polygon points="8,2 14,14 12,14 8,6" fill="#888888" />
+
+  <!-- 登录态可替换为绿色 -->
+</svg>

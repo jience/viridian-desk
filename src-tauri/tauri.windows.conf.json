@@ -1,0 +1,28 @@
+{
+  "bundle":{
+    "targets": ["nsis"],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "nsis": {
+        "displayLanguageSelector": true,
+        "installerIcon": "icons/icon.ico",
+        "installMode": "perMachine",
+        "languages": ["SimpChinese", "English"],
+        "template": "./packages/windows/installer.nsi"
+      },
+      "timestampUrl": "",
+      "webviewInstallMode": {
+        "silent": true,
+        "type": "embedBootstrapper"
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  }
+}

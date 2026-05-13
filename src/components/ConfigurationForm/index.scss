@@ -1,0 +1,126 @@
+.baseForm {
+  .ant-space-compact {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+
+    .noStyle-form-item {
+      width: 65%;
+      margin: 0;
+
+      border-start-start-radius: 3px;
+
+      .ant-input-number,
+      .ant-input {
+        width: 100%;
+      }
+    }
+
+    .addon-after {
+      width: 35%;
+
+      > .ant-select-selector {
+        background: var(--config-formModel-addonAfter-back);
+        border: 1px solid rgba(203, 214, 226, 1);
+        border-radius: 0 6px 6px 0;
+
+        font-family: SourceHanSansSC-Regular;
+        font-size: 12px;
+        letter-spacing: 0;
+        font-weight: 400;
+      }
+    }
+
+    .ant-btn {
+      border-radius: 0 6px 6px 0;
+
+      font-family: SourceHanSansSC-Regular;
+      font-size: 12px;
+      letter-spacing: 0;
+      font-weight: 400;
+    }
+
+    .ant-btn-loading {
+      border-radius: 0 6px 6px 0;
+
+      font-family: SourceHanSansSC-Regular;
+      font-size: 12px;
+      letter-spacing: 0;
+      font-weight: 400;
+    }
+  }
+
+  .noSeparator > .ant-form-item:nth-child(n + 2) {
+    margin-left: 10px;
+  }
+
+  .item-combination {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .combination-sub-item {
+      flex: 1;
+    }
+
+    .separator {
+      height: 32px;
+      width: 30px;
+      margin: 0 10px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: center;
+
+      .ant-divider {
+        margin: 2px 0;
+      }
+    }
+
+    .ant-form-item:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .item-Info-line {
+    font-family: SourceHanSansSC-Regular;
+    font-size: 12px;
+    color: var(--config-tab-default);
+    letter-spacing: 0;
+    font-weight: 400;
+
+    .ant-btn-text {
+      padding: 0;
+      color: #4c8cca;
+    }
+  }
+
+  .noStyle-form-item-line {
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  .item-Info {
+    margin: 4px 0 0 0;
+    font-family: SourceHanSansSC-Regular;
+    font-size: 12px;
+    color: var(--config-tab-default);
+    letter-spacing: 0;
+    font-weight: 400;
+
+    .ant-btn-text {
+      padding: 0;
+      color: #4c8cca;
+    }
+  }
+
+  .shadow-form-item .ant-form-item-control-input {
+    padding: 0 8px;
+    border-radius: 6px;
+    background-color: #f6faff;
+  }
+}

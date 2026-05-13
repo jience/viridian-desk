@@ -1,0 +1,14 @@
+.diffloginModal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  flex-direction: column;
+  img {
+    width: 185px;
+    margin-bottom: 10px;
+  }
+  p {
+    margin-bottom: 5px;
+  }
+}

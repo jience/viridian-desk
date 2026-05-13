@@ -1,0 +1,437 @@
+$contentMarging: 2px;
+$cardPadding: 10px 14px;
+$cardMargin: 6px;
+$cardMarginRow: 16px;
+
+@mixin Card {
+  .integratedCard {
+    &-bullet {
+      position: relative;
+      top: 14px;
+
+      &::before {
+        content: '';
+        width: 4px;
+        height: 20px;
+        position: absolute;
+        background-color: var(--config-card-bullet-default);
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+      }
+    }
+
+    &-title {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      padding: $cardPadding;
+
+      &-left {
+        flex: 6 1 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        min-width: 55%;
+
+        &-main {
+          margin: $contentMarging;
+          max-width: 100%;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: center;
+          align-items: center;
+
+          .titleText {
+            max-width: 100%;
+            line-height: 25px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            color: var(--config-card-title-default);
+            font-weight: 600;
+            span {
+              line-height: 25px;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              font-size: 14px;
+              color: var(--config-card-title-default);
+              font-weight: 600;
+            }
+          }
+
+          .titleText-tag {
+            background-color: var(--config-card-background-default);
+          }
+
+          .ant-tag {
+            font-size: 12px;
+            margin: 0 4px;
+          }
+        }
+
+        &-sub {
+          font-size: 13px;
+          margin: $contentMarging;
+          color: var(--config-card-content-color);
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+          align-items: center;
+          max-width: 90%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+
+          .titleText {
+            width: 100%;
+            line-height: 18px;
+            margin: 0 $contentMarging * 6 0 0;
+
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            align-items: center;
+
+            span {
+              width: 100%;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            }
+
+            .slotIcon {
+              min-width: 11.35px;
+              min-height: 11.36px;
+              display: flex;
+              flex-direction: row;
+              flex-wrap: nowrap;
+              justify-content: flex-start;
+              align-items: center;
+              margin: 0 $contentMarging;
+
+              .action {
+                color: var(--config-card-bullet-default);
+              }
+
+              .ant-tag {
+                font-family: SourceHanSansSC-Regular;
+                font-size: 12px;
+                font-weight: 400;
+                border-radius: 3px;
+              }
+            }
+          }
+        }
+      }
+
+      &-middle {
+        flex: 2 0 auto;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-self: center;
+        align-items: center;
+        margin: $contentMarging;
+        color: var(--config-card-title-default);
+
+        .ant-checkbox-wrapper {
+          font-size: 12px;
+        }
+      }
+
+      &-divider {
+        align-self: center;
+        height: 24px;
+        border-color: var(--config-card-divider-default);
+      }
+
+      &-right {
+        position: relative;
+        flex: 2 0 auto;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+        align-self: center;
+        align-items: center;
+        margin: $contentMarging;
+        color: var(--config-card-title-default);
+        font-family: SourceHanSansSC-Regular;
+        font-size: 13px;
+        font-weight: 400;
+
+        .ant-btn {
+          border: 1px solid rgba(203, 214, 226, 1);
+          border-radius: 3px;
+          padding: 0px 6px;
+          margin: 0 0 0 6px;
+          background-color: var(--config-card-background-default);
+          color: var(--config-card-content-color);
+
+          .iconfont {
+            color: var(--config-card-content-color);
+          }
+        }
+
+        .iconfont {
+          font-size: 8px;
+          color: var(--config-card-icon-default);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .success {
+          color: var(--config-card-icon-success) !important;
+        }
+      }
+    }
+
+    &-content {
+      > pre {
+        white-space: pre-wrap;
+        width: 100%;
+        word-break: break-all;
+        flex: 1;
+        padding: $cardPadding;
+        margin: $contentMarging;
+        color: var(--config-card-content-color);
+        font-size: 13px;
+        font-family: SourceHanSansSC-Regular;
+        line-height: 20px;
+        font-weight: 400;
+
+        overflow-y: scroll;
+        /* 隐藏滚动条 */
+        scrollbar-width: none;
+        /* firefox */
+        -ms-overflow-style: none;
+
+        /* IE 10+ */
+        /* Chrome Safari */
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.Card {
+  @include Card;
+}
+
+.integratedCard-normal-row {
+  flex: 0 0 auto;
+  width: 32%;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  margin: $cardMargin $cardMargin;
+
+  background-color: var(--config-card-background-default);
+  border: 1px solid var(--card-borderColor-default);
+  box-shadow: 0px 0px 5px 0px var(--config-card-shadow-default);
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+
+  @include Card;
+
+  .integratedCard-title-right {
+    .btnGroup {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .special {
+      font-family: SourceHanSansSC-Regular;
+      font-size: 12px;
+      letter-spacing: 0;
+      font-weight: 400;
+      border-radius: 3px;
+      min-width: 64px;
+      height: 28px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-around;
+
+      .iconfont {
+        font-size: 12px;
+        color: var(--config-card-content-color);
+      }
+    }
+
+    .ant-checkbox-wrapper {
+      color: var(--config-card-title-default);
+    }
+  }
+
+  &:hover {
+    -webkit-box-shadow: 0px 0px 5px 0px var(--primary-shadow-color);
+    box-shadow: 0px 0px 1px 1px var(--primary-shadow-color);
+    background-color: var(--config-card-background-default);
+    border: 1px solid var(--card-borderColor-default);
+    border-radius: 4px;
+  }
+}
+
+.integratedCard-normal {
+  flex: 0 0 auto;
+  width: 480px;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  margin: $cardMargin 0;
+
+  background-color: var(--config-card-background-default);
+  border: 1px solid var(--card-borderColor-default);
+  box-shadow: 0px 0px 5px 0px var(--config-card-shadow-default);
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+
+  @include Card;
+
+  .integratedCard-title-right {
+    .btnGroup {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .special {
+      font-family: SourceHanSansSC-Regular;
+      font-size: 12px;
+      letter-spacing: 0;
+      font-weight: 400;
+      border-radius: 3px;
+      min-width: 64px;
+      height: 28px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-around;
+
+      .iconfont {
+        font-size: 12px;
+        color: var(--config-card-content-color);
+      }
+    }
+
+    .archer-checkbox-wrapper {
+      color: var(--config-card-title-default);
+    }
+  }
+
+  &:hover {
+    -webkit-box-shadow: 0px 0px 5px 0px var(--primary-shadow-color);
+    box-shadow: 0px 0px 1px 1px var(--primary-shadow-color);
+
+    background-color: var(--config-card-background-default);
+    border: 1px solid var(--card-borderColor-default);
+    border-radius: 4px;
+  }
+}
+
+.integratedCard-overSize {
+  flex: 0 0 auto;
+  width: 800px;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  margin: $cardMargin 0;
+
+  background-color: var(--config-card-background-default);
+  border: 1px solid var(--card-borderColor-default);
+  box-shadow: 0px 0px 5px 1px var(--config-card-shadow-default);
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+
+  @include Card;
+
+  .integratedCard-title-left {
+    max-width: 80%;
+
+    &-main {
+      .titleText {
+        font-size: 18px;
+        font-weight: 700;
+        font-family: SourceHanSansSC-Bold;
+      }
+
+      .titleText-tag {
+        background-color: var(--config-card-background-default);
+      }
+    }
+  }
+
+  .integratedCard-title-right {
+    .btnGroup {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .archer-btn {
+      font-family: SourceHanSansSC-Regular;
+      font-size: 12px;
+      letter-spacing: 0;
+      font-weight: 400;
+      border-radius: 3px;
+      background-color: var(--config-card-background-default);
+      color: var(--config-card-content-color);
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-around;
+
+      .iconfont {
+        color: var(--config-card-content-color);
+      }
+    }
+
+    .iconfont {
+      font-size: 12px;
+      color: var(--config-card-content-color);
+    }
+
+    .archer-checkbox-wrapper {
+      color: var(--config-card-title-default);
+    }
+  }
+
+  &:hover {
+    -webkit-box-shadow: 0px 0px 5px 0px var(--primary-shadow-color);
+    box-shadow: 0px 0px 1px 1px var(--primary-shadow-color);
+
+    background-color: var(--config-card-background-default);
+    border: 1px solid var(--card-borderColor-default);
+    border-radius: 4px;
+  }
+}

@@ -1,0 +1,14 @@
+.message-notice-modal {
+  width: 800px !important;
+  .search-bar {
+    margin-bottom: 8px;
+    .search-input {
+      .ant-btn.ant-btn-icon-only {
+        height: 28px;
+      }
+    }
+    .ant-input-search .ant-input-affix-wrapper {
+      height: 28px;
+    }
+  }
+}

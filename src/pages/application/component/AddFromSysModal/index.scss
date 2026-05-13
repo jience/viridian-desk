@@ -1,0 +1,28 @@
+.add-favorite-app-modal {
+  width: 800px !important;
+  .add-vapp-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .selected-count {
+      font-size: 14px;
+      color: #33475b;
+      font-weight: 400;
+      strong {
+        color: #eb5f5c;
+        font-weight: 400;
+      }
+    }
+  }
+  .search-bar {
+    margin-bottom: 8px;
+    .search-input {
+      .ant-btn.ant-btn-icon-only {
+        height: 28px;
+      }
+    }
+    .ant-input-search .ant-input-affix-wrapper {
+      height: 28px;
+    }
+  }
+}

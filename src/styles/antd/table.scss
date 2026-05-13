@@ -1,0 +1,178 @@
+.ant-table-wrapper .ant-table.ant-table-small .ant-table-thead > tr > th {
+  padding: 8px 8px;
+}
+
+.ant-table-wrapper
+  .ant-table-thead
+  > tr
+  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not(
+    [colspan]
+  )::before {
+  height: 40px;
+  background-color: var(--ant-table-thead-before-bac-color);
+}
+
+.ant-table-wrapper {
+  table {
+    border-top: 1px solid var(--ant-table-thead-before-bac-color);
+    border-left: 1px solid var(--ant-table-thead-before-bac-color);
+    border-right: 1px solid var(--ant-table-thead-before-bac-color);
+  }
+  td.ant-table-cell {
+    font-size: 12px;
+    font-weight: 400;
+  }
+  .ant-table-pagination.ant-pagination {
+    margin-bottom: 0px;
+  }
+  .ant-pagination.ant-pagination-mini {
+    .ant-pagination-item-link {
+      color: var(--pretty-table-page-btn-color);
+    }
+    .ant-pagination-disabled {
+      .ant-pagination-item-link {
+        color: var(--pretty-table-page-btn-color);
+      }
+    }
+  }
+}
+
+.pretty-large-table {
+  box-shadow: 0px 0px 6px 0px var(--pretty-table-box-shadow-color);
+  .ant-table-tbody > tr.ant-table-placeholder {
+    background: transparent;
+    .ant-table-cell {
+      border-bottom: none;
+    }
+    &:hover > td {
+      background-color: transparent;
+    }
+  }
+  .ant-checkbox .ant-checkbox-inner {
+    width: 14px;
+    height: 14px;
+  }
+  .ant-table-content {
+    padding: 0 16px;
+  }
+  .ant-table {
+    background: var(--pretty-table-bac-color);
+  }
+  table {
+    border: none;
+  }
+  .ant-table-thead
+    > tr
+    > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not(
+      [colspan]
+    )::before {
+    width: 0;
+  }
+  .ant-table-cell {
+    .ant-checkbox-checked .ant-checkbox-inner:after {
+      transform: rotate(45deg) scale(0.9) translate(-50%, -50%);
+      top: 45%;
+      inset-inline-start: 20%;
+    }
+  }
+  .ant-table-cell,
+  .ant-table-thead > tr > th {
+    padding: 14px 16px;
+  }
+  .ant-table-tbody > tr > td {
+    padding: 14px 16px;
+  }
+  .ant-table-cell {
+    &.ant-table-cell-row-hover {
+      background: transparent;
+    }
+    &.ant-table-selection-column {
+      padding-left: 0px;
+    }
+  }
+  .ant-table-thead > tr > th {
+    background: transparent;
+    &:last-child {
+      padding-right: 0px;
+    }
+  }
+
+  .ant-table-tbody > tr > td {
+    &:last-child {
+      padding-right: 0px;
+    }
+  }
+  .ant-table-pagination.ant-pagination {
+    background: var(--pretty-table-bac-color);
+    margin: 0px;
+    padding: 12px 16px 16px 16px;
+    border-bottom-left-radius: 4px;
+  }
+  .ant-pagination.ant-pagination-mini {
+    .ant-pagination-item-link {
+      border: 1px solid var(--pretty-table-page-btn-border-color);
+      background-color: var(--pretty-table-page-btn-bac-color);
+      color: var(--pretty-table-page-btn-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover {
+        background-color: #f5f8fa;
+      }
+    }
+    .ant-pagination-disabled {
+      .ant-pagination-item-link {
+        border: none;
+        background-color: var(--pretty-table-page-btn-bac-color);
+        color: var(--pretty-table-page-btn-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+
+  .ant-pagination.ant-pagination-simple {
+    .ant-pagination-prev {
+      margin-right: 6px;
+    }
+    .ant-pagination-next {
+      margin-left: 6px;
+    }
+    .ant-pagination-simple-pager {
+      display: flex;
+      align-items: center;
+      margin: 0px;
+      color: #7c98b6;
+      .ant-pagination-slash {
+        margin: 0 4px;
+      }
+      input {
+        width: 48px;
+        text-align: left;
+        padding: 0 8px;
+        color: var(--pretty-table-page-input-color);
+        background-color: var(--pretty-table-page-input-bac-color);
+        border-color: var(--pretty-table-page-input-border-color);
+      }
+    }
+  }
+}
+
+.client-css-var.ant-table-css-var {
+  --ant-table-cell-padding-block: 16px;
+  --ant-table-cell-padding-inline: 16px;
+  --ant-table-cell-padding-block-md: 8px;
+  --ant-table-cell-padding-inline-md: 16px;
+  --ant-table-cell-padding-block-sm: 8px;
+  --ant-table-cell-padding-inline-sm: 8px;
+  --ant-table-header-border-radius: 4px;
+  --ant-table-cell-font-size: 14px;
+  --ant-table-cell-font-size-md: 14px;
+  --ant-table-cell-font-size-sm: 14px;
+  --ant-table-selection-column-width: 32px;
+  --ant-table-sticky-scroll-bar-border-radius: 100px;
+  --ant-table-expand-icon-margin-top: 2.5px;
+  --ant-table-expand-icon-half-inner: 7px;
+  --ant-table-expand-icon-size: 17px;
+}

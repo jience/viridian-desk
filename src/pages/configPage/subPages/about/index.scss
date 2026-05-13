@@ -1,0 +1,31 @@
+.about {
+  width: 800px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  row-gap: 12px;
+
+  .bottom-wrapper {
+    flex: 1 1 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  .copyright {
+    font-family: SourceHanSansSC-Regular;
+    font-size: 12px;
+    color: #7c98b6;
+    text-align: right;
+    line-height: 17px;
+    font-weight: 400;
+  }
+}

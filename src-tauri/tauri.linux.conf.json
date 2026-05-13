@@ -1,0 +1,17 @@
+{
+  "bundle": {
+    "targets": ["deb"],
+    "linux": {
+      "deb": {
+        "conflicts": ["Client"],
+        "depends": ["libusb-1.0-0(>=1.0.0)"],
+        "files": {},
+        "postInstallScript": "./packages/linux/post-install.sh",
+        "postRemoveScript": "./packages/linux/post-remove.sh",
+        "preInstallScript": "./packages/linux/pre-install.sh",
+        "preRemoveScript": "./packages/linux/pre-remove.sh",
+        "provides": ["Client"]
+      }
+    }
+  }
+}

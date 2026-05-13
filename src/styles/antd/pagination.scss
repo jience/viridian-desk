@@ -1,0 +1,13 @@
+.ant-pagination {
+  font-size: 12px;
+  .ant-pagination-item-active {
+    height: 24px;
+    width: 24px;
+    border: 1px solid #b6d9fb;
+    background-color: #e6f1fd;
+    a {
+      color: #4c8cca;
+      font-weight: 500;
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0.0",
+  "identifier": "com.viridian.desk",
+  "mainBinaryName": "viridian-desk",
+  "productName": "viridian-desk",
+  "version": "2.0.1",
+  "build": {
+    "beforeBuildCommand": "pnpm run build",
+    "beforeDevCommand": "pnpm run dev",
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "security": {
+      "csp": {
+        "default-src": "'self' blob: data:",
+        "connect-src": "ipc: http://ipc.localhost",
+        "img-src": "'self' asset: https://asset.localhost blob: data:",
+        "style-src": "'unsafe-inline' 'self'"
+      }
+    },
+    "windows": [
+      {
+        "title": "ViridianDesk",
+        "center": true,
+        "decorations": false,
+        "fullscreen": false,
+        "height": 640,
+        "resizable": true,
+        "shadow": false,
+        "transparent": true,
+        "visible": true,
+        "width": 1000
+      }
+    ]
+  },
+  "bundle": {
+    "active": true,
+    "category": "DeveloperTool",
+    "copyright": "Viridian Desk Contributors",
+    "externalBin": [
+      "bin/input-activity-monitor",
+      "bin/net-probe",
+      "bin/terminal-model",
+      "bin/terminal-uuid-gen",
+      "bin/usb-device-probe"
+    ],
+    "homepage": "https://viridianstack.com/",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "longDescription": "Viridian Desk enables secure connection to VDI cloud desktops, virtual applications, and remote applications with user authentication.",
+    "macOS": {
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
+    },
+    "publisher": "Client Software",
+    "resources": ["resources/*"],
+    "shortDescription": "Secure VDI desktop client",
+    "targets": "all",
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEI5QjhBNzFENUUzNERFQzIKUldUQzNqUmVIYWU0dVJLSjU2OGlOMFdWdGo0RVY1Wld5am5YRHVxQ1RzcG1SY245ZWV6WWZCNGsK",
+      "endpoints": [
+        "https://releases.myapp.com/latest/download/latest.json"
+      ]
+    }
+  }
+}

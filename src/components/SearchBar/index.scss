@@ -1,0 +1,66 @@
+.antd-table-search-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 8px 0;
+  > *:not(:first-child) {
+    margin-left: 8px;
+  }
+  .antd-btn-icon-only {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    .btn-icon {
+      font-size: 12px;
+    }
+  }
+  .antd-input-affix-wrapper {
+    padding: 0 9px;
+    width: 205px;
+    .antd-input {
+      margin: 3px 0;
+      font-size: 13px;
+    }
+    .anticon {
+      color: var(--primary-color);
+    }
+  }
+
+  .antd-search-bar-tag-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .antd-tag {
+      margin-right: 4px;
+      background: var(--footer-button-bg);
+      border: none;
+      color: var(--primary-color);
+      height: 28px;
+      line-height: 28px;
+      font-size: 12px;
+      padding: 0 8px;
+      .tag-value {
+        margin-left: 4px;
+        font-weight: bold;
+        display: inline-block;
+        max-width: 240px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+      }
+      .antd-tag-close-icon {
+        color: var(--text-color1);
+      }
+    }
+    .antd-search-bar-tag-delete {
+      font-size: 14px;
+      margin-left: 2px;
+      color: var(--primary-color);
+    }
+  }
+
+  .antd-search-bar-slot-container {
+    text-align: right;
+  }
+}

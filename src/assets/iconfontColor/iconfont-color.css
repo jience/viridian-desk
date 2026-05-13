@@ -1,0 +1,172 @@
+@font-face {
+  font-family: 'iconfontColor'; /* Project id 3533540 */
+  /* Color fonts */
+  src:
+    url('iconfont.woff2?t=1721094620135') format('woff2'),
+    url('iconfont.woff?t=1721094620135') format('woff'),
+    url('iconfont.ttf?t=1721094620135') format('truetype');
+}
+
+.iconfontColor {
+  font-family: 'iconfontColor' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-risk-outline:before {
+  content: '\e677';
+}
+
+.icon-risk:before {
+  content: '\e678';
+}
+
+.icon-blue-link:before {
+  content: '\e676';
+}
+
+.icon-yellow-left:before {
+  content: '\e66d';
+}
+
+.icon-yellow-up:before {
+  content: '\e66e';
+}
+
+.icon-yellow-down:before {
+  content: '\e674';
+}
+
+.icon-yellow-right:before {
+  content: '\e675';
+}
+
+.icon-chongtu:before {
+  content: '\e66c';
+}
+
+.icon-safe-outline:before {
+  content: '\e79f';
+}
+
+.icon-share-outline:before {
+  content: '\e779';
+}
+
+.icon-notice-yellow1:before {
+  content: '\e66f';
+}
+
+.icon-notice-red1:before {
+  content: '\e670';
+}
+
+.icon-notice-green1:before {
+  content: '\e671';
+}
+
+.icon-urgent-red1:before {
+  content: '\e672';
+}
+
+.icon-urgent-yellow1:before {
+  content: '\e673';
+}
+
+.icon-occupy-green:before {
+  content: '\e660';
+}
+
+.icon-suspend-grey:before {
+  content: '\e661';
+}
+
+.icon-close-grey:before {
+  content: '\e662';
+}
+
+.icon-alarm-yellow:before {
+  content: '\e663';
+}
+
+.icon-operation-green:before {
+  content: '\e664';
+}
+
+.icon-alarm-red:before {
+  content: '\e665';
+}
+
+.icon-disable-red:before {
+  content: '\e668';
+}
+
+.icon-correct-green:before {
+  content: '\e66a';
+}
+
+.icon-unknown-grey:before {
+  content: '\e66b';
+}
+
+.icon-release-grey:before {
+  content: '\e65e';
+}
+
+.icon-release-green:before {
+  content: '\e65f';
+}
+
+.icon-binding-yellow:before {
+  content: '\e65a';
+}
+
+.icon-binding-green:before {
+  content: '\e65b';
+}
+
+.icon-operating-yellow:before {
+  content: '\e658';
+}
+
+.icon-operating-green:before {
+  content: '\e659';
+}
+
+.icon-error-disabled:before {
+  content: '\e652';
+}
+
+.icon-error-yellow:before {
+  content: '\e653';
+}
+
+.icon-error-red:before {
+  content: '\e654';
+}
+
+.icon-ongoing-red:before {
+  content: '\e64f';
+}
+
+.icon-ongoing-blue:before {
+  content: '\e650';
+}
+
+.icon-ongoing-yellow:before {
+  content: '\e651';
+}
+
+.icon-disable-outline:before {
+  content: '\e666';
+}
+
+.icon-operation-outline:before {
+  content: '\e667';
+}
+
+.icon-lock-outline:before {
+  content: '\e669';
+}

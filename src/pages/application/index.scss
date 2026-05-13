@@ -1,0 +1,21 @@
+.application-wrapper {
+  height: 100%;
+  .application-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    height: 28px;
+    justify-content: space-between;
+    .popover-tip-icon {
+      color: #7c98b6;
+    }
+  }
+
+  .virtual-container {
+    height: calc(100% - 52px);
+    overflow: auto;
+    .ant-spin-nested-loading {
+      height: 100%;
+    }
+  }
+}

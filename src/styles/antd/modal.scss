@@ -1,0 +1,104 @@
+.ant-modal {
+  .ant-modal-close {
+    top: 8px;
+    inset-inline-end: 8px;
+  }
+  .ant-modal-close-x {
+    font-size: 14px;
+  }
+  .ant-modal-container {
+    padding: 0px;
+  }
+  .ant-modal-header {
+    height: 48px;
+    margin-bottom: 0px;
+    border-bottom: 1px solid var(--ant-modal-header-border-bottom-color);
+    background: var(--ant-modal-header-bac-color);
+  }
+  .ant-modal-title {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    column-gap: 6px;
+    font-family: SourceHanSansSC-Bold;
+    font-size: 16px;
+    color: var(--my-ant-modal-title-color);
+    font-weight: 700;
+    &:before {
+      content: '\e622';
+      font-family: 'iconfont' !important;
+      font-style: normal;
+      -webkit-font-smoothing: antialiased;
+      color: var(--ant-modal-title-before-color);
+      margin-top: 2px;
+    }
+  }
+  .ant-modal-body {
+    padding: 16px 16px 0px 16px;
+    background-color: var(--ant-modal-body-bac-color);
+  }
+  .ant-modal-footer {
+    margin-top: 0px;
+    padding: 16px 16px 10px 16px;
+    background-color: var(--ant-modal-body-bac-color);
+  }
+}
+
+.ant-modal-confirm {
+  .ant-modal-confirm-body {
+    .anticon {
+      display: none;
+    }
+    .ant-modal-confirm-paragraph {
+      max-width: 100%;
+      row-gap: 0px;
+      .ant-modal-confirm-title {
+        height: 48px;
+        margin-bottom: 0px;
+        border-bottom: 1px solid var(--ant-modal-header-border-bottom-color);
+        background: var(--ant-modal-header-bac-color);
+
+        display: flex;
+        align-items: center;
+        padding: 18px;
+        column-gap: 8px;
+        font-family: SourceHanSansSC-Bold;
+        font-size: 16px;
+        color: var(--my-ant-modal-title-color);
+        font-weight: 700;
+        border-radius: 3px 3px 0px 0px;
+        &:before {
+          content: '\e70e';
+          font-family: 'iconfont' !important;
+          font-style: normal;
+          -webkit-font-smoothing: antialiased;
+          margin-top: 2px;
+          color: #f0a332;
+        }
+      }
+      .ant-modal-confirm-content {
+        padding: 16px 16px 0px 16px;
+        color: var(--ant-modal-content-color);
+      }
+    }
+  }
+  .ant-modal-confirm-btns {
+    margin-top: 0px;
+    padding: 10px 16px;
+  }
+}
+
+.client-css-var.ant-modal-css-var {
+  --ant-modal-title-font-size: 16px;
+  --ant-modal-content-padding: 20px 24px;
+  --ant-modal-header-padding: 0px;
+  --ant-modal-header-margin-bottom: 8px;
+  --ant-modal-body-padding: 0px;
+  --ant-modal-footer-padding: 0px;
+  --ant-modal-footer-border-radius: 0px;
+  --ant-modal-footer-margin-top: 12px;
+  --ant-modal-confirm-body-padding: 0px;
+  --ant-modal-confirm-icon-margin-inline-end: 12px;
+  --ant-modal-confirm-btns-margin-top: 12px;
+}

@@ -1,0 +1,74 @@
+.diagnosisInfo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 12px 18px;
+  .normal {
+    color: #5ab55e;
+  }
+  .error {
+    color: #f0a332;
+  }
+
+  .diagnosisInfo-content {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    /* 隐藏滚动条 */
+    scrollbar-width: none;
+    /* firefox */
+    -ms-overflow-style: none;
+
+    /* IE 10+ */
+    /* Chrome Safari */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .diagnosisInfo-content-row {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-items: center;
+      margin: 8px 0 0 0;
+
+      .diagnosisInfo-content-row-key {
+        flex: 3;
+        font-size: 12px;
+        color: var(--diagnosis-info-content-row-key-color);
+        font-weight: 400;
+      }
+
+      .diagnosisInfo-content-row-val {
+        flex: 7;
+        font-size: 12px;
+        color: var(--diagnosis-info-content-row-val-color);
+        font-weight: 400;
+        max-width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      &-val-success {
+        color: var(--config-card-icon-success);
+      }
+
+      &-val-warning {
+        color: var(--config-card-icon-warning);
+      }
+    }
+  }
+  pre {
+    border-radius: 3px;
+    margin: 10px 0;
+    background-color: #231f1f;
+    color: #93ebff;
+    padding: 10px;
+  }
+}

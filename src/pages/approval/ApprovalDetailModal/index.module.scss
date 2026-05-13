@@ -1,0 +1,40 @@
+.approval-detail-modal-wrapper {
+  width: 500px !important;
+  .approval-detail-modal-content {
+    height: 400px;
+    overflow: auto;
+    padding-bottom: 24px;
+  }
+  .watermark {
+    pointer-events: none;
+    position: absolute;
+    top: 20%;
+    right: 6%;
+    transform: rotate(20deg);
+
+    padding: 4px 24px;
+    font-size: 30px;
+    border-width: 1px;
+    border-style: dotted;
+    border-radius: 4px;
+    &.success {
+      color: var(--confirm-success-color);
+      border-color: var(--confirm-success-color);
+    }
+
+    &.processing {
+      color: var(--text-hight-color1);
+      border-color: var(--text-hight-color1);
+    }
+
+    &.warning {
+      color: var(--confirm-warning-color);
+      border-color: var(--confirm-warning-color);
+    }
+
+    &.danger {
+      color: var(--confirm-error-color);
+      border-color: var(--confirm-error-color);
+    }
+  }
+}

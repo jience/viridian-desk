@@ -1,0 +1,16 @@
+.AllDiskListModal {
+  .statuBox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    .selfIcon {
+      margin: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

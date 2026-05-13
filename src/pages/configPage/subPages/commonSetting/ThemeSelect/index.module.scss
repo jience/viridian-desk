@@ -1,0 +1,84 @@
+.theme-select-wrapper {
+  width: 100%;
+  .theme-select-content {
+    display: flex;
+    padding: 12px 18px;
+    column-gap: 8px;
+
+    .theme-item {
+      overflow: hidden;
+      width: 143px;
+      height: 73px;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(223, 227, 235, 1);
+      &.active {
+        border: 1px solid var(--primary-color);
+        box-sizing: border-box;
+        &:hover {
+          border: 1px solid var(--primary-color);
+          box-shadow: 0px 1px 5px 0px var(--theme-select-item-hover-box-shadow);
+        }
+      }
+      &:hover {
+        border: 1px solid rgba(182, 217, 251, 1);
+        box-shadow: 0px 1px 5px 0px rgba(51, 71, 91, 0.16);
+      }
+      .top-content {
+        width: 100%;
+        height: 48px;
+        &.theme-light {
+          background-image: linear-gradient(
+            210deg,
+            rgba(203, 212, 254) 10%,
+            rgba(201, 220, 253) 90%,
+            rgba(201, 220, 253) 90%,
+            rgba(233, 243, 255) 90%,
+            rgba(201, 220, 253) 90%
+          );
+        }
+        &.theme-dark {
+          background-image: linear-gradient(
+            210deg,
+            rgb(34, 39, 61) 10%,
+            rgba(72, 73, 123, 1) 90%,
+            rgba(72, 73, 123, 1) 90%,
+            rgba(74, 94, 146, 1) 90%,
+            rgba(72, 73, 123, 1) 90%
+          );
+        }
+        &.theme-system {
+          // 跟随系统 - 优化版本
+          background: linear-gradient(
+            140deg,
+            rgba(203, 212, 254) 0%,
+            rgba(180, 190, 230) 30%,
+            rgba(120, 130, 180) 45%,
+            rgba(80, 90, 140) 50%,
+            rgba(60, 70, 120) 55%,
+            rgba(45, 50, 80) 70%,
+            rgb(34, 39, 61) 100%
+          );
+        }
+      }
+      .bottom-content {
+        width: 100%;
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 8px;
+        font-size: 12px;
+        color: #516f90;
+        font-weight: 400;
+        background-color: #fff;
+        .right-icon {
+          color: #5ab55e;
+        }
+      }
+    }
+  }
+}

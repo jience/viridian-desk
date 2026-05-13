@@ -1,0 +1,56 @@
+.icon-choose {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+
+  .img-container {
+    width: 48px;
+    height: 48px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: all 0.3s;
+
+    &:hover {
+      border-color: #1890ff;
+    }
+
+    &.active {
+      border-color: #1890ff;
+      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .iconModel-modal {
+    width: 48px;
+    height: 48px;
+    border: 1px dashed #d9d9d9;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+
+    &:hover {
+      border-color: #1890ff;
+      background-color: rgba(24, 144, 255, 0.06);
+    }
+
+    .iconModel-modal-icon {
+      font-size: 16px;
+      color: #999;
+    }
+  }
+}

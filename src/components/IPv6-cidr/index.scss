@@ -1,0 +1,22 @@
+.customized-ipv6 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.customized-ipv6-address {
+  flex: 1;
+}
+
+.customized-ipv6-split {
+  width: 18px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #cbd6e2;
+}
+
+.customized-ipv6-port {
+  width: 100px;
+}

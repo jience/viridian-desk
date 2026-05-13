@@ -1,0 +1,33 @@
+@use '@/styles/theme.scss' as *;
+@use '@/styles/antd/index.scss' as *;
+@use '@/assets/iconfontColor/iconfont-color.css';
+@use '@/assets/iconfont/iconfont.css';
+@use '@/styles/scrollbar.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  font-family: SourceHanSansSC-Regular;
+}
+
+ul {
+  padding-left: 0;
+  list-style: none;
+  margin-bottom: 0;
+}
+
+// 表单前缀图标样式
+.form-prefix-icon {
+  font-size: 12px;
+  color: #7c98b6;
+}

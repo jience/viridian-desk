@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
+  <defs>
+    <linearGradient id="leftGradDarkText" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ADE80;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22C55E;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="rightGradDarkText" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2DD4BF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#14B8A6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- 透明背景（由窗口控制） -->
+
+  <!-- V 图标 -->
+  <g transform="translate(0, 0)">
+    <polygon points="60,20 20,100 35,100 60,50" fill="url(#leftGradDarkText)" />
+    <polygon points="60,20 100,100 85,100 60,50" fill="url(#rightGradDarkText)" />
+  </g>
+
+  <!-- 文字：Viridian（亮翠绿） -->
+  <text x="80" y="62" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="32" font-weight="700" fill="#4ADE80" letter-spacing="1">
+    Viridian
+  </text>
+
+  <!-- 文字：Desk（浅灰色） -->
+  <text x="195" y="62" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="32" font-weight="400" fill="#A1A1AA" letter-spacing="1">
+    Desk
+  </text>
+
+  <!-- 副标题（灰色） -->
+  <text x="80" y="88" font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="11" fill="#6B7280" letter-spacing="2">
+    SECURE VDI CLIENT
+  </text>
+</svg>

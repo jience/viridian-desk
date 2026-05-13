@@ -1,0 +1,64 @@
+.self_modal {
+  width: 500px !important;
+  .ant-modal-body {
+    padding-bottom: 16px;
+  }
+}
+
+.titleSlot {
+  &-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    .icon {
+      color: var(--primary-shadow-color);
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .title {
+      font-family: SourceHanSansSC-Bold;
+      font-size: 16px;
+      color: var(--config-formModel-title-default);
+      font-weight: 700;
+      margin: 0 4px;
+    }
+  }
+}
+
+.baseForm {
+  .addon-after {
+    width: 20%;
+
+    > .antd-select-selector {
+      background: var(--config-formModel-addonAfter-back);
+      border: 1px solid rgba(203, 214, 226, 1);
+      border-end-end-radius: 3px;
+
+      font-family: SourceHanSansSC-Regular;
+      font-size: 12px;
+      color: var(--config-formModel-title-default);
+      letter-spacing: 0;
+      font-weight: 400;
+    }
+  }
+
+  .item-Info {
+    margin: 4px 0 0 0;
+    font-family: SourceHanSansSC-Regular;
+    font-size: 12px;
+    color: var(--config-tab-default);
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+
+  .noStyle-form-item {
+    width: 80%;
+    margin: 0;
+  }
+}

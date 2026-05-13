@@ -1,0 +1,47 @@
+$prefix: archer;
+$formtable-prefix-cls: archer-formtable;
+
+.#{$formtable-prefix-cls} {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  color: #cbd6e2;
+  font-size: 14px;
+  font-variant: tabular-nums;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #cbd6e200;
+  border-radius: 3px;
+  transition:
+    border 0.3s,
+    box-shadow 0.3s;
+
+  &:hover {
+    border-color: #74a8d6;
+  }
+
+  &.#{$formtable-prefix-cls}-disabled {
+    .#{$prefix}-input-borderless.#{$prefix}-input-disabled,
+    .#{$prefix}-input-borderless.#{$prefix}-input-disabled + .ip-split {
+      background-color: #eaf0f6;
+    }
+  }
+
+  &.#{$formtable-prefix-cls}-status-error {
+    border-color: #eb5f5c;
+  }
+}
+
+.archer-form-item-has-error .#{$formtable-prefix-cls} {
+  border-color: #eb5f5c;
+
+  &.#{$formtable-prefix-cls}-focus {
+    border-color: #f78e88;
+    outline: 0;
+    box-shadow: 0 0 0 2px rgb(235 95 92 / 20%);
+  }
+}

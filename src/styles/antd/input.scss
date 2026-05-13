@@ -1,0 +1,19 @@
+.ant-input-affix-wrapper > input.ant-input {
+  font-size: 12px;
+}
+
+.client-css-var.ant-input-css-var {
+  --ant-font-size: 12px;
+  --ant-input-padding-block: 4px;
+  --ant-input-padding-block-sm: 0px;
+  --ant-input-padding-block-lg: 7px;
+  --ant-input-padding-inline: 10px;
+  --ant-input-padding-inline-sm: 7px;
+  --ant-input-padding-inline-lg: 11px;
+  --ant-input-active-shadow: 0 0 0 2px rgba(5, 172, 255, 0.06);
+  --ant-input-error-active-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06);
+  --ant-input-warning-active-shadow: 0 0 0 2px rgba(255, 215, 5, 0.1);
+  --ant-input-input-font-size: 12px;
+  --ant-input-input-font-size-lg: 16px;
+  --ant-input-input-font-size-sm: 12px;
+}

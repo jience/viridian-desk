@@ -1,0 +1,220 @@
+.footer-content {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+  .login-footer-content {
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    align-items: flex-end;
+  }
+  .footer-left {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+
+    .btn-group {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+
+      border-radius: 6px;
+    }
+
+    .option-button {
+      min-width: 28px;
+      height: 28px;
+      margin-right: 8px;
+      background: var(--footer-button-bg);
+      border-radius: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      border: 1px solid var(--login-page-bottom-btn-border-color);
+      cursor: pointer;
+      .client-button {
+        color: var(--footer-button-color1);
+        font-size: 16px;
+        display: flex;
+        &:hover,
+        &:focus {
+          color: var(--primary-color);
+        }
+      }
+
+      .haveName {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 8px;
+
+        .opt-name {
+          margin: 0 2px;
+          font-size: 12px;
+          font-weight: 800;
+          color: var(--footer-button-color1);
+        }
+      }
+
+      &:hover {
+        background: #ffffff;
+        .client-button {
+          color: var(--primary-color);
+        }
+      }
+      &.msgdot::after {
+        content: '';
+        position: absolute;
+        width: 7px;
+        height: 7px;
+        background-color: red;
+        border-radius: 10px;
+        border: 1px solid #fff;
+        top: 6px;
+        right: 5px;
+      }
+    }
+    .develop-mode {
+      padding: 6px 12px;
+      height: 28px;
+      background: var(--develop-mode-bac-color);
+      border-radius: 14px;
+      font-size: 12px;
+      color: var(--develop-mode-color);
+      display: flex;
+      align-items: center;
+      column-gap: 6px;
+      line-height: 1;
+
+      .iconfont {
+        font-size: 12px;
+      }
+    }
+  }
+  .footer-right {
+    display: flex;
+    align-items: center;
+    padding-bottom: 2px;
+  }
+  .archer-divider-vertical {
+    margin-left: 0px;
+  }
+  .public-net {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    color: var(--confirm-content-color);
+    > span {
+      margin-right: 5px;
+    }
+  }
+  .network-card {
+    float: right;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .network-card-green {
+    color: #5ab55e;
+  }
+  .network-card-grey {
+    color: #969696;
+  }
+
+  .network-card-content {
+    font-size: 12px;
+    .content-info {
+      color: rgba(0, 0, 0, 0.65);
+      margin-bottom: 8px;
+      display: flex;
+      .item-name {
+        width: 90px;
+      }
+      .item-detail {
+        flex: 1;
+        color: rgba(0, 0, 0, 0.85);
+        word-break: break-all;
+      }
+    }
+    .nic-info {
+      margin-top: 8px;
+    }
+  }
+  .ant-popover {
+    background: #ffffff;
+    border: 1px solid rgba(224, 224, 224, 1);
+    box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.08);
+  }
+  .ant-popover-content {
+    width: 240px;
+  }
+  .ant-popover-inner-content {
+    padding: 12px !important;
+  }
+  .ant-popover .ant-popover-arrow {
+    display: block !important;
+  }
+  .ant-popover-placement-top .ant-popover-arrow {
+    bottom: -15px;
+  }
+  .ant-popover-placement-topRight .ant-popover-arrow {
+    right: 11px;
+    bottom: -15px;
+  }
+  .copy-text {
+    margin-top: 10px;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: center;
+    color: var(--ant-primary-color);
+  }
+  .copy-success {
+    color: #5ab55e;
+  }
+  .content-divider {
+    width: 100%;
+    border-bottom: 1px solid #d9d9d9;
+    margin-top: 4px;
+  }
+}
+.footer-text-content {
+  width: 100%;
+  height: 17px;
+  font-size: 12px;
+  color: var(--footer-button-color1);
+  text-align: right;
+}
+.testsss {
+  width: 100%;
+}
+
+.footer-msg {
+  max-width: 300px;
+  min-width: 200px;
+  margin: 0;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.footer-title {
+  width: 100px;
+  margin: 0;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.malfunction-name-text {
+  display: block;
+  max-width: 130px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

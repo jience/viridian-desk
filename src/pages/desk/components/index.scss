@@ -1,0 +1,30 @@
+.deskPoolInDesk {
+  width: 400px !important;
+  .detailList {
+    .antd-tooltip {
+      left: 6px !important;
+    }
+    li {
+      border-bottom: 1px solid #dfe3eb;
+      padding: 14px 0;
+      // width: 352px;
+      .content {
+        display: flex;
+        align-items: center;
+      }
+      p {
+        width: 91%;
+        margin-left: 20px;
+        font-size: 12px;
+        color: #33475b;
+      }
+      i {
+        font-size: 14px;
+        color: #7c98b6;
+      }
+    }
+    li:last-child {
+      border: 0;
+    }
+  }
+}

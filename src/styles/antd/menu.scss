@@ -1,0 +1,132 @@
+.ant-popover {
+  .ant-popover-container {
+    padding: 8px 2px;
+    .ant-menu {
+      .ant-menu-item {
+        width: auto;
+        border-radius: 0px;
+        margin: 0;
+        padding: 0 12px;
+        height: 28px;
+        line-height: 28px;
+        color: var(--menu-item-text-color);
+        font-size: 12px;
+        i {
+          margin-right: 10px;
+          font-size: 12px;
+          color: var(--menu-item-icon-color);
+        }
+      }
+    }
+  }
+}
+
+.ant-menu.ant-menu-root.ant-menu-vertical {
+  border-inline-end: none;
+}
+.ant-menu-vertical .ant-menu-item:not(:last-child),
+.ant-menu-vertical-left .ant-menu-item:not(:last-child),
+.ant-menu-vertical-right .ant-menu-item:not(:last-child),
+.ant-menu-inline .ant-menu-item:not(:last-child) {
+  margin-bottom: 0;
+}
+.ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):active,
+.ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover {
+  background-color: var(--menu-setting-hover);
+  color: var(--menu-item-text-color);
+}
+
+.client-css-var.ant-popover {
+  --ant-popover-title-min-width: 177px;
+  --ant-popover-arrow-shadow-width: 8.970562748477143px;
+  --ant-popover-arrow-polygon: polygon(
+    1.6568542494923806px 100%,
+    50% 1.6568542494923806px,
+    14.34314575050762px 100%,
+    1.6568542494923806px 100%
+  );
+  --ant-popover-arrow-offset-horizontal: 12px;
+  --ant-popover-arrow-offset-vertical: 8px;
+  --ant-popover-inner-padding: 12px;
+  --ant-popover-title-margin-bottom: 8px;
+  --ant-popover-title-padding: 0px;
+  --ant-popover-inner-content-padding: 0px;
+}
+
+.client-css-var.ant-popover-css-var {
+  --ant-tooltip-arrow-offset-horizontal: 12px;
+  --ant-tooltip-arrow-offset-vertical: 8px;
+  --ant-tooltip-arrow-shadow-width: 8.970562748477143px;
+  --ant-tooltip-arrow-polygon: polygon(
+    1.6568542494923806px 100%,
+    50% 1.6568542494923806px,
+    14.34314575050762px 100%,
+    1.6568542494923806px 100%
+  );
+}
+
+.client-css-var.ant-menu-css-var {
+  --ant-menu-dropdown-width: 160px;
+  --ant-menu-radius-item: 4px;
+  --ant-menu-item-border-radius: 4px;
+  --ant-menu-radius-sub-menu-item: 4px;
+  --ant-menu-sub-menu-item-border-radius: 4px;
+  --ant-menu-color-active-bar-width: 0px;
+  --ant-menu-active-bar-width: 0px;
+  --ant-menu-color-active-bar-height: 2px;
+  --ant-menu-active-bar-height: 2px;
+  --ant-menu-color-active-bar-border-size: 1px;
+  --ant-menu-active-bar-border-width: 1px;
+  --ant-menu-item-margin-inline: 4px;
+  --ant-menu-horizontal-item-border-radius: 0px;
+  --ant-menu-item-height: 40px;
+  --ant-menu-collapsed-width: 80px;
+  --ant-menu-item-margin-block: 4px;
+  --ant-menu-item-padding-inline: 16px;
+  --ant-menu-horizontal-line-height: 46px;
+  --ant-menu-icon-size: 14px;
+  --ant-menu-icon-margin-inline-end: 10px;
+  --ant-menu-collapsed-icon-size: 16px;
+  --ant-menu-group-title-font-size: 14px;
+  --ant-menu-item-width: calc(100% - 8px);
+}
+
+.client-css-var.ant-dropdown-menu-css-var {
+  --ant-menu-dropdown-width: 160px;
+  --ant-menu-radius-item: 4px;
+  --ant-menu-item-border-radius: 4px;
+  --ant-menu-radius-sub-menu-item: 4px;
+  --ant-menu-sub-menu-item-border-radius: 4px;
+  --ant-menu-color-active-bar-width: 0px;
+  --ant-menu-active-bar-width: 0px;
+  --ant-menu-color-active-bar-height: 2px;
+  --ant-menu-active-bar-height: 2px;
+  --ant-menu-color-active-bar-border-size: 1px;
+  --ant-menu-active-bar-border-width: 1px;
+  --ant-menu-item-margin-inline: 4px;
+  --ant-menu-horizontal-item-border-radius: 0px;
+  --ant-menu-item-height: 40px;
+  --ant-menu-collapsed-width: 80px;
+  --ant-menu-item-margin-block: 4px;
+  --ant-menu-item-padding-inline: 16px;
+  --ant-menu-horizontal-line-height: 46px;
+  --ant-menu-icon-size: 14px;
+  --ant-menu-icon-margin-inline-end: 10px;
+  --ant-menu-collapsed-icon-size: 16px;
+  --ant-menu-group-title-font-size: 14px;
+  --ant-menu-item-width: calc(100% - 8px);
+}
+
+.client-css-var.ant-dropdown-css-var {
+  --ant-font-size: 12px;
+  --ant-dropdown-padding-block: 6.571428571428571px;
+  --ant-dropdown-arrow-offset-horizontal: 12px;
+  --ant-dropdown-arrow-offset-vertical: 8px;
+  --ant-dropdown-arrow-shadow-width: 8.970562748477143px;
+  --ant-dropdown-arrow-polygon: polygon(
+    1.6568542494923806px 100%,
+    50% 1.6568542494923806px,
+    14.34314575050762px 100%,
+    1.6568542494923806px 100%
+  );
+}

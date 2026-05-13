@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <polygon points="8,2 2,14 4.5,14 8,5.5" fill="#1DB954" />
+  <polygon points="8,2 14,14 11.5,14 8,5.5" fill="#1DB954" />
+  <circle cx="8" cy="14.5" r="1.5" fill="#F2B179">
+    <animate attributeName="r" values="1.5;2.5;1.5" dur="1.5s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="1;0.4;1" dur="1.5s" repeatCount="indefinite" />
+  </circle>
+</svg>

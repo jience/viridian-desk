@@ -1,0 +1,105 @@
+.silent-update {
+  width: 480px !important;
+  border-radius: 8px;
+  overflow: hidden;
+  .archer-modal-body {
+    width: 480px;
+    height: 280px;
+    background: url('@/assets/images/upgrade-bgc.png');
+    background-size: 100% 100%;
+    padding: 0;
+  }
+
+  .upgrade-modal-content {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .current-version {
+      position: absolute;
+      bottom: 16px;
+      right: 24px;
+      font-size: 14px;
+      color: #7c98b6;
+    }
+    .content {
+      flex: 1;
+      padding: 0 32px;
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        p {
+          font-size: 16px;
+          color: #33475b;
+          font-weight: 700;
+          span {
+            font-size: 16px;
+            color: #2491ff;
+            font-weight: 700;
+            margin-left: 8px;
+          }
+        }
+      }
+      .download-progress {
+        font-size: 14px;
+        color: #516f90;
+        font-weight: 400;
+      }
+    }
+    .upgradeLoading {
+      animation: round 1.2s linear infinite;
+    }
+    .upgrading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      > p {
+        margin-top: 16px;
+        font-size: 16px;
+        color: #33475b;
+        font-weight: 700;
+        span {
+          font-size: 16px;
+          color: #2491ff;
+          font-weight: 700;
+          margin-left: 8px;
+        }
+      }
+    }
+    .upgradeFail {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0 20px;
+      .upgradeFailIcon {
+        svg {
+          font-size: 46px;
+        }
+      }
+      .err {
+        font-size: 18px;
+        color: #33475b;
+        margin-top: 12px;
+        font-weight: 700;
+      }
+      .current-version-fail {
+        font-size: 14px;
+        color: #7c98b6;
+        font-weight: 400;
+      }
+    }
+  }
+}
+@keyframes round {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

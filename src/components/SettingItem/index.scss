@@ -1,0 +1,76 @@
+.setting-item-wrapper {
+  width: 100%;
+  box-shadow: 0px 0px 6px 0px var(--setting-item-wrapper-box-shadow-color);
+  .title-wrapper {
+    background: var(--setting-item-title-wrapper-bac-color);
+    border: 1px solid var(--setting-item-title-wrapper-border-color);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 18px 8px 0px;
+    height: 40px;
+    &.sticky {
+      position: sticky;
+      top: 0px;
+      z-index: 1;
+    }
+    &.has-subtitle-or-content {
+      padding: 12px 18px 12px 0px;
+      height: auto;
+    }
+    &.has-children {
+      border-radius: 4px 4px 0px 0px;
+      border-bottom: none;
+    }
+    .left-content {
+      padding-left: 18px;
+      display: flex;
+      row-gap: 8px;
+      flex-direction: column;
+      .main-title {
+        position: relative;
+        font-size: 14px;
+        color: var(--setting-item-main-title-color);
+        font-weight: 400;
+        &.has-subtitle-or-content {
+          font-size: 16px;
+          color: var(--setting-item-has-subtitle-or-content-color);
+          font-weight: 700;
+        }
+        &::before {
+          content: '';
+          position: absolute;
+          left: -19px;
+          top: 0px;
+          width: 3px;
+          height: 100%;
+          background: var(--setting-item-main-title-before-bac-color);
+          border-radius: 0px 3px 3px 0px;
+        }
+      }
+      .sub-title {
+        font-size: 14px;
+        color: var(--config-card-sub-title-color);
+        font-weight: 400;
+      }
+    }
+    .right-content {
+      display: flex;
+      align-items: center;
+      column-gap: 4px;
+      &.has-subtitle-or-content {
+        .ant-btn.ant-btn-sm {
+          height: 28px;
+        }
+      }
+    }
+  }
+  .content-wrapper {
+    box-shadow: 0px 0px 6px 0px var(--setting-item-content-wrapper-shadow-color);
+    background: var(--config-infoTable-background-default);
+    border: 1px solid var(--setting-item-content-wrapper-bac-color);
+    border-radius: 0px 0px 4px 4px;
+    position: relative;
+  }
+}
