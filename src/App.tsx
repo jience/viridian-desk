@@ -8,6 +8,7 @@ import zhCN from 'antd/locale/zh_CN';
 import { useAppSelector } from './store';
 import { selectLanguage } from './store/feature/config';
 import { useTheme } from '@/theme/useTheme';
+import { UiThemeProvider } from '@/ui/theme/theme-provider';
 import { LanguageType } from './native/interfaces/config';
 
 const IS_THIN_CLIENT = import.meta.env.TAURI_IS_THIN_CLIENT === 'true';
@@ -48,19 +49,21 @@ function App() {
   }, []);
 
   return (
-    <ConfigProvider
-      locale={lang}
-      theme={{ ...antdTheme, zeroRuntime: true, hashed: false, cssVar: { key: 'client-css-var' } }}
-      button={{ autoInsertSpace: false }}
-      modal={{ centered: true }}
-      form={{ colon: false }}
-    >
-      <ClientApp component={false}>
-        <IntlProvider locale={'zh-CN'} messages={window.LanguageData['zh-CN']}>
-          <RouterProvider router={router} />
-        </IntlProvider>
-      </ClientApp>
-    </ConfigProvider>
+    <UiThemeProvider>
+      <ConfigProvider
+        locale={lang}
+        theme={{ ...antdTheme, zeroRuntime: true, hashed: false, cssVar: { key: 'client-css-var' } }}
+        button={{ autoInsertSpace: false }}
+        modal={{ centered: true }}
+        form={{ colon: false }}
+      >
+        <ClientApp component={false}>
+          <IntlProvider locale={'zh-CN'} messages={window.LanguageData['zh-CN']}>
+            <RouterProvider router={router} />
+          </IntlProvider>
+        </ClientApp>
+      </ConfigProvider>
+    </UiThemeProvider>
   );
 }
 
