@@ -16,6 +16,7 @@
   --vd-focus-ring: 0 0 0 3px rgba(217, 255, 92, 0.4);
 }
 
+:root.dark,
 :root[data-ui-theme='dark'] {
   --vd-color-bg: #151917;
   --vd-color-panel: #1c211f;
