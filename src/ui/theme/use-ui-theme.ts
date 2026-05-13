@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { UiThemeContext } from './theme-provider';
+import { UiThemeContext } from './context';
 
 export function useUiTheme() {
   const value = useContext(UiThemeContext);

@@ -1,16 +1,15 @@
-import { createContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react';
-import { readStoredUiTheme, writeStoredUiTheme } from './storage';
-import type { ResolvedUiTheme, UiThemeContextValue, UiThemeMode } from './types';
-
-export const UiThemeContext = createContext<UiThemeContextValue | null>(null);
-
-export function resolveTheme(mode: UiThemeMode, systemDark: boolean): ResolvedUiTheme {
-  if (mode === 'system') return systemDark ? 'dark' : 'light';
-  return mode;
-}
+import { useEffect, useMemo, useState, type PropsWithChildren } from 'react';
+import { ThemeType } from '@/native/interfaces/config';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { configTheme, selectTheme } from '@/store/feature/config';
+import { UiThemeContext } from './context';
+import { resolveTheme } from './resolve-theme';
+import type { UiThemeContextValue, UiThemeMode } from './types';
 
 export function UiThemeProvider({ children }: PropsWithChildren) {
-  const [mode, setModeState] = useState<UiThemeMode>(() => readStoredUiTheme());
+  const dispatch = useAppDispatch();
+  const theme = useAppSelector(selectTheme);
+  const mode = theme as UiThemeMode;
   const [systemDark, setSystemDark] = useState(
     () => window.matchMedia('(prefers-color-scheme: dark)').matches,
   );
@@ -34,11 +33,10 @@ export function UiThemeProvider({ children }: PropsWithChildren) {
       mode,
       resolvedTheme,
       setMode: (nextMode) => {
-        writeStoredUiTheme(nextMode);
-        setModeState(nextMode);
+        dispatch(configTheme(nextMode as ThemeType));
       },
     };
-  }, [mode, resolvedTheme]);
+  }, [dispatch, mode, resolvedTheme]);
 
   return <UiThemeContext.Provider value={value}>{children}</UiThemeContext.Provider>;
 }
