@@ -6,6 +6,9 @@ interface UserMenuProps {
   email: string;
 }
 
+const menuItemClassName =
+  'rounded-xl px-3 py-2 text-sm outline-none hover:bg-vd-panel-subtle data-[highlighted]:bg-vd-panel-subtle data-[highlighted]:text-vd-text';
+
 export function UserMenu({ initials, name, email }: UserMenuProps) {
   return (
     <DropdownMenu.Root>
@@ -29,13 +32,15 @@ export function UserMenu({ initials, name, email }: UserMenuProps) {
             <div className="font-semibold">{name}</div>
             <div className="text-xs text-vd-muted">{email}</div>
           </div>
-          <DropdownMenu.Item className="rounded-xl px-3 py-2 text-sm outline-none hover:bg-vd-panel-subtle">
+          <DropdownMenu.Item className={menuItemClassName}>
             Personal information
           </DropdownMenu.Item>
-          <DropdownMenu.Item className="rounded-xl px-3 py-2 text-sm outline-none hover:bg-vd-panel-subtle">
+          <DropdownMenu.Item className={menuItemClassName}>
             Preferences
           </DropdownMenu.Item>
-          <DropdownMenu.Item className="rounded-xl px-3 py-2 text-sm text-vd-danger outline-none hover:bg-vd-panel-subtle">
+          <DropdownMenu.Item
+            className={`${menuItemClassName} text-vd-danger data-[highlighted]:text-vd-danger`}
+          >
             Sign out
           </DropdownMenu.Item>
         </DropdownMenu.Content>
