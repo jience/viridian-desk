@@ -8,19 +8,23 @@ import { LanguageType } from '@/native/interfaces/config';
 i18next
   .use(
     resourcesToBackend((language: string, namespace: string) => {
+      const normalizedLanguage =
+        language === 'zh' ? LanguageType.ZH_CN : language === 'en' ? LanguageType.EN_US : language;
+
+      if (namespace === 'common' || namespace === 'assistant') {
+        return import(`@/ui/i18n/locales/${normalizedLanguage}/${namespace}.json`);
+      }
+
       // 处理浏览器语言检测可能返回 'zh' 的情况，防止 Vite 报错 "Unknown variable dynamic import"
-      if (language === 'zh') {
+      if (normalizedLanguage === LanguageType.ZH_CN) {
         return import('@/assets/locales/zh-CN.json');
       }
-      if (language === 'en') {
+      if (normalizedLanguage === LanguageType.EN_US) {
         return import('@/assets/locales/en-US.json');
       }
-      if (namespace === 'common' || namespace === 'assistant') {
-        return import(`@/ui/i18n/locales/${language}/${namespace}.json`);
-      }
       // 仅加载支持的语言包
-      if (Object.values(LanguageType).includes(language as LanguageType)) {
-        return import(`@/assets/locales/${language}.json`);
+      if (Object.values(LanguageType).includes(normalizedLanguage as LanguageType)) {
+        return import(`@/assets/locales/${normalizedLanguage}.json`);
       }
       return Promise.resolve({});
     }),
