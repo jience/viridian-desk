@@ -8,10 +8,11 @@ interface AssistantPanelProps {
 
 export function AssistantPanel({ collapsed = false, onToggle }: AssistantPanelProps) {
   const { t } = useTranslation('assistant');
+  const { t: commonT } = useTranslation('common');
 
   if (collapsed) {
     return (
-      <div className="flex h-full flex-col items-center gap-3 p-3">
+      <div className="vd-assistant-panel vd-assistant-panel--collapsed">
         <Button aria-label={t('title')} onClick={onToggle} size="sm" variant="secondary">
           ?
         </Button>
@@ -20,25 +21,19 @@ export function AssistantPanel({ collapsed = false, onToggle }: AssistantPanelPr
   }
 
   return (
-    <div className="grid h-full grid-rows-[auto_auto_1fr_auto] gap-4 p-4">
+    <div className="vd-assistant-panel">
       <div>
-        <h2 className="text-lg font-semibold">{t('title')}</h2>
-        <p className="mt-1 text-xs leading-5 text-vd-muted">{t('subtitle')}</p>
+        <h2 className="vd-assistant-panel__title">{t('title')}</h2>
+        <p className="vd-assistant-panel__subtitle">{t('subtitle')}</p>
       </div>
-      <div className="grid gap-2 text-xs">
-        <div className="rounded-xl border border-vd-border bg-vd-panel p-3">
-          {t('quick.connectionHelp')}
-        </div>
-        <div className="rounded-xl border border-vd-border bg-vd-panel p-3">
-          {t('quick.openLogs')}
-        </div>
-        <div className="rounded-xl border border-vd-border bg-vd-panel p-3">
-          {t('quick.reportFault')}
-        </div>
+      <div className="vd-assistant-panel__quick-list">
+        <div className="vd-assistant-panel__quick-item">{t('quick.connectionHelp')}</div>
+        <div className="vd-assistant-panel__quick-item">{t('quick.openLogs')}</div>
+        <div className="vd-assistant-panel__quick-item">{t('quick.reportFault')}</div>
       </div>
-      <div />
+      <div className="vd-assistant-panel__spacer" />
       <Button onClick={onToggle} size="sm" variant="secondary">
-        {t('actions.close', { ns: 'common' })}
+        {commonT('actions.close')}
       </Button>
     </div>
   );

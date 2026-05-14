@@ -10,5 +10,8 @@
   "actions.save": "Save",
   "actions.search": "Search",
   "status.online": "Online",
-  "status.offline": "Offline"
+  "status.offline": "Offline",
+  "user.personalInformation": "Personal information",
+  "user.preferences": "Preferences",
+  "user.signOut": "Sign out"
 }

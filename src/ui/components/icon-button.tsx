@@ -12,10 +12,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       <button
         ref={ref}
         aria-label={label}
-        className={cn(
-          'vd-focus-ring inline-grid size-10 place-items-center rounded-xl bg-vd-panel text-vd-text transition hover:bg-vd-panel-subtle active:translate-y-px disabled:pointer-events-none disabled:opacity-50',
-          className,
-        )}
+        className={cn('vd-icon-button vd-focus-ring', className)}
         type={type ?? 'button'}
         {...props}
       >

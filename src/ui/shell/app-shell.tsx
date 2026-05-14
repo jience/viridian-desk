@@ -21,20 +21,20 @@ export function AppShell({
   return (
     <div
       className={cn(
-        'grid h-full min-h-0 bg-vd-bg text-vd-text',
-        assistantState === 'expanded' && 'grid-cols-[76px_minmax(0,1fr)_314px]',
-        assistantState === 'collapsed' && 'grid-cols-[76px_minmax(0,1fr)_64px]',
-        assistantState === 'hidden' && 'grid-cols-[76px_minmax(0,1fr)]',
+        'vd-app-shell',
+        assistantState === 'expanded' && 'vd-app-shell--assistant-expanded',
+        assistantState === 'collapsed' && 'vd-app-shell--assistant-collapsed',
+        assistantState === 'hidden' && 'vd-app-shell--assistant-hidden',
       )}
     >
-      <aside className="flex min-h-0 flex-col items-center gap-3 bg-vd-rail px-2 py-3 text-vd-panel">
+      <aside className="vd-app-shell__rail">
         {nav}
-        <div className="flex-1" />
+        <div className="vd-app-shell__spacer" />
         {userMenu}
       </aside>
-      <main className="min-w-0 overflow-hidden p-5">{children}</main>
+      <main className="vd-app-shell__main">{children}</main>
       {assistantState !== 'hidden' && (
-        <aside className="min-w-0 border-l border-vd-border bg-vd-panel/70">{assistant}</aside>
+        <aside className="vd-app-shell__assistant">{assistant}</aside>
       )}
     </div>
   );

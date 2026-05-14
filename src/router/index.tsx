@@ -1,5 +1,4 @@
 import { BasicLayout } from '@/layouts/BasicLayout';
-import RedesignPreview from '@/features/redesign-preview';
 import { LoginAuthType } from '@/native/interfaces/login_history';
 import { Application } from '@/pages/application';
 import ConfigPage from '@/pages/configPage';
@@ -22,6 +21,17 @@ import { Component as Malfunction } from '../pages/malfunction';
 import { Component as PeripheralSetting } from '../pages/peripheralSetting';
 
 const rootRoutes: RouteObject[] = [
+  {
+    path: '/redesign-preview',
+    loader: async () => {
+      await appStore.dispatch(fetchConfigInfo());
+      return null;
+    },
+    lazy: async () => {
+      const { default: RedesignPreview } = await import('@/features/redesign-preview');
+      return { Component: RedesignPreview };
+    },
+  },
   {
     path: '/',
     element: <ClientLayout />,
@@ -52,10 +62,6 @@ const rootRoutes: RouteObject[] = [
       {
         path: 'login',
         element: <Login />,
-      },
-      {
-        path: 'redesign-preview',
-        element: <RedesignPreview />,
       },
       {
         path: 'configPage',

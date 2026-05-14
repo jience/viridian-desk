@@ -7,9 +7,9 @@ interface PreLoginSettingsShellProps {
 
 export function PreLoginSettingsShell({ sidebar, children }: PreLoginSettingsShellProps) {
   return (
-    <div className="grid h-full min-h-[560px] grid-cols-[236px_minmax(0,1fr)] bg-vd-bg text-vd-text">
-      <aside className="border-r border-vd-border bg-vd-panel p-5">{sidebar}</aside>
-      <main className="min-w-0 overflow-hidden p-6">{children}</main>
+    <div className="vd-prelogin-settings-shell">
+      <aside className="vd-prelogin-settings-shell__sidebar">{sidebar}</aside>
+      <main className="vd-prelogin-settings-shell__main">{children}</main>
     </div>
   );
 }

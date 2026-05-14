@@ -10,5 +10,8 @@
   "actions.save": "保存",
   "actions.search": "搜索",
   "status.online": "在线",
-  "status.offline": "离线"
+  "status.offline": "离线",
+  "user.personalInformation": "个人信息",
+  "user.preferences": "偏好设置",
+  "user.signOut": "退出登录"
 }

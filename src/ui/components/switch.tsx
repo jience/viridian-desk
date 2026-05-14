@@ -9,13 +9,10 @@ export const Switch = forwardRef<
   return (
     <SwitchPrimitive.Root
       ref={ref}
-      className={cn(
-        'vd-focus-ring relative h-6 w-11 rounded-full bg-vd-panel-subtle transition data-[state=checked]:bg-vd-rail',
-        className,
-      )}
+      className={cn('vd-switch vd-focus-ring', className)}
       {...props}
     >
-      <SwitchPrimitive.Thumb className="block size-5 translate-x-0.5 rounded-full bg-vd-panel shadow transition data-[state=checked]:translate-x-5 data-[state=checked]:bg-vd-accent" />
+      <SwitchPrimitive.Thumb className="vd-switch__thumb" />
     </SwitchPrimitive.Root>
   );
 });

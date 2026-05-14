@@ -1,4 +1,5 @@
 import * as DropdownMenu from '@/ui/components/dropdown-menu';
+import { useTranslation } from 'react-i18next';
 
 interface UserMenuProps {
   initials: string;
@@ -7,15 +8,17 @@ interface UserMenuProps {
 }
 
 const menuItemClassName =
-  'rounded-xl px-3 py-2 text-sm outline-none hover:bg-vd-panel-subtle data-[highlighted]:bg-vd-panel-subtle data-[highlighted]:text-vd-text';
+  'vd-user-menu__item';
 
 export function UserMenu({ initials, name, email }: UserMenuProps) {
+  const { t } = useTranslation('common');
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
           aria-label={name}
-          className="vd-focus-ring grid size-12 place-items-center rounded-2xl bg-vd-panel text-sm font-bold text-vd-rail"
+          className="vd-user-menu__trigger vd-focus-ring"
           type="button"
         >
           {initials}
@@ -24,24 +27,22 @@ export function UserMenu({ initials, name, email }: UserMenuProps) {
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           align="start"
-          className="z-50 w-72 rounded-2xl border border-vd-border bg-vd-panel p-2 text-vd-text shadow-xl"
+          className="vd-user-menu__content"
           side="right"
           sideOffset={12}
         >
-          <div className="border-b border-vd-border p-3">
-            <div className="font-semibold">{name}</div>
-            <div className="text-xs text-vd-muted">{email}</div>
+          <div className="vd-user-menu__header">
+            <div className="vd-user-menu__name">{name}</div>
+            <div className="vd-user-menu__email">{email}</div>
           </div>
           <DropdownMenu.Item className={menuItemClassName}>
-            Personal information
+            {t('user.personalInformation')}
           </DropdownMenu.Item>
-          <DropdownMenu.Item className={menuItemClassName}>
-            Preferences
-          </DropdownMenu.Item>
+          <DropdownMenu.Item className={menuItemClassName}>{t('user.preferences')}</DropdownMenu.Item>
           <DropdownMenu.Item
-            className={`${menuItemClassName} text-vd-danger data-[highlighted]:text-vd-danger`}
+            className={`${menuItemClassName} vd-user-menu__item--danger`}
           >
-            Sign out
+            {t('user.signOut')}
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

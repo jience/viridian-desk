@@ -10,5 +10,8 @@
   "actions.save": "儲存",
   "actions.search": "搜尋",
   "status.online": "線上",
-  "status.offline": "離線"
+  "status.offline": "離線",
+  "user.personalInformation": "個人資訊",
+  "user.preferences": "偏好設定",
+  "user.signOut": "登出"
 }

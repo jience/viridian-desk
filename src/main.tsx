@@ -1,4 +1,3 @@
-import '@/styles/redesign.css';
 import '@/styles/index.scss';
 import '@/utils/i18n';
 

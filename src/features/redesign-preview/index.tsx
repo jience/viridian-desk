@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import '@/styles/redesign.css';
 import { AssistantPanel } from '@/ui/assistant/assistant-panel';
 import { Button } from '@/ui/components/button';
 import { Input } from '@/ui/components/input';
@@ -14,6 +15,7 @@ import './index.scss';
 
 export default function RedesignPreview() {
   const { t } = useTranslation(redesignNamespaces);
+  const { t: assistantT } = useTranslation('assistant');
   const { mode, resolvedTheme, setMode } = useUiTheme();
   const [assistantCollapsed, setAssistantCollapsed] = useState(false);
   const [enabled, setEnabled] = useState(true);
@@ -72,7 +74,7 @@ export default function RedesignPreview() {
           <div className="redesign-preview__settings">
             <div>
               <h2>{t('appName')}</h2>
-              <p>{t('assistant:subtitle')}</p>
+              <p>{assistantT('subtitle')}</p>
             </div>
             <label className="redesign-preview__switch-row">
               <span>{isDark ? t('theme.dark') : t('theme.light')}</span>
@@ -99,7 +101,7 @@ export default function RedesignPreview() {
               <Button aria-label={t('appName')} size="sm">
                 V
               </Button>
-              <Button aria-label={t('assistant:title')} size="sm" variant="secondary">
+              <Button aria-label={assistantT('title')} size="sm" variant="secondary">
                 A
               </Button>
             </nav>
@@ -116,21 +118,21 @@ export default function RedesignPreview() {
             <div className="redesign-preview__workspace-header">
               <div>
                 <h2>{t('appName')}</h2>
-                <p>{t('assistant:subtitle')}</p>
+                <p>{assistantT('subtitle')}</p>
               </div>
               <label className="redesign-preview__assistant-toggle">
-                <span>{t('assistant:title')}</span>
+                <span>{assistantT('title')}</span>
                 <Switch
-                  aria-label={t('assistant:title')}
+                  aria-label={assistantT('title')}
                   checked={!assistantCollapsed}
                   onCheckedChange={(checked) => setAssistantCollapsed(!checked)}
                 />
               </label>
             </div>
             <div className="redesign-preview__grid">
-              <div>{t('assistant:quick.connectionHelp')}</div>
-              <div>{t('assistant:quick.openLogs')}</div>
-              <div>{t('assistant:quick.reportFault')}</div>
+              <div>{assistantT('quick.connectionHelp')}</div>
+              <div>{assistantT('quick.openLogs')}</div>
+              <div>{assistantT('quick.reportFault')}</div>
             </div>
           </div>
         </AppShell>
