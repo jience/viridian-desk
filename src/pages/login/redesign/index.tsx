@@ -14,7 +14,7 @@ import { Button } from '@/ui/components/button';
 import { LoginShell } from '@/ui/shell/login-shell';
 import { QrcodeOutlined } from '@ant-design/icons';
 import { Checkbox, Form } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router';
@@ -45,6 +45,7 @@ export default function RedesignLogin() {
   const currentLoginWay = useAppSelector(selectCurrentLoginType);
 
   const orgScanLoginModalRef = useRef<OrgScanLoginModalRef>(null);
+  const submitLockRef = useRef(false);
   const { loginWayKv } = useLoginWayData();
   const {
     userLogin,
@@ -74,10 +75,17 @@ export default function RedesignLogin() {
     (!isLocalPhoneLogin || currentLoginWay !== LoginAuthType.LOCAL) &&
     currentLoginWay !== LoginAuthType.IAM;
 
-  const handleSubmit = async () => {
-    const values = await form.validateFields();
-    await userLogin(values);
-  };
+  const handleSubmit = useCallback(async () => {
+    if (!canSubmit || loginLoading || submitLockRef.current) return;
+
+    submitLockRef.current = true;
+    try {
+      const values = await form.validateFields();
+      await userLogin(values);
+    } finally {
+      submitLockRef.current = false;
+    }
+  }, [canSubmit, form, loginLoading, userLogin]);
 
   const handleOrgScanLogin = () => {
     if (!canScan) return;
@@ -89,7 +97,12 @@ export default function RedesignLogin() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      const isDialogInput = target?.closest('.ant-modal, .ant-drawer, [role="dialog"]');
+
       if (event.key === 'Enter') {
+        if (event.defaultPrevented || event.isComposing || isDialogInput) return;
+
         event.preventDefault();
         handleSubmit();
       }

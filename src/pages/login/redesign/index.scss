@@ -147,7 +147,6 @@
 
 .redesign-auth-page__card {
   position: relative;
-  overflow: hidden;
 
   &::before {
     position: absolute;
@@ -155,6 +154,7 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(142, 242, 189, 0.56), transparent);
     content: '';
+    pointer-events: none;
   }
 }
 
