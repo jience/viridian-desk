@@ -1,0 +1,254 @@
+.redesign-settings-page {
+  --vd-color-bg: #0d1110;
+  --vd-color-panel: #151b19;
+  --vd-color-panel-subtle: #202925;
+  --vd-color-rail: #0a0e0d;
+  --vd-color-text: #eef5ef;
+  --vd-color-muted: #8f9c94;
+  --vd-color-border: rgba(209, 255, 229, 0.12);
+  --vd-color-accent: #8ef2bd;
+  --vd-shadow-window: 0 30px 90px rgba(0, 0, 0, 0.42);
+
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(142, 242, 189, 0.12), transparent 30%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px),
+    var(--vd-color-bg);
+  background-size: auto, 26px 26px, auto;
+  color: var(--vd-color-text);
+
+  .vd-prelogin-settings-shell {
+    background: transparent;
+  }
+
+  .vd-prelogin-settings-shell__sidebar {
+    position: relative;
+    overflow: hidden;
+    border-right-color: rgba(209, 255, 229, 0.12);
+    background:
+      linear-gradient(180deg, rgba(142, 242, 189, 0.12), transparent 42%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px),
+      #101513;
+    background-size: auto, 32px 32px, auto;
+  }
+
+  .vd-prelogin-settings-shell__sidebar::before {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(rgba(142, 242, 189, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(142, 242, 189, 0.04) 1px, transparent 1px);
+    background-size: 100% 44px, 44px 100%;
+    content: '';
+    mask-image: linear-gradient(90deg, transparent, #000 20%, #000 86%, transparent);
+  }
+
+  .vd-prelogin-settings-shell__main {
+    padding: 24px 28px 28px;
+  }
+
+  .vd-prelogin-settings-shell__header {
+    min-height: 52px;
+    border-bottom: 1px solid rgba(209, 255, 229, 0.1);
+    padding-bottom: 18px;
+  }
+
+  .vd-prelogin-settings-shell__content {
+    overflow: hidden;
+  }
+
+  :where(.ant-btn, .ant-select-selector, .ant-input, .ant-input-affix-wrapper) {
+    box-shadow: none;
+  }
+
+  :where(.setting-item-wrapper) {
+    border: 1px solid rgba(209, 255, 229, 0.12);
+    border-radius: 10px;
+    background: rgba(21, 27, 25, 0.76);
+    box-shadow:
+      0 18px 50px rgba(0, 0, 0, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  :where(.setting-item-wrapper .title-wrapper) {
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+  }
+
+  :where(.setting-item-wrapper .title-wrapper.has-children) {
+    border-bottom: 1px solid rgba(209, 255, 229, 0.08);
+    border-radius: 10px 10px 0 0;
+  }
+
+  :where(.setting-item-wrapper .content-wrapper) {
+    border: 0;
+    border-radius: 0 0 10px 10px;
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: none;
+  }
+
+  :where(.setting-item-wrapper .left-content .main-title) {
+    color: var(--vd-color-text);
+  }
+
+  :where(.setting-item-wrapper .left-content .main-title.has-subtitle-or-content) {
+    color: var(--vd-color-text);
+  }
+
+  :where(.setting-item-wrapper .left-content .main-title::before) {
+    background: var(--vd-color-accent);
+  }
+
+  :where(.setting-item-wrapper .left-content .sub-title) {
+    color: var(--vd-color-muted);
+  }
+}
+
+.redesign-settings-page__sidebar {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  height: 100%;
+  grid-template-rows: auto 1fr;
+  gap: 24px;
+}
+
+.redesign-settings-page__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--vd-color-text);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.redesign-settings-page__brand-mark {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid rgba(142, 242, 189, 0.28);
+  border-radius: 10px;
+  background: rgba(142, 242, 189, 0.1);
+  color: var(--vd-color-accent);
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.redesign-settings-page__heading {
+  display: grid;
+  gap: 5px;
+}
+
+.redesign-settings-page__eyebrow {
+  color: var(--vd-color-accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.redesign-settings-page__title {
+  margin: 0;
+  color: var(--vd-color-text);
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.redesign-settings-page__exit {
+  gap: 8px;
+  border: 1px solid rgba(209, 255, 229, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--vd-color-text);
+}
+
+.redesign-settings-page__exit:hover {
+  background: rgba(142, 242, 189, 0.12);
+}
+
+.redesign-settings-page__nav-button {
+  min-height: 44px;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--vd-color-muted);
+}
+
+.redesign-settings-page__nav-button:hover {
+  border-color: rgba(142, 242, 189, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--vd-color-text);
+}
+
+.redesign-settings-page__nav-button[aria-current='page'] {
+  border-color: rgba(142, 242, 189, 0.34);
+  background: rgba(142, 242, 189, 0.14);
+  color: var(--vd-color-accent);
+}
+
+.redesign-settings-page__nav-button .iconfont {
+  width: 18px;
+  font-size: 17px;
+}
+
+.redesign-settings-page__content {
+  display: flex;
+  min-height: 0;
+  height: 100%;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(209, 255, 229, 0.12);
+  border-radius: 14px;
+  padding: 24px;
+  background: rgba(13, 17, 16, 0.58);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.redesign-settings-page__content :where(.server-setting-wrapper, .advanced-setting) {
+  width: min(100%, 620px);
+}
+
+.redesign-settings-page__content :where(.about) {
+  width: min(100%, 840px);
+}
+
+.redesign-settings-page__content :where(.addBtn) {
+  border-color: rgba(142, 242, 189, 0.34);
+  border-radius: 10px;
+  background: rgba(142, 242, 189, 0.08);
+  color: var(--vd-color-accent);
+}
+
+.redesign-settings-page__content :where(.addBtn:hover) {
+  background: rgba(142, 242, 189, 0.14) !important;
+}
+
+@media (max-width: 860px) {
+  .redesign-settings-page {
+    .vd-prelogin-settings-shell {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .vd-prelogin-settings-shell__sidebar {
+      border-right: 0;
+      border-bottom: 1px solid rgba(209, 255, 229, 0.12);
+      padding: 14px;
+    }
+  }
+
+  .redesign-settings-page__sidebar {
+    gap: 12px;
+  }
+
+  .redesign-settings-page .vd-settings-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .redesign-settings-page__content {
+    padding: 16px;
+  }
+}
