@@ -9,7 +9,7 @@ interface LoginShellProps {
 
 export function LoginShell({ header, children, footer, aside }: LoginShellProps) {
   return (
-    <div className="vd-login-shell">
+    <div className={aside ? 'vd-login-shell vd-login-shell--with-aside' : 'vd-login-shell'}>
       <section className="vd-login-shell__content">
         <header>{header}</header>
         <main className="vd-login-shell__main">{children}</main>
