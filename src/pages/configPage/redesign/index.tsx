@@ -1,9 +1,9 @@
 import '@/styles/redesign.css';
 import { Button } from '@/ui/components/button';
 import { PreLoginSettingsShell } from '@/ui/shell/pre-login-settings-shell';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 import FormModal from '../modalComp/FormModal';
 import './index.scss';
 
@@ -16,6 +16,35 @@ export default function RedesignConfigPage() {
 
   const [formModalVisible, setFormModalVisible] = useState(false);
 
+  const securityPasswordLabel = intl.formatMessage({ id: 'SecurityPassword' });
+  const formFeatureDefaults = useMemo(
+    () => [
+      {
+        key: 'securityPassword',
+        name: 'securityPassword',
+        label: securityPasswordLabel,
+        rules: [
+          {
+            required: true,
+            message: intl.formatMessage(
+              { id: 'FORM_ERROR_MSG' },
+              { name: securityPasswordLabel },
+            ),
+          },
+        ],
+        comType: 'input.password',
+        comProps: {
+          prefix: '',
+          suffix: '',
+          placeholder: intl.formatMessage(
+            { id: 'FORM_ERROR_MSG' },
+            { name: securityPasswordLabel },
+          ),
+        },
+      },
+    ],
+    [intl, securityPasswordLabel],
+  );
   const initialValues = useMemo(
     () => ({
       securityPassword: '',
@@ -23,28 +52,11 @@ export default function RedesignConfigPage() {
     [],
   );
   const [defaultFormValues, setDefaultFormValues] = useState(initialValues);
-  const [formFeatures, setFormFeatures] = useState([
-    {
-      key: 'securityPassword',
-      name: 'securityPassword',
-      label: intl.formatMessage({ id: 'SecurityPassword' }),
-      rules: [
-        {
-          required: true,
-          message: intl.formatMessage(
-            { id: 'FORM_ERROR_MSG' },
-            { name: intl.formatMessage({ id: 'SecurityPassword' }) },
-          ),
-        },
-      ],
-      comType: 'input.password',
-      comProps: {
-        prefix: '',
-        suffix: '',
-        placeholder: `请输入${intl.formatMessage({ id: 'SecurityPassword' })}`,
-      },
-    },
-  ]);
+  const [formFeatures, setFormFeatures] = useState(formFeatureDefaults);
+
+  useEffect(() => {
+    setFormFeatures(formFeatureDefaults);
+  }, [formFeatureDefaults]);
 
   const tabButtons = useMemo(
     () => [
@@ -154,7 +166,11 @@ export default function RedesignConfigPage() {
         }
       >
         <div className="redesign-settings-page__content">
-          <Outlet />
+          {location.pathname === SETTINGS_ROOT ? (
+            <Navigate to={`${SETTINGS_ROOT}/serverSetting`} replace />
+          ) : (
+            <Outlet />
+          )}
         </div>
       </PreLoginSettingsShell>
 
