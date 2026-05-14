@@ -364,7 +364,7 @@ import './index.scss';
 
 export default function RedesignLogin() {
   const { formatMessage } = useIntl();
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const { t: assistantT } = useTranslation('assistant');
   const [form] = Form.useForm<LoginFormType>();
 
@@ -723,7 +723,7 @@ export default function RedesignConfigPage() {
           <>
             <div>
               <h1 className="redesign-settings-page__title">
-                {intl.formatMessage({ id: 'SETTING' })}
+                {intl.formatMessage({ id: 'COMMONSETUP' })}
               </h1>
               <p className="redesign-settings-page__subtitle">
                 {intl.formatMessage({ id: 'COMMONSETUP' })}
