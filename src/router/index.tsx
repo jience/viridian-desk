@@ -1,6 +1,8 @@
 import { BasicLayout } from '@/layouts/BasicLayout';
 import { LoginAuthType } from '@/native/interfaces/login_history';
 import { isRedesignAuthEnabled } from '@/features/redesign-auth/enabled';
+import { isRedesignAppEnabled } from '@/features/redesign-app/enabled';
+import { RedesignAppLayout } from '@/layouts/RedesignAppLayout';
 import { Application } from '@/pages/application';
 import ConfigPage from '@/pages/configPage';
 import RedesignConfigPage from '@/pages/configPage/redesign';
@@ -8,6 +10,8 @@ import About from '@/pages/configPage/subPages/about';
 import AdvancedSetting from '@/pages/configPage/subPages/advancedSetting';
 import CurrencySetting from '@/pages/configPage/subPages/commonSetting';
 import ServerSetting from '@/pages/configPage/subPages/serverSetting';
+import { Component as RedesignDesk } from '@/pages/desk/redesign';
+import { Component as RedesignDeskDetail } from '@/pages/deskDetail/redesign';
 import { appStore } from '@/store';
 import { getLoginHistory, setCurrentLoginType } from '@/store/feature/app';
 import { fetchConfigInfo } from '@/store/feature/config';
@@ -36,7 +40,11 @@ import { Component as PeripheralSetting } from '../pages/peripheralSetting';
 
 const ActiveLogin = isRedesignAuthEnabled ? RedesignLogin : Login;
 const ActiveConfigPage = isRedesignAuthEnabled ? RedesignConfigPage : ConfigPage;
+const ActiveAppLayout = isRedesignAppEnabled ? RedesignAppLayout : BasicLayout;
+const ActiveDesk = isRedesignAppEnabled ? RedesignDesk : Desk;
+const ActiveDeskDetail = isRedesignAppEnabled ? RedesignDeskDetail : DeskDetail;
 const configPagePathPattern = /^\/configPage(?=\/|$)/;
+const appPathPattern = /^\/app(?=\/|$)/;
 
 const rewriteLegacyConfigPath = (to: To): To => {
   if (typeof to === 'string') {
@@ -47,6 +55,21 @@ const rewriteLegacyConfigPath = (to: To): To => {
     return {
       ...to,
       pathname: to.pathname.replace(configPagePathPattern, '/legacy-configPage'),
+    };
+  }
+
+  return to;
+};
+
+const rewriteLegacyAppPath = (to: To): To => {
+  if (typeof to === 'string') {
+    return to.replace(appPathPattern, '/legacy-app');
+  }
+
+  if (to.pathname) {
+    return {
+      ...to,
+      pathname: to.pathname.replace(appPathPattern, '/legacy-app'),
     };
   }
 
@@ -109,6 +132,62 @@ function LegacyConfigPageRoute() {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
+function LegacyAppRoute() {
+  const dataRouterContext = useContext(UNSAFE_DataRouterContext);
+  const navigationContext = useContext(UNSAFE_NavigationContext);
+
+  const legacyDataRouterContext = useMemo(() => {
+    if (!dataRouterContext) return dataRouterContext;
+
+    const { router } = dataRouterContext;
+    const legacyRouter = Object.create(router) as typeof router;
+
+    legacyRouter.navigate = (async (
+      to: number | To | null,
+      opts?: RouterNavigateOptions,
+    ): Promise<void> => {
+      if (typeof to === 'number') {
+        await router.navigate(to);
+        return;
+      }
+
+      await router.navigate(to === null ? to : rewriteLegacyAppPath(to), opts);
+    }) as typeof router.navigate;
+
+    return {
+      ...dataRouterContext,
+      router: legacyRouter,
+    };
+  }, [dataRouterContext]);
+
+  const legacyNavigationContext = useMemo(() => {
+    const { navigator } = navigationContext;
+    const legacyNavigator: RouterNavigator = {
+      ...navigator,
+      push: (to: To, state?: unknown, opts?: NavigateOptions) => {
+        navigator.push(rewriteLegacyAppPath(to), state, opts);
+      },
+      replace: (to: To, state?: unknown, opts?: NavigateOptions) => {
+        navigator.replace(rewriteLegacyAppPath(to), state, opts);
+      },
+    };
+
+    return {
+      ...navigationContext,
+      navigator: legacyNavigator,
+    };
+  }, [navigationContext]);
+
+  return (
+    <UNSAFE_DataRouterContext.Provider value={legacyDataRouterContext}>
+      <UNSAFE_NavigationContext.Provider value={legacyNavigationContext}>
+        <BasicLayout />
+      </UNSAFE_NavigationContext.Provider>
+    </UNSAFE_DataRouterContext.Provider>
+  );
+}
+
 const createSettingsRoutes = (): RouteObject[] => [
   {
     index: true,
@@ -130,6 +209,21 @@ const createSettingsRoutes = (): RouteObject[] => [
     path: 'about',
     element: <About />,
   },
+];
+
+const createAppRoutes = ({
+  desk,
+  deskDetail,
+}: {
+  desk: RouteObject['element'];
+  deskDetail: RouteObject['element'];
+}): RouteObject[] => [
+  { path: 'desk', element: desk },
+  { path: 'application', element: <Application /> },
+  { path: 'deskDetail', element: deskDetail },
+  { path: 'peripheral', element: <PeripheralSetting /> },
+  { path: 'malfunction', element: <Malfunction /> },
+  { path: 'approval', element: <Approval /> },
 ];
 
 const rootRoutes: RouteObject[] = [
@@ -191,33 +285,19 @@ const rootRoutes: RouteObject[] = [
       },
       {
         path: 'app',
-        element: <BasicLayout />,
-        children: [
-          {
-            path: 'desk',
-            element: <Desk />,
-          },
-          {
-            path: 'application',
-            element: <Application />,
-          },
-          {
-            path: 'deskDetail',
-            element: <DeskDetail />,
-          },
-          {
-            path: 'peripheral',
-            element: <PeripheralSetting />,
-          },
-          {
-            path: 'malfunction',
-            element: <Malfunction />,
-          },
-          {
-            path: 'approval',
-            element: <Approval />,
-          },
-        ],
+        element: <ActiveAppLayout />,
+        children: createAppRoutes({
+          desk: <ActiveDesk />,
+          deskDetail: <ActiveDeskDetail />,
+        }),
+      },
+      {
+        path: 'legacy-app',
+        element: <LegacyAppRoute />,
+        children: createAppRoutes({
+          desk: <Desk />,
+          deskDetail: <DeskDetail />,
+        }),
       },
     ],
   },
