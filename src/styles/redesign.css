@@ -189,18 +189,19 @@
   min-height: 0;
   background: var(--vd-color-bg);
   color: var(--vd-color-text);
+  transition: grid-template-columns 180ms ease;
 }
 
 .vd-app-shell--assistant-expanded {
-  grid-template-columns: 76px minmax(0, 1fr) 314px;
+  grid-template-columns: 68px minmax(0, 1fr) 304px;
 }
 
 .vd-app-shell--assistant-collapsed {
-  grid-template-columns: 76px minmax(0, 1fr) 64px;
+  grid-template-columns: 68px minmax(0, 1fr) 58px;
 }
 
 .vd-app-shell--assistant-hidden {
-  grid-template-columns: 76px minmax(0, 1fr);
+  grid-template-columns: 68px minmax(0, 1fr);
 }
 
 .vd-app-shell__rail {
@@ -222,13 +223,19 @@
 .vd-app-shell__main {
   min-width: 0;
   overflow: hidden;
-  padding: 20px;
+  padding: 18px 20px 14px;
 }
 
 .vd-app-shell__assistant {
   min-width: 0;
   border-left: 1px solid var(--vd-color-border);
-  background: color-mix(in srgb, var(--vd-color-panel) 70%, transparent);
+  background: rgba(17, 22, 21, 0.86);
+}
+
+@media (max-width: 1080px) {
+  .vd-app-shell--assistant-expanded {
+    grid-template-columns: 68px minmax(0, 1fr) 58px;
+  }
 }
 
 .vd-login-shell,
