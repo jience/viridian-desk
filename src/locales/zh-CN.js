@@ -578,6 +578,7 @@ export default {
   UserOldPasswordError: '旧密码输入错误',
   PermissionDenied: '当前用户无登录权限',
   AppInfomation: '应用',
+  Application: '应用',
   'InvalidVmStatus.MustUnlocked': '锁定中的桌面无法进行此操作',
   publishFromSys: '收藏应用',
   publishFromSelf: '自定义发布',

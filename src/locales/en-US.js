@@ -538,6 +538,7 @@ export default {
   UserOldPasswordError: 'UserOldPasswordError',
   PermissionDenied: 'PermissionDenied',
   AppInfomation: 'AppInfomation',
+  Application: 'Application',
   'InvalidVmStatus.MustUnlocked': 'InvalidVmStatus.MustUnlocked',
   publishFromSys: 'PublishFromSys',
   publishFromSelf: 'publishFromSelf',
