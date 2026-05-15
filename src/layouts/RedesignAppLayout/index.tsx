@@ -14,7 +14,7 @@ const routeTitleIds: Array<{ match: string; titleId: string; fallback: string }>
   { match: '/app/deskDetail', titleId: 'DETAIL', fallback: 'Detail' },
   { match: '/app/desk', titleId: 'DESK', fallback: 'Desktop' },
   { match: '/app/application', titleId: 'Application', fallback: 'Application' },
-  { match: '/app/peripheral', titleId: 'PERIPHERAL', fallback: 'Peripheral' },
+  { match: '/app/peripheral', titleId: 'Peripheral', fallback: 'Peripheral' },
   { match: '/app/approval', titleId: 'APPROVAL', fallback: 'Approval' },
   { match: '/app/malfunction', titleId: 'DesktopIssues', fallback: 'Faults' },
 ];
