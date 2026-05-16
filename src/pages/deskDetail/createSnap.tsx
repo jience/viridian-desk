@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import Regex from '@/utils/regex';
 import { createSnapshot } from '@/services/resource';
 import useRequest from '@/hooks/useRequest';
-import './index.scss';
+import './createSnap.scss';
 import { isEmpty } from 'lodash-es';
 
 const useCreateSnap = (props: any) => {
@@ -125,7 +125,7 @@ const useCreateSnap = (props: any) => {
     <Modal
       open={visible}
       keyboard={false}
-      className="sendmsg-modal"
+      className="sendmsg-modal desk-detail-create-snap-modal"
       onCancel={() => {
         formIns.resetFields();
         setVisible(false);
