@@ -378,38 +378,29 @@ export function Component() {
                   <article
                     className="redesign-desk-pool"
                     key={item?.id || `${item?.name}-${index}`}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`${detailLabel}: ${item.name}`}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      getDeskPoolDetail(item.id);
-                      setPoolDetailVisible(true);
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.currentTarget !== event.target) {
-                        return;
-                      }
-                      if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        event.stopPropagation();
+                  >
+                    <button
+                      type="button"
+                      className="redesign-desk-pool__detail"
+                      aria-label={`${detailLabel}: ${item.name}`}
+                      onClick={() => {
                         getDeskPoolDetail(item.id);
                         setPoolDetailVisible(true);
-                      }
-                    }}
-                  >
-                    <div className="redesign-desk-pool__os">
-                      <span className="redesign-desk-pool__os-shell">
-                        <Deskpool />
-                      </span>
-                      {transIcon(item?.os)}
-                    </div>
-                    <Tooltip title={item.name}>
-                      <p className="redesign-desk-pool__name">
-                        <span>{item.name}</span>
-                        {transType(item)}
-                      </p>
-                    </Tooltip>
+                      }}
+                    >
+                      <div className="redesign-desk-pool__os">
+                        <span className="redesign-desk-pool__os-shell">
+                          <Deskpool />
+                        </span>
+                        {transIcon(item?.os)}
+                      </div>
+                      <Tooltip title={item.name}>
+                        <p className="redesign-desk-pool__name">
+                          <span>{item.name}</span>
+                          {transType(item)}
+                        </p>
+                      </Tooltip>
+                    </button>
                     <Button
                       onClick={(event) => {
                         event.stopPropagation();

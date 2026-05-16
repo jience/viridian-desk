@@ -5,6 +5,7 @@ import router from './router';
 import { useEffect, useMemo } from 'react';
 import enUS from 'antd/locale/en_US';
 import zhCN from 'antd/locale/zh_CN';
+import zhTW from 'antd/locale/zh_TW';
 import { useAppSelector } from './store';
 import { selectLanguage } from './store/feature/config';
 import { useTheme } from '@/theme/useTheme';
@@ -20,6 +21,8 @@ function App() {
   const lang = useMemo(() => {
     if (language === LanguageType.ZH_CN) {
       return zhCN;
+    } else if (language === LanguageType.ZH_TW) {
+      return zhTW;
     } else if (language === LanguageType.EN_US) {
       return enUS;
     } else {
@@ -58,7 +61,10 @@ function App() {
         form={{ colon: false }}
       >
         <ClientApp component={false}>
-          <IntlProvider locale={'zh-CN'} messages={window.LanguageData['zh-CN']}>
+          <IntlProvider
+            locale={language}
+            messages={window.LanguageData[language] ?? window.LanguageData[LanguageType.ZH_CN]}
+          >
             <RouterProvider router={router} />
           </IntlProvider>
         </ClientApp>

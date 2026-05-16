@@ -6,6 +6,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { appStore } from './store';
 import zhCN from '@/locales/zh-CN';
+import zhTW from '@/locales/zh-TW';
 import en from '@/locales/en-US';
 import { setupServices } from './services';
 
@@ -20,6 +21,7 @@ function setupOldLang() {
   const LanguageData: any = {
     'en-US': { ...en },
     'zh-CN': { ...zhCN },
+    'zh-TW': { ...zhTW },
   };
 
   window.LanguageData = LanguageData;

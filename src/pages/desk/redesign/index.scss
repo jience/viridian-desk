@@ -364,10 +364,27 @@
 .redesign-desk-pool {
   min-height: 184px;
   padding: 14px;
-  cursor: pointer;
   background:
     linear-gradient(180deg, rgba(25, 34, 43, 0.96), rgba(13, 22, 31, 0.96)),
     radial-gradient(circle at 18% 15%, rgba(119, 140, 154, 0.2), transparent 36%);
+}
+
+.redesign-desk-pool__detail {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  text-align: initial;
+  background: transparent;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid rgba(132, 190, 202, 0.82);
+    outline-offset: 4px;
+    border-radius: 6px;
+  }
 }
 
 .redesign-desk-pool__create {
