@@ -19,7 +19,7 @@
 
 ## Execution Order
 
-Run Task 2 before Task 1 so the `RedesignMalfunctionPage` module exists before the controller imports it. After that, continue with Task 3, Task 4, and Task 5 in order.
+Run Task 2, Task 3, and Task 4 before Task 1 so the `RedesignMalfunctionPage` module, imported stylesheet, and new locale keys all exist before the controller imports the redesigned page. After that, run Task 5.
 
 ## Task 1: Prepare The Malfunction Controller
 

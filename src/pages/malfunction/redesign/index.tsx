@@ -185,27 +185,6 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
     },
   };
 
-  const renderSegmentedFilter = <Value extends ViewFaultType | ViewFaultStatus>(
-    options: FaultOptions,
-    currentValue: Value,
-    onChange: (value: Value) => void,
-  ) =>
-    options.map((option) => {
-      const value = toOptionKey(option.value) as Value;
-      const active = toOptionKey(currentValue) === toOptionKey(value);
-
-      return (
-        <button
-          className={active ? 'is-active' : ''}
-          key={toOptionKey(option.value)}
-          type="button"
-          onClick={() => onChange(value)}
-        >
-          {option.label}
-        </button>
-      );
-    });
-
   return (
     <main className="redesign-malfunction-page">
       <header className="redesign-malfunction-page__header">
@@ -256,15 +235,49 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
       </header>
 
       <section className="redesign-malfunction-page__filters">
-        <div className="redesign-malfunction-page__segmented" role="group">
-          {renderSegmentedFilter(props.faultTypeOptions, props.currentType, props.onTypeChange)}
+        <div
+          aria-label={props.formatMessage({ id: 'FaultType' })}
+          className="redesign-malfunction-page__segmented"
+          role="group"
+        >
+          {props.faultTypeOptions.map((option) => {
+            const value = toOptionKey(option.value) as ViewFaultType;
+            const active = toOptionKey(props.currentType) === toOptionKey(value);
+
+            return (
+              <button
+                aria-pressed={option.value === props.currentType}
+                className={active ? 'is-active' : ''}
+                key={toOptionKey(option.value)}
+                type="button"
+                onClick={() => props.onTypeChange(value)}
+              >
+                {option.label}
+              </button>
+            );
+          })}
         </div>
-        <div className="redesign-malfunction-page__segmented" role="group">
-          {renderSegmentedFilter(
-            props.faultStatusOptions,
-            props.currentStatus,
-            props.onStatusChange,
-          )}
+        <div
+          aria-label={props.formatMessage({ id: 'STATUS' })}
+          className="redesign-malfunction-page__segmented"
+          role="group"
+        >
+          {props.faultStatusOptions.map((option) => {
+            const value = toOptionKey(option.value) as ViewFaultStatus;
+            const active = toOptionKey(props.currentStatus) === toOptionKey(value);
+
+            return (
+              <button
+                aria-pressed={option.value === props.currentStatus}
+                className={active ? 'is-active' : ''}
+                key={toOptionKey(option.value)}
+                type="button"
+                onClick={() => props.onStatusChange(value)}
+              >
+                {option.label}
+              </button>
+            );
+          })}
         </div>
       </section>
 
