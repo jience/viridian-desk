@@ -1,36 +1,139 @@
 .server-setting-wrapper {
-  width: 480px;
+  width: 100%;
+  max-width: 920px;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  min-height: 0;
+  margin: 0 auto;
 
-  overflow-y: scroll;
-  /* 隐藏滚动条 */
-  scrollbar-width: none;
-  /* firefox */
-  -ms-overflow-style: none;
-  row-gap: 12px;
-  &::-webkit-scrollbar {
-    display: none;
+  .vd-settings-section__body {
+    overflow: auto;
+  }
+}
+
+.server-setting-add-btn {
+  min-width: 126px;
+  border-color: var(--settings-page-accent);
+  background: var(--settings-page-accent);
+  font-weight: 700;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--settings-page-accent-strong) !important;
+    background: var(--settings-page-accent-strong) !important;
   }
 
-  .addBtn {
-    border-radius: 4px;
-    height: 40px;
-    border: 1px dashed rgba(153, 172, 194, 1);
-    background-color: rgba(153, 172, 194, 0);
-    font-size: 14px;
-    color: var(--config-tab-default);
-    font-weight: 400;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  .iconfont {
+    font-size: 13px;
+    line-height: 1;
+  }
+}
 
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.4) !important;
+.server-setting-summary {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+
+  .vd-settings-metric {
+    min-width: 0;
+  }
+
+  .vd-settings-metric strong {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.server-setting-empty {
+  display: grid;
+  min-height: 144px;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  padding: 28px;
+  color: var(--settings-page-muted);
+  text-align: center;
+
+  span {
+    color: var(--settings-page-text);
+    font-size: 14px;
+    font-weight: 750;
+    line-height: 1.4;
+  }
+
+  p {
+    max-width: 420px;
+    margin: 0;
+    color: var(--settings-page-muted);
+    font-size: 12px;
+    line-height: 1.55;
+  }
+}
+
+.server-setting-gateway-row {
+  .vd-settings-row__content {
+    min-width: 0;
+  }
+
+  .vd-settings-row__title-line {
+    flex-wrap: nowrap;
+  }
+
+  .vd-settings-row__title {
+    min-width: 0;
+  }
+
+  .vd-settings-row__meta {
+    flex: 0 0 auto;
+  }
+}
+
+.server-setting-gateway-name,
+.server-setting-gateway-address {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.server-setting-gateway-address {
+  max-width: 100%;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+}
+
+.server-setting-gateway-meta {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: var(--settings-page-subtle);
+  font-size: 12px;
+  line-height: 1.4;
+
+  span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@container vd-settings-workbench (max-width: 760px) {
+  .server-setting-wrapper {
+    max-width: none;
+  }
+
+  .server-setting-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .server-setting-gateway-row {
+    .vd-settings-row__title-line {
+      flex-wrap: wrap;
     }
   }
 }
