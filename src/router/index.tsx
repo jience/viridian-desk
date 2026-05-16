@@ -1,6 +1,4 @@
-import { BasicLayout } from '@/layouts/BasicLayout';
 import { LoginAuthType } from '@/native/interfaces/login_history';
-import { isRedesignAppEnabled } from '@/features/redesign-app/enabled';
 import { RedesignAppLayout } from '@/layouts/RedesignAppLayout';
 import { Application } from '@/pages/application';
 import RedesignConfigPage from '@/pages/configPage/redesign';
@@ -15,101 +13,16 @@ import { getLoginHistory, setCurrentLoginType } from '@/store/feature/app';
 import { fetchConfigInfo } from '@/store/feature/config';
 import { setNetwork } from '@/store/feature/gateway';
 import { fetchTerminalInfo } from '@/store/feature/terminal';
-import { useContext, useMemo } from 'react';
 import {
   createBrowserRouter,
   Navigate,
-  UNSAFE_DataRouterContext,
-  UNSAFE_NavigationContext,
-  type NavigateOptions,
-  type Navigator as RouterNavigator,
   type RouteObject,
-  type RouterNavigateOptions,
-  type To,
 } from 'react-router';
 import ClientLayout from '../layouts/clientLayout';
 import { Component as Approval } from '../pages/approval';
-import { Component as Desk } from '../pages/desk';
-import { Component as DeskDetail } from '../pages/deskDetail';
 import RedesignLogin from '../pages/login/redesign';
 import { Component as Malfunction } from '../pages/malfunction';
 import { Component as PeripheralSetting } from '../pages/peripheralSetting';
-
-const ActiveAppLayout = isRedesignAppEnabled ? RedesignAppLayout : BasicLayout;
-const ActiveDesk = isRedesignAppEnabled ? RedesignDesk : Desk;
-const ActiveDeskDetail = isRedesignAppEnabled ? RedesignDeskDetail : DeskDetail;
-const appPathPattern = /^\/app(?=\/|$)/;
-
-const rewriteLegacyAppPath = (to: To): To => {
-  if (typeof to === 'string') {
-    return to.replace(appPathPattern, '/legacy-app');
-  }
-
-  if (to.pathname) {
-    return {
-      ...to,
-      pathname: to.pathname.replace(appPathPattern, '/legacy-app'),
-    };
-  }
-
-  return to;
-};
-
-// eslint-disable-next-line react-refresh/only-export-components
-function LegacyAppRoute() {
-  const dataRouterContext = useContext(UNSAFE_DataRouterContext);
-  const navigationContext = useContext(UNSAFE_NavigationContext);
-
-  const legacyDataRouterContext = useMemo(() => {
-    if (!dataRouterContext) return dataRouterContext;
-
-    const { router } = dataRouterContext;
-    const legacyRouter = Object.create(router) as typeof router;
-
-    legacyRouter.navigate = (async (
-      to: number | To | null,
-      opts?: RouterNavigateOptions,
-    ): Promise<void> => {
-      if (typeof to === 'number') {
-        await router.navigate(to);
-        return;
-      }
-
-      await router.navigate(to === null ? to : rewriteLegacyAppPath(to), opts);
-    }) as typeof router.navigate;
-
-    return {
-      ...dataRouterContext,
-      router: legacyRouter,
-    };
-  }, [dataRouterContext]);
-
-  const legacyNavigationContext = useMemo(() => {
-    const { navigator } = navigationContext;
-    const legacyNavigator: RouterNavigator = {
-      ...navigator,
-      push: (to: To, state?: unknown, opts?: NavigateOptions) => {
-        navigator.push(rewriteLegacyAppPath(to), state, opts);
-      },
-      replace: (to: To, state?: unknown, opts?: NavigateOptions) => {
-        navigator.replace(rewriteLegacyAppPath(to), state, opts);
-      },
-    };
-
-    return {
-      ...navigationContext,
-      navigator: legacyNavigator,
-    };
-  }, [navigationContext]);
-
-  return (
-    <UNSAFE_DataRouterContext.Provider value={legacyDataRouterContext}>
-      <UNSAFE_NavigationContext.Provider value={legacyNavigationContext}>
-        <BasicLayout />
-      </UNSAFE_NavigationContext.Provider>
-    </UNSAFE_DataRouterContext.Provider>
-  );
-}
 
 const createSettingsRoutes = (): RouteObject[] => [
   {
@@ -199,18 +112,10 @@ const rootRoutes: RouteObject[] = [
       },
       {
         path: 'app',
-        element: <ActiveAppLayout />,
+        element: <RedesignAppLayout />,
         children: createAppRoutes({
-          desk: <ActiveDesk />,
-          deskDetail: <ActiveDeskDetail />,
-        }),
-      },
-      {
-        path: 'legacy-app',
-        element: <LegacyAppRoute />,
-        children: createAppRoutes({
-          desk: <Desk />,
-          deskDetail: <DeskDetail />,
+          desk: <RedesignDesk />,
+          deskDetail: <RedesignDeskDetail />,
         }),
       },
     ],
