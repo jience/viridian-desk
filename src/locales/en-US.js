@@ -746,6 +746,13 @@ export default {
   FaultCancel: 'CancelFault',
   FaultDelete: 'DeleteFault',
   FaultCreate: 'Create fault',
+  MalfunctionWorkbenchEyebrow: 'Fault tickets',
+  MalfunctionWorkbenchTitle: 'Fault workbench',
+  MalfunctionWorkbenchSummary: '{count} records, filtered by {type} / {status}',
+  MalfunctionFilters: 'Fault filters',
+  MalfunctionEmptyTitle: 'No fault tickets',
+  MalfunctionEmptyDescription:
+    'No tickets match the current filters. Refresh the list or create a new fault ticket.',
   FaultOperationNotAllowedError: 'FaultOperationNotAllowedError',
   RevokeFaultError: 'RevokeFaultError',
   Revoke: 'Revoke',
