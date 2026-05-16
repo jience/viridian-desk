@@ -1,4 +1,4 @@
-.redesign-desk-detail-page {
+.desk-detail-page {
   --detail-surface: rgba(18, 26, 38, 0.86);
   --detail-surface-strong: rgba(22, 32, 46, 0.96);
   --detail-border: rgba(142, 159, 181, 0.18);
@@ -223,7 +223,7 @@
   }
 }
 
-.redesign-desk-detail-fact {
+.desk-detail-fact {
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr) 28px;
   gap: 10px;
@@ -287,13 +287,13 @@
   }
 }
 
-.redesign-desk-detail-timeline {
+.desk-detail-timeline {
   min-height: 0;
   padding-right: 4px;
   overflow-y: auto;
 }
 
-.redesign-desk-detail-snapshot {
+.desk-detail-snapshot {
   display: grid;
   grid-template-columns: 28px minmax(0, 1fr);
   gap: 10px;
@@ -410,7 +410,7 @@
   }
 }
 
-.redesign-desk-detail-disk-list {
+.desk-detail-disk-list {
   display: grid;
   min-width: 180px;
 
@@ -425,7 +425,7 @@
 }
 
 @media (max-width: 1180px) {
-  .redesign-desk-detail-page {
+  .desk-detail-page {
     &__content {
       grid-template-columns: 1fr;
       overflow-y: auto;

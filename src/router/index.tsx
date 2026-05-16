@@ -7,7 +7,7 @@ import AdvancedSetting from '@/pages/configPage/subPages/advancedSetting';
 import CurrencySetting from '@/pages/configPage/subPages/commonSetting';
 import ServerSetting from '@/pages/configPage/subPages/serverSetting';
 import { DeskPage } from '@/pages/desk/DeskPage';
-import { Component as RedesignDeskDetail } from '@/pages/deskDetail/redesign';
+import { DeskDetailPage } from '@/pages/deskDetail/DeskDetailPage';
 import { appStore } from '@/store';
 import { getLoginHistory, setCurrentLoginType } from '@/store/feature/app';
 import { fetchConfigInfo } from '@/store/feature/config';
@@ -100,7 +100,7 @@ const rootRoutes: RouteObject[] = [
         element: <RedesignAppLayout />,
         children: createAppRoutes({
           desk: <DeskPage />,
-          deskDetail: <RedesignDeskDetail />,
+          deskDetail: <DeskDetailPage />,
         }),
       },
     ],

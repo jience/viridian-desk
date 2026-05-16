@@ -9,12 +9,12 @@ import Actions from '@/utils/actions';
 import { DESK_STATUS, EmptyText } from '@/utils/constant';
 import { transIcon } from '@/utils/utils';
 import snapPng from '@/assets/images/snap.png';
-import { transStatus } from '../../desk/useDeskHooks';
-import AllDiskListModal from '../allDiskListModal';
-import CreateModal from '../createSnap';
-import useDeskDetail from '../useDeskDetail';
-import useSnap from '../useSnap';
-import './index.scss';
+import { transStatus } from '../desk/useDeskHooks';
+import AllDiskListModal from './allDiskListModal';
+import CreateModal from './createSnap';
+import useDeskDetail from './useDeskDetail';
+import useSnap from './useSnap';
+import './DeskDetailPage.scss';
 
 const ActionDropdown = ActionAuth(Dropdown);
 const AuthCreateButton = ActionAuth(Button);
@@ -23,7 +23,7 @@ const MAXSNAP = 10;
 
 const snapshotBusyStatuses = ['CREATING', 'ROLLBACK', 'DELETING', ...sanSpecialStatus];
 
-export function Component() {
+export function DeskDetailPage() {
   const { formatMessage } = useIntl();
   const location = useLocation();
   const navigate = useNavigate();
@@ -86,9 +86,9 @@ export function Component() {
   }, []);
 
   const renderDisks = (dataDisks: any[] = []) => (
-    <div className="redesign-desk-detail-disk-list">
+    <div className="desk-detail-disk-list">
       {dataDisks.map((disk) => (
-        <div className="redesign-desk-detail-disk-list__item" key={disk.id || disk.name}>
+        <div className="desk-detail-disk-list__item" key={disk.id || disk.name}>
           {disk.name}
         </div>
       ))}
@@ -101,20 +101,20 @@ export function Component() {
   };
 
   return (
-    <main className="redesign-desk-detail-page">
-      <header className="redesign-desk-detail-page__toolbar">
+    <main className="desk-detail-page">
+      <header className="desk-detail-page__toolbar">
         <Button
-          className="redesign-desk-detail-page__icon-button"
+          className="desk-detail-page__icon-button"
           icon={<i className="iconfont icon-left" />}
           aria-label={formatMessage({ id: 'BACK', defaultMessage: 'Back' })}
           onClick={() => navigate('/app/desk')}
         />
-        <div className="redesign-desk-detail-page__heading">
+        <div className="desk-detail-page__heading">
           <span>{formatMessage({ id: 'DESK' })}</span>
           <h2>{desk?.name || EmptyText}</h2>
         </div>
         <Button
-          className="redesign-desk-detail-page__icon-button"
+          className="desk-detail-page__icon-button"
           icon={<i className="iconfont icon-refresh" />}
           loading={isRefreshing}
           aria-label={formatMessage({ id: 'REFRESH', defaultMessage: 'Refresh' })}
@@ -123,12 +123,12 @@ export function Component() {
       </header>
 
       <Spin spinning={isRefreshing}>
-        <section className="redesign-desk-detail-page__content">
-          <aside className="redesign-desk-detail-page__profile" aria-label={desk?.name}>
-            <div className="redesign-desk-detail-page__hero">
-              <div className="redesign-desk-detail-page__os">
+        <section className="desk-detail-page__content">
+          <aside className="desk-detail-page__profile" aria-label={desk?.name}>
+            <div className="desk-detail-page__hero">
+              <div className="desk-detail-page__os">
                 {desk?.status?.toLowerCase() === 'stop' ? (
-                  <span className="redesign-desk-detail-page__stop-shell">
+                  <span className="desk-detail-page__stop-shell">
                     <Close />
                   </span>
                 ) : (
@@ -137,7 +137,7 @@ export function Component() {
                 {transIcon(desk?.image?.os || desk?.os)}
                 {transStatus(desk?.status, desk?.isLock)}
               </div>
-              <div className="redesign-desk-detail-page__identity">
+              <div className="desk-detail-page__identity">
                 <h3 title={desk?.name}>{desk?.name || EmptyText}</h3>
                 <p>
                   {transType(desk?.desktopPool || {})}
@@ -149,21 +149,21 @@ export function Component() {
               </div>
             </div>
 
-            <div className="redesign-desk-detail-page__facts">
+            <div className="desk-detail-page__facts">
               {config?.map((item) => (
-                <article className="redesign-desk-detail-fact" key={item.key}>
-                  <div className="redesign-desk-detail-fact__icon">
+                <article className="desk-detail-fact" key={item.key}>
+                  <div className="desk-detail-fact__icon">
                     <i className={`iconfont ${item.icon}`} />
                   </div>
-                  <div className="redesign-desk-detail-fact__body">
+                  <div className="desk-detail-fact__body">
                     <span>{item.title}</span>
                     <Tooltip title={item.title} placement="topLeft">
-                      <div className="redesign-desk-detail-fact__value">{item.render()}</div>
+                      <div className="desk-detail-fact__value">{item.render()}</div>
                     </Tooltip>
                   </div>
                   {item.showMore && (
                     <Button
-                      className="redesign-desk-detail-fact__more"
+                      className="desk-detail-fact__more"
                       icon={<i className="iconfont icon-more" />}
                       type="text"
                       title={formatMessage({ id: 'More' })}
@@ -175,10 +175,10 @@ export function Component() {
             </div>
           </aside>
 
-          <section className="redesign-desk-detail-page__snapshots">
+          <section className="desk-detail-page__snapshots">
             {authActionShow([Actions.TerminalROSnapshotRead]) ? (
               <>
-                <div className="redesign-desk-detail-page__section-header">
+                <div className="desk-detail-page__section-header">
                   <div>
                     <span>{formatMessage({ id: 'SNAPSHOTLIST' })}</span>
                     <strong>{snapshots.length}</strong>
@@ -195,19 +195,19 @@ export function Component() {
                 </div>
 
                 {snapshots.length ? (
-                  <div className="redesign-desk-detail-timeline">
+                  <div className="desk-detail-timeline">
                     {snapshots.map((snapshot) => (
-                      <article className="redesign-desk-detail-snapshot" key={snapshot.id}>
-                        <div className="redesign-desk-detail-snapshot__status">
+                      <article className="desk-detail-snapshot" key={snapshot.id}>
+                        <div className="desk-detail-snapshot__status">
                           {handleDiskStatus(snapshot.status)}
                         </div>
-                        <div className="redesign-desk-detail-snapshot__card">
+                        <div className="desk-detail-snapshot__card">
                           <img src={snapPng} alt={formatMessage({ id: 'SNAPSHOTLIST' })} />
-                          <div className="redesign-desk-detail-snapshot__body">
-                            <div className="redesign-desk-detail-snapshot__name">
+                          <div className="desk-detail-snapshot__body">
+                            <div className="desk-detail-snapshot__name">
                               <span title={snapshot.name}>{snapshot.name}</span>
                               {snapshot?.systemFlag && (
-                                <Tag className="redesign-desk-detail-snapshot__tag">
+                                <Tag className="desk-detail-snapshot__tag">
                                   {formatMessage({ id: 'CurrentUsedThing' })}
                                 </Tag>
                               )}
@@ -219,7 +219,7 @@ export function Component() {
                                 overlayInnerStyle={{ maxWidth: 'unset' }}
                                 showArrow={false}
                               >
-                                <Tag className="redesign-desk-detail-snapshot__tag">
+                                <Tag className="desk-detail-snapshot__tag">
                                   {`${formatMessage({ id: 'DESK_VLOUME' })}：${
                                     snapshot.disk?.length || 0
                                   }`}
@@ -238,7 +238,7 @@ export function Component() {
                             placement="bottomLeft"
                           >
                             <Button
-                              className="redesign-desk-detail-snapshot__menu"
+                              className="desk-detail-snapshot__menu"
                               icon={<i className="iconfont icon-more" />}
                               onClick={(event) => event.stopPropagation()}
                             />
@@ -248,13 +248,13 @@ export function Component() {
                     ))}
                   </div>
                 ) : (
-                  <div className="redesign-desk-detail-page__empty">
+                  <div className="desk-detail-page__empty">
                     <Empty description={formatMessage({ id: 'SNAPSHOTLIST' })} />
                   </div>
                 )}
               </>
             ) : (
-              <div className="redesign-desk-detail-page__empty">
+              <div className="desk-detail-page__empty">
                 <Empty description="无权限查看" />
               </div>
             )}
