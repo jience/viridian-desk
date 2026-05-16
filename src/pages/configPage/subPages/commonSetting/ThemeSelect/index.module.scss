@@ -4,8 +4,9 @@
 
 .theme-select-content {
   display: grid;
-  grid-template-columns: repeat(3, minmax(96px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(96px, 100%), 1fr));
   gap: 10px;
+  min-width: 0;
 }
 
 .theme-item {

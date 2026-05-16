@@ -53,7 +53,13 @@ export const ThemeSelect: FC = () => {
             const itemClass = `${style.themeItem} ${isActive ? style.active : ''}`;
             const topContentClass = `${style.topContent} ${i.classNames.join(' ')}`;
             return (
-              <button type="button" onClick={() => switchTheme(i.key)} key={i.key} className={itemClass}>
+              <button
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => switchTheme(i.key)}
+                key={i.key}
+                className={itemClass}
+              >
                 <div className={topContentClass} />
                 <div className={style.bottomContent}>
                   <span>{i.label}</span>

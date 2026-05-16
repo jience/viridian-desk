@@ -3,3 +3,7 @@
   align-content: start;
   gap: 14px;
 }
+
+.common-setting-wrapper :global(.vd-settings-group__content > div + div .vd-settings-row) {
+  border-top: 1px solid var(--settings-page-border);
+}
