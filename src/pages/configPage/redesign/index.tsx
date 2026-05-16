@@ -62,21 +62,25 @@ export default function RedesignConfigPage() {
     () => [
       {
         name: intl.formatMessage({ id: 'Server' }),
+        subtitle: intl.formatMessage({ id: 'SettingsServerSubtitle' }),
         icon: 'icon-net',
         path: `${SETTINGS_ROOT}/serverSetting`,
       },
       {
         name: intl.formatMessage({ id: 'COMMONSETUP' }),
+        subtitle: intl.formatMessage({ id: 'SettingsCommonSubtitle' }),
         icon: 'icon-stencil',
         path: `${SETTINGS_ROOT}/commonSetting`,
       },
       {
         name: intl.formatMessage({ id: 'Senior' }),
+        subtitle: intl.formatMessage({ id: 'SettingsAdvancedSubtitle' }),
         icon: 'icon-log',
         path: `${SETTINGS_ROOT}/advancedSetting`,
       },
       {
         name: intl.formatMessage({ id: 'ABOUT' }),
+        subtitle: intl.formatMessage({ id: 'SettingsAboutSubtitle' }),
         icon: 'icon-info-s',
         path: `${SETTINGS_ROOT}/about`,
       },
@@ -94,6 +98,7 @@ export default function RedesignConfigPage() {
   }, [location.pathname, tabButtons]);
 
   const activeTabName = tabButtons.find((button) => button.path === activeTabPath)?.name;
+  const activeTabSubtitle = tabButtons.find((button) => button.path === activeTabPath)?.subtitle;
 
   const goBack = useCallback(() => {
     navigate('/login');
@@ -119,11 +124,14 @@ export default function RedesignConfigPage() {
           <>
             <div className="redesign-settings-page__heading">
               <span className="redesign-settings-page__eyebrow">
-                {intl.formatMessage({ id: 'COMMONSETUP' })}
+                {intl.formatMessage({ id: 'SettingsWorkbenchEyebrow' })}
               </span>
               <h1 className="redesign-settings-page__title">
                 {activeTabName ?? intl.formatMessage({ id: 'COMMONSETUP' })}
               </h1>
+              {activeTabSubtitle && (
+                <p className="redesign-settings-page__subtitle">{activeTabSubtitle}</p>
+              )}
             </div>
             <Button
               className="redesign-settings-page__exit"
@@ -140,7 +148,7 @@ export default function RedesignConfigPage() {
           <div className="redesign-settings-page__sidebar">
             <div className="redesign-settings-page__brand">
               <span className="redesign-settings-page__brand-mark">VD</span>
-              <span>{intl.formatMessage({ id: 'COMMONSETUP' })}</span>
+              <span>{intl.formatMessage({ id: 'SettingsWorkbenchTitle' })}</span>
             </div>
 
             <nav className="vd-settings-nav" aria-label={intl.formatMessage({ id: 'COMMONSETUP' })}>
