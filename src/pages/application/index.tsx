@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import './index.scss';
-import { VirtualApp } from './component/VirtualApp';
-import { message, Select, Spin, Tooltip } from 'antd';
+import { message } from 'antd';
 import { useInitData } from './initData';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { deleteVapp, listVapp, removeVapp, VappApi } from '@/services/api/vapp';
 import type {
   DeleteVappReq,
@@ -16,6 +15,7 @@ import { AddFromSelfModal } from './component/AddFromSelfModal';
 import { useLoading } from '@/hooks/useLoading';
 import { connectVapp } from '@/services/invoke/vapp';
 import type { ConnectVappReq } from '@/services/invoke/vapp/types';
+import { RedesignApplicationPage } from './redesign';
 
 export const Application = () => {
   const { t } = useTranslation();
@@ -34,10 +34,14 @@ export const Application = () => {
       pageNumber: 1,
       pageSize: 999,
       isAdded: true,
-      category: c == 'all' ? undefined : c,
+      category: c === 'all' ? undefined : c,
     });
     setCategory(c);
     setVappList(res.data.results || []);
+  };
+
+  const handleRefresh = async () => {
+    await getListVapp(category);
   };
 
   const handleCustomPublish = () => {
@@ -73,35 +77,20 @@ export const Application = () => {
   }, []);
 
   return (
-    <div className="application-wrapper">
-      <div className="application-header">
-        <div className="left-content">
-          <Select
-            value={category}
-            className="page-transparent-select"
-            onChange={handleChangeCategory}
-            options={appCategoryList}
-          />
-        </div>
-        <Tooltip
-          title={<Trans t={t} i18nKey="application_page.virtual_app_minimize_tip" />}
-          placement="rightTop"
-        >
-          <i className="iconfont icon-c_question-s popover-tip-icon" />
-        </Tooltip>
-      </div>
-      <div className="virtual-container">
-        <Spin spinning={listVappLoading}>
-          <VirtualApp
-            dataSource={vappList}
-            OnCustomPublish={handleCustomPublish}
-            OnFavoriteApp={handleFavoriteApp}
-            OnDeleteApp={handleDeleteApp}
-            OnRemoveApp={handleRemoveApp}
-            OnVappItemClick={handleVappItemClick}
-          />
-        </Spin>
-      </div>
+    <>
+      <RedesignApplicationPage
+        category={category}
+        categories={appCategoryList}
+        dataSource={vappList}
+        loading={listVappLoading}
+        onCategoryChange={handleChangeCategory}
+        onRefresh={handleRefresh}
+        onCustomPublish={handleCustomPublish}
+        onFavoriteApp={handleFavoriteApp}
+        onDeleteApp={handleDeleteApp}
+        onRemoveApp={handleRemoveApp}
+        onVappItemClick={handleVappItemClick}
+      />
       <AddFromSysModal
         visible={addFormSysVisible}
         setVisible={setAddFromSysVisible}
@@ -112,6 +101,6 @@ export const Application = () => {
         setVisible={setAddFromSelfVisible}
         OnRefresh={getListVapp}
       />
-    </div>
+    </>
   );
 };
