@@ -94,7 +94,6 @@ export default function SettingsPage() {
     );
   }, [location.pathname, tabButtons]);
 
-  const activeTabName = tabButtons.find((button) => button.path === activeTabPath)?.name;
   const activeTabSubtitle = tabButtons.find((button) => button.path === activeTabPath)?.subtitle;
 
   const goBack = useCallback(() => {
@@ -124,7 +123,7 @@ export default function SettingsPage() {
                 {intl.formatMessage({ id: 'SettingsWorkbenchEyebrow' })}
               </span>
               <h1 className="settings-page__title">
-                {activeTabName ?? intl.formatMessage({ id: 'COMMONSETUP' })}
+                {intl.formatMessage({ id: 'SettingsWorkbenchTitle' })}
               </h1>
               {activeTabSubtitle && <p className="settings-page__subtitle">{activeTabSubtitle}</p>}
             </div>

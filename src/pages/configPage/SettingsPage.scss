@@ -47,6 +47,7 @@
 
   .vd-prelogin-settings-shell__sidebar {
     border-right-color: var(--settings-page-border);
+    padding: 16px;
     background: var(--settings-page-rail);
   }
 
@@ -97,7 +98,7 @@
   height: 100%;
   min-height: 0;
   grid-template-rows: auto 1fr;
-  gap: 22px;
+  gap: 12px;
 }
 
 .settings-page__brand {
@@ -171,13 +172,17 @@
 }
 
 .settings-page__nav-button {
-  min-height: 44px;
+  min-height: 38px;
   gap: 10px;
   border: 1px solid transparent;
   border-radius: 8px;
   color: var(--settings-page-muted);
   font-weight: 650;
   letter-spacing: 0;
+}
+
+.settings-page .vd-settings-nav {
+  gap: 6px;
 }
 
 .settings-page__nav-button:hover {
@@ -610,7 +615,7 @@
     .vd-prelogin-settings-shell__sidebar {
       border-right: 0;
       border-bottom: 1px solid var(--settings-page-border);
-      padding: 14px;
+      padding: 12px;
     }
 
     .vd-prelogin-settings-shell__main {
@@ -624,7 +629,7 @@
   }
 
   .settings-page__sidebar {
-    gap: 12px;
+    gap: 10px;
   }
 
   .settings-page .vd-settings-nav {

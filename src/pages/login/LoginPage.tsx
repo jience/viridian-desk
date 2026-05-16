@@ -33,7 +33,6 @@ import './LoginPage.scss';
 export default function LoginPage() {
   const { formatMessage } = useIntl();
   const { t } = useTranslation('common');
-  const { t: assistantT } = useTranslation('assistant');
   const navigate = useNavigate();
   const [form] = Form.useForm<LoginFormType>();
 
@@ -134,24 +133,6 @@ export default function LoginPage() {
           </div>
         }
         footer={<Footer />}
-        aside={
-          <div className="vd-auth-side-panel auth-page__side-panel">
-            <div className="auth-page__console">
-              <span className="auth-page__console-label">{assistantT('title')}</span>
-              <h1 className="vd-auth-side-panel__title">{t('appName')}</h1>
-              <p className="vd-auth-side-panel__text">{assistantT('subtitle')}</p>
-            </div>
-            <div className="auth-page__quick-list" aria-label={assistantT('title')}>
-              <span>{assistantT('quick.connectionHelp')}</span>
-              <span>{assistantT('quick.openLogs')}</span>
-              <span>{assistantT('quick.reportFault')}</span>
-            </div>
-            <p className="vd-auth-side-panel__text auth-page__status">
-              <span className={canSubmit ? 'is-online' : 'is-offline'} />
-              {canSubmit ? t('status.online') : t('status.offline')}
-            </p>
-          </div>
-        }
       >
         <div className="vd-auth-card auth-page__card">
           <div className="vd-auth-stack">

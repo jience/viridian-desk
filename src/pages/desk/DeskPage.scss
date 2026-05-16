@@ -417,6 +417,143 @@
   }
 }
 
+:root:not(.dark):not([data-ui-theme='dark']) {
+  .desk-page {
+    color: #20231e;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(77, 124, 63, 0.14), transparent 34%),
+      radial-gradient(circle at 88% 10%, rgba(154, 101, 30, 0.12), transparent 30%),
+      linear-gradient(145deg, #f5f2ea 0%, #eee8dc 48%, #f8f5ee 100%);
+
+    &::before {
+      background-image:
+        linear-gradient(rgba(82, 72, 52, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(82, 72, 52, 0.04) 1px, transparent 1px);
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.42), transparent 70%);
+    }
+  }
+
+  .desk-page__toolbar {
+    border-color: rgba(82, 72, 52, 0.16);
+    background: rgba(255, 253, 248, 0.78);
+    box-shadow: 0 18px 54px rgba(55, 48, 38, 0.14);
+
+    h1 {
+      color: #20231e;
+    }
+  }
+
+  .desk-page__eyebrow {
+    color: #4d7c3f;
+  }
+
+  .desk-page__section-header {
+    color: #20231e;
+
+    strong {
+      border-color: rgba(82, 72, 52, 0.16);
+      color: #315f2d;
+      background: rgba(255, 253, 248, 0.86);
+    }
+  }
+
+  .desk-page__empty {
+    border-color: rgba(82, 72, 52, 0.22);
+    background: rgba(255, 253, 248, 0.68);
+
+    .ant-empty-description {
+      color: #6c7268;
+    }
+  }
+
+  .desk-card,
+  .desk-pool {
+    border-color: rgba(82, 72, 52, 0.14);
+    background:
+      linear-gradient(180deg, rgba(255, 253, 248, 0.94), rgba(238, 232, 220, 0.95)),
+      radial-gradient(circle at 16% 10%, rgba(77, 124, 63, 0.12), transparent 34%);
+    box-shadow: 0 18px 40px rgba(55, 48, 38, 0.12);
+
+    &::after {
+      border-top-color: rgba(255, 255, 255, 0.62);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 42%);
+    }
+
+    &:hover {
+      border-color: rgba(77, 124, 63, 0.28);
+      box-shadow: 0 22px 48px rgba(55, 48, 38, 0.16);
+    }
+  }
+
+  .desk-card--SHARE,
+  .desk-card--RESTORE,
+  .desk-card--EXCLUSIVE {
+    background:
+      linear-gradient(180deg, rgba(255, 253, 248, 0.95), rgba(238, 232, 220, 0.96)),
+      radial-gradient(circle at 18% 12%, rgba(77, 124, 63, 0.14), transparent 38%);
+  }
+
+  .desk-card--disabled {
+    background:
+      linear-gradient(180deg, rgba(238, 232, 220, 0.86), rgba(245, 242, 234, 0.92)),
+      radial-gradient(circle at 16% 12%, rgba(108, 114, 104, 0.1), transparent 38%);
+
+    .desk-card__name {
+      color: #7b8178;
+    }
+  }
+
+  .desk-card__default {
+    border-color: rgba(77, 124, 63, 0.24);
+    color: #315f2d;
+    background: rgba(77, 124, 63, 0.1);
+  }
+
+  .desk-card__os,
+  .desk-pool__os {
+    color: #20231e;
+
+    > svg {
+      filter: drop-shadow(0 10px 16px rgba(55, 48, 38, 0.16));
+    }
+  }
+
+  .desk-card__name,
+  .desk-pool__name {
+    color: #20231e;
+
+    > i {
+      color: #6c7268;
+    }
+  }
+
+  .desk-card__actions {
+    border-color: rgba(82, 72, 52, 0.12);
+    background: rgba(245, 242, 234, 0.56);
+
+    .ant-btn {
+      color: #6c7268;
+    }
+
+    .ant-btn-text:not(:disabled):hover {
+      color: #20231e;
+      background: rgba(77, 124, 63, 0.1);
+    }
+  }
+
+  .desk-pool__create {
+    border-color: rgba(82, 72, 52, 0.18);
+    color: #20231e;
+    background: rgba(255, 253, 248, 0.7);
+
+    &:not(:disabled):hover {
+      border-color: rgba(77, 124, 63, 0.36);
+      color: #315f2d;
+      background: rgba(77, 124, 63, 0.1);
+    }
+  }
+}
+
 @media (max-width: 760px) {
   .desk-page {
     padding: 14px;
