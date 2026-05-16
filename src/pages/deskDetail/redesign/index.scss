@@ -61,11 +61,15 @@
     .title {
       color: var(--app-text-color, #e8eef7);
     }
+  }
 
-    .snap {
-      height: auto;
-      min-height: 0;
-      overflow-y: auto;
-    }
+  // Match and exceed the legacy selector specificity so height: 100vh is scoped out in redesign.
+  // Legacy: .deskDetail .deskDetail-content .SnapBox .snap
+  // Redesign: .redesign-desk-detail-page .deskDetail .deskDetail-content .SnapBox .snap
+  .deskDetail .deskDetail-content .SnapBox .snap {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+    overflow-y: auto;
   }
 }
