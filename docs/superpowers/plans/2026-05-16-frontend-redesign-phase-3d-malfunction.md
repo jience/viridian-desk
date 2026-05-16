@@ -17,6 +17,10 @@
 - Modify `src/pages/malfunction/index.tsx`: keep data and modal state, add request ordering guard, clear invalid selections, render `RedesignMalfunctionPage`.
 - Modify `src/locales/zh-CN.js`, `src/locales/en-US.js`, `src/locales/zh-TW.js`: add only the new workbench labels used by the redesigned page.
 
+## Execution Order
+
+Run Task 2 before Task 1 so the `RedesignMalfunctionPage` module exists before the controller imports it. After that, continue with Task 3, Task 4, and Task 5 in order.
+
 ## Task 1: Prepare The Malfunction Controller
 
 **Files:**
