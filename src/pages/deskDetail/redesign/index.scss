@@ -3,6 +3,12 @@
   min-height: 0;
   overflow: hidden;
 
+  .ant-spin-nested-loading,
+  .ant-spin-container {
+    height: 100%;
+    min-height: 0;
+  }
+
   .deskDetail {
     display: grid;
     grid-template-rows: 32px 32px minmax(0, 1fr);
@@ -12,11 +18,22 @@
   }
 
   .deskDetail-content {
+    height: 100%;
     min-height: 0;
+
+    .ant-row,
+    .ant-col,
+    .archer-row,
+    .archer-col {
+      height: 100%;
+      min-height: 0;
+    }
   }
 
   .desk-detail-content,
   .SnapBox {
+    height: 100%;
+    min-height: 0;
     border: 1px solid rgba(142, 159, 181, 0.18);
     border-radius: 14px;
     background: rgba(18, 26, 38, 0.92);
@@ -24,6 +41,12 @@
   }
 
   .desk-detail-content {
+    .detailList {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+    }
+
     .detail-title {
       .name-content {
         .name,
@@ -37,6 +60,12 @@
   .SnapBox {
     .title {
       color: var(--app-text-color, #e8eef7);
+    }
+
+    .snap {
+      height: auto;
+      min-height: 0;
+      overflow-y: auto;
     }
   }
 }
