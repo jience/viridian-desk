@@ -11,6 +11,7 @@ import img6 from '@/assets/images/boot_page/6.png';
 import { Button, Space } from 'antd';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
 import { useAppSelector } from '@/store';
+import { useIntl } from 'react-intl';
 
 interface NoviceGuidanceProps {
   setIsNoviceGuidance: (value: string) => void;
@@ -28,6 +29,7 @@ interface StepConfig {
 }
 
 const NoviceGuidance = ({ setIsNoviceGuidance }: NoviceGuidanceProps) => {
+  const { formatMessage } = useIntl();
   const [step, setStep] = useState(1);
   const isThin = useAppSelector(selectIsThin);
 
@@ -42,7 +44,7 @@ const NoviceGuidance = ({ setIsNoviceGuidance }: NoviceGuidanceProps) => {
       image: img1,
       showSkip: true,
       showNextStep: true,
-      nextStepText: '下一步',
+      nextStepText: formatMessage({ id: 'NextStep' }),
     },
     {
       id: 2,
@@ -50,7 +52,7 @@ const NoviceGuidance = ({ setIsNoviceGuidance }: NoviceGuidanceProps) => {
       showLastStep: true,
       showNextStep: true,
       useSpaceCompact: true,
-      nextStepText: '下一步',
+      nextStepText: formatMessage({ id: 'NextStep' }),
     },
     {
       id: 3,
@@ -58,7 +60,7 @@ const NoviceGuidance = ({ setIsNoviceGuidance }: NoviceGuidanceProps) => {
       showLastStep: true,
       showNextStep: true,
       useSpaceCompact: true,
-      nextStepText: '下一步',
+      nextStepText: formatMessage({ id: 'NextStep' }),
     },
     {
       id: 4,
@@ -66,7 +68,7 @@ const NoviceGuidance = ({ setIsNoviceGuidance }: NoviceGuidanceProps) => {
       showLastStep: true,
       showNextStep: true,
       useSpaceCompact: true,
-      nextStepText: '下一步',
+      nextStepText: formatMessage({ id: 'NextStep' }),
     },
     {
       id: 5,
@@ -74,14 +76,14 @@ const NoviceGuidance = ({ setIsNoviceGuidance }: NoviceGuidanceProps) => {
       showLastStep: true,
       showNextStep: true,
       useSpaceCompact: true,
-      nextStepText: '下一步',
+      nextStepText: formatMessage({ id: 'NextStep' }),
     },
     {
       id: 6,
       image: img6,
       showLastStep: true,
       showNextStep: true,
-      nextStepText: '开始体验',
+      nextStepText: formatMessage({ id: 'StartExperience' }),
       nextStepAction: handleSkip,
       useSpaceCompact: true,
     },
@@ -108,46 +110,40 @@ const NoviceGuidance = ({ setIsNoviceGuidance }: NoviceGuidanceProps) => {
   const renderButtons = () => {
     const buttons = [];
 
-    // 跳过按钮
     if (currentStepConfig.showSkip) {
       buttons.push(
-        <Button key="skip" className="step-btn" type="default" shape="round" onClick={handleSkip}>
-          跳过
+        <Button key="skip" className="novice-guidance__button" type="default" onClick={handleSkip}>
+          {formatMessage({ id: 'SkipGuide' })}
         </Button>,
       );
     }
 
-    // 上一步按钮
     if (currentStepConfig.showLastStep) {
       buttons.push(
         <Button
           key="prev"
-          className="step-btn"
+          className="novice-guidance__button"
           type="default"
-          shape="round"
           onClick={handlePrevStep}
         >
-          上一步
+          {formatMessage({ id: 'Previous' })}
         </Button>,
       );
     }
 
-    // 下一步/开始体验按钮
     if (currentStepConfig.showNextStep) {
       buttons.push(
         <Button
           key="next"
-          className="step-btn"
+          className="novice-guidance__button novice-guidance__button--primary"
           type="primary"
-          shape="round"
           onClick={handleNextStep}
         >
-          {currentStepConfig.nextStepText || '下一步'}
+          {currentStepConfig.nextStepText || formatMessage({ id: 'NextStep' })}
         </Button>,
       );
     }
 
-    // 如果需要紧凑布局，使用 Space.Compact
     if (currentStepConfig.useSpaceCompact && buttons.length > 1) {
       return (
         <>
@@ -161,12 +157,25 @@ const NoviceGuidance = ({ setIsNoviceGuidance }: NoviceGuidanceProps) => {
   };
 
   return (
-    <div
-      className={`novice-guidance ${!isThin && 'layout-drag'}`}
-      style={{ backgroundImage: `url(${currentStepConfig.image})` }}
-    >
-      <div className="options-wrapper">{renderButtons()}</div>
-    </div>
+    <main className={`novice-guidance ${!isThin ? 'layout-drag' : ''}`}>
+      <img
+        className="novice-guidance__image"
+        src={currentStepConfig.image}
+        alt={formatMessage({ id: 'NoviceGuide' })}
+        draggable={false}
+      />
+      <div className="novice-guidance__progress" aria-label={formatMessage({ id: 'NoviceGuide' })}>
+        {stepConfigs.map((config) => (
+          <span
+            className={
+              config.id === step ? 'novice-guidance__dot is-active' : 'novice-guidance__dot'
+            }
+            key={config.id}
+          />
+        ))}
+      </div>
+      <div className="novice-guidance__options">{renderButtons()}</div>
+    </main>
   );
 };
 

@@ -1,5 +1,5 @@
 import './index.scss';
-import { useMemo, useState, useEffect, useRef } from 'react';
+import { useMemo, useState, useEffect, useRef, type CSSProperties } from 'react';
 import useSharedState from './useSharedState';
 import { convertFileSrc, invoke } from '@tauri-apps/api/core';
 import NoviceGuidance from '../../components/NoviceGuidance';
@@ -36,11 +36,10 @@ const ClientLayout = () => {
   const msgModalShow = useAppSelector(selectMsgModalShow);
   const msgId = useAppSelector(selectMsgId);
 
-  // 字体大小重绘
   const resize = () => {
     const docEl = document.documentElement;
     const dpr = window.devicePixelRatio || 1;
-    // adjust body font size
+
     function setBodyFontSize() {
       if (document.body) {
         document.body.style.fontSize = 12 * dpr + 'px';
@@ -50,11 +49,9 @@ const ClientLayout = () => {
     }
     setBodyFontSize();
 
-    // set 1rem = viewWidth / 10
     function setRemUnit() {
       const rem = docEl.clientWidth / 12;
 
-      // todo
       if (window.innerWidth <= 1000) {
         docEl.style.fontSize = 100 + 'px';
       } else {
@@ -64,15 +61,15 @@ const ClientLayout = () => {
 
     setRemUnit();
 
-    // reset rem unit on page resize
-    window.addEventListener('resize', setRemUnit);
-    window.addEventListener('pageshow', function (e) {
+    const handlePageShow = (e: PageTransitionEvent) => {
       if (e.persisted) {
         setRemUnit();
       }
-    });
+    };
 
-    // detect 0.5px supports
+    window.addEventListener('resize', setRemUnit);
+    window.addEventListener('pageshow', handlePageShow);
+
     if (dpr >= 2) {
       const fakeBody = document.createElement('body');
       const testElement = document.createElement('div');
@@ -84,10 +81,15 @@ const ClientLayout = () => {
       }
       docEl.removeChild(fakeBody);
     }
+
+    return () => {
+      window.removeEventListener('resize', setRemUnit);
+      window.removeEventListener('pageshow', handlePageShow);
+    };
   };
 
   useEffect(() => {
-    resize();
+    return resize();
   }, []);
 
   useEffect(() => {
@@ -143,10 +145,10 @@ const ClientLayout = () => {
     getClientConfig();
   }, [reconnectGateWay]);
 
-  const bgStyle = useMemo(() => {
+  const bgStyle = useMemo<CSSProperties | undefined>(() => {
     if (backgroundImage) {
       return {
-        backgroundImage: `url(${convertFileSrc(backgroundImage)}) no-repeat`,
+        backgroundImage: `url(${convertFileSrc(backgroundImage)})`,
       };
     }
   }, [backgroundImage]);
@@ -156,10 +158,10 @@ const ClientLayout = () => {
   }, [isThin]);
 
   return (
-    <div id="appLayout" className="app-layout" style={bgStyle}>
-      <div {...dragAttr} className="drag-bar"></div>
-      <div className="control-bar">
-        <ControlWindow></ControlWindow>
+    <div id="appLayout" className="client-layout-shell" style={bgStyle}>
+      <div {...dragAttr} className="client-layout-shell__drag-region" />
+      <div className="client-layout-shell__controls">
+        <ControlWindow />
       </div>
       {!isNoviceGuidance && <NoviceGuidance setIsNoviceGuidance={setIsNoviceGuidance} />}
       {isNoviceGuidance && <Outlet />}
@@ -171,7 +173,7 @@ const ClientLayout = () => {
             dispatch(setMsgModalShow({ msgModalShow: val, msgId: '' }));
           }}
           msgId={msgId}
-        ></MessageListModal>
+        />
       )}
     </div>
   );

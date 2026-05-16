@@ -3,6 +3,7 @@ import { logoutCurrentUser, selectIsLogin } from '@/store/feature/app';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { type FC } from 'react';
+import { useIntl } from 'react-intl';
 import './index.scss';
 
 export interface ControlWindowProps {
@@ -15,6 +16,7 @@ const ControlWindow: FC<ControlWindowProps> = (props) => {
   const { exist, hiddenMini } = props;
 
   const appDispatch = useAppDispatch();
+  const { formatMessage } = useIntl();
   const isThin = useAppSelector(selectIsThin);
   const isLogin = useAppSelector(selectIsLogin);
 
@@ -31,9 +33,25 @@ const ControlWindow: FC<ControlWindowProps> = (props) => {
 
   return !isThin || exist ? (
     <div className="control-window-content">
-      {!hiddenMini && <i tabIndex={1} className="iconfont icon-minus" onClick={miniWindow}></i>}
+      {!hiddenMini && (
+        <button
+          aria-label={formatMessage({ id: 'MINIMIZE', defaultMessage: 'Minimize' })}
+          className="control-window-content__button"
+          type="button"
+          onClick={miniWindow}
+        >
+          <i className="iconfont icon-minus" />
+        </button>
+      )}
 
-      <i tabIndex={2} className="iconfont icon-error" onClick={closeWindow}></i>
+      <button
+        aria-label={formatMessage({ id: 'CLOSE', defaultMessage: 'Close' })}
+        className="control-window-content__button control-window-content__button--close"
+        type="button"
+        onClick={closeWindow}
+      >
+        <i className="iconfont icon-error" />
+      </button>
     </div>
   ) : null;
 };
