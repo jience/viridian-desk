@@ -120,8 +120,9 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
           <Tooltip
             placement="right"
             title={`${props.formatMessage({ id: 'FaultDesktop' })}: ${row.desktop?.name || '-'}`}
+            trigger={['hover', 'focus']}
           >
-            <span className="redesign-malfunction-page__desktop-type">
+            <span className="redesign-malfunction-page__desktop-type" tabIndex={0}>
               {label}
               <i className="iconfont icon-more" />
             </span>
