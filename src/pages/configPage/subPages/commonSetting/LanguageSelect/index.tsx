@@ -1,4 +1,3 @@
-import { SettingItem } from '@/components/SettingItem';
 import style from './index.module.scss';
 import { useMemo, type FC } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,9 +5,12 @@ import { Select } from 'antd';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { configLanguage, selectLanguage } from '@/store/feature/config';
 import { LanguageType } from '@/native/interfaces/config';
+import { SettingsRow } from '../../../redesign/components';
 
 export const LanguageSelect: FC = () => {
   const { t } = useTranslation();
+  const tCommon = (key: 'language_description') =>
+    (t as unknown as (translationKey: string) => string)(`config_page.common_setting.${key}`);
   const dispatch = useAppDispatch();
   const language = useAppSelector(selectLanguage);
 
@@ -27,9 +29,11 @@ export const LanguageSelect: FC = () => {
 
   return (
     <div className={style.languageSelectWrapper}>
-      <SettingItem
-        mainTitle={t('config_page.common_setting.language')}
-        optionSlot={
+      <SettingsRow
+        icon={<i className="iconfont icon-language" />}
+        title={t('config_page.common_setting.language')}
+        description={tCommon('language_description')}
+        action={
           <Select
             className={style.languageSelect}
             size="small"

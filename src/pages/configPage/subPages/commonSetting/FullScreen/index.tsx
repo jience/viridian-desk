@@ -1,13 +1,15 @@
-import { SettingItem } from '@/components/SettingItem';
 import style from './index.module.scss';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { message, Switch } from 'antd';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { configFullScreen, selectFullScreen } from '@/store/feature/config';
+import { SettingsRow } from '../../../redesign/components';
 
 export const FullScreen: FC = () => {
   const { t } = useTranslation();
+  const tCommon = (key: 'full_screen_description') =>
+    (t as unknown as (translationKey: string) => string)(`config_page.common_setting.${key}`);
   const dispatch = useAppDispatch();
   const fullscreen = useAppSelector(selectFullScreen);
 
@@ -18,9 +20,11 @@ export const FullScreen: FC = () => {
 
   return (
     <div className={style.fullScreenWrapper}>
-      <SettingItem
-        mainTitle={t('config_page.common_setting.full_screen_mode')}
-        optionSlot={<Switch size="small" checked={fullscreen} onChange={switchFullScreen} />}
+      <SettingsRow
+        icon={<i className="iconfont icon-stencil" />}
+        title={t('config_page.common_setting.full_screen_mode')}
+        description={tCommon('full_screen_description')}
+        action={<Switch size="small" checked={fullscreen} onChange={switchFullScreen} />}
       />
     </div>
   );

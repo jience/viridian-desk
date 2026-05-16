@@ -1,13 +1,15 @@
-import { SettingItem } from '@/components/SettingItem';
 import style from './index.module.scss';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { message, Switch } from 'antd';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { configAutoUpdate, selectAutoUpdate } from '@/store/feature/config';
+import { SettingsRow } from '../../../redesign/components';
 
 export const AutoUpdate: FC = () => {
   const { t } = useTranslation();
+  const tCommon = (key: 'auto_update_description') =>
+    (t as unknown as (translationKey: string) => string)(`config_page.common_setting.${key}`);
   const dispatch = useAppDispatch();
   const autoUpdate = useAppSelector(selectAutoUpdate);
 
@@ -18,9 +20,11 @@ export const AutoUpdate: FC = () => {
 
   return (
     <div className={style.autoUpdateWrapper}>
-      <SettingItem
-        mainTitle={t('config_page.common_setting.auto_update')}
-        optionSlot={<Switch size="small" checked={autoUpdate} onChange={switchAutoUpdate} />}
+      <SettingsRow
+        icon={<i className="iconfont icon-stencil" />}
+        title={t('config_page.common_setting.auto_update')}
+        description={tCommon('auto_update_description')}
+        action={<Switch size="small" checked={autoUpdate} onChange={switchAutoUpdate} />}
       />
     </div>
   );

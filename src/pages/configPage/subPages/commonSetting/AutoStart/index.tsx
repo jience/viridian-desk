@@ -1,13 +1,15 @@
-import { SettingItem } from '@/components/SettingItem';
 import style from './index.module.scss';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { message, Switch } from 'antd';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { configAutoStart, selectAutoStart } from '@/store/feature/config';
+import { SettingsRow } from '../../../redesign/components';
 
 export const AutoStart: FC = () => {
   const { t } = useTranslation();
+  const tCommon = (key: 'auto_start_description') =>
+    (t as unknown as (translationKey: string) => string)(`config_page.common_setting.${key}`);
   const dispatch = useAppDispatch();
   const autoStart = useAppSelector(selectAutoStart);
 
@@ -18,9 +20,11 @@ export const AutoStart: FC = () => {
 
   return (
     <div className={style.autoStartWrapper}>
-      <SettingItem
-        mainTitle={t('config_page.common_setting.auto_start')}
-        optionSlot={<Switch size="small" checked={autoStart} onChange={switchAutoStart} />}
+      <SettingsRow
+        icon={<i className="iconfont icon-stencil" />}
+        title={t('config_page.common_setting.auto_start')}
+        description={tCommon('auto_start_description')}
+        action={<Switch size="small" checked={autoStart} onChange={switchAutoStart} />}
       />
     </div>
   );

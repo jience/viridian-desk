@@ -1,4 +1,3 @@
-import { SettingItem } from '@/components/SettingItem';
 import style from './index.module.scss';
 import { useMemo, type FC } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,9 +6,12 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { configTheme, selectTheme } from '@/store/feature/config';
 import { CheckOutlined } from '@ant-design/icons';
 import { ThemeType } from '@/native/interfaces/config';
+import { SettingsRow } from '../../../redesign/components';
 
 export const ThemeSelect: FC = () => {
   const { t } = useTranslation();
+  const tCommon = (key: 'theme_description') =>
+    (t as unknown as (translationKey: string) => string)(`config_page.common_setting.${key}`);
   const dispatch = useAppDispatch();
   const currentTheme = useAppSelector(selectTheme);
 
@@ -40,24 +42,28 @@ export const ThemeSelect: FC = () => {
 
   return (
     <div className={style.themeSelectWrapper}>
-      <SettingItem mainTitle={t('config_page.common_setting.theme')}>
+      <SettingsRow
+        icon={<i className="iconfont icon-stencil" />}
+        title={t('config_page.common_setting.theme')}
+        description={tCommon('theme_description')}
+      >
         <div className={style.themeSelectContent}>
           {themeList.map((i) => {
             const isActive = i.key === currentTheme;
             const itemClass = `${style.themeItem} ${isActive ? style.active : ''}`;
             const topContentClass = `${style.topContent} ${i.classNames.join(' ')}`;
             return (
-              <div onClick={() => switchTheme(i.key)} key={i.key} className={itemClass}>
+              <button type="button" onClick={() => switchTheme(i.key)} key={i.key} className={itemClass}>
                 <div className={topContentClass} />
                 <div className={style.bottomContent}>
                   <span>{i.label}</span>
                   <div>{isActive && <CheckOutlined className={style.rightIcon} />}</div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
-      </SettingItem>
+      </SettingsRow>
     </div>
   );
 };
