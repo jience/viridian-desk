@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useIntl } from 'react-intl';
-import { Form, Input, Modal, message } from 'antd';
+import { Button, Form, Input, Modal, message } from 'antd';
 import Regex from '@/utils/regex';
 import { formatTel } from '@/utils/utils';
 import './index.scss';
@@ -59,7 +59,7 @@ const ChangePhone = (props: any) => {
   });
 
   const send = () => {
-    if (!Regex.isMobile.test(phoneValue) || !connected || !network || sent) return;
+    if (!Regex.isMobile.test(phoneValue || '') || !connected || !network || sent) return;
     if (sent) return;
     getPhoneCodeRun({
       phone: phoneValue,
@@ -100,11 +100,12 @@ const ChangePhone = (props: any) => {
     setVisible(false);
     form.resetFields();
   };
+  const canSendCode = Regex.isMobile.test(phoneValue || '') && connected && network && !sent;
 
   return (
     <Modal
       open={visible}
-      className="ChangePhone-modal"
+      className="change-phone-modal"
       keyboard={false}
       onCancel={() => cancelModal()}
       okText={formatMessage({ id: 'SURE' })}
@@ -117,9 +118,10 @@ const ChangePhone = (props: any) => {
       }}
       cancelText={formatMessage({ id: 'Cancel' })}
     >
-      <Form layout="vertical" form={form} className="send-msg-form">
+      <Form layout="vertical" form={form} className="change-phone-modal__form">
         <Form.Item
           name="phone"
+          label={formatMessage({ id: 'UserPhone' })}
           rules={[
             {
               required: true,
@@ -136,17 +138,14 @@ const ChangePhone = (props: any) => {
         >
           <Input placeholder={formatMessage({ id: 'ChangePhonePlaceHolder' })} />
         </Form.Item>
-        <p className="send-title">
+        <p className="change-phone-modal__hint">
           {formatMessage({ id: 'SendPhoneLable' }, { phone: formatTel(phoneValue) })}
         </p>
-        <div style={{ display: 'flex' }}>
+        <div className="change-phone-modal__code-row">
           <Form.Item
             name="verifyCode"
-            className="send-msg-form-item"
+            className="change-phone-modal__code-item"
             rules={formRules['verifyCode']}
-            style={{
-              flex: 1,
-            }}
           >
             <Input
               placeholder={intl.formatMessage(
@@ -157,13 +156,18 @@ const ChangePhone = (props: any) => {
                   }),
                 },
               )}
-              addonAfter={
-                <div onClick={() => send()} style={{ cursor: 'pointer' }}>
-                  {sent ? `${number}s 重新获取` : formatMessage({ id: 'GetVerificationCode' })}
-                </div>
-              }
             />
           </Form.Item>
+          <Button
+            className="change-phone-modal__send"
+            disabled={!canSendCode}
+            type="default"
+            onClick={send}
+          >
+            {sent
+              ? `${number}s ${formatMessage({ id: 'RetryGetCode' })}`
+              : formatMessage({ id: 'GetVerificationCode' })}
+          </Button>
         </div>
       </Form>
     </Modal>

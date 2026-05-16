@@ -1065,6 +1065,7 @@ export default {
   PleaseChoose: '请选择',
   PleaseInput: '请输入',
   GetVerificationCode: '获取验证码',
+  RetryGetCode: '重新获取',
   SHARE: '共享',
   RESTORE: '还原',
   EXCLUSIVE: '专属',

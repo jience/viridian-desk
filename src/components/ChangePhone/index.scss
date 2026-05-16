@@ -1,3 +1,36 @@
-.ChangePhone-modal {
+.change-phone-modal {
   width: 520px !important;
+
+  .ant-modal-content {
+    overflow: hidden;
+    border: 1px solid rgba(142, 159, 181, 0.16);
+    border-radius: 10px;
+  }
+}
+
+.change-phone-modal__form {
+  padding-top: 2px;
+}
+
+.change-phone-modal__hint {
+  margin: -4px 0 12px;
+  color: var(--app-muted-color, #6f7f90);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.change-phone-modal__code-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 132px;
+  gap: 10px;
+  align-items: start;
+}
+
+.change-phone-modal__code-item {
+  margin-bottom: 0;
+}
+
+.change-phone-modal__send {
+  height: 32px;
+  border-radius: 8px;
 }

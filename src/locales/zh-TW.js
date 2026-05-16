@@ -1058,6 +1058,7 @@ export default {
   PleaseChoose: '請選擇',
   PleaseInput: '請輸入',
   GetVerificationCode: '獲取驗證碼',
+  RetryGetCode: '重新獲取',
   SHARE: '共享',
   RESTORE: '還原',
   EXCLUSIVE: '專屬',

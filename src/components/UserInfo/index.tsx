@@ -1,81 +1,72 @@
 import { useAppSelector } from '@/store';
 import { selectCurrentUser } from '@/store/feature/app';
-import { Form, Modal } from 'antd';
+import { Modal } from 'antd';
 import { useIntl } from 'react-intl';
 import './index.scss';
 
-const UserInfo = ({ visible, setVisible }: any) => {
-  const intl = useIntl();
+interface UserInfoProps {
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
+}
+
+const UserInfo = ({ visible, setVisible }: UserInfoProps) => {
+  const { formatMessage } = useIntl();
   const currentUser = useAppSelector(selectCurrentUser);
 
-  const handleSubmit = () => {
-    setVisible(false);
-  };
+  const fields = [
+    {
+      key: 'userName',
+      label: formatMessage({ id: 'USERNAME' }),
+      value: currentUser?.loginName,
+    },
+    {
+      key: 'realName',
+      label: formatMessage({ id: 'REALNAME' }),
+      value: currentUser?.userName,
+    },
+    {
+      key: 'phone',
+      label: formatMessage({ id: 'PHONE' }),
+      value: currentUser?.telephone,
+    },
+    {
+      key: 'email',
+      label: formatMessage({ id: 'EMAIL' }),
+      value: currentUser?.email,
+    },
+  ];
 
   return (
     <Modal
       open={visible}
       keyboard={false}
-      className="sendmsg-modal"
+      className="user-info-modal"
       onCancel={() => {
         setVisible(false);
       }}
-      cancelButtonProps={{
-        style: {
-          display: 'none',
-        },
-      }}
-      onOk={() => handleSubmit()}
-      title={intl.formatMessage({ id: 'USER_INFO' })}
-      centered={true}
-      destroyOnHidden={true}
+      footer={null}
+      title={formatMessage({ id: 'USER_INFO' })}
+      centered
+      destroyOnHidden
     >
-      <Form colon={false} labelCol={{ span: 5, offset: 0 }} labelAlign="left">
-        <Form.Item
-          name="userName"
-          label={intl.formatMessage({ id: 'USERNAME' })}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <div className="infoBox">{currentUser?.loginName || '-'}</div>
-        </Form.Item>
-        <Form.Item
-          name="realName"
-          label={intl.formatMessage({ id: 'REALNAME' })}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <div className="infoBox">{currentUser?.userName || '-'}</div>
-        </Form.Item>
-        <Form.Item
-          name="phone"
-          label={intl.formatMessage({ id: 'PHONE' })}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <div className="infoBox">{currentUser?.telephone || '-'}</div>
-        </Form.Item>
-        <Form.Item
-          name="email"
-          label={intl.formatMessage({ id: 'EMAIL' })}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <div className="infoBox">{currentUser?.email || '-'}</div>
-        </Form.Item>
-      </Form>
+      <section className="user-info-modal__profile">
+        <div className="user-info-modal__avatar" aria-hidden="true">
+          {(currentUser?.userName || currentUser?.loginName || '-').slice(0, 1).toUpperCase()}
+        </div>
+        <div className="user-info-modal__identity">
+          <strong>{currentUser?.userName || currentUser?.loginName || '-'}</strong>
+          <span>{currentUser?.loginName || '-'}</span>
+        </div>
+      </section>
+
+      <dl className="user-info-modal__fields">
+        {fields.map((field) => (
+          <div className="user-info-modal__field" key={field.key}>
+            <dt>{field.label}</dt>
+            <dd title={field.value || '-'}>{field.value || '-'}</dd>
+          </div>
+        ))}
+      </dl>
     </Modal>
   );
 };

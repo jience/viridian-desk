@@ -957,6 +957,7 @@ export default {
   PleaseChoose: 'Please choose',
   PleaseInput: 'Please enter',
   GetVerificationCode: 'Send',
+  RetryGetCode: 'Retry',
   SHARE: 'SHARE',
   RESTORE: 'RESTORE',
   EXCLUSIVE: 'EXCLUSIVE',
