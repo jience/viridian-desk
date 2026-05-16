@@ -4,7 +4,7 @@ import './index.scss';
 import { useRef, type FC } from 'react';
 import { Button } from 'antd';
 import DiagnosisModal, { type DiagnosisModalRef } from './DiagnosisModal';
-import { SettingsRow } from '../../../redesign/components';
+import { SettingsRow } from '../../../components';
 
 type PendingDiagnosisKey = 'diagnosis_description';
 

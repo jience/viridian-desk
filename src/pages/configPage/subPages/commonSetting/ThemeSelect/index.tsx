@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { configTheme, selectTheme } from '@/store/feature/config';
 import { CheckOutlined } from '@ant-design/icons';
 import { ThemeType } from '@/native/interfaces/config';
-import { SettingsRow } from '../../../redesign/components';
+import { SettingsRow } from '../../../components';
 
 export const ThemeSelect: FC = () => {
   const { t } = useTranslation();

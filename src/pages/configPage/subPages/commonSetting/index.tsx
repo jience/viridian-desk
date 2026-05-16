@@ -10,7 +10,7 @@ import { LanguageSelect } from './LanguageSelect';
 import { ThemeSelect } from './ThemeSelect';
 import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';
-import { SettingsGroup, SettingsSection } from '../../redesign/components';
+import { SettingsGroup, SettingsSection } from '../../components';
 
 type PendingCommonSettingKey =
   | 'appearance_language'

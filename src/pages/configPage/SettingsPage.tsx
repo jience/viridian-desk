@@ -4,12 +4,12 @@ import { PreLoginSettingsShell } from '@/ui/shell/pre-login-settings-shell';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
-import FormModal from '../modalComp/FormModal';
-import './index.scss';
+import FormModal from './modalComp/FormModal';
+import './SettingsPage.scss';
 
 const SETTINGS_ROOT = '/configPage';
 
-export default function RedesignConfigPage() {
+export default function SettingsPage() {
   const intl = useIntl();
   const location = useLocation();
   const navigate = useNavigate();
@@ -26,10 +26,7 @@ export default function RedesignConfigPage() {
         rules: [
           {
             required: true,
-            message: intl.formatMessage(
-              { id: 'FORM_ERROR_MSG' },
-              { name: securityPasswordLabel },
-            ),
+            message: intl.formatMessage({ id: 'FORM_ERROR_MSG' }, { name: securityPasswordLabel }),
           },
         ],
         comType: 'input.password',
@@ -118,23 +115,21 @@ export default function RedesignConfigPage() {
   }, []);
 
   return (
-    <div className="redesign-settings-page">
+    <div className="settings-page">
       <PreLoginSettingsShell
         header={
           <>
-            <div className="redesign-settings-page__heading">
-              <span className="redesign-settings-page__eyebrow">
+            <div className="settings-page__heading">
+              <span className="settings-page__eyebrow">
                 {intl.formatMessage({ id: 'SettingsWorkbenchEyebrow' })}
               </span>
-              <h1 className="redesign-settings-page__title">
+              <h1 className="settings-page__title">
                 {activeTabName ?? intl.formatMessage({ id: 'COMMONSETUP' })}
               </h1>
-              {activeTabSubtitle && (
-                <p className="redesign-settings-page__subtitle">{activeTabSubtitle}</p>
-              )}
+              {activeTabSubtitle && <p className="settings-page__subtitle">{activeTabSubtitle}</p>}
             </div>
             <Button
-              className="redesign-settings-page__exit"
+              className="settings-page__exit"
               type="button"
               variant="secondary"
               onClick={goBack}
@@ -145,9 +140,9 @@ export default function RedesignConfigPage() {
           </>
         }
         sidebar={
-          <div className="redesign-settings-page__sidebar">
-            <div className="redesign-settings-page__brand">
-              <span className="redesign-settings-page__brand-mark">VD</span>
+          <div className="settings-page__sidebar">
+            <div className="settings-page__brand">
+              <span className="settings-page__brand-mark">VD</span>
               <span>{intl.formatMessage({ id: 'SettingsWorkbenchTitle' })}</span>
             </div>
 
@@ -159,7 +154,7 @@ export default function RedesignConfigPage() {
                   <Button
                     key={button.path}
                     aria-current={isActive ? 'page' : undefined}
-                    className="vd-settings-nav__button redesign-settings-page__nav-button"
+                    className="vd-settings-nav__button settings-page__nav-button"
                     type="button"
                     variant={isActive ? 'primary' : 'ghost'}
                     onClick={() => tabChoose(button.path)}
@@ -173,7 +168,7 @@ export default function RedesignConfigPage() {
           </div>
         }
       >
-        <div className="redesign-settings-page__content">
+        <div className="settings-page__content">
           {location.pathname === SETTINGS_ROOT ? (
             <Navigate to={`${SETTINGS_ROOT}/serverSetting`} replace />
           ) : (

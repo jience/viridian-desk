@@ -30,7 +30,7 @@ import {
   SettingsRow,
   SettingsSection,
   SettingsStatus,
-} from '../../redesign/components';
+} from '../../components';
 
 type PendingServerSettingKey =
   | 'available_gateway'
@@ -71,14 +71,15 @@ export default function ServerSetting() {
   const gatewayCount = gatewayList.length;
   const connectionTone: 'success' | 'warning' = connected && network ? 'success' : 'warning';
   const connectionLabel =
-    connected && network
-      ? tPending('network_available')
-      : tPending('network_limited');
+    connected && network ? tPending('network_available') : tPending('network_limited');
 
   // 设置默认网关
-  const setOrCancelDefault = useCallback(async (data: GatewayItem) => {
-    await dispatch(switchGateway(data.uuid));
-  }, [dispatch]);
+  const setOrCancelDefault = useCallback(
+    async (data: GatewayItem) => {
+      await dispatch(switchGateway(data.uuid));
+    },
+    [dispatch],
+  );
 
   // 删除网关
   const deleteGateway = useCallback(
@@ -210,9 +211,7 @@ export default function ServerSetting() {
         <SettingsMetric
           label={tPending('current_gateway')}
           value={currentGateway?.name || tPending('no_current_gateway')}
-          helper={
-            currentGateway ? t('config_page.current') : tPending('not_configured')
-          }
+          helper={currentGateway ? t('config_page.current') : tPending('not_configured')}
         />
         <SettingsMetric
           label={tPending('network_state')}
@@ -247,9 +246,7 @@ export default function ServerSetting() {
                   g.auto ? (
                     <SettingsStatus tone="success">{t('config_page.current')}</SettingsStatus>
                   ) : (
-                    <SettingsStatus>
-                      {tPending('available_gateway')}
-                    </SettingsStatus>
+                    <SettingsStatus>{tPending('available_gateway')}</SettingsStatus>
                   )
                 }
                 action={<DropdownBtn options={generateMenus(g)}></DropdownBtn>}

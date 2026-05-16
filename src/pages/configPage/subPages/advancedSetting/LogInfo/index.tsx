@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { LogConfigModal, type LogConfigModalRef } from './LogConfigModal';
 import type { GetLogInfoRes, SetLogReq } from '@/native/interfaces/cmd';
 import { bridge } from '@/native';
-import { SettingsRow } from '../../../redesign/components';
+import { SettingsRow } from '../../../components';
 
 export type LogInfoProps = unknown;
 

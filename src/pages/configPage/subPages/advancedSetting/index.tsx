@@ -7,7 +7,7 @@ import { NetworkInfo } from './NetworkInfo';
 import { Diagnosis } from './Diagnosis';
 import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';
-import { SettingsGroup, SettingsSection } from '../../redesign/components';
+import { SettingsGroup, SettingsSection } from '../../components';
 
 type PendingAdvancedSettingKey =
   | 'developer_tools'

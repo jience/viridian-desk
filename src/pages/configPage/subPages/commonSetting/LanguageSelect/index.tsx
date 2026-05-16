@@ -5,7 +5,7 @@ import { Select } from 'antd';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { configLanguage, selectLanguage } from '@/store/feature/config';
 import { LanguageType } from '@/native/interfaces/config';
-import { SettingsRow } from '../../../redesign/components';
+import { SettingsRow } from '../../../components';
 
 export const LanguageSelect: FC = () => {
   const { t } = useTranslation();

@@ -10,7 +10,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import type { FetchUpdateResp } from '@/native/interfaces/app_updates';
 import { bridge } from '@/native';
 import type { GetClientAboutResp } from '@/native/interfaces/terminal';
-import { SettingsGroup, SettingsMetric, SettingsRow } from '../../../redesign/components';
+import { SettingsGroup, SettingsMetric, SettingsRow } from '../../../components';
 
 type PendingAboutKey =
   | 'client_type'

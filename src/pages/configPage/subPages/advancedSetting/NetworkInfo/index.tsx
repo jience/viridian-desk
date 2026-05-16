@@ -10,7 +10,7 @@ import { selectIsThin } from '@/store/feature/terminal';
 import { EditNetModal, type EditNetModalRef, type EditNetModalReqType } from './EditNetModal';
 import type { NetProbeItemRender } from '@/native/interfaces/cmd';
 import { bridge } from '@/native';
-import { SettingsRow } from '../../../redesign/components';
+import { SettingsRow } from '../../../components';
 
 type PendingNetworkInfoKey = 'network_info_description';
 

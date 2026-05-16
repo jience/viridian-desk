@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Switch } from 'antd';
 import { configDeveloperMode, selectDeveloperMode } from '@/store/feature/config';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { SettingsRow } from '../../../redesign/components';
+import { SettingsRow } from '../../../components';
 
 type PendingDeveloperModeKey = 'developer_mode_description';
 

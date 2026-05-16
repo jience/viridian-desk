@@ -8,7 +8,7 @@ import { bridge } from '@/native';
 import type { GetClientAboutResp } from '@/native/interfaces/terminal';
 import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';
-import { SettingsSection } from '../../redesign/components';
+import { SettingsSection } from '../../components';
 
 type PendingAboutKey = 'product' | 'product_description';
 

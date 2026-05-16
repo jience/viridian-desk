@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import style from './index.module.scss';
 import { useTranslation } from 'react-i18next';
 import type { GetClientAboutResp } from '@/native/interfaces/terminal';
-import { SettingsGroup } from '../../../redesign/components';
+import { SettingsGroup } from '../../../components';
 
 export interface LicenseContentProps {
   aboutInfo?: GetClientAboutResp;

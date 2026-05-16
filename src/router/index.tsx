@@ -1,7 +1,7 @@
 import { LoginAuthType } from '@/native/interfaces/login_history';
 import { AppLayout } from '@/layouts/AppLayout';
 import { Application } from '@/pages/application';
-import RedesignConfigPage from '@/pages/configPage/redesign';
+import SettingsPage from '@/pages/configPage/SettingsPage';
 import About from '@/pages/configPage/subPages/about';
 import AdvancedSetting from '@/pages/configPage/subPages/advancedSetting';
 import CurrencySetting from '@/pages/configPage/subPages/commonSetting';
@@ -92,7 +92,7 @@ const rootRoutes: RouteObject[] = [
       },
       {
         path: 'configPage',
-        element: <RedesignConfigPage />,
+        element: <SettingsPage />,
         children: createSettingsRoutes(),
       },
       {

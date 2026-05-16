@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { message, Switch } from 'antd';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { configAutoUpdate, selectAutoUpdate } from '@/store/feature/config';
-import { SettingsRow } from '../../../redesign/components';
+import { SettingsRow } from '../../../components';
 
 export const AutoUpdate: FC = () => {
   const { t } = useTranslation();
