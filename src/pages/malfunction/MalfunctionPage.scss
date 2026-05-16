@@ -1,4 +1,4 @@
-.redesign-malfunction-page {
+.malfunction-page {
   --malfunction-page-text: #14221c;
   --malfunction-page-muted: #62746b;
   --malfunction-page-accent: #127454;
@@ -28,8 +28,8 @@
   }
 }
 
-:root.dark .redesign-malfunction-page,
-:root[data-ui-theme='dark'] .redesign-malfunction-page {
+:root.dark .malfunction-page,
+:root[data-ui-theme='dark'] .malfunction-page {
   --malfunction-page-text: #edf8f3;
   --malfunction-page-muted: #9fb3aa;
   --malfunction-page-accent: #70e3c2;
@@ -46,7 +46,7 @@
   --malfunction-page-row-hover: rgba(112, 227, 194, 0.09);
 }
 
-.redesign-malfunction-page__header {
+.malfunction-page__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -58,7 +58,7 @@
   box-shadow: var(--malfunction-page-shadow);
 }
 
-.redesign-malfunction-page__heading {
+.malfunction-page__heading {
   min-width: 0;
   flex: 1 1 auto;
 
@@ -86,7 +86,7 @@
   }
 }
 
-.redesign-malfunction-page__actions {
+.malfunction-page__actions {
   min-width: 0;
   max-width: 100%;
   display: flex;
@@ -136,12 +136,12 @@
   }
 }
 
-:root.dark .redesign-malfunction-page__actions .ant-btn-primary,
-:root[data-ui-theme='dark'] .redesign-malfunction-page__actions .ant-btn-primary {
+:root.dark .malfunction-page__actions .ant-btn-primary,
+:root[data-ui-theme='dark'] .malfunction-page__actions .ant-btn-primary {
   color: #06120e;
 }
 
-.redesign-malfunction-page__filters {
+.malfunction-page__filters {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -150,7 +150,7 @@
   padding: 2px;
 }
 
-.redesign-malfunction-page__segmented {
+.malfunction-page__segmented {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -195,7 +195,7 @@
   }
 }
 
-.redesign-malfunction-page__compact-filters {
+.malfunction-page__compact-filters {
   display: none;
   align-items: center;
   gap: 8px;
@@ -206,7 +206,7 @@
   }
 }
 
-.redesign-malfunction-page__table {
+.malfunction-page__table {
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -327,16 +327,16 @@
   }
 }
 
-.redesign-malfunction-page {
-  .redesign-malfunction-page__desktop-type,
-  .redesign-malfunction-table__status-trigger {
+.malfunction-page {
+  .malfunction-page__desktop-type,
+  .malfunction-table__status-trigger {
     display: inline-flex;
     align-items: center;
     max-width: 100%;
     border-radius: 7px;
   }
 
-  .redesign-malfunction-page__desktop-type {
+  .malfunction-page__desktop-type {
     gap: 4px;
     color: var(--malfunction-page-text);
 
@@ -346,14 +346,14 @@
     }
   }
 
-  .redesign-malfunction-page__desktop-type:focus-visible,
-  .redesign-malfunction-table__status-trigger:focus-visible {
+  .malfunction-page__desktop-type:focus-visible,
+  .malfunction-table__status-trigger:focus-visible {
     outline: 2px solid var(--malfunction-page-focus);
     outline-offset: 2px;
   }
 }
 
-.redesign-malfunction-page__empty {
+.malfunction-page__empty {
   max-width: 360px;
   margin: 0 auto;
   padding: 38px 16px;
@@ -378,7 +378,7 @@
   }
 }
 
-.redesign-malfunction-page {
+.malfunction-page {
   .poptitle {
     color: var(--malfunction-page-text);
     font-size: 12px;
@@ -416,19 +416,19 @@
 }
 
 @container (max-width: 760px) {
-  .redesign-malfunction-page__header {
+  .malfunction-page__header {
     flex-direction: column;
   }
 
-  .redesign-malfunction-page__actions {
+  .malfunction-page__actions {
     justify-content: flex-start;
   }
 
-  .redesign-malfunction-page__filters {
+  .malfunction-page__filters {
     display: none;
   }
 
-  .redesign-malfunction-page__compact-filters {
+  .malfunction-page__compact-filters {
     display: flex;
     flex-wrap: wrap;
   }

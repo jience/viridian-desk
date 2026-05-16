@@ -1,10 +1,7 @@
 import { useLoading } from '@/hooks/useLoading';
 import useRequest from '@/hooks/useRequest';
 import { FaultApi, listFault, revokeFault } from '@/services/api/fault';
-import type {
-  FaultItem,
-  FaultListRequest,
-} from '@/services/api/fault/types';
+import type { FaultItem, FaultListRequest } from '@/services/api/fault/types';
 import { createFault, listResourceUser } from '@/services/resource';
 import Actions from '@/utils/actions';
 import { hasPermission } from '@/utils/permission';
@@ -16,7 +13,7 @@ import { useIntl } from 'react-intl';
 import CreatedModal from './create';
 import './index.scss';
 import { initQueryParams, useFaultStatus, useFaultType } from './initData';
-import { RedesignMalfunctionPage } from './redesign';
+import { MalfunctionPage } from './MalfunctionPage';
 import type { ViewFaultStatus, ViewFaultType } from './types';
 
 export function Component() {
@@ -321,7 +318,7 @@ export function Component() {
 
   return (
     <div className="malfunction-list">
-      <RedesignMalfunctionPage
+      <MalfunctionPage
         currentType={curFaultType}
         currentStatus={curFaultStatus}
         faultTypeOptions={faultTypeOptions}

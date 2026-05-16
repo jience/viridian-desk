@@ -4,12 +4,12 @@ import { Button, Empty, Popover, Select, Space, Table, Tag, Tooltip } from 'antd
 import type { ColumnsType } from 'antd/es/table';
 import type { Key, ReactNode } from 'react';
 import type { IntlShape } from 'react-intl';
-import type { ViewFaultStatus, ViewFaultType } from '../types';
-import './index.scss';
+import type { ViewFaultStatus, ViewFaultType } from './types';
+import './MalfunctionPage.scss';
 
 type FaultOptions = NonNullable<SelectProps['options']>;
 
-export interface RedesignMalfunctionPageProps {
+export interface MalfunctionPageProps {
   currentType: ViewFaultType;
   currentStatus: ViewFaultStatus;
   faultTypeOptions: FaultOptions;
@@ -43,7 +43,7 @@ const toOptionKey = (value: unknown) => String(value ?? '');
 const findOptionLabel = (options: FaultOptions, value: unknown) =>
   toText(options.find((option) => toOptionKey(option.value) === toOptionKey(value))?.label);
 
-export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
+export function MalfunctionPage(props: MalfunctionPageProps) {
   const refreshLabel = props.formatMessage({ id: 'REFRESH', defaultMessage: 'Refresh' });
   const selectedContainsBlocked = props.selectedRows.some((row) => !isRevocable(row));
   const batchCancelDisabled =
@@ -90,7 +90,7 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
         getPopupContainer={(node) => node.parentNode as HTMLElement}
         trigger={['hover', 'focus']}
       >
-        <span className="redesign-malfunction-table__status-trigger" tabIndex={0}>
+        <span className="malfunction-table__status-trigger" tabIndex={0}>
           {tag}
         </span>
       </Popover>
@@ -123,7 +123,7 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
             title={`${props.formatMessage({ id: 'FaultDesktop' })}: ${row.desktop?.name || '-'}`}
             trigger={['hover', 'focus']}
           >
-            <span className="redesign-malfunction-page__desktop-type" tabIndex={0}>
+            <span className="malfunction-page__desktop-type" tabIndex={0}>
               {label}
               <i className="iconfont icon-more" />
             </span>
@@ -189,9 +189,9 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
   };
 
   return (
-    <main className="redesign-malfunction-page">
-      <header className="redesign-malfunction-page__header">
-        <div className="redesign-malfunction-page__heading">
+    <main className="malfunction-page">
+      <header className="malfunction-page__header">
+        <div className="malfunction-page__heading">
           <span>{props.formatMessage({ id: 'MalfunctionWorkbenchEyebrow' })}</span>
           <h1>{props.formatMessage({ id: 'MalfunctionWorkbenchTitle' })}</h1>
           <p>
@@ -206,7 +206,7 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
           </p>
         </div>
 
-        <Space className="redesign-malfunction-page__actions" wrap>
+        <Space className="malfunction-page__actions" wrap>
           {props.canCancel && (
             <Tooltip title={props.formatMessage({ id: 'FaultCancel' })}>
               <Button
@@ -237,10 +237,10 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
         </Space>
       </header>
 
-      <section className="redesign-malfunction-page__filters">
+      <section className="malfunction-page__filters">
         <div
           aria-label={props.formatMessage({ id: 'FaultType' })}
-          className="redesign-malfunction-page__segmented"
+          className="malfunction-page__segmented"
           role="group"
         >
           {props.faultTypeOptions.map((option) => {
@@ -262,7 +262,7 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
         </div>
         <div
           aria-label={props.formatMessage({ id: 'STATUS' })}
-          className="redesign-malfunction-page__segmented"
+          className="malfunction-page__segmented"
           role="group"
         >
           {props.faultStatusOptions.map((option) => {
@@ -284,7 +284,7 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
         </div>
       </section>
 
-      <div className="redesign-malfunction-page__compact-filters">
+      <div className="malfunction-page__compact-filters">
         <Select
           aria-label={props.formatMessage({ id: 'FaultType' })}
           value={props.currentType}
@@ -302,14 +302,14 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
       <Table<FaultItem>
         rowKey="id"
         rowSelection={rowSelection}
-        className="redesign-malfunction-page__table"
+        className="malfunction-page__table"
         columns={columns}
         dataSource={props.rows}
         pagination={props.pagination}
         loading={props.loading}
         locale={{
           emptyText: (
-            <section className="redesign-malfunction-page__empty">
+            <section className="malfunction-page__empty">
               <Empty description={props.formatMessage({ id: 'MalfunctionEmptyTitle' })} />
               <p>{props.formatMessage({ id: 'MalfunctionEmptyDescription' })}</p>
               {props.canCreate && (
