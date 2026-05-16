@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './index.scss';
 import { message } from 'antd';
 import { useInitData } from './initData';
@@ -28,14 +28,19 @@ export const Application = () => {
   // 分类默认选中全部
   const [category, setCategory] = useState<VappCategory | 'all'>('all');
   const [vappList, setVappList] = useState<ListVappItem[]>([]);
+  const listRequestSeqRef = useRef(0);
 
   const getListVapp = async (c: VappCategory | 'all' = category) => {
+    const requestSeq = ++listRequestSeqRef.current;
     const res = await listVapp({
       pageNumber: 1,
       pageSize: 999,
       isAdded: true,
       category: c === 'all' ? undefined : c,
     });
+    if (requestSeq !== listRequestSeqRef.current) {
+      return;
+    }
     setCategory(c);
     setVappList(res.data.results || []);
   };
