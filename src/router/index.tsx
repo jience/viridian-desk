@@ -1,6 +1,5 @@
 import { BasicLayout } from '@/layouts/BasicLayout';
 import { LoginAuthType } from '@/native/interfaces/login_history';
-import { isRedesignAuthEnabled } from '@/features/redesign-auth/enabled';
 import { isRedesignAppEnabled } from '@/features/redesign-app/enabled';
 import { RedesignAppLayout } from '@/layouts/RedesignAppLayout';
 import { Application } from '@/pages/application';
@@ -32,12 +31,10 @@ import ClientLayout from '../layouts/clientLayout';
 import { Component as Approval } from '../pages/approval';
 import { Component as Desk } from '../pages/desk';
 import { Component as DeskDetail } from '../pages/deskDetail';
-import Login from '../pages/login';
 import RedesignLogin from '../pages/login/redesign';
 import { Component as Malfunction } from '../pages/malfunction';
 import { Component as PeripheralSetting } from '../pages/peripheralSetting';
 
-const ActiveLogin = isRedesignAuthEnabled ? RedesignLogin : Login;
 const ActiveAppLayout = isRedesignAppEnabled ? RedesignAppLayout : BasicLayout;
 const ActiveDesk = isRedesignAppEnabled ? RedesignDesk : Desk;
 const ActiveDeskDetail = isRedesignAppEnabled ? RedesignDeskDetail : DeskDetail;
@@ -193,11 +190,7 @@ const rootRoutes: RouteObject[] = [
       },
       {
         path: 'login',
-        element: <ActiveLogin />,
-      },
-      {
-        path: 'legacy-login',
-        element: <Login />,
+        element: <RedesignLogin />,
       },
       {
         path: 'configPage',
