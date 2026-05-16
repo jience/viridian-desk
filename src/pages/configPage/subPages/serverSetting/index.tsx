@@ -32,11 +32,32 @@ import {
   SettingsStatus,
 } from '../../redesign/components';
 
-const serverSettingKey = (key: string) => `config_page.server_setting.${key}`;
+type PendingServerSettingKey =
+  | 'available_gateway'
+  | 'current_gateway'
+  | 'empty_description'
+  | 'empty_title'
+  | 'eyebrow'
+  | 'gateway_count'
+  | 'gateway_count_helper'
+  | 'gateway_list'
+  | 'gateway_list_description'
+  | 'network_available'
+  | 'network_limited'
+  | 'network_state'
+  | 'network_state_helper'
+  | 'no_current_gateway'
+  | 'not_configured'
+  | 'private_network'
+  | 'workbench_description'
+  | 'workbench_title';
+
+const serverSettingKey = (key: PendingServerSettingKey) => `config_page.server_setting.${key}`;
 
 export default function ServerSetting() {
   const { t } = useTranslation();
-  const tPending = t as unknown as (key: string) => string;
+  const tPending = (key: PendingServerSettingKey) =>
+    (t as unknown as (translationKey: string) => string)(serverSettingKey(key));
   const { modal } = App.useApp();
   const dispatch = useAppDispatch();
   const serverEditModalRef = useRef<ServerEditModalRef>(null);
@@ -51,40 +72,43 @@ export default function ServerSetting() {
   const connectionTone: 'success' | 'warning' = connected && network ? 'success' : 'warning';
   const connectionLabel =
     connected && network
-      ? tPending(serverSettingKey('network_available'))
-      : tPending(serverSettingKey('network_limited'));
+      ? tPending('network_available')
+      : tPending('network_limited');
 
   // 设置默认网关
-  const setOrCancelDefault = async (data: GatewayItem) => {
+  const setOrCancelDefault = useCallback(async (data: GatewayItem) => {
     await dispatch(switchGateway(data.uuid));
-  };
+  }, [dispatch]);
 
   // 删除网关
-  const deleteGateway = (data: GatewayItem) => {
-    modal.confirm({
-      centered: true,
-      className: 'confirm-modal',
-      title: <span>{t('config_page.server_setting.delete_access_gateway')}</span>,
-      content: t('config_page.server_setting.delete_access_gateway_msg', {
-        name: data.name,
-        address:
-          gatewayAddrShowSwitch === 'Enabled' && connected && network
-            ? `(${data.address}:${data.port})`
-            : '',
-      }),
-      okText: t('config_page.delete'),
-      cancelText: t('config_page.cancel'),
-      onOk: async () => {
-        await dispatch(delGateway(data.uuid));
-        message.success(
-          t('config_page.server_setting.success_gateway_delete', { name: data.name }),
-        );
-      },
-    });
-  };
+  const deleteGateway = useCallback(
+    (data: GatewayItem) => {
+      modal.confirm({
+        centered: true,
+        className: 'confirm-modal',
+        title: <span>{t('config_page.server_setting.delete_access_gateway')}</span>,
+        content: t('config_page.server_setting.delete_access_gateway_msg', {
+          name: data.name,
+          address:
+            gatewayAddrShowSwitch === 'Enabled' && connected && network
+              ? `(${data.address}:${data.port})`
+              : '',
+        }),
+        okText: t('config_page.delete'),
+        cancelText: t('config_page.cancel'),
+        onOk: async () => {
+          await dispatch(delGateway(data.uuid));
+          message.success(
+            t('config_page.server_setting.success_gateway_delete', { name: data.name }),
+          );
+        },
+      });
+    },
+    [connected, dispatch, gatewayAddrShowSwitch, modal, network, t],
+  );
 
   // 添加网关
-  const addServer = async () => {
+  const addServer = useCallback(async () => {
     if (!serverEditModalRef.current) return;
     const res = await serverEditModalRef.current.openModal({
       modalType: 'add',
@@ -99,29 +123,32 @@ export default function ServerSetting() {
     }
     await dispatch(addGateway(gateway));
     message.success(t('config_page.server_setting.success_gateway_create', { name: res.name }));
-  };
+  }, [dispatch, gatewayList.length, t]);
 
   // 编辑网关
-  const editServer = async (params: GatewayItem) => {
-    if (!serverEditModalRef.current) return;
-    const res = await serverEditModalRef.current?.openModal({
-      initData: {
-        name: params.name,
-        address: params.address,
-        isPublic: params.isPublic,
-      },
-      modalType: 'edit',
-    });
-    if (!res) return;
+  const editServer = useCallback(
+    async (params: GatewayItem) => {
+      if (!serverEditModalRef.current) return;
+      const res = await serverEditModalRef.current?.openModal({
+        initData: {
+          name: params.name,
+          address: params.address,
+          isPublic: params.isPublic,
+        },
+        modalType: 'edit',
+      });
+      if (!res) return;
 
-    const data: UpdateGatewayServerReq = {
-      gwid: params.uuid,
-      ...res,
-    };
+      const data: UpdateGatewayServerReq = {
+        gwid: params.uuid,
+        ...res,
+      };
 
-    await dispatch(updateGateway(data));
-    message.success(t('config_page.server_setting.success_gateway_edit', { name: params?.name }));
-  };
+      await dispatch(updateGateway(data));
+      message.success(t('config_page.server_setting.success_gateway_edit', { name: params?.name }));
+    },
+    [dispatch, t],
+  );
 
   // 右侧操作按钮下拉菜单
   const generateMenus = useCallback(
@@ -146,23 +173,23 @@ export default function ServerSetting() {
         },
       ];
     },
-    [t],
+    [deleteGateway, editServer, setOrCancelDefault, t],
   );
 
-  const getGatewayList = async () => {
+  const getGatewayList = useCallback(async () => {
     await dispatch(fetchGatewayList());
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     getGatewayList();
-  }, []);
+  }, [getGatewayList]);
 
   return (
     <SettingsSection
       className="server-setting-wrapper"
-      eyebrow={tPending(serverSettingKey('eyebrow'))}
-      title={tPending(serverSettingKey('workbench_title'))}
-      description={tPending(serverSettingKey('workbench_description'))}
+      eyebrow={tPending('eyebrow')}
+      title={tPending('workbench_title')}
+      description={tPending('workbench_description')}
       actions={
         <Button
           type="primary"
@@ -176,32 +203,32 @@ export default function ServerSetting() {
     >
       <div className="server-setting-summary">
         <SettingsMetric
-          label={tPending(serverSettingKey('gateway_count'))}
+          label={tPending('gateway_count')}
           value={gatewayCount}
-          helper={tPending(serverSettingKey('gateway_count_helper'))}
+          helper={tPending('gateway_count_helper')}
         />
         <SettingsMetric
-          label={tPending(serverSettingKey('current_gateway'))}
-          value={currentGateway?.name || tPending(serverSettingKey('no_current_gateway'))}
+          label={tPending('current_gateway')}
+          value={currentGateway?.name || tPending('no_current_gateway')}
           helper={
-            currentGateway ? t('config_page.current') : tPending(serverSettingKey('not_configured'))
+            currentGateway ? t('config_page.current') : tPending('not_configured')
           }
         />
         <SettingsMetric
-          label={tPending(serverSettingKey('network_state'))}
+          label={tPending('network_state')}
           value={<SettingsStatus tone={connectionTone}>{connectionLabel}</SettingsStatus>}
-          helper={tPending(serverSettingKey('network_state_helper'))}
+          helper={tPending('network_state_helper')}
         />
       </div>
 
       <SettingsGroup
-        title={tPending(serverSettingKey('gateway_list'))}
-        description={tPending(serverSettingKey('gateway_list_description'))}
+        title={tPending('gateway_list')}
+        description={tPending('gateway_list_description')}
       >
         {gatewayList.length === 0 ? (
           <div className="server-setting-empty">
-            <span>{tPending(serverSettingKey('empty_title'))}</span>
-            <p>{tPending(serverSettingKey('empty_description'))}</p>
+            <span>{tPending('empty_title')}</span>
+            <p>{tPending('empty_description')}</p>
           </div>
         ) : (
           gatewayList.map((g) => {
@@ -221,7 +248,7 @@ export default function ServerSetting() {
                     <SettingsStatus tone="success">{t('config_page.current')}</SettingsStatus>
                   ) : (
                     <SettingsStatus>
-                      {tPending(serverSettingKey('available_gateway'))}
+                      {tPending('available_gateway')}
                     </SettingsStatus>
                   )
                 }
@@ -231,7 +258,7 @@ export default function ServerSetting() {
                   <span>
                     {g.isPublic
                       ? t('config_page.server_setting.public_network_agent')
-                      : tPending(serverSettingKey('private_network'))}
+                      : tPending('private_network')}
                   </span>
                 </div>
               </SettingsRow>
