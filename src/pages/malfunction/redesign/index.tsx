@@ -44,6 +44,7 @@ const findOptionLabel = (options: FaultOptions, value: unknown) =>
   toText(options.find((option) => toOptionKey(option.value) === toOptionKey(value))?.label);
 
 export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
+  const refreshLabel = props.formatMessage({ id: 'REFRESH', defaultMessage: 'Refresh' });
   const selectedContainsBlocked = props.selectedRows.some((row) => !isRevocable(row));
   const batchCancelDisabled =
     props.selectedRowKeys.length === 0 || selectedContainsBlocked || props.loading;
@@ -222,7 +223,7 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
             icon={<i className="iconfont icon-refresh" />}
             onClick={props.onRefresh}
           >
-            {props.formatMessage({ id: 'Refresh' })}
+            {refreshLabel}
           </Button>
           {props.canCreate && (
             <Button
