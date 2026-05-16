@@ -1,31 +1,19 @@
 .license-content-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  pre {
-    padding: 12px 18px;
-    white-space: pre-wrap;
-    width: 100%;
-    word-break: break-all;
-    flex: 1;
-    color: var(--config-card-title-default);
-    font-size: 13px;
-    line-height: 20px;
-    font-weight: 400;
-    font-family: SourceHanSansSC-Regular;
+  display: contents;
+}
 
-    overflow-y: scroll;
-    /* 隐藏滚动条 */
-    scrollbar-width: none;
-    /* firefox */
-    -ms-overflow-style: none;
+.license-group {
+  min-height: 0;
+}
 
-    /* IE 10+ */
-    /* Chrome Safari */
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
+.license-group pre {
+  max-height: 320px;
+  margin: 0;
+  overflow: auto;
+  padding: 16px;
+  color: var(--settings-page-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
 }

@@ -1,21 +1,55 @@
 .version-info-wrapper {
-  width: 100%;
-  .main-title {
-    display: flex;
-    column-gap: 4px;
-    .tag-wrapper {
-      display: flex;
-      :global(.ant-tag) {
-        margin-inline-end: 4px;
-      }
-    }
+  display: contents;
+}
+
+.main-title {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.tag-wrapper {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tag-wrapper :global(.ant-tag) {
+  margin-inline-end: 0;
+}
+
+.sub-title-wrapper {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.sub-title-item {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+
+  span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  .sub-title-wrapper {
-    display: flex;
-    column-gap: 8px;
-    .sub-title-item {
-      display: flex;
-      column-gap: 4px;
-    }
+}
+
+.version-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 0 16px 16px;
+}
+
+@container vd-settings-workbench (max-width: 760px) {
+  .version-metrics {
+    grid-template-columns: 1fr;
   }
 }

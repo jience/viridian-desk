@@ -2,13 +2,23 @@ import { useEffect, useState } from 'react';
 import './index.scss';
 import { Skeleton } from 'antd';
 
-import { _get_client_about, _check_version_upgrade } from '@/services/invokeServices';
 import { VersionInfo } from './VersionInfo';
 import { LicenseContent } from './LicenseContent';
 import { bridge } from '@/native';
 import type { GetClientAboutResp } from '@/native/interfaces/terminal';
+import { useTranslation } from 'react-i18next';
+import { useIntl } from 'react-intl';
+import { SettingsSection } from '../../redesign/components';
+
+type PendingAboutKey = 'product' | 'product_description';
+
+const aboutKey = (key: PendingAboutKey) => `config_page.about.${key}`;
 
 export default function About(_props: any) {
+  const { t } = useTranslation();
+  const intl = useIntl();
+  const tPending = (key: PendingAboutKey) =>
+    (t as unknown as (translationKey: string) => string)(aboutKey(key));
   const [aboutInfo, setAboutInfo] = useState<GetClientAboutResp>();
   const [getClientAboutLoading, setGetClientAboutLoading] = useState(false);
 
@@ -27,18 +37,26 @@ export default function About(_props: any) {
   }, []);
 
   return (
-    <div className="about">
+    <>
       {getClientAboutLoading ? (
-        <Skeleton active />
+        <div className="about">
+          <Skeleton active />
+        </div>
       ) : (
-        <>
-          <VersionInfo aboutInfo={aboutInfo} />
-          <div className="bottom-wrapper">
-            <LicenseContent aboutInfo={aboutInfo} />
+        <SettingsSection
+          eyebrow={tPending('product')}
+          title={intl.formatMessage({ id: 'ABOUT' })}
+          description={tPending('product_description')}
+        >
+          <div className="about">
+            <VersionInfo aboutInfo={aboutInfo} />
+            <div className="bottom-wrapper">
+              <LicenseContent aboutInfo={aboutInfo} />
+            </div>
+            <div className="copyright">{aboutInfo?.copyright}</div>
           </div>
-          <div className="copyright">{aboutInfo?.copyright}</div>
-        </>
+        </SettingsSection>
       )}
-    </div>
+    </>
   );
 }

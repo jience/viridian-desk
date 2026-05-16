@@ -1,6 +1,5 @@
 import { useMemo, useState, type FC } from 'react';
 import style from './index.module.scss';
-import { SettingItem } from '@/components/SettingItem';
 import { useAppSelector } from '@/store';
 import { selectIsThin } from '@/store/feature/terminal';
 import { Button, Tag } from 'antd';
@@ -11,6 +10,16 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import type { FetchUpdateResp } from '@/native/interfaces/app_updates';
 import { bridge } from '@/native';
 import type { GetClientAboutResp } from '@/native/interfaces/terminal';
+import { SettingsGroup, SettingsMetric, SettingsRow } from '../../../redesign/components';
+
+type PendingAboutKey =
+  | 'client_type'
+  | 'client_version'
+  | 'sku'
+  | 'version_info'
+  | 'version_info_description';
+
+const aboutKey = (key: PendingAboutKey) => `config_page.about.${key}`;
 
 export interface VersionInfoProps {
   aboutInfo?: GetClientAboutResp;
@@ -20,6 +29,8 @@ export const VersionInfo: FC<VersionInfoProps> = (props) => {
   const { aboutInfo } = props;
   const isThin = useAppSelector(selectIsThin);
   const { t } = useTranslation();
+  const tPending = (key: PendingAboutKey) =>
+    (t as unknown as (translationKey: string) => string)(aboutKey(key));
   const [downloadVisible, setDownloadVisible] = useState(false);
   const [downloadData, setDownloadData] = useState<FetchUpdateResp>();
   const [checkUpgradeLoading, setCheckUpgradeLoading] = useState(false);
@@ -56,7 +67,7 @@ export const VersionInfo: FC<VersionInfoProps> = (props) => {
         </div>
       </div>
     );
-  }, [aboutInfo]);
+  }, [aboutInfo, isThin]);
 
   const handleCheckUpgrade = async () => {
     setCheckUpgradeLoading(true);
@@ -108,20 +119,34 @@ export const VersionInfo: FC<VersionInfoProps> = (props) => {
 
   return (
     <div className={style.versionInfoWrapper}>
-      <SettingItem
-        mainTitle={mainTitle}
-        subTitle={subTitle}
-        optionSlot={
-          <Button
-            size="small"
-            icon={<RocketOutlined />}
-            loading={checkUpgradeLoading}
-            onClick={handleCheckUpgrade}
-          >
-            {t('config_page.about.version_update')}
-          </Button>
-        }
-      ></SettingItem>
+      <SettingsGroup
+        title={tPending('version_info')}
+        description={tPending('version_info_description')}
+      >
+        <SettingsRow
+          icon={<i className="iconfont icon-info-s" />}
+          title={mainTitle}
+          description={subTitle}
+          action={
+            <Button
+              size="small"
+              icon={<RocketOutlined />}
+              loading={checkUpgradeLoading}
+              onClick={handleCheckUpgrade}
+            >
+              {t('config_page.about.version_update')}
+            </Button>
+          }
+        />
+        <div className={style.versionMetrics}>
+          <SettingsMetric label={tPending('client_type')} value={aboutInfo?.clientType || '-'} />
+          <SettingsMetric
+            label={tPending('client_version')}
+            value={aboutInfo?.clientVersion || '-'}
+          />
+          {isThin && <SettingsMetric label={tPending('sku')} value={aboutInfo?.sku || '-'} />}
+        </div>
+      </SettingsGroup>
       {downloadData && (
         <DownloadModal
           setDownloadVisible={setDownloadVisible}
