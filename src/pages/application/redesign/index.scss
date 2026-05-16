@@ -1,10 +1,50 @@
 .redesign-application-page {
+  --application-page-text: #14221c;
+  --application-page-muted: #58675f;
+  --application-page-subtle: #6f7c75;
+  --application-page-accent: #166f48;
+  --application-page-accent-strong: #0e5a38;
+  --application-page-accent-soft: rgba(22, 111, 72, 0.1);
+  --application-page-accent-border: rgba(22, 111, 72, 0.26);
+  --application-page-surface: rgba(255, 255, 255, 0.92);
+  --application-page-surface-subtle: rgba(246, 250, 247, 0.88);
+  --application-page-toolbar-bg: rgba(255, 255, 255, 0.9);
+  --application-page-toolbar-border: rgba(64, 93, 77, 0.18);
+  --application-page-toolbar-shadow: 0 16px 38px rgba(31, 57, 45, 0.1);
+  --application-page-filter-bg: rgba(255, 255, 255, 0.72);
+  --application-page-filter-border: rgba(64, 93, 77, 0.18);
+  --application-page-filter-hover-bg: rgba(22, 111, 72, 0.08);
+  --application-page-filter-active-bg: rgba(22, 111, 72, 0.12);
+  --application-page-card-border: rgba(64, 93, 77, 0.17);
+  --application-page-card-border-hover: rgba(22, 111, 72, 0.36);
+  --application-page-card-bg:
+    linear-gradient(135deg, rgba(22, 111, 72, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 247, 243, 0.95));
+  --application-page-card-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.76),
+    0 18px 42px rgba(31, 57, 45, 0.11);
+  --application-page-card-hover-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 24px 52px rgba(31, 57, 45, 0.15);
+  --application-page-meta-bg: rgba(22, 111, 72, 0.06);
+  --application-page-meta-border: rgba(64, 93, 77, 0.18);
+  --application-page-meta-text: #506258;
+  --application-page-empty-bg: rgba(246, 250, 247, 0.78);
+  --application-page-empty-border: rgba(64, 93, 77, 0.24);
+  --application-page-focus-outline: rgba(22, 111, 72, 0.5);
+  --application-page-button-bg: rgba(255, 255, 255, 0.82);
+  --application-page-button-border: rgba(64, 93, 77, 0.2);
+  --application-page-button-hover-bg: rgba(22, 111, 72, 0.08);
+  --application-page-primary-bg: #166f48;
+  --application-page-primary-hover-bg: #0e5a38;
+  --application-page-primary-text: #ffffff;
+
   height: 100%;
   min-height: 0;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
   gap: 14px;
-  color: var(--vd-color-text, #eef5ef);
+  color: var(--application-page-text);
   container-type: inline-size;
 
   .ant-spin-nested-loading,
@@ -19,16 +59,59 @@
   }
 }
 
+:root.dark .redesign-application-page,
+:root[data-ui-theme='dark'] .redesign-application-page {
+  --application-page-text: #eef5ef;
+  --application-page-muted: #8f9c94;
+  --application-page-subtle: #a9bacb;
+  --application-page-accent: #8ef2bd;
+  --application-page-accent-strong: #a7f7cc;
+  --application-page-accent-soft: rgba(142, 242, 189, 0.12);
+  --application-page-accent-border: rgba(142, 242, 189, 0.45);
+  --application-page-surface: rgba(10, 14, 13, 0.58);
+  --application-page-surface-subtle: rgba(255, 255, 255, 0.04);
+  --application-page-toolbar-bg: rgba(10, 14, 13, 0.58);
+  --application-page-toolbar-border: rgba(209, 255, 229, 0.12);
+  --application-page-toolbar-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
+  --application-page-filter-bg: rgba(255, 255, 255, 0.04);
+  --application-page-filter-border: rgba(209, 255, 229, 0.1);
+  --application-page-filter-hover-bg: rgba(142, 242, 189, 0.08);
+  --application-page-filter-active-bg: rgba(142, 242, 189, 0.12);
+  --application-page-card-border: rgba(149, 178, 194, 0.16);
+  --application-page-card-border-hover: rgba(132, 190, 202, 0.4);
+  --application-page-card-bg:
+    linear-gradient(135deg, rgba(44, 65, 73, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(20, 35, 45, 0.94), rgba(11, 22, 30, 0.95));
+  --application-page-card-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 20px 48px rgba(0, 0, 0, 0.26);
+  --application-page-card-hover-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 26px 58px rgba(0, 0, 0, 0.34);
+  --application-page-meta-bg: transparent;
+  --application-page-meta-border: rgba(148, 163, 184, 0.16);
+  --application-page-meta-text: #a9bacb;
+  --application-page-empty-bg: rgba(9, 19, 26, 0.68);
+  --application-page-empty-border: rgba(148, 163, 184, 0.24);
+  --application-page-focus-outline: rgba(132, 190, 202, 0.82);
+  --application-page-button-bg: rgba(255, 255, 255, 0.04);
+  --application-page-button-border: rgba(209, 255, 229, 0.14);
+  --application-page-button-hover-bg: rgba(142, 242, 189, 0.1);
+  --application-page-primary-bg: #2f9f68;
+  --application-page-primary-hover-bg: #39b879;
+  --application-page-primary-text: #08100c;
+}
+
 .redesign-application-page__toolbar {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
   padding: 16px;
-  border: 1px solid var(--vd-color-border, rgba(209, 255, 229, 0.12));
+  border: 1px solid var(--application-page-toolbar-border);
   border-radius: 10px;
-  background: rgba(10, 14, 13, 0.58);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
+  background: var(--application-page-toolbar-bg);
+  box-shadow: var(--application-page-toolbar-shadow);
 }
 
 .redesign-application-page__heading {
@@ -36,14 +119,14 @@
   min-width: 0;
 
   > span {
-    color: var(--vd-color-accent, #8ef2bd);
+    color: var(--application-page-accent);
     font-size: 11px;
     font-weight: 700;
   }
 
   h1 {
     margin: 4px 0;
-    color: var(--vd-color-text, #eef5ef);
+    color: var(--application-page-text);
     font-size: 22px;
     font-weight: 650;
     line-height: 1.2;
@@ -51,7 +134,7 @@
 
   p {
     margin: 0;
-    color: var(--vd-color-muted, #8f9c94);
+    color: var(--application-page-muted);
     font-size: 13px;
   }
 }
@@ -69,8 +152,36 @@
   .ant-btn {
     max-width: 100%;
     min-height: 34px;
+    border-color: var(--application-page-button-border);
     border-radius: 7px;
+    color: var(--application-page-text);
+    background: var(--application-page-button-bg);
     font-weight: 550;
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--application-page-accent-border);
+      color: var(--application-page-accent-strong);
+      background: var(--application-page-button-hover-bg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--application-page-focus-outline);
+      outline-offset: 2px;
+    }
+  }
+
+  .ant-btn-primary {
+    border-color: var(--application-page-primary-bg);
+    color: var(--application-page-primary-text);
+    background: var(--application-page-primary-bg);
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--application-page-primary-hover-bg);
+      color: var(--application-page-primary-text);
+      background: var(--application-page-primary-hover-bg);
+    }
   }
 }
 
@@ -83,11 +194,11 @@
   button {
     min-height: 34px;
     flex: 0 0 auto;
-    border: 1px solid rgba(209, 255, 229, 0.1);
+    border: 1px solid var(--application-page-filter-border);
     border-radius: 8px;
     padding: 0 12px;
-    color: var(--vd-color-muted, #8f9c94);
-    background: rgba(255, 255, 255, 0.04);
+    color: var(--application-page-muted);
+    background: var(--application-page-filter-bg);
     cursor: pointer;
     transition:
       border-color 160ms ease,
@@ -97,20 +208,20 @@
 
   button:hover,
   button:focus-visible {
-    border-color: rgba(142, 242, 189, 0.32);
-    color: var(--vd-color-text, #eef5ef);
-    background: rgba(142, 242, 189, 0.08);
+    border-color: var(--application-page-accent-border);
+    color: var(--application-page-text);
+    background: var(--application-page-filter-hover-bg);
   }
 
   button:focus-visible {
-    outline: 2px solid rgba(142, 242, 189, 0.56);
+    outline: 2px solid var(--application-page-focus-outline);
     outline-offset: 2px;
   }
 
   button.is-active {
-    border-color: rgba(142, 242, 189, 0.45);
-    color: var(--vd-color-accent, #8ef2bd);
-    background: rgba(142, 242, 189, 0.12);
+    border-color: var(--application-page-accent-border);
+    color: var(--application-page-accent-strong);
+    background: var(--application-page-filter-active-bg);
   }
 }
 
@@ -128,24 +239,19 @@
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto auto;
   gap: 12px;
-  border: 1px solid rgba(149, 178, 194, 0.16);
+  border: 1px solid var(--application-page-card-border);
   border-radius: 8px;
   padding: 14px;
-  background:
-    linear-gradient(135deg, rgba(44, 65, 73, 0.18), transparent 42%),
-    linear-gradient(180deg, rgba(20, 35, 45, 0.94), rgba(11, 22, 30, 0.95));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 20px 48px rgba(0, 0, 0, 0.26);
+  background: var(--application-page-card-bg);
+  box-shadow: var(--application-page-card-shadow);
   transition:
     border-color 180ms ease,
+    box-shadow 180ms ease,
     transform 180ms ease;
 
   &:hover {
-    border-color: rgba(132, 190, 202, 0.4);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      0 26px 58px rgba(0, 0, 0, 0.34);
+    border-color: var(--application-page-card-border-hover);
+    box-shadow: var(--application-page-card-hover-shadow);
     transform: translateY(-2px);
   }
 }
@@ -165,7 +271,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid rgba(132, 190, 202, 0.82);
+    outline: 2px solid var(--application-page-focus-outline);
     outline-offset: 4px;
     border-radius: 6px;
   }
@@ -182,14 +288,14 @@
 
 .redesign-application-card__name {
   margin-top: 12px;
-  color: #f6fbff;
+  color: var(--application-page-text);
   font-size: 15px;
   font-weight: 700;
 }
 
 .redesign-application-card__resource {
   margin-top: 4px;
-  color: var(--vd-color-muted, #8f9c94);
+  color: var(--application-page-muted);
   font-size: 12px;
 }
 
@@ -205,10 +311,11 @@
 
   span {
     max-width: 100%;
-    border: 1px solid rgba(148, 163, 184, 0.16);
+    border: 1px solid var(--application-page-meta-border);
     border-radius: 6px;
     padding: 3px 7px;
-    color: #a9bacb;
+    color: var(--application-page-meta-text);
+    background: var(--application-page-meta-bg);
     font-size: 11px;
   }
 }
@@ -218,7 +325,35 @@
 
   .ant-btn {
     min-height: 32px;
+    border-color: var(--application-page-button-border);
     border-radius: 6px;
+    color: var(--application-page-text);
+    background: var(--application-page-button-bg);
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--application-page-accent-border);
+      color: var(--application-page-accent-strong);
+      background: var(--application-page-button-hover-bg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--application-page-focus-outline);
+      outline-offset: 2px;
+    }
+  }
+
+  .ant-btn-primary {
+    border-color: var(--application-page-primary-bg);
+    color: var(--application-page-primary-text);
+    background: var(--application-page-primary-bg);
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--application-page-primary-hover-bg);
+      color: var(--application-page-primary-text);
+      background: var(--application-page-primary-hover-bg);
+    }
   }
 }
 
@@ -228,10 +363,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px dashed rgba(148, 163, 184, 0.24);
+  border: 1px dashed var(--application-page-empty-border);
   border-radius: 8px;
-  background: rgba(9, 19, 26, 0.68);
-  color: var(--vd-color-muted, #8f9c94);
+  background: var(--application-page-empty-bg);
+  color: var(--application-page-muted);
 
   p {
     margin: 8px 0 0;
@@ -239,7 +374,7 @@
   }
 
   .ant-empty-description {
-    color: var(--vd-color-muted, #8f9c94);
+    color: var(--application-page-muted);
   }
 }
 
