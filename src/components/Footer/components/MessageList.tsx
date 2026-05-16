@@ -1,11 +1,11 @@
 import './messageList.scss';
 import { useState, useEffect } from 'react';
-import { Button, Input, Modal, Radio, Space, Table } from 'antd';
+import { Button, Empty, Input, Modal, Radio, Table } from 'antd';
 
 import { useInitData } from './initData';
 
 import { useTranslation } from 'react-i18next';
-import { ReloadOutlined } from '@ant-design/icons';
+import { ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { useMsg } from './useMsg';
 import { useNotice } from './useNotice';
 
@@ -49,6 +49,14 @@ const MessageNoticeModal = (props: any) => {
         break;
     }
   };
+  const isLoading = listHistoryMessageLoading || listNoticeLoading;
+  const currentTotal = msgType === 'msg' ? pageTotal : noticeTotal;
+  const currentSearchValue =
+    msgType === 'msg' ? msgReqParams.msgContentLike : noticeReqParams.subject;
+  const searchPlaceholder =
+    msgType === 'msg'
+      ? t('common.message_modal.please_enter_message_content')
+      : t('common.message_modal.please_enter_notice_title');
 
   useEffect(() => {
     if (visible) {
@@ -70,18 +78,13 @@ const MessageNoticeModal = (props: any) => {
       className="message-notice-modal"
       maskClosable={false}
       title={t('common.message_modal.msg_notice')}
-      cancelButtonProps={{
-        style: { display: 'none' },
-      }}
-      centered={true}
+      footer={null}
+      centered
+      width={860}
     >
-      <Space className="search-bar" size={8}>
-        <Button
-          icon={<ReloadOutlined spin={listHistoryMessageLoading || listNoticeLoading} />}
-          onClick={refreshDistributor}
-        />
+      <section className="message-notice-modal__toolbar">
         <Radio.Group
-          className="radio-group"
+          className="message-notice-modal__tabs"
           optionType="button"
           buttonStyle="solid"
           defaultValue={msgType}
@@ -91,71 +94,90 @@ const MessageNoticeModal = (props: any) => {
             setMsgType(e.target.value);
           }}
         />
-        <Input.Search
-          className="search-input"
-          placeholder={
-            msgType === 'msg'
-              ? t('common.message_modal.please_enter_message_content')
-              : t('common.message_modal.please_enter_notice_title')
-          }
-          loading={listHistoryMessageLoading || listNoticeLoading}
-          value={msgType === 'msg' ? msgReqParams.msgContentLike : noticeReqParams.subject}
-          onChange={(e) => {
-            if (msgType === 'msg') {
-              setMsgReqParams((prev) => ({
-                ...prev,
-                msgContentLike: e.target.value,
-              }));
-            } else {
-              setNoticeReqParams((prev) => ({
-                ...prev,
-                subject: e.target.value,
-              }));
-            }
-          }}
-          allowClear
-          onSearch={(value) => {
-            if (msgType === 'msg') {
-              fetchMsgList({ msgContentLike: value });
-            } else {
-              fetchNoticeList({ subject: value });
-            }
-          }}
-        />
-      </Space>
-      {msgType === 'msg' ? (
-        <Table
-          columns={msgColumns}
-          dataSource={msgList}
-          loading={listHistoryMessageLoading}
-          rowKey="id"
-          size="middle"
-          pagination={{
-            pageSize: msgReqParams.pageSize,
-            current: msgReqParams.pageNumber,
-            total: pageTotal,
-            onChange: (page, pageSize) => {
-              fetchMsgList({ pageNumber: page, pageSize });
-            },
-          }}
-        />
-      ) : (
-        <Table
-          columns={noticeColumns}
-          dataSource={noticeList}
-          loading={listNoticeLoading}
-          rowKey="id"
-          size="middle"
-          pagination={{
-            pageSize: noticeReqParams.pageSize,
-            current: noticeReqParams.pageNumber,
-            total: noticeTotal,
-            onChange: (page, pageSize) => {
-              fetchNoticeList({ pageNumber: page, pageSize });
-            },
-          }}
-        />
-      )}
+        <div className="message-notice-modal__tools">
+          <Input
+            className="message-notice-modal__search"
+            placeholder={searchPlaceholder}
+            prefix={<SearchOutlined />}
+            value={currentSearchValue}
+            onChange={(e) => {
+              if (msgType === 'msg') {
+                setMsgReqParams((prev) => ({
+                  ...prev,
+                  msgContentLike: e.target.value,
+                }));
+              } else {
+                setNoticeReqParams((prev) => ({
+                  ...prev,
+                  subject: e.target.value,
+                }));
+              }
+            }}
+            allowClear
+            onPressEnter={(event) => {
+              const value = event.currentTarget.value;
+              if (msgType === 'msg') {
+                fetchMsgList({ msgContentLike: value, pageNumber: 1 });
+              } else {
+                fetchNoticeList({ subject: value, pageNumber: 1 });
+              }
+            }}
+          />
+          <Button
+            className="message-notice-modal__refresh"
+            icon={<ReloadOutlined spin={isLoading} />}
+            aria-label={t('application_page.refresh')}
+            onClick={refreshDistributor}
+          />
+        </div>
+      </section>
+      <div className="message-notice-modal__summary">
+        <span>
+          {msgType === 'msg' ? t('common.message_modal.msg') : t('common.message_modal.notice')}
+        </span>
+        <strong>{currentTotal}</strong>
+      </div>
+      <div className="message-notice-modal__table">
+        {msgType === 'msg' ? (
+          <Table
+            columns={msgColumns}
+            dataSource={msgList}
+            loading={listHistoryMessageLoading}
+            rowKey="id"
+            size="middle"
+            locale={{
+              emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />,
+            }}
+            pagination={{
+              pageSize: msgReqParams.pageSize,
+              current: msgReqParams.pageNumber,
+              total: pageTotal,
+              onChange: (page, pageSize) => {
+                fetchMsgList({ pageNumber: page, pageSize });
+              },
+            }}
+          />
+        ) : (
+          <Table
+            columns={noticeColumns}
+            dataSource={noticeList}
+            loading={listNoticeLoading}
+            rowKey="id"
+            size="middle"
+            locale={{
+              emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />,
+            }}
+            pagination={{
+              pageSize: noticeReqParams.pageSize,
+              current: noticeReqParams.pageNumber,
+              total: noticeTotal,
+              onChange: (page, pageSize) => {
+                fetchNoticeList({ pageNumber: page, pageSize });
+              },
+            }}
+          />
+        )}
+      </div>
       {delMsgContextHolder}
     </Modal>
   );

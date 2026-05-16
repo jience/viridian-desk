@@ -2,7 +2,7 @@ import { HistoryMessageLevel, type HistoryMessageItem } from '@/services/api/msg
 import type { NoticeItem } from '@/services/api/notice/types';
 import { useAppSelector } from '@/store';
 import { selectIsLogin } from '@/store/feature/app';
-import { Button, Tooltip, type CheckboxOptionType } from 'antd';
+import { Button, Tag, Tooltip, type CheckboxOptionType } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 
@@ -28,47 +28,72 @@ export const useInitData = (opt: {
       dataIndex: 'msgContent',
       key: 'msgContent',
       ellipsis: true,
+      className: 'message-notice-modal__primary-cell',
       render: (text: any) => {
-        return text || '-';
+        return (
+          <Tooltip title={text || '-'} placement="topLeft">
+            <span className="message-notice-modal__text">{text || '-'}</span>
+          </Tooltip>
+        );
       },
     },
     {
       title: t('common.message_modal.msg_type'),
       dataIndex: 'level',
       key: 'level',
-      width: '1rem',
+      width: 116,
       render: (text: HistoryMessageLevel) => {
-        return levelMap[text] || '-';
+        const isEmergency = text === HistoryMessageLevel.EMERGENCY;
+        return (
+          <Tag
+            className={
+              isEmergency
+                ? 'message-notice-modal__tag message-notice-modal__tag--warning'
+                : 'message-notice-modal__tag'
+            }
+          >
+            {levelMap[text] || '-'}
+          </Tag>
+        );
       },
     },
     {
       title: t('common.message_modal.send_time'),
       dataIndex: 'createTime',
       key: 'createTime',
-      width: '1.6rem',
+      width: 168,
       render: (text: any) => {
-        return text || '-';
+        return <span className="message-notice-modal__time">{text || '-'}</span>;
       },
     },
     {
       title: t('common.message_modal.sender'),
       dataIndex: 'userName',
       key: 'userName',
-      fixed: 'left',
-      width: '1rem',
+      width: 120,
       render: (text: any) => {
-        return text ? <span title={`${text}`}>{`${text}`}</span> : '-';
+        return text ? (
+          <span className="message-notice-modal__user" title={`${text}`}>
+            {`${text}`}
+          </span>
+        ) : (
+          '-'
+        );
       },
     },
     {
       dataIndex: 'operate',
       key: 'operate',
-      fixed: 'right',
-      width: '1rem',
+      width: 92,
       title: t('common.operate'),
       render: (_value, row) => {
         return (
-          <Button type="text" disabled={!isLogin} onClick={() => opt.onMsgDelete(row)}>
+          <Button
+            className="message-notice-modal__delete"
+            type="text"
+            disabled={!isLogin}
+            onClick={() => opt.onMsgDelete(row)}
+          >
             {t('common.delete')}
           </Button>
         );
@@ -81,12 +106,14 @@ export const useInitData = (opt: {
       title: t('common.message_modal.notice_title'),
       dataIndex: 'subject',
       key: 'subject',
-      width: '1.8rem',
+      width: 176,
       ellipsis: true,
       render: (text: any) => {
         return (
-          <Tooltip title={text || '-'} trigger={['hover']} placement="left">
-            <p className="footer-title">{text || '-'}</p>
+          <Tooltip title={text || '-'} trigger={['hover']} placement="topLeft">
+            <span className="message-notice-modal__text message-notice-modal__text--strong">
+              {text || '-'}
+            </span>
           </Tooltip>
         );
       },
@@ -96,10 +123,11 @@ export const useInitData = (opt: {
       dataIndex: 'content',
       key: 'content',
       ellipsis: true,
+      className: 'message-notice-modal__primary-cell',
       render: (text: any) => {
         return (
-          <Tooltip title={text || '-'} trigger={['hover']} placement="left">
-            {text || '-'}
+          <Tooltip title={text || '-'} trigger={['hover']} placement="topLeft">
+            <span className="message-notice-modal__text">{text || '-'}</span>
           </Tooltip>
         );
       },
@@ -108,19 +136,24 @@ export const useInitData = (opt: {
       title: t('common.message_modal.published_time'),
       dataIndex: 'publishedTime',
       key: 'publishedTime',
-      width: '1.5rem',
+      width: 168,
       render: (text: any) => {
-        return text || '-';
+        return <span className="message-notice-modal__time">{text || '-'}</span>;
       },
     },
     {
       title: t('common.message_modal.notice_publisher'),
       dataIndex: 'publisher',
       key: 'publisher',
-      width: '1rem',
-      fixed: 'left',
+      width: 120,
       render: (text: any) => {
-        return text ? <span title={`${text?.loginName}`}>{`${text?.loginName}`}</span> : '-';
+        return text ? (
+          <span className="message-notice-modal__user" title={`${text?.loginName}`}>
+            {`${text?.loginName}`}
+          </span>
+        ) : (
+          '-'
+        );
       },
     },
   ];
