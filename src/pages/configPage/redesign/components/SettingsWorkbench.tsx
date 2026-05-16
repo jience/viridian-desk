@@ -105,7 +105,7 @@ export function SettingsRow({
       {hasContent(icon) && <div className="vd-settings-row__icon">{icon}</div>}
       <div className="vd-settings-row__content">
         <div className="vd-settings-row__title-line">
-          <span className="vd-settings-row__title">{title}</span>
+          <div className="vd-settings-row__title">{title}</div>
           {hasContent(meta) && <span className="vd-settings-row__meta">{meta}</span>}
         </div>
         {hasContent(description) && <div className="vd-settings-row__description">{description}</div>}

@@ -4,7 +4,6 @@ import { isRedesignAuthEnabled } from '@/features/redesign-auth/enabled';
 import { isRedesignAppEnabled } from '@/features/redesign-app/enabled';
 import { RedesignAppLayout } from '@/layouts/RedesignAppLayout';
 import { Application } from '@/pages/application';
-import ConfigPage from '@/pages/configPage';
 import RedesignConfigPage from '@/pages/configPage/redesign';
 import About from '@/pages/configPage/subPages/about';
 import AdvancedSetting from '@/pages/configPage/subPages/advancedSetting';
@@ -39,27 +38,10 @@ import { Component as Malfunction } from '../pages/malfunction';
 import { Component as PeripheralSetting } from '../pages/peripheralSetting';
 
 const ActiveLogin = isRedesignAuthEnabled ? RedesignLogin : Login;
-const ActiveConfigPage = isRedesignAuthEnabled ? RedesignConfigPage : ConfigPage;
 const ActiveAppLayout = isRedesignAppEnabled ? RedesignAppLayout : BasicLayout;
 const ActiveDesk = isRedesignAppEnabled ? RedesignDesk : Desk;
 const ActiveDeskDetail = isRedesignAppEnabled ? RedesignDeskDetail : DeskDetail;
-const configPagePathPattern = /^\/configPage(?=\/|$)/;
 const appPathPattern = /^\/app(?=\/|$)/;
-
-const rewriteLegacyConfigPath = (to: To): To => {
-  if (typeof to === 'string') {
-    return to.replace(configPagePathPattern, '/legacy-configPage');
-  }
-
-  if (to.pathname) {
-    return {
-      ...to,
-      pathname: to.pathname.replace(configPagePathPattern, '/legacy-configPage'),
-    };
-  }
-
-  return to;
-};
 
 const rewriteLegacyAppPath = (to: To): To => {
   if (typeof to === 'string') {
@@ -75,62 +57,6 @@ const rewriteLegacyAppPath = (to: To): To => {
 
   return to;
 };
-
-// eslint-disable-next-line react-refresh/only-export-components
-function LegacyConfigPageRoute() {
-  const dataRouterContext = useContext(UNSAFE_DataRouterContext);
-  const navigationContext = useContext(UNSAFE_NavigationContext);
-
-  const legacyDataRouterContext = useMemo(() => {
-    if (!dataRouterContext) return dataRouterContext;
-
-    const { router } = dataRouterContext;
-    const legacyRouter = Object.create(router) as typeof router;
-
-    legacyRouter.navigate = (async (
-      to: number | To | null,
-      opts?: RouterNavigateOptions,
-    ): Promise<void> => {
-      if (typeof to === 'number') {
-        await router.navigate(to);
-        return;
-      }
-
-      await router.navigate(to === null ? to : rewriteLegacyConfigPath(to), opts);
-    }) as typeof router.navigate;
-
-    return {
-      ...dataRouterContext,
-      router: legacyRouter,
-    };
-  }, [dataRouterContext]);
-
-  const legacyNavigationContext = useMemo(() => {
-    const { navigator } = navigationContext;
-    const legacyNavigator: RouterNavigator = {
-      ...navigator,
-      push: (to: To, state?: unknown, opts?: NavigateOptions) => {
-        navigator.push(rewriteLegacyConfigPath(to), state, opts);
-      },
-      replace: (to: To, state?: unknown, opts?: NavigateOptions) => {
-        navigator.replace(rewriteLegacyConfigPath(to), state, opts);
-      },
-    };
-
-    return {
-      ...navigationContext,
-      navigator: legacyNavigator,
-    };
-  }, [navigationContext]);
-
-  return (
-    <UNSAFE_DataRouterContext.Provider value={legacyDataRouterContext}>
-      <UNSAFE_NavigationContext.Provider value={legacyNavigationContext}>
-        <ConfigPage />
-      </UNSAFE_NavigationContext.Provider>
-    </UNSAFE_DataRouterContext.Provider>
-  );
-}
 
 // eslint-disable-next-line react-refresh/only-export-components
 function LegacyAppRoute() {
@@ -275,12 +201,7 @@ const rootRoutes: RouteObject[] = [
       },
       {
         path: 'configPage',
-        element: <ActiveConfigPage />,
-        children: createSettingsRoutes(),
-      },
-      {
-        path: 'legacy-configPage',
-        element: <LegacyConfigPageRoute />,
+        element: <RedesignConfigPage />,
         children: createSettingsRoutes(),
       },
       {
