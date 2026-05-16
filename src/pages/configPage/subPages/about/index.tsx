@@ -37,26 +37,24 @@ export default function About(_props: any) {
   }, []);
 
   return (
-    <>
+    <SettingsSection
+      eyebrow={tPending('product')}
+      title={intl.formatMessage({ id: 'ABOUT' })}
+      description={tPending('product_description')}
+    >
       {getClientAboutLoading ? (
-        <div className="about">
+        <div className="about about--loading">
           <Skeleton active />
         </div>
       ) : (
-        <SettingsSection
-          eyebrow={tPending('product')}
-          title={intl.formatMessage({ id: 'ABOUT' })}
-          description={tPending('product_description')}
-        >
-          <div className="about">
-            <VersionInfo aboutInfo={aboutInfo} />
-            <div className="bottom-wrapper">
-              <LicenseContent aboutInfo={aboutInfo} />
-            </div>
-            <div className="copyright">{aboutInfo?.copyright}</div>
+        <div className="about">
+          <VersionInfo aboutInfo={aboutInfo} />
+          <div className="bottom-wrapper">
+            <LicenseContent aboutInfo={aboutInfo} />
           </div>
-        </SettingsSection>
+          <div className="copyright">{aboutInfo?.copyright}</div>
+        </div>
       )}
-    </>
+    </SettingsSection>
   );
 }

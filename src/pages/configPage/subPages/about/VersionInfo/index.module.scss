@@ -48,6 +48,17 @@
   padding: 0 16px 16px;
 }
 
+.version-metrics :global(.vd-settings-metric) {
+  min-width: 0;
+}
+
+.version-metrics :global(.vd-settings-metric strong) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @container vd-settings-workbench (max-width: 760px) {
   .version-metrics {
     grid-template-columns: 1fr;
