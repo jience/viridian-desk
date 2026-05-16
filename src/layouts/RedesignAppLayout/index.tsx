@@ -1,6 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useIntl } from 'react-intl';
 import { Outlet, useLocation } from 'react-router';
 import Sidebar from '@/components/Sidebar';
 import { GatewaySelect } from '@/components/GatewaySelect';
@@ -10,34 +9,45 @@ import { AppShell, type AssistantState } from '@/ui/shell/app-shell';
 import '@/styles/redesign.css';
 import './index.scss';
 
-const routeTitleIds: Array<{ match: string; titleId: string; fallback: string }> = [
-  { match: '/app/deskDetail', titleId: 'DETAIL', fallback: 'Detail' },
-  { match: '/app/desk', titleId: 'DESK', fallback: 'Desktop' },
-  { match: '/app/application', titleId: 'Application', fallback: 'Application' },
-  { match: '/app/peripheral', titleId: 'Peripheral', fallback: 'Peripheral' },
-  { match: '/app/approval', titleId: 'APPROVAL', fallback: 'Approval' },
-  { match: '/app/malfunction', titleId: 'DesktopIssues', fallback: 'Faults' },
-];
+const routeTitles = [
+  { match: '/app/deskDetail', titleKey: 'navigation.detail' },
+  { match: '/app/desk', titleKey: 'navigation.desktop' },
+  { match: '/app/application', titleKey: 'navigation.application' },
+  { match: '/app/peripheral', titleKey: 'navigation.peripheral' },
+  { match: '/app/approval', titleKey: 'navigation.approval' },
+  { match: '/app/malfunction', titleKey: 'navigation.desktopIssues' },
+] as const;
 
 export function RedesignAppLayout() {
-  const intl = useIntl();
   const { t: assistantT } = useTranslation('assistant');
   const { t: commonT } = useTranslation('common');
   const location = useLocation();
   const [assistantCollapsed, setAssistantCollapsed] = useState(false);
+  const [isCompactAssistant, setIsCompactAssistant] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 1080px)');
+    const updateCompactAssistant = () => setIsCompactAssistant(mediaQuery.matches);
+
+    updateCompactAssistant();
+    mediaQuery.addEventListener('change', updateCompactAssistant);
+
+    return () => mediaQuery.removeEventListener('change', updateCompactAssistant);
+  }, []);
 
   const routeMeta = useMemo(() => {
-    return routeTitleIds.find((item) => location.pathname.startsWith(item.match)) ?? routeTitleIds[1];
+    return routeTitles.find((item) => location.pathname.startsWith(item.match)) ?? routeTitles[1];
   }, [location.pathname]);
 
-  const assistantState: AssistantState = assistantCollapsed ? 'collapsed' : 'expanded';
+  const effectiveAssistantCollapsed = assistantCollapsed || isCompactAssistant;
+  const assistantState: AssistantState = effectiveAssistantCollapsed ? 'collapsed' : 'expanded';
 
   return (
     <div className="redesign-app-layout">
       <AppShell
         assistant={
           <AssistantPanel
-            collapsed={assistantCollapsed}
+            collapsed={effectiveAssistantCollapsed}
             onToggle={() => setAssistantCollapsed((current) => !current)}
           />
         }
@@ -49,17 +59,15 @@ export function RedesignAppLayout() {
           <header className="redesign-app-layout__header">
             <div>
               <p className="redesign-app-layout__eyebrow">{commonT('appName')}</p>
-              <h1 className="redesign-app-layout__title">
-                {intl.formatMessage({ id: routeMeta.titleId, defaultMessage: routeMeta.fallback })}
-              </h1>
+              <h1 className="redesign-app-layout__title">{commonT(routeMeta.titleKey)}</h1>
             </div>
             <Button
-              aria-pressed={!assistantCollapsed}
+              aria-pressed={!effectiveAssistantCollapsed}
               onClick={() => setAssistantCollapsed((current) => !current)}
               size="sm"
               variant="secondary"
             >
-              {assistantCollapsed ? assistantT('title') : commonT('actions.close')}
+              {effectiveAssistantCollapsed ? assistantT('title') : commonT('actions.close')}
             </Button>
           </header>
 

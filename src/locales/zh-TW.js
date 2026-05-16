@@ -577,7 +577,6 @@ export default {
   UserOldPasswordError: '舊密碼輸入錯誤',
   PermissionDenied: '當前用戶無登錄權限',
   AppInfomation: '應用',
-  Application: '應用',
   'InvalidVmStatus.MustUnlocked': '鎖定中的桌面無法進行此操作',
   publishFromSys: '收藏應用',
   publishFromSelf: '自定義發布',
