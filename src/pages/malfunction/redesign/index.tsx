@@ -242,7 +242,7 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
         >
           {props.faultTypeOptions.map((option) => {
             const value = toOptionKey(option.value) as ViewFaultType;
-            const active = toOptionKey(props.currentType) === toOptionKey(value);
+            const active = option.value === props.currentType;
 
             return (
               <button
@@ -264,7 +264,7 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
         >
           {props.faultStatusOptions.map((option) => {
             const value = toOptionKey(option.value) as ViewFaultStatus;
-            const active = toOptionKey(props.currentStatus) === toOptionKey(value);
+            const active = option.value === props.currentStatus;
 
             return (
               <button
