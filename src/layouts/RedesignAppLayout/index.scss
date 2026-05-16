@@ -175,6 +175,23 @@
 }
 
 @media (max-width: 1080px) {
+  .redesign-app-layout {
+    .vd-app-shell--assistant-expanded {
+      grid-template-columns: 68px minmax(0, 1fr);
+    }
+
+    .vd-app-shell--assistant-expanded .vd-app-shell__assistant {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      width: min(304px, calc(100% - 68px));
+      min-width: min(304px, calc(100% - 68px));
+      box-shadow: -18px 0 42px rgba(0, 0, 0, 0.2);
+    }
+  }
+
   .redesign-app-layout__header {
     min-height: 64px;
     padding: 12px 14px;

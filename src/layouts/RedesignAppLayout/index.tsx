@@ -42,10 +42,15 @@ export function RedesignAppLayout() {
     return routeTitles.find((item) => location.pathname.startsWith(item.match)) ?? routeTitles[1];
   }, [location.pathname]);
 
-  const effectiveAssistantCollapsed = isCompactAssistant
-    ? !compactAssistantOpen
-    : assistantCollapsed;
-  const assistantState: AssistantState = effectiveAssistantCollapsed ? 'collapsed' : 'expanded';
+  const assistantState: AssistantState = isCompactAssistant
+    ? compactAssistantOpen
+      ? 'expanded'
+      : 'hidden'
+    : assistantCollapsed
+      ? 'collapsed'
+      : 'expanded';
+  const assistantPanelCollapsed = isCompactAssistant ? false : assistantCollapsed;
+  const isAssistantOpen = assistantState === 'expanded';
   const toggleAssistant = () => {
     if (isCompactAssistant) {
       setCompactAssistantOpen((current) => !current);
@@ -59,10 +64,9 @@ export function RedesignAppLayout() {
     <div className="redesign-app-layout">
       <AppShell
         assistant={
-          <AssistantPanel
-            collapsed={effectiveAssistantCollapsed}
-            onToggle={toggleAssistant}
-          />
+          assistantState === 'hidden' ? undefined : (
+            <AssistantPanel collapsed={assistantPanelCollapsed} onToggle={toggleAssistant} />
+          )
         }
         assistantState={assistantState}
         nav={<Sidebar />}
@@ -75,12 +79,12 @@ export function RedesignAppLayout() {
               <h1 className="redesign-app-layout__title">{commonT(routeMeta.titleKey)}</h1>
             </div>
             <Button
-              aria-pressed={!effectiveAssistantCollapsed}
+              aria-pressed={isAssistantOpen}
               onClick={toggleAssistant}
               size="sm"
               variant="secondary"
             >
-              {effectiveAssistantCollapsed ? assistantT('title') : commonT('actions.close')}
+              {isAssistantOpen ? commonT('actions.close') : assistantT('title')}
             </Button>
           </header>
 
