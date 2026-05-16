@@ -13,11 +13,7 @@ import { getLoginHistory, setCurrentLoginType } from '@/store/feature/app';
 import { fetchConfigInfo } from '@/store/feature/config';
 import { setNetwork } from '@/store/feature/gateway';
 import { fetchTerminalInfo } from '@/store/feature/terminal';
-import {
-  createBrowserRouter,
-  Navigate,
-  type RouteObject,
-} from 'react-router';
+import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
 import ClientLayout from '../layouts/clientLayout';
 import { Component as Approval } from '../pages/approval';
 import RedesignLogin from '../pages/login/redesign';
@@ -63,17 +59,6 @@ const createAppRoutes = ({
 ];
 
 const rootRoutes: RouteObject[] = [
-  {
-    path: '/redesign-preview',
-    loader: async () => {
-      await appStore.dispatch(fetchConfigInfo());
-      return null;
-    },
-    lazy: async () => {
-      const { default: RedesignPreview } = await import('@/features/redesign-preview');
-      return { Component: RedesignPreview };
-    },
-  },
   {
     path: '/',
     element: <ClientLayout />,
