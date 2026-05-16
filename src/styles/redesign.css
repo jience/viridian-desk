@@ -473,6 +473,9 @@
   display: grid;
   grid-auto-rows: minmax(44px, auto);
   gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .vd-assistant-panel__quick-item {
@@ -490,31 +493,12 @@
   font-size: 12px;
   font-weight: 600;
   text-align: left;
-  cursor: pointer;
-  transition:
-    border-color 160ms ease,
-    background-color 160ms ease,
-    transform 160ms ease;
 }
 
 .vd-assistant-panel__quick-item i {
   color: var(--vd-color-muted);
   font-size: 16px;
   text-align: center;
-}
-
-.vd-assistant-panel__quick-item:hover {
-  border-color: color-mix(in srgb, var(--vd-color-accent) 52%, var(--vd-color-border));
-  background: var(--vd-color-panel-subtle);
-}
-
-.vd-assistant-panel__quick-item:active {
-  transform: translateY(1px);
-}
-
-.vd-assistant-panel__quick-item:focus-visible {
-  outline: none;
-  box-shadow: var(--vd-focus-ring);
 }
 
 .vd-assistant-panel__note {

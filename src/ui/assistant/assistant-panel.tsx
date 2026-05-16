@@ -34,14 +34,14 @@ export function AssistantPanel({ collapsed = false, onToggle }: AssistantPanelPr
         <p className="vd-assistant-panel__subtitle">{t('subtitle')}</p>
       </div>
 
-      <div className="vd-assistant-panel__quick-list">
+      <ul className="vd-assistant-panel__quick-list">
         {workflowItems.map((item) => (
-          <button className="vd-assistant-panel__quick-item" key={item.key} type="button">
+          <li className="vd-assistant-panel__quick-item" key={item.key}>
             <i className={`iconfont ${item.icon}`} aria-hidden="true" />
             <span>{t(item.key)}</span>
-          </button>
+          </li>
         ))}
-      </div>
+      </ul>
 
       <div className="vd-assistant-panel__note">
         <span className="vd-assistant-panel__status-dot" />
