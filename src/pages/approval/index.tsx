@@ -125,10 +125,16 @@ export function Component() {
     [formatMessage, statusLabels],
   );
 
-  const pendingCount = useMemo(
+  const canRead = hasPermission(Actions.TerminalROApplyManageRead);
+  const canManageApproval = hasPermission(Actions.TerminalRWApplyManageCreateOrCancel);
+  const canCancel = canManageApproval;
+  const canCreate = canManageApproval;
+
+  const currentPagePendingCount = useMemo(
     () => approvalList.filter((item) => item.status === 'pending').length,
     [approvalList],
   );
+  const pendingCount = curWorkflowStatus === 'pending' ? total : currentPagePendingCount;
 
   const handleStatusChange = (status: ViewWorkflowStatus) => {
     setCurWorkflowStatus(status);
@@ -179,7 +185,7 @@ export function Component() {
   };
 
   const paginationProps = useMemo<false | TablePaginationConfig>(() => {
-    if (!hasPermission(Actions.TerminalROApplyManageRead)) {
+    if (!canRead) {
       return false;
     }
 
@@ -195,6 +201,7 @@ export function Component() {
       disabled: listWorkflowLoading,
     };
   }, [
+    canRead,
     curWorkflowStatus,
     currentUser?.userId,
     listWorkflowLoading,
@@ -216,9 +223,9 @@ export function Component() {
         selectedRowKeys={selectedRowKeys}
         selectedRows={tableChecked}
         pagination={paginationProps}
-        canCancel={hasPermission(Actions.TerminalRWApplyManageCreateOrCancel)}
-        canCreate={hasPermission(Actions.TerminalRWApplyManageCreateOrCancel)}
-        canRead={hasPermission(Actions.TerminalROApplyManageRead)}
+        canCancel={canCancel}
+        canCreate={canCreate}
+        canRead={canRead}
         onRefresh={handleRefresh}
         onStatusChange={handleStatusChange}
         onCreate={() => setCreateModalVisible(true)}
