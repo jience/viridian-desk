@@ -1,4 +1,3 @@
-import { SettingItem } from '@/components/SettingItem';
 import './index.scss';
 import { useEffect, useMemo, useRef, useState, type FC } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,9 +10,16 @@ import { selectIsThin } from '@/store/feature/terminal';
 import { EditNetModal, type EditNetModalRef, type EditNetModalReqType } from './EditNetModal';
 import type { NetProbeItemRender } from '@/native/interfaces/cmd';
 import { bridge } from '@/native';
+import { SettingsRow } from '../../../redesign/components';
+
+type PendingNetworkInfoKey = 'network_info_description';
+
+const advancedSettingKey = (key: PendingNetworkInfoKey) => `config_page.advanced_setting.${key}`;
 
 export const NetworkInfo: FC = () => {
   const { t } = useTranslation();
+  const tPending = (key: PendingNetworkInfoKey) =>
+    (t as unknown as (translationKey: string) => string)(advancedSettingKey(key));
   const [copyIpMacInfo, setCopyIpMacInfo] = useState('');
   const [networkInfo, setNetworkInfo] = useState<NetProbeItemRender>();
   const [netCopied, setNetCopied] = useState(false);
@@ -97,9 +103,11 @@ export const NetworkInfo: FC = () => {
 
   return (
     <div className="network-info-wrapper">
-      <SettingItem
-        mainTitle={t('config_page.advanced_setting.network_info')}
-        optionSlot={
+      <SettingsRow
+        icon={<i className="iconfont icon-net" />}
+        title={t('config_page.advanced_setting.network_info')}
+        description={networkInfo?.name || tPending('network_info_description')}
+        action={
           <CopyToClipboard text={copyIpMacInfo} onCopy={handleOnCopy}>
             <Button
               size="small"
@@ -127,7 +135,7 @@ export const NetworkInfo: FC = () => {
             </Button>
           }
         />
-      </SettingItem>
+      </SettingsRow>
       <EditNetModal ref={editNetModalRef} />
     </div>
   );

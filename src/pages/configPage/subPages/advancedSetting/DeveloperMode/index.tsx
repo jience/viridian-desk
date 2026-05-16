@@ -1,13 +1,19 @@
-import { SettingItem } from '@/components/SettingItem';
 import './index.scss';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Switch } from 'antd';
 import { configDeveloperMode, selectDeveloperMode } from '@/store/feature/config';
 import { useAppDispatch, useAppSelector } from '@/store';
+import { SettingsRow } from '../../../redesign/components';
+
+type PendingDeveloperModeKey = 'developer_mode_description';
+
+const advancedSettingKey = (key: PendingDeveloperModeKey) => `config_page.advanced_setting.${key}`;
 
 export const DeveloperMode: FC = () => {
   const { t } = useTranslation();
+  const tPending = (key: PendingDeveloperModeKey) =>
+    (t as unknown as (translationKey: string) => string)(advancedSettingKey(key));
   const dispatch = useAppDispatch();
   const developerMode = useAppSelector(selectDeveloperMode);
 
@@ -18,10 +24,12 @@ export const DeveloperMode: FC = () => {
 
   return (
     <div className="develop-mode-wrapper">
-      <SettingItem
-        mainTitle={t('config_page.advanced_setting.developer_mode')}
-        optionSlot={
-          <Switch size="small" checked={developerMode} onChange={(e: any) => switchHandle(e)} />
+      <SettingsRow
+        icon={<i className="iconfont icon-log" />}
+        title={t('config_page.advanced_setting.developer_mode')}
+        description={tPending('developer_mode_description')}
+        action={
+          <Switch size="small" checked={developerMode} onChange={(e: boolean) => switchHandle(e)} />
         }
       />
     </div>

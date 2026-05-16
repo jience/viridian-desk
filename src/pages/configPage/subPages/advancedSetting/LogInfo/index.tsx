@@ -1,6 +1,5 @@
 import './index.scss';
 import InfoTable from '@/components/InfoTable';
-import { SettingItem } from '@/components/SettingItem';
 import { useAppSelector } from '@/store';
 import { selectDeveloperMode, selectIntegration } from '@/store/feature/config';
 import { transformSize } from '@/utils/common';
@@ -11,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { LogConfigModal, type LogConfigModalRef } from './LogConfigModal';
 import type { GetLogInfoRes, SetLogReq } from '@/native/interfaces/cmd';
 import { bridge } from '@/native';
+import { SettingsRow } from '../../../redesign/components';
 
 export type LogInfoProps = unknown;
 
@@ -107,15 +107,16 @@ export const LogInfo: FC<LogInfoProps> = () => {
 
   return (
     <div className="log-info-wrapper">
-      <SettingItem
-        mainTitle={
+      <SettingsRow
+        icon={<i className="iconfont icon-log" />}
+        title={
           <div className="log-title">
             <span>{logSizeNumber}</span> {logSizeUnit}
           </div>
         }
-        subTitle={t('config_page.advanced_setting.log_size')}
-        optionSlot={
-          <Space size={4}>
+        description={t('config_page.advanced_setting.log_size')}
+        action={
+          <Space size={4} wrap>
             <Button icon={<DeleteOutlined />} size="small" onClick={() => handleClearLog()}>
               {t('config_page.advanced_setting.clear')}
             </Button>
@@ -143,7 +144,7 @@ export const LogInfo: FC<LogInfoProps> = () => {
             </Button>
           }
         />
-      </SettingItem>
+      </SettingsRow>
       <LogConfigModal ref={logConfigModalRef} />
       {contextHolder}
     </div>

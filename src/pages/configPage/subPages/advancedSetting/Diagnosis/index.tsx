@@ -2,12 +2,18 @@ import { useTranslation } from 'react-i18next';
 import './index.scss';
 
 import { useRef, type FC } from 'react';
-import { SettingItem } from '@/components/SettingItem';
 import { Button } from 'antd';
 import DiagnosisModal, { type DiagnosisModalRef } from './DiagnosisModal';
+import { SettingsRow } from '../../../redesign/components';
+
+type PendingDiagnosisKey = 'diagnosis_description';
+
+const advancedSettingKey = (key: PendingDiagnosisKey) => `config_page.advanced_setting.${key}`;
 
 export const Diagnosis: FC = () => {
   const { t } = useTranslation();
+  const tPending = (key: PendingDiagnosisKey) =>
+    (t as unknown as (translationKey: string) => string)(advancedSettingKey(key));
   const diagnosisRef = useRef<DiagnosisModalRef>(null);
 
   const handleOpenDiagnosis = async () => {
@@ -18,9 +24,11 @@ export const Diagnosis: FC = () => {
 
   return (
     <div className="diagnosis-wrapper">
-      <SettingItem
-        mainTitle={t('config_page.advanced_setting.diagnosis')}
-        optionSlot={
+      <SettingsRow
+        icon={<i className="iconfont icon-log" />}
+        title={t('config_page.advanced_setting.diagnosis')}
+        description={tPending('diagnosis_description')}
+        action={
           <Button className="right-btn" size="small" onClick={handleOpenDiagnosis}>
             {t('config_page.advanced_setting.diagnosis')}
           </Button>

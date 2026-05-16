@@ -5,8 +5,26 @@ import { LogInfo } from './LogInfo';
 import { DeveloperMode } from './DeveloperMode';
 import { NetworkInfo } from './NetworkInfo';
 import { Diagnosis } from './Diagnosis';
+import { useTranslation } from 'react-i18next';
+import { useIntl } from 'react-intl';
+import { SettingsGroup, SettingsSection } from '../../redesign/components';
+
+type PendingAdvancedSettingKey =
+  | 'developer_tools'
+  | 'developer_tools_description'
+  | 'operations'
+  | 'operations_description'
+  | 'support_tools'
+  | 'support_tools_description';
+
+const advancedSettingKey = (key: PendingAdvancedSettingKey) =>
+  `config_page.advanced_setting.${key}`;
 
 export default function AdvancedSetting() {
+  const { t } = useTranslation();
+  const intl = useIntl();
+  const tPending = (key: PendingAdvancedSettingKey) =>
+    (t as unknown as (translationKey: string) => string)(advancedSettingKey(key));
   const developerMode = useAppSelector(selectDeveloperMode);
 
   // 网络信息编辑表单
@@ -142,11 +160,27 @@ export default function AdvancedSetting() {
   // }, [intl, networkInfo]);
 
   return (
-    <div className="advanced-setting" key="advanced-setting">
-      <Diagnosis />
-      <NetworkInfo />
-      <DeveloperMode />
-      {developerMode && <LogInfo />}
-    </div>
+    <SettingsSection
+      eyebrow={tPending('operations')}
+      title={intl.formatMessage({ id: 'Senior' })}
+      description={tPending('operations_description')}
+    >
+      <div className="advanced-setting" key="advanced-setting">
+        <SettingsGroup
+          title={tPending('support_tools')}
+          description={tPending('support_tools_description')}
+        >
+          <Diagnosis />
+          <NetworkInfo />
+        </SettingsGroup>
+        <SettingsGroup
+          title={tPending('developer_tools')}
+          description={tPending('developer_tools_description')}
+        >
+          <DeveloperMode />
+          {developerMode && <LogInfo />}
+        </SettingsGroup>
+      </div>
+    </SettingsSection>
   );
 }
