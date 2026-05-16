@@ -8,18 +8,18 @@ import type { TablePaginationConfig } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { ApprovalDetailModal, type ApprovalDetailModalRef } from './ApprovalDetailModal';
+import { ApprovalPage } from './ApprovalPage';
 import CancelWorkflow from './component/cancel';
 import Create from './component/create';
 import './index.scss';
 import {
   getWorkflowTypeLabel,
-  RedesignApprovalPage,
   type ApprovalWorkflowItem,
   type ViewWorkflowStatus,
   type WorkflowStatus,
   workflowStatusOrder,
   type WorkflowStatusOption,
-} from './redesign';
+} from './approvalUtils';
 
 const APPROVAL_PAGE_SIZE = 7;
 
@@ -212,7 +212,7 @@ export function Component() {
 
   return (
     <>
-      <RedesignApprovalPage
+      <ApprovalPage
         currentStatus={curWorkflowStatus}
         statusOptions={statusOptions}
         statusLabels={statusLabels}

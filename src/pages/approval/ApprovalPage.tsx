@@ -11,8 +11,8 @@ import {
   type ViewWorkflowStatus,
   type WorkflowStatus,
   type WorkflowStatusOption,
-} from './utils';
-import './index.scss';
+} from './approvalUtils';
+import './ApprovalPage.scss';
 
 const statusToneMap: Record<WorkflowStatus, string> = {
   pending: 'processing',
@@ -28,7 +28,7 @@ const toText = (value: ReactNode) =>
   typeof value === 'string' || typeof value === 'number' ? String(value) : '';
 const toOptionKey = (value: unknown) => String(value ?? '');
 
-export interface RedesignApprovalPageProps {
+export interface ApprovalPageProps {
   currentStatus: ViewWorkflowStatus;
   statusOptions: WorkflowStatusOption[];
   statusLabels: Record<WorkflowStatus, string>;
@@ -51,7 +51,7 @@ export interface RedesignApprovalPageProps {
   formatMessage: IntlShape['formatMessage'];
 }
 
-export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
+export function ApprovalPage(props: ApprovalPageProps) {
   const refreshLabel = props.formatMessage({ id: 'REFRESH', defaultMessage: 'Refresh' });
   const activeStatusLabel =
     toText(props.statusOptions.find((option) => option.value === props.currentStatus)?.label) ||
@@ -72,11 +72,7 @@ export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
     }
 
     return (
-      <span
-        className={`redesign-approval-status redesign-approval-status--${statusToneMap[status]}`}
-      >
-        {label}
-      </span>
+      <span className={`approval-status approval-status--${statusToneMap[status]}`}>{label}</span>
     );
   };
 
@@ -118,7 +114,7 @@ export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
       width: 170,
       render: (approveUser: ApprovalWorkflowItem['approveUser']) =>
         approveUser ? (
-          <span className="redesign-approval-page__name" title={approveUser}>
+          <span className="approval-page__name" title={approveUser}>
             {approveUser}
           </span>
         ) : (
@@ -171,9 +167,9 @@ export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
   };
 
   return (
-    <main className="redesign-approval-page">
-      <header className="redesign-approval-page__header">
-        <div className="redesign-approval-page__heading">
+    <main className="approval-page">
+      <header className="approval-page__header">
+        <div className="approval-page__heading">
           <span>{props.formatMessage({ id: 'ApprovalWorkbenchEyebrow' })}</span>
           <h1>{props.formatMessage({ id: 'ApprovalWorkbenchTitle' })}</h1>
           <p>
@@ -188,7 +184,7 @@ export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
           </p>
         </div>
 
-        <Space className="redesign-approval-page__actions" wrap>
+        <Space className="approval-page__actions" wrap>
           {props.canCancel && (
             <Tooltip title={props.formatMessage({ id: 'CancelWorkflow' })}>
               <Button
@@ -219,10 +215,10 @@ export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
         </Space>
       </header>
 
-      <section className="redesign-approval-page__filters">
+      <section className="approval-page__filters">
         <div
           aria-label={props.formatMessage({ id: 'STATUS' })}
-          className="redesign-approval-page__segmented"
+          className="approval-page__segmented"
           role="group"
         >
           {props.statusOptions.map((option) => {
@@ -243,7 +239,7 @@ export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
         </div>
       </section>
 
-      <div className="redesign-approval-page__compact-filters">
+      <div className="approval-page__compact-filters">
         <Select<ViewWorkflowStatus>
           aria-label={props.formatMessage({ id: 'STATUS' })}
           value={props.currentStatus}
@@ -255,14 +251,14 @@ export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
       <Table<ApprovalWorkflowItem>
         rowKey="id"
         rowSelection={props.canCancel ? rowSelection : undefined}
-        className="redesign-approval-page__table"
+        className="approval-page__table"
         columns={columns}
         dataSource={props.rows}
         pagination={props.pagination}
         loading={props.loading}
         locale={{
           emptyText: (
-            <section className="redesign-approval-page__empty">
+            <section className="approval-page__empty">
               <Empty description={props.formatMessage({ id: 'ApprovalWorkbenchEmptyTitle' })} />
               <p>{props.formatMessage({ id: 'ApprovalWorkbenchEmptyDescription' })}</p>
               {props.canCreate && (
