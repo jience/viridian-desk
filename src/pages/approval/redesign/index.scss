@@ -13,11 +13,17 @@
   --approval-page-header-bg: rgba(255, 255, 255, 0.9);
   --approval-page-table-head: var(--approval-page-surface-subtle);
   --approval-page-row-hover: rgba(18, 116, 84, 0.08);
+  --approval-status-processing-text: #2374b7;
+  --approval-status-processing-bg: rgba(72, 147, 215, 0.14);
+  --approval-status-warning-text: #a56b18;
+  --approval-status-warning-bg: rgba(225, 170, 70, 0.18);
+  --approval-status-danger-text: #c84d4d;
+  --approval-status-danger-bg: rgba(216, 82, 82, 0.14);
 
   height: 100%;
   min-height: 0;
   display: grid;
-  grid-template-rows: auto auto auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
   gap: 14px;
   color: var(--approval-page-text);
   container-type: inline-size;
@@ -44,6 +50,12 @@
   --approval-page-header-bg: rgba(12, 19, 18, 0.68);
   --approval-page-table-head: var(--approval-page-surface-subtle);
   --approval-page-row-hover: rgba(112, 227, 194, 0.09);
+  --approval-status-processing-text: #8ccfff;
+  --approval-status-processing-bg: rgba(88, 166, 255, 0.18);
+  --approval-status-warning-text: #ffd48a;
+  --approval-status-warning-bg: rgba(245, 180, 72, 0.18);
+  --approval-status-danger-text: #ff9b9b;
+  --approval-status-danger-bg: rgba(255, 112, 112, 0.18);
 }
 
 .redesign-approval-page__header {
@@ -336,17 +348,19 @@
   font-size: 12px;
   font-weight: 650;
   line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .redesign-approval-status--processing {
-  color: #2374b7;
-  background: rgba(72, 147, 215, 0.14);
+  color: var(--approval-status-processing-text);
+  background: var(--approval-status-processing-bg);
 }
 
 .redesign-approval-status--warning {
-  color: #a56b18;
-  background: rgba(225, 170, 70, 0.18);
+  color: var(--approval-status-warning-text);
+  background: var(--approval-status-warning-bg);
 }
 
 .redesign-approval-status--success {
@@ -355,8 +369,8 @@
 }
 
 .redesign-approval-status--danger {
-  color: #c84d4d;
-  background: rgba(216, 82, 82, 0.14);
+  color: var(--approval-status-danger-text);
+  background: var(--approval-status-danger-bg);
 }
 
 .redesign-approval-status--default {
