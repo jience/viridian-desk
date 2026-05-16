@@ -66,42 +66,65 @@ export function Component() {
 
   const isRefreshing = deskLoading || deskPoolLoading;
   const isEmpty = !deskData?.length && !deskPoolData?.length && !isRefreshing;
+  const refreshLabel = formatMessage({ id: 'REFRESH', defaultMessage: 'Refresh' });
+  const connectLabel = formatMessage({ id: 'ConnectDesktop' });
+  const restartLabel = formatMessage({ id: 'RESTART' });
+  const shutdownLabel = formatMessage({ id: 'SHUT_DOWN' });
+  const detailLabel = formatMessage({ id: 'DETAIL' });
+  const moreLabel = formatMessage({ id: 'ACTION' });
 
   useEffect(() => {
-    let unListenConnect: (() => void) | null = null;
-    let unListenDesktopList: (() => void) | null = null;
-    let unListenDesktopIdleDisconnect: (() => void) | null = null;
-    let unListenDesktopIdleClose: (() => void) | null = null;
+    let disposed = false;
+    const unsubscribers: Array<() => void> = [];
 
-    const setupListeners = async () => {
-      unListenConnect = await listen('desktop-connect', () => {
+    const registerListener = (unlistenPromise: Promise<() => void>) => {
+      unlistenPromise
+        .then((unlisten) => {
+          if (disposed) {
+            unlisten();
+            return;
+          }
+          unsubscribers.push(unlisten);
+        })
+        .catch((error) => {
+          console.error('Failed to register desktop event listener', error);
+        });
+    };
+
+    registerListener(
+      listen('desktop-connect', () => {
         setIsLoadingDesk(false);
-      });
+      }),
+    );
 
-      unListenDesktopList = await listen('desktop-list', () => {
+    registerListener(
+      listen('desktop-list', () => {
         listResourceUserRefresh();
         listDesktopPoolRefresh();
-      });
+      }),
+    );
 
-      unListenDesktopIdleDisconnect = await listen('desktop-idle-disconnect', async () => {
+    registerListener(
+      listen('desktop-idle-disconnect', async () => {
         await killAllHdpViewers();
         message.warning('用户闲置策略生效，断开桌面连接');
-      });
-      unListenDesktopIdleClose = await listen('desktop-idle-close', async () => {
+      }),
+    );
+
+    registerListener(
+      listen('desktop-idle-close', async () => {
         console.log('用户闲置策略生效，关闭桌面');
         // TODO 用户闲置策略生效，关闭桌面 待实现
-      });
-    };
-
-    setupListeners();
+      }),
+    );
 
     return () => {
-      if (unListenConnect) unListenConnect();
-      if (unListenDesktopList) unListenDesktopList();
-      if (unListenDesktopIdleDisconnect) unListenDesktopIdleDisconnect();
-      if (unListenDesktopIdleClose) unListenDesktopIdleClose();
+      disposed = true;
+      unsubscribers.forEach((unlisten) => {
+        unlisten();
+      });
     };
-  }, []);
+  }, [listDesktopPoolRefresh, listResourceUserRefresh, setIsLoadingDesk]);
 
   const { run: detachVolumeRun } = useRequest(detachVolume, {
     manual: true,
@@ -203,8 +226,8 @@ export function Component() {
           type="primary"
           loading={isRefreshing}
           icon={<i className="iconfont icon-refresh" />}
-          aria-label="Refresh"
-          title="Refresh"
+          aria-label={refreshLabel}
+          title={refreshLabel}
           onClick={refreshDeskResources}
         />
       </header>
@@ -269,36 +292,44 @@ export function Component() {
                         </Tooltip>
                       </button>
                       <div className="redesign-desk-card__actions">
-                        <Popover content={formatMessage({ id: 'ConnectDesktop' })}>
+                        <Popover content={connectLabel}>
                           <Button
                             type="text"
                             icon={<i className="iconfont icon-boot" />}
+                            aria-label={connectLabel}
+                            title={connectLabel}
                             onClick={() => enterDesk(item)}
                           />
                         </Popover>
-                        <Popover content={formatMessage({ id: 'RESTART' })}>
+                        <Popover content={restartLabel}>
                           <AuthButton
                             actions={[Actions.TerminalRWDesktopForceReboot]}
                             disabled={item.status !== DESK_STATUS.START || item.isLock}
                             type="text"
                             icon={<i className="iconfont icon-reboot" />}
+                            aria-label={restartLabel}
+                            title={restartLabel}
                             onClick={() => restartDesk(item, false)}
                           />
                         </Popover>
-                        <Popover content={formatMessage({ id: 'SHUT_DOWN' })}>
+                        <Popover content={shutdownLabel}>
                           <AuthButton
                             actions={[Actions.TerminalRWDesktopShutdown]}
                             disabled={item.status !== DESK_STATUS.START || item.isLock}
                             type="text"
                             icon={<i className="iconfont icon-shutdown" />}
+                            aria-label={shutdownLabel}
+                            title={shutdownLabel}
                             onClick={() => shutDownDesktop(item)}
                           />
                         </Popover>
-                        <Popover content={formatMessage({ id: 'DETAIL' })}>
+                        <Popover content={detailLabel}>
                           <Button
                             type="text"
                             icon={<i className="iconfont icon-info-o" />}
                             disabled={item.status === DESK_STATUS.DELETING}
+                            aria-label={detailLabel}
+                            title={detailLabel}
                             onClick={() => {
                               navigate('/app/deskDetail', {
                                 state: { id: item.id },
@@ -321,7 +352,12 @@ export function Component() {
                             ) as HTMLElement
                           }
                         >
-                          <Button type="text" icon={<i className="iconfont icon-more" />} />
+                          <Button
+                            type="text"
+                            icon={<i className="iconfont icon-more" />}
+                            aria-label={moreLabel}
+                            title={moreLabel}
+                          />
                         </AuthDropDown>
                       </div>
                     </article>
@@ -344,10 +380,24 @@ export function Component() {
                   <article
                     className="redesign-desk-pool"
                     key={item?.id || `${item?.name}-${index}`}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${detailLabel}: ${item.name}`}
                     onClick={(event) => {
                       event.stopPropagation();
                       getDeskPoolDetail(item.id);
                       setPoolDetailVisible(true);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.currentTarget !== event.target) {
+                        return;
+                      }
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        getDeskPoolDetail(item.id);
+                        setPoolDetailVisible(true);
+                      }
                     }}
                   >
                     <div className="redesign-desk-pool__os">
