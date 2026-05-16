@@ -1,4 +1,4 @@
-.redesign-application-page {
+.application-page {
   --application-page-text: #14221c;
   --application-page-muted: #58675f;
   --application-page-subtle: #6f7c75;
@@ -21,11 +21,9 @@
     linear-gradient(135deg, rgba(22, 111, 72, 0.08), transparent 42%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 247, 243, 0.95));
   --application-page-card-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.76),
-    0 18px 42px rgba(31, 57, 45, 0.11);
+    inset 0 1px 0 rgba(255, 255, 255, 0.76), 0 18px 42px rgba(31, 57, 45, 0.11);
   --application-page-card-hover-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.86),
-    0 24px 52px rgba(31, 57, 45, 0.15);
+    inset 0 1px 0 rgba(255, 255, 255, 0.86), 0 24px 52px rgba(31, 57, 45, 0.15);
   --application-page-meta-bg: rgba(22, 111, 72, 0.06);
   --application-page-meta-border: rgba(64, 93, 77, 0.18);
   --application-page-meta-text: #506258;
@@ -59,8 +57,8 @@
   }
 }
 
-:root.dark .redesign-application-page,
-:root[data-ui-theme='dark'] .redesign-application-page {
+:root.dark .application-page,
+:root[data-ui-theme='dark'] .application-page {
   --application-page-text: #eef5ef;
   --application-page-muted: #8f9c94;
   --application-page-subtle: #a9bacb;
@@ -83,11 +81,9 @@
     linear-gradient(135deg, rgba(44, 65, 73, 0.18), transparent 42%),
     linear-gradient(180deg, rgba(20, 35, 45, 0.94), rgba(11, 22, 30, 0.95));
   --application-page-card-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    0 20px 48px rgba(0, 0, 0, 0.26);
+    inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 20px 48px rgba(0, 0, 0, 0.26);
   --application-page-card-hover-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 26px 58px rgba(0, 0, 0, 0.34);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 26px 58px rgba(0, 0, 0, 0.34);
   --application-page-meta-bg: transparent;
   --application-page-meta-border: rgba(148, 163, 184, 0.16);
   --application-page-meta-text: #a9bacb;
@@ -102,7 +98,7 @@
   --application-page-primary-text: #08100c;
 }
 
-.redesign-application-page__toolbar {
+.application-page__toolbar {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -114,7 +110,7 @@
   box-shadow: var(--application-page-toolbar-shadow);
 }
 
-.redesign-application-page__heading {
+.application-page__heading {
   flex: 1 1 auto;
   min-width: 0;
 
@@ -139,7 +135,7 @@
   }
 }
 
-.redesign-application-page__actions {
+.application-page__actions {
   min-width: 0;
   max-width: 100%;
   display: flex;
@@ -185,7 +181,7 @@
   }
 }
 
-.redesign-application-page__filters {
+.application-page__filters {
   display: flex;
   gap: 8px;
   overflow-x: auto;
@@ -225,7 +221,7 @@
   }
 }
 
-.redesign-application-page__grid {
+.application-page__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 14px;
@@ -234,7 +230,7 @@
   padding: 2px 2px 16px;
 }
 
-.redesign-application-card {
+.application-card {
   min-height: 196px;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto auto;
@@ -256,7 +252,7 @@
   }
 }
 
-.redesign-application-card__main {
+.application-card__main {
   min-width: 0;
   border: 0;
   padding: 0;
@@ -277,8 +273,8 @@
   }
 }
 
-.redesign-application-card__name,
-.redesign-application-card__resource {
+.application-card__name,
+.application-card__resource {
   display: block;
   min-width: 0;
   overflow: hidden;
@@ -286,27 +282,27 @@
   white-space: nowrap;
 }
 
-.redesign-application-card__name {
+.application-card__name {
   margin-top: 12px;
   color: var(--application-page-text);
   font-size: 15px;
   font-weight: 700;
 }
 
-.redesign-application-card__resource {
+.application-card__resource {
   margin-top: 4px;
   color: var(--application-page-muted);
   font-size: 12px;
 }
 
-.redesign-application-card__meta,
-.redesign-application-card__footer {
+.application-card__meta,
+.application-card__footer {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.redesign-application-card__meta {
+.application-card__meta {
   flex-wrap: wrap;
 
   span {
@@ -320,7 +316,7 @@
   }
 }
 
-.redesign-application-card__footer {
+.application-card__footer {
   justify-content: space-between;
 
   .ant-btn {
@@ -357,7 +353,7 @@
   }
 }
 
-.redesign-application-page__empty {
+.application-page__empty {
   min-height: 320px;
   display: flex;
   flex-direction: column;
@@ -379,22 +375,22 @@
 }
 
 @container (max-width: 760px) {
-  .redesign-application-page__toolbar {
+  .application-page__toolbar {
     flex-direction: column;
   }
 
-  .redesign-application-page__actions {
+  .application-page__actions {
     width: 100%;
     justify-content: flex-start;
   }
 }
 
 @media (max-width: 920px) {
-  .redesign-application-page__toolbar {
+  .application-page__toolbar {
     flex-direction: column;
   }
 
-  .redesign-application-page__actions {
+  .application-page__actions {
     width: 100%;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -402,11 +398,11 @@
 }
 
 @media (max-width: 560px) {
-  .redesign-application-page__grid {
+  .application-page__grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .redesign-application-card__footer {
+  .application-card__footer {
     align-items: stretch;
 
     .ant-btn-primary {

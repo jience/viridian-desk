@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import './index.scss';
 import { message } from 'antd';
 import { useInitData } from './initData';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +14,7 @@ import { AddFromSelfModal } from './component/AddFromSelfModal';
 import { useLoading } from '@/hooks/useLoading';
 import { connectVapp } from '@/services/invoke/vapp';
 import type { ConnectVappReq } from '@/services/invoke/vapp/types';
-import { RedesignApplicationPage } from './redesign';
+import { ApplicationPage } from './ApplicationPage';
 
 export const Application = () => {
   const { t } = useTranslation();
@@ -83,7 +82,7 @@ export const Application = () => {
 
   return (
     <>
-      <RedesignApplicationPage
+      <ApplicationPage
         category={category}
         categories={appCategoryList}
         dataSource={vappList}

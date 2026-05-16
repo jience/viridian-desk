@@ -3,8 +3,8 @@ import { Button, Dropdown, Empty, Modal, Spin, Tooltip } from 'antd';
 import type { ItemType } from 'antd/es/menu/interface';
 import type { ModalFunc } from 'antd/es/modal/confirm';
 import { Trans, useTranslation } from 'react-i18next';
-import { AppDetailModal } from '../component/AppDetailModal';
-import { AppIcon } from '../component/AppIcon';
+import { AppDetailModal } from './component/AppDetailModal';
+import { AppIcon } from './component/AppIcon';
 import { useLoading } from '@/hooks/useLoading';
 import { VappApi } from '@/services/api/vapp';
 import Actions from '@/utils/actions';
@@ -17,9 +17,9 @@ import type {
 } from '@/services/api/vapp/types';
 import type { ConnectVappReq } from '@/services/invoke/vapp/types';
 import type { DefaultOptionType } from 'antd/es/select';
-import './index.scss';
+import './ApplicationPage.scss';
 
-export interface RedesignApplicationPageProps {
+export interface ApplicationPageProps {
   category: VappCategory | 'all';
   categories: DefaultOptionType[];
   dataSource: ListVappItem[];
@@ -41,7 +41,7 @@ const getPublishTypeKey = (app: ListVappItem) =>
     ? 'application_page.favorite_app'
     : 'application_page.custom_publish';
 
-export const RedesignApplicationPage: FC<RedesignApplicationPageProps> = (props) => {
+export const ApplicationPage: FC<ApplicationPageProps> = (props) => {
   const { t } = useTranslation();
   const [modal, contextHolder] = Modal.useModal();
   const deleteConfirmRef = useRef<ReturnType<ModalFunc>>(null);
@@ -154,9 +154,9 @@ export const RedesignApplicationPage: FC<RedesignApplicationPageProps> = (props)
   ];
 
   return (
-    <main className="redesign-application-page">
-      <header className="redesign-application-page__toolbar">
-        <div className="redesign-application-page__heading">
+    <main className="application-page">
+      <header className="application-page__toolbar">
+        <div className="application-page__heading">
           <span>{t('application_page.workbench_eyebrow')}</span>
           <h1>{t('application_page.workbench_title')}</h1>
           <p>
@@ -166,7 +166,7 @@ export const RedesignApplicationPage: FC<RedesignApplicationPageProps> = (props)
             })}
           </p>
         </div>
-        <div className="redesign-application-page__actions">
+        <div className="application-page__actions">
           <Tooltip title={<Trans t={t} i18nKey="application_page.virtual_app_minimize_tip" />}>
             <Button
               icon={<i className="iconfont icon-c_question-s" />}
@@ -193,10 +193,7 @@ export const RedesignApplicationPage: FC<RedesignApplicationPageProps> = (props)
         </div>
       </header>
 
-      <nav
-        className="redesign-application-page__filters"
-        aria-label={t('application_page.category')}
-      >
+      <nav className="application-page__filters" aria-label={t('application_page.category')}>
         {props.categories.map((item) => (
           <button
             key={String(item.value)}
@@ -211,35 +208,32 @@ export const RedesignApplicationPage: FC<RedesignApplicationPageProps> = (props)
 
       <Spin spinning={props.loading}>
         {props.dataSource.length === 0 ? (
-          <section className="redesign-application-page__empty">
+          <section className="application-page__empty">
             <Empty description={t('application_page.empty_title')} />
             <p>{t('application_page.empty_description')}</p>
           </section>
         ) : (
-          <section className="redesign-application-page__grid">
+          <section className="application-page__grid">
             {props.dataSource.map((app) => {
               const isLaunching = launchingIds.has(app.id);
 
               return (
-                <article className="redesign-application-card" key={app.id}>
+                <article className="application-card" key={app.id}>
                   <button
-                    className="redesign-application-card__main"
+                    className="application-card__main"
                     type="button"
                     disabled={isLaunching}
                     onClick={() => launchApp(app)}
                   >
                     <AppIcon appIconUrl={app.vapp.appIconUrl} appId={app.id} />
-                    <span className="redesign-application-card__name" title={app.vapp.name}>
+                    <span className="application-card__name" title={app.vapp.name}>
                       {app.vapp.name}
                     </span>
-                    <span
-                      className="redesign-application-card__resource"
-                      title={getResourceName(app)}
-                    >
+                    <span className="application-card__resource" title={getResourceName(app)}>
                       {getResourceName(app)}
                     </span>
                   </button>
-                  <div className="redesign-application-card__meta">
+                  <div className="application-card__meta">
                     <span>{getCategoryLabel(app)}</span>
                     <span>
                       {t(
@@ -250,7 +244,7 @@ export const RedesignApplicationPage: FC<RedesignApplicationPageProps> = (props)
                     </span>
                     <span>{t(getPublishTypeKey(app))}</span>
                   </div>
-                  <div className="redesign-application-card__footer">
+                  <div className="application-card__footer">
                     <Button
                       type="primary"
                       loading={isLaunching}
