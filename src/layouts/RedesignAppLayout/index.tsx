@@ -23,7 +23,10 @@ export function RedesignAppLayout() {
   const { t: commonT } = useTranslation('common');
   const location = useLocation();
   const [assistantCollapsed, setAssistantCollapsed] = useState(false);
-  const [isCompactAssistant, setIsCompactAssistant] = useState(false);
+  const [compactAssistantOpen, setCompactAssistantOpen] = useState(false);
+  const [isCompactAssistant, setIsCompactAssistant] = useState(
+    () => window.matchMedia('(max-width: 1080px)').matches,
+  );
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 1080px)');
@@ -39,10 +42,13 @@ export function RedesignAppLayout() {
     return routeTitles.find((item) => location.pathname.startsWith(item.match)) ?? routeTitles[1];
   }, [location.pathname]);
 
-  const effectiveAssistantCollapsed = assistantCollapsed || isCompactAssistant;
+  const effectiveAssistantCollapsed = isCompactAssistant
+    ? !compactAssistantOpen
+    : assistantCollapsed;
   const assistantState: AssistantState = effectiveAssistantCollapsed ? 'collapsed' : 'expanded';
   const toggleAssistant = () => {
     if (isCompactAssistant) {
+      setCompactAssistantOpen((current) => !current);
       return;
     }
 
@@ -70,7 +76,6 @@ export function RedesignAppLayout() {
             </div>
             <Button
               aria-pressed={!effectiveAssistantCollapsed}
-              disabled={isCompactAssistant}
               onClick={toggleAssistant}
               size="sm"
               variant="secondary"
