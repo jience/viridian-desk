@@ -1,60 +1,18 @@
-import type { SelectProps, TablePaginationConfig } from 'antd';
 import { Button, Dropdown, Empty, Select, Space, Table, Tooltip } from 'antd';
+import type { TablePaginationConfig } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import type { ItemType } from 'antd/es/menu/interface';
 import type { Key, ReactNode } from 'react';
 import type { IntlShape } from 'react-intl';
+import {
+  getWorkflowTypeLabel,
+  isWorkflowStatus,
+  type ApprovalWorkflowItem,
+  type ViewWorkflowStatus,
+  type WorkflowStatus,
+  type WorkflowStatusOption,
+} from './utils';
 import './index.scss';
-
-export type WorkflowStatus = 'pending' | 'processing' | 'success' | 'reject' | 'error' | 'revoke';
-export type ViewWorkflowStatus = WorkflowStatus | 'all';
-
-export interface ApprovalWorkflowItem {
-  id: string;
-  workflowType?: string;
-  approveUser?: string;
-  status?: WorkflowStatus;
-  createTime?: string;
-  createUser?: string;
-}
-
-export type WorkflowStatusOption = {
-  label: ReactNode;
-  value: ViewWorkflowStatus;
-};
-
-type WorkflowStatusOptions = NonNullable<SelectProps['options']>;
-
-export const workflowStatusOrder: WorkflowStatus[] = [
-  'pending',
-  'processing',
-  'success',
-  'reject',
-  'error',
-  'revoke',
-];
-
-export const workflowTypeMessageIds: Record<string, string> = {
-  createDesktop: 'ApplyForDesk',
-  extendDisk: 'ResizeDisk',
-  addDisk: 'ApplyDataDisk',
-  resizeDesktop: 'ChangeConfig',
-  updateApps: 'UpdateApps',
-  addSoftware: 'ApplySoftware',
-  applyUsb: 'ApplyUSB',
-};
-
-export const getWorkflowTypeLabel = (
-  formatMessage: IntlShape['formatMessage'],
-  workflowType?: string,
-) => {
-  if (!workflowType) {
-    return '-';
-  }
-
-  const messageId = workflowTypeMessageIds[workflowType];
-  return messageId ? formatMessage({ id: messageId, defaultMessage: workflowType }) : workflowType;
-};
 
 const statusToneMap: Record<WorkflowStatus, string> = {
   pending: 'processing',
@@ -96,18 +54,20 @@ export interface RedesignApprovalPageProps {
 export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
   const refreshLabel = props.formatMessage({ id: 'REFRESH', defaultMessage: 'Refresh' });
   const activeStatusLabel =
-    toText(
-      props.statusOptions.find(
-        (option) => toOptionKey(option.value) === toOptionKey(props.currentStatus),
-      )?.label,
-    ) || props.formatMessage({ id: 'AllStatus' });
+    toText(props.statusOptions.find((option) => option.value === props.currentStatus)?.label) ||
+    props.formatMessage({ id: 'AllStatus' });
   const batchCancelDisabled =
     props.loading ||
     props.selectedRowKeys.length === 0 ||
     props.selectedRows.some((row) => !isCancelable(row));
 
-  const renderStatus = (status?: WorkflowStatus) => {
-    if (!status) {
+  const renderStatus = (status?: ApprovalWorkflowItem['status']) => {
+    if (!isWorkflowStatus(status)) {
+      return '-';
+    }
+
+    const label = props.statusLabels[status];
+    if (!label) {
       return '-';
     }
 
@@ -115,7 +75,7 @@ export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
       <span
         className={`redesign-approval-status redesign-approval-status--${statusToneMap[status]}`}
       >
-        {props.statusLabels[status]}
+        {label}
       </span>
     );
   };
@@ -266,7 +226,6 @@ export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
           role="group"
         >
           {props.statusOptions.map((option) => {
-            const value = toOptionKey(option.value) as ViewWorkflowStatus;
             const active = option.value === props.currentStatus;
 
             return (
@@ -275,7 +234,7 @@ export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
                 className={active ? 'is-active' : ''}
                 key={toOptionKey(option.value)}
                 type="button"
-                onClick={() => props.onStatusChange(value)}
+                onClick={() => props.onStatusChange(option.value)}
               >
                 {option.label}
               </button>
@@ -285,17 +244,17 @@ export function RedesignApprovalPage(props: RedesignApprovalPageProps) {
       </section>
 
       <div className="redesign-approval-page__compact-filters">
-        <Select
+        <Select<ViewWorkflowStatus>
           aria-label={props.formatMessage({ id: 'STATUS' })}
           value={props.currentStatus}
-          options={props.statusOptions as WorkflowStatusOptions}
-          onChange={(value) => props.onStatusChange(value as ViewWorkflowStatus)}
+          options={props.statusOptions}
+          onChange={props.onStatusChange}
         />
       </div>
 
       <Table<ApprovalWorkflowItem>
         rowKey="id"
-        rowSelection={rowSelection}
+        rowSelection={props.canCancel ? rowSelection : undefined}
         className="redesign-approval-page__table"
         columns={columns}
         dataSource={props.rows}
