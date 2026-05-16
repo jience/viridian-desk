@@ -87,9 +87,11 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
         title={title}
         content={content}
         getPopupContainer={(node) => node.parentNode as HTMLElement}
-        trigger="hover"
+        trigger={['hover', 'focus']}
       >
-        {tag}
+        <span className="redesign-malfunction-table__status-trigger" tabIndex={0}>
+          {tag}
+        </span>
       </Popover>
     );
   };
@@ -139,8 +141,7 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
       key: 'processor',
       width: 150,
       render: (_, row) => {
-        const approveUser = row.approveUser as { loginName?: string } | null;
-        const processor = row.approveRealName || approveUser?.loginName || row.approveUsername;
+        const processor = row.approveUsername || row.approveRealName;
 
         return processor ? (
           <span className="malfunction-name-text" title={processor}>
@@ -283,11 +284,13 @@ export function RedesignMalfunctionPage(props: RedesignMalfunctionPageProps) {
 
       <div className="redesign-malfunction-page__compact-filters">
         <Select
+          aria-label={props.formatMessage({ id: 'FaultType' })}
           value={props.currentType}
           options={props.faultTypeOptions}
           onChange={(value) => props.onTypeChange(value as ViewFaultType)}
         />
         <Select
+          aria-label={props.formatMessage({ id: 'STATUS' })}
           value={props.currentStatus}
           options={props.faultStatusOptions}
           onChange={(value) => props.onStatusChange(value as ViewFaultStatus)}
