@@ -21,9 +21,10 @@ import {
 } from '@/store/feature/app';
 import { selectIntegration } from '@/store/feature/config';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
+import { cn } from '@/ui/lib/cn';
 import { authActionShow } from '@/utils/actionAuth';
 import { listen } from '@tauri-apps/api/event';
-import { Menu, message, Modal, Popover } from 'antd';
+import { Menu, message, Modal, Popover, Tooltip } from 'antd';
 import { Buffer } from 'buffer';
 import { isEmpty } from 'lodash-es';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -35,6 +36,7 @@ import { initMenus as menus } from './initData';
 function Sidebar() {
   const intl = useIntl();
   const { t } = useTranslation();
+  const { t: commonT } = useTranslation('common');
   const appDispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -256,8 +258,8 @@ function Sidebar() {
     appDispatch(setMsgModalShow({ msgModalShow: true, msgId: '' }));
   };
 
-  const onPersonalVisibleChange = (val: any) => {
-    setUserBtnOpen(false);
+  const onPersonalVisibleChange = (val: boolean) => {
+    setUserBtnOpen(val);
     if (val) {
       // res 是null 则不是绑定并自动登录， res不为空，则是绑定并自动登录
       // window.ipcRenderer.send(globalAjax.GetBindUser, {});
@@ -297,42 +299,52 @@ function Sidebar() {
   }, []);
 
   return (
-    <div className={`sidebar nav-drag`}>
-      <ul className="menus">
+    <nav className="sidebar nav-drag" aria-label={commonT('appName')}>
+      <ul className="sidebar__menus" aria-label={commonT('appName')}>
         {menus.map((item) => {
-          return isEmpty(item.actions) ? (
-            <li
-              className={`menu-item ${activeMenu === item.path ? 'active' : ''}`}
-              key={item.name}
-              onClick={() => {
-                navigate(item.path);
-              }}
-            >
-              <i className={`iconfont ${item.icon}`}></i>
+          const visible = isEmpty(item.actions) || authActionShow(item.actions);
+          if (!visible) return null;
+
+          const label = commonT(item.labelKey);
+          const active = activeMenu === item.path;
+
+          return (
+            <li className="sidebar__item" key={item.name}>
+              <Tooltip title={label} placement="right">
+                <button
+                  aria-current={active ? 'page' : undefined}
+                  aria-label={label}
+                  className={cn('sidebar__button', active && 'sidebar__button--active')}
+                  type="button"
+                  onClick={() => {
+                    navigate(item.path);
+                  }}
+                >
+                  <i className={`iconfont ${item.icon}`} />
+                  <span className="sidebar__label">{label}</span>
+                </button>
+              </Tooltip>
             </li>
-          ) : (
-            authActionShow(item.actions) && (
-              <li
-                className={`menu-item ${activeMenu === item.path ? 'active' : ''}`}
-                key={item.name}
-                onClick={() => {
-                  navigate(item.path);
-                }}
-              >
-                <i className={`iconfont ${item.icon}`}></i>
-              </li>
-            )
           );
         })}
       </ul>
-      <ul className="user-info">
+      <ul className="sidebar__actions" aria-label={commonT('user.personalInformation')}>
         {
           <>
             {/* <li onClick={showEasyLog}>
               <i className="iconfont icon-done"></i>
             </li> */}
-            <li onClick={getMsg} className={`${msgDot && 'msgdot'}`}>
-              <i className="iconfont icon-message"></i>
+            <li className="sidebar__item">
+              <Tooltip title={intl.formatMessage({ id: 'MSG' })} placement="right">
+                <button
+                  aria-label={intl.formatMessage({ id: 'MSG' })}
+                  className={cn('sidebar__button', msgDot && 'sidebar__button--unread')}
+                  type="button"
+                  onClick={getMsg}
+                >
+                  <i className="iconfont icon-message" />
+                </button>
+              </Tooltip>
             </li>
           </>
         }
@@ -344,14 +356,33 @@ function Sidebar() {
           onOpenChange={(e) => onPersonalVisibleChange(e)}
           classNames={{ root: 'slider-user-menus' }}
         >
-          <li onClick={() => setUserBtnOpen(true)}>
-            <i className="iconfont icon-user"></i>
+          <li className="sidebar__item">
+            <Tooltip title={commonT('user.personalInformation')} placement="right">
+              <button
+                aria-expanded={userBtnOpen}
+                aria-label={commonT('user.personalInformation')}
+                className={cn('sidebar__button', userBtnOpen && 'sidebar__button--active')}
+                type="button"
+                onClick={() => setUserBtnOpen(true)}
+              >
+                <i className="iconfont icon-user" />
+              </button>
+            </Tooltip>
           </li>
         </Popover>
         {/* )} */}
         {(isIntegratedMode || isThin) && (
-          <li onClick={shutdown} className="self-power-off">
-            <i className="iconfont icon-power-off-filled" />
+          <li className="sidebar__item">
+            <Tooltip title={intl.formatMessage({ id: 'SHUTDOWNDESTOP' })} placement="right">
+              <button
+                aria-label={intl.formatMessage({ id: 'SHUTDOWNDESTOP' })}
+                className="sidebar__button sidebar__button--danger"
+                type="button"
+                onClick={shutdown}
+              >
+                <i className="iconfont icon-power-off-filled" />
+              </button>
+            </Tooltip>
           </li>
         )}
       </ul>
@@ -372,7 +403,7 @@ function Sidebar() {
         <DiffLoginTip visible={diffLoginTipVisible} setVisible={setDiffLoginTipVisible} />
       )}
       <>{contextHolder}</>
-    </div>
+    </nav>
   );
 }
 

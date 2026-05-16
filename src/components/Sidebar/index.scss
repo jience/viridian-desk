@@ -1,114 +1,119 @@
 .sidebar {
-  height: 100%;
-  position: relative;
   display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  flex-direction: column;
-  background-color: var(--menu-slider-bg);
-  .menus {
-    .menu-item {
-      color: var(--menu-icon-color);
-      height: 32px;
-      width: 32px;
-      margin: 14px auto;
-      border-radius: 32px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: scale(1);
+  background: transparent;
+}
 
-      &:hover {
-        background-color: var(--menu-btn-hover);
-      }
+.sidebar__menus,
+.sidebar__actions {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
-      &.active {
-        background: var(--primary-color);
-        transform: scale(1);
-        box-shadow: 0px 2px 5px 0px var(--menu-btn-selected-shadow);
-        animation-name: menusFrames;
-        animation-duration: 0.2s;
+.sidebar__menus {
+  padding-top: 4px;
+}
 
-        i {
-          color: var(--menu-icon-color-selected);
-        }
-      }
-    }
+.sidebar__actions {
+  padding-bottom: 4px;
+}
+
+.sidebar__item {
+  display: grid;
+  place-items: center;
+}
+
+.sidebar__button {
+  position: relative;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  margin: 10px auto;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(209, 255, 229, 0.1);
+  border-radius: 12px;
+  background: rgba(238, 245, 239, 0.04);
+  box-shadow: none;
+  color: rgba(238, 245, 239, 0.68);
+  cursor: pointer;
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+
+  i {
+    font-size: 18px;
+    line-height: 1;
   }
 
-  .user-info {
-    li {
-      color: var(--menu-icon-color);
-      height: 32px;
-      width: 32px;
-      margin: 14px auto;
-      border-radius: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      background: var(--downMenu-btn-default);
-      border: 1px solid rgba(203, 214, 226, 1);
-      transition: 0.2s;
-      position: relative;
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-1px);
+    border-color: rgba(142, 242, 189, 0.28);
+    background: rgba(142, 242, 189, 0.12);
+    color: var(--vd-color-text, #eef5ef);
+  }
 
-      &:hover {
-        i {
-          color: var(--primary-color);
-        }
-      }
-
-      &.msgdot::after {
-        content: '';
-        position: absolute;
-        width: 7px;
-        height: 7px;
-        background-color: red;
-        border-radius: 10px;
-        border: 1px solid #fff;
-        top: 6px;
-        right: 6px;
-      }
-    }
-    .self-power-off {
-      i {
-        font-size: 20px !important;
-        color: #e53935;
-      }
-
-      &:hover,
-      &:focus {
-        i {
-          color: #eb5f5c !important;
-        }
-      }
-
-      &-disabled {
-        color: rgba(255, 255, 255, 0.25);
-      }
-    }
+  &:active {
+    transform: translateY(0) scale(0.98);
   }
 }
 
-@keyframes menusFrames {
-  0% {
-    transform: scale(0.5);
-  }
+.sidebar__button--active {
+  border-color: rgba(142, 242, 189, 0.74);
+  background:
+    linear-gradient(135deg, rgba(142, 242, 189, 0.26), rgba(142, 242, 189, 0.1)),
+    rgba(142, 242, 189, 0.12);
+  box-shadow:
+    0 0 0 1px rgba(142, 242, 189, 0.08),
+    0 12px 26px rgba(0, 0, 0, 0.28);
+  color: var(--vd-color-accent, #8ef2bd);
+}
 
-  25% {
-    transform: scale(0.8);
-  }
+.sidebar__button--unread::after {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--vd-color-rail, #0a0e0d);
+  border-radius: 999px;
+  background: #ff5d5d;
+  content: '';
+}
 
-  50% {
-    transform: scale(1);
-  }
+.sidebar__button--danger {
+  color: #ff6b63;
 
-  75% {
-    transform: scale(1.2);
+  &:hover,
+  &:focus-visible {
+    border-color: rgba(255, 107, 99, 0.35);
+    background: rgba(255, 107, 99, 0.12);
+    color: #ff8a84;
   }
+}
 
-  100% {
-    transform: scale(1);
+.sidebar__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar__button {
+    transition: none;
   }
 }
