@@ -4,21 +4,19 @@ import { FaultApi, listFault, revokeFault } from '@/services/api/fault';
 import type {
   FaultItem,
   FaultListRequest,
-  FaultStatus,
-  FaultType,
 } from '@/services/api/fault/types';
 import { createFault, listResourceUser } from '@/services/resource';
-import { authActionShow } from '@/utils/actionAuth';
 import Actions from '@/utils/actions';
 import { hasPermission } from '@/utils/permission';
-import type { TableColumnProps, TablePaginationConfig } from 'antd';
-import { Button, Modal, Popover, Select, Space, Table, Tag, Tooltip } from 'antd';
+import type { TablePaginationConfig } from 'antd';
+import { Modal } from 'antd';
 import { isEmpty } from 'lodash-es';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import CreatedModal from './create';
 import './index.scss';
 import { initQueryParams, useFaultStatus, useFaultType } from './initData';
+import { RedesignMalfunctionPage } from './redesign';
 import type { ViewFaultStatus, ViewFaultType } from './types';
 
 export function Component() {
@@ -31,6 +29,7 @@ export function Component() {
   const [total, setTotal] = useState(0);
   const [tableChecked, setTableChecked] = useState<FaultItem[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const listRequestSeqRef = useRef(0);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const initialValues = {
     faultType: 'desktop',
@@ -42,6 +41,11 @@ export function Component() {
   const [curFaultStatus, setCurFaultStatus] = useState<ViewFaultStatus>('all');
   const { options: faultStatusOptions, faultStatusKv, faultStatusStatusKv } = useFaultStatus();
   const { options: faultTypeOptions, faultTypeKv } = useFaultType();
+
+  const clearSelection = () => {
+    setSelectedRowKeys([]);
+    setTableChecked([]);
+  };
 
   // 创建工单
   const { run: createFaultRun, loading: createFaultLoading } = useRequest(createFault, {
@@ -173,117 +177,6 @@ export function Component() {
     ];
   }, [desktopListOptions, formatMessage, listResourceUserLoading]);
 
-  const columns: TableColumnProps<FaultItem>[] = [
-    {
-      title: formatMessage({ id: 'FaultContent' }),
-      dataIndex: 'description',
-      key: 'description',
-      ellipsis: true,
-    },
-    {
-      title: formatMessage({ id: 'FaultType' }),
-      dataIndex: 'faultType',
-      key: 'faultType',
-      width: '1rem',
-      render: (val: FaultType, row) => {
-        if (val === 'desktop') {
-          return (
-            <Tooltip placement="right" title={`工单桌面：${row.desktop?.name || '-'}`}>
-              {faultTypeKv[val]}
-              <i
-                style={{ fontSize: '10px', transform: 'rotate(90deg)' }}
-                className="iconfont 'icon-more'"
-              />
-            </Tooltip>
-          );
-        } else {
-          return faultTypeKv[val] || '-';
-        }
-      },
-    },
-    {
-      title: formatMessage({ id: 'STATUS' }),
-      dataIndex: 'status',
-      key: 'status',
-      width: '1rem',
-      render: (val: FaultStatus, row: any) => {
-        if (['solved', 'reject'].includes(val)) {
-          const title = (
-            <div className="poptitle">
-              {formatMessage({
-                id: val === 'solved' ? 'SolveFaultSuggest' : 'RejectFaultReason',
-              })}
-            </div>
-          );
-          const content = (
-            <div className="contentbox">
-              <div className="popreply popoverStatic">{row.reply}</div>
-              <div className="poptime">{row.updateTime}</div>
-            </div>
-          );
-          return (
-            <Popover
-              placement="right"
-              title={title}
-              content={content}
-              getPopupContainer={(node: any) => node.parentNode}
-              trigger="hover"
-            >
-              <Tag color={faultStatusStatusKv[val]}>{faultStatusKv[val]}</Tag>
-            </Popover>
-          );
-        } else {
-          return <Tag color={faultStatusStatusKv[val]}>{faultStatusKv[val]}</Tag>;
-        }
-      },
-    },
-    {
-      title: formatMessage({ id: 'FaultProcessor' }),
-      dataIndex: ['approveUser', 'loginName'],
-      key: 'userName',
-      width: '1rem',
-      render: (val: any) => {
-        return isEmpty(val) ? (
-          '-'
-        ) : (
-          <span title={`${val}`} className="malfunction-name-text">{`${val}`}</span>
-        );
-      },
-    },
-    {
-      title: formatMessage({ id: 'FaultReportTime' }),
-      dataIndex: 'createTime',
-      key: 'createTime',
-      width: '1.6rem',
-      render: (val: any) => {
-        return val || '-';
-      },
-    },
-    ...(authActionShow([Actions.TerminalRWMalfunctionCancel])
-      ? ([
-          {
-            title: formatMessage({ id: 'ACTION' }),
-            dataIndex: 'action',
-            key: 'action',
-            width: '1rem',
-            render: (_value, row) => {
-              return (
-                <Button
-                  type="text"
-                  disabled={['solved', 'reject', 'revoke'].includes(row.status)}
-                  onClick={() => {
-                    handleCancel(row);
-                  }}
-                >
-                  {formatMessage({ id: 'FaultCancel' })}
-                </Button>
-              );
-            },
-          },
-        ] as TableColumnProps<FaultItem>[])
-      : []),
-  ];
-
   const handleCancel = async (row?: FaultItem) => {
     let tips;
     let rows: string[] = [];
@@ -321,25 +214,10 @@ export function Component() {
     });
     if (res) {
       await revokeFault({ ids: rows });
-      fetchFaultList();
+      clearSelection();
+      await fetchFaultList();
     }
   };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (selectedRowKeys: any, selectedRows: any) => {
-      setSelectedRowKeys(selectedRowKeys);
-      setTableChecked(selectedRows);
-    },
-  };
-
-  const cancelDisable = useMemo(() => {
-    if (tableChecked?.length > 0) {
-      return tableChecked.some((item: any) => ['solved', 'reject', 'revoke'].includes(item.status));
-    } else {
-      return true;
-    }
-  }, [tableChecked]);
 
   const handlePageChange = async (page: any) => {
     await fetchFaultList({ pageNumber: page });
@@ -356,15 +234,18 @@ export function Component() {
       status: curFaultStatus === 'all' ? '' : curFaultStatus,
       ...params,
     };
+    const requestSeq = ++listRequestSeqRef.current;
     const resp = await listFault(req);
+    if (requestSeq !== listRequestSeqRef.current) {
+      return;
+    }
     setQueryParams(req);
     setFaultList(resp.data.results || []);
     setTotal(resp.data.totalCount || 0);
   };
 
   const resetFaultList = async () => {
-    setSelectedRowKeys([]);
-    setTableChecked([]);
+    clearSelection();
     await fetchFaultList(initQueryParams);
   };
 
@@ -402,6 +283,7 @@ export function Component() {
 
   const handleFaultTypeChange = async (value: ViewFaultType) => {
     setCurFaultType(value);
+    clearSelection();
     const req: Partial<FaultListRequest> = {
       pageNumber: 1,
       faultType: value === 'all' ? '' : value,
@@ -411,6 +293,7 @@ export function Component() {
 
   const handleFaultStatusChange = async (value: ViewFaultStatus) => {
     setCurFaultStatus(value);
+    clearSelection();
     const req: Partial<FaultListRequest> = {
       pageNumber: 1,
       status: value === 'all' ? '' : value,
@@ -438,55 +321,35 @@ export function Component() {
 
   return (
     <div className="malfunction-list">
-      <div className="panel-header malfunction-header">
-        <Space>
-          {hasPermission(
-            [Actions.TerminalRWMalfunctionCancel],
-            <Tooltip title={formatMessage({ id: 'FaultCancel' })}>
-              <Button
-                icon={<i className="iconfont icon-file-cancel"></i>}
-                disabled={cancelDisable || listFaultLoading}
-                onClick={() => handleCancel()}
-              />
-            </Tooltip>,
-          )}
-          <Button
-            icon={<i className="iconfont icon-refresh" />}
-            onClick={() => fetchFaultList()}
-          ></Button>
-          <Select
-            className="page-transparent-select"
-            defaultValue={curFaultType}
-            options={faultTypeOptions}
-            onChange={handleFaultTypeChange}
-          ></Select>
-          <Select
-            className="page-transparent-select"
-            defaultValue={curFaultStatus}
-            options={faultStatusOptions}
-            onChange={handleFaultStatusChange}
-          ></Select>
-        </Space>
-        {hasPermission(
-          Actions.TerminalRWMalfunctionReport,
-          <Button
-            type="primary"
-            icon={<i className="iconfont icon-add" />}
-            onClick={() => {
-              getDeskList();
-              setCreateModalVisible(true);
-            }}
-          />,
-        )}
-      </div>
-      <Table<FaultItem>
-        rowKey="id"
-        rowSelection={rowSelection}
-        className="pretty-large-table"
-        columns={columns}
-        dataSource={faultList}
-        pagination={paginationProps}
+      <RedesignMalfunctionPage
+        currentType={curFaultType}
+        currentStatus={curFaultStatus}
+        faultTypeOptions={faultTypeOptions}
+        faultStatusOptions={faultStatusOptions}
+        faultTypeLabels={faultTypeKv}
+        faultStatusLabels={faultStatusKv}
+        faultStatusColors={faultStatusStatusKv}
+        rows={faultList}
+        total={total}
         loading={listFaultLoading}
+        selectedRowKeys={selectedRowKeys}
+        selectedRows={tableChecked}
+        pagination={paginationProps}
+        canCancel={hasPermission([Actions.TerminalRWMalfunctionCancel])}
+        canCreate={hasPermission(Actions.TerminalRWMalfunctionReport)}
+        onRefresh={() => fetchFaultList()}
+        onTypeChange={handleFaultTypeChange}
+        onStatusChange={handleFaultStatusChange}
+        onCancel={handleCancel}
+        onCreate={() => {
+          getDeskList();
+          setCreateModalVisible(true);
+        }}
+        onSelectionChange={(keys, rows) => {
+          setSelectedRowKeys(keys);
+          setTableChecked(rows);
+        }}
+        formatMessage={formatMessage}
       />
       <CreatedModal
         title={formatMessage({ id: 'FaultCreate' })}
