@@ -6,6 +6,12 @@ interface AssistantPanelProps {
   onToggle?: () => void;
 }
 
+const workflowItems = [
+  { key: 'quick.connectionHelp', icon: 'icon-net' },
+  { key: 'quick.openLogs', icon: 'icon-log' },
+  { key: 'quick.reportFault', icon: 'icon-fault' },
+] as const;
+
 export function AssistantPanel({ collapsed = false, onToggle }: AssistantPanelProps) {
   const { t } = useTranslation('assistant');
   const { t: commonT } = useTranslation('common');
@@ -14,7 +20,7 @@ export function AssistantPanel({ collapsed = false, onToggle }: AssistantPanelPr
     return (
       <div className="vd-assistant-panel vd-assistant-panel--collapsed">
         <Button aria-label={t('title')} onClick={onToggle} size="sm" variant="secondary">
-          ?
+          <i className="iconfont icon-c_question-s" aria-hidden="true" />
         </Button>
       </div>
     );
@@ -22,15 +28,26 @@ export function AssistantPanel({ collapsed = false, onToggle }: AssistantPanelPr
 
   return (
     <div className="vd-assistant-panel">
-      <div>
+      <div className="vd-assistant-panel__header">
+        <span className="vd-assistant-panel__label">{t('title')}</span>
         <h2 className="vd-assistant-panel__title">{t('title')}</h2>
         <p className="vd-assistant-panel__subtitle">{t('subtitle')}</p>
       </div>
+
       <div className="vd-assistant-panel__quick-list">
-        <div className="vd-assistant-panel__quick-item">{t('quick.connectionHelp')}</div>
-        <div className="vd-assistant-panel__quick-item">{t('quick.openLogs')}</div>
-        <div className="vd-assistant-panel__quick-item">{t('quick.reportFault')}</div>
+        {workflowItems.map((item) => (
+          <button className="vd-assistant-panel__quick-item" key={item.key} type="button">
+            <i className={`iconfont ${item.icon}`} aria-hidden="true" />
+            <span>{t(item.key)}</span>
+          </button>
+        ))}
       </div>
+
+      <div className="vd-assistant-panel__note">
+        <span className="vd-assistant-panel__status-dot" />
+        <span>{commonT('status.online')}</span>
+      </div>
+
       <div className="vd-assistant-panel__spacer" />
       <Button onClick={onToggle} size="sm" variant="secondary">
         {commonT('actions.close')}
