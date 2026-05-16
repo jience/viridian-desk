@@ -4,7 +4,7 @@ import useSharedState from './useSharedState';
 import { convertFileSrc, invoke } from '@tauri-apps/api/core';
 import NoviceGuidance from '../../components/NoviceGuidance';
 import { Outlet } from 'react-router';
-import MessageListModal from '@/components/Footer/components/MessageList';
+import MessageListModal from '@/components/MessageCenter';
 import { globalEmitter } from '@/utils/mitt';
 import { message } from 'antd';
 import { useInitState } from './useInitState';
