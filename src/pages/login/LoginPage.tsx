@@ -18,19 +18,19 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router';
-import FindPasswordModal from '../component/FindPasswordModal';
-import LoginWayChange from '../component/LoginWayChange';
-import { useLoginHandler } from '../hooks/useLoginHandler';
-import { useLoginWayData } from '../initData';
-import { LoginFormItems } from '../LoginFormItems';
-import { OneTimePwdModal } from '../OneTimePasswordModal';
-import { OrgScanLoginModal, type OrgScanLoginModalRef } from '../OrgScanLoginModal';
-import { SendMsgModal } from '../SendMsgModal';
-import { SliderVerifyModal } from '../SliderVerifyModal';
-import type { LoginFormType } from '../types';
-import './index.scss';
+import FindPasswordModal from './component/FindPasswordModal';
+import LoginWayChange from './component/LoginWayChange';
+import { useLoginHandler } from './hooks/useLoginHandler';
+import { useLoginWayData } from './initData';
+import { LoginFormItems } from './LoginFormItems';
+import { OneTimePwdModal } from './OneTimePasswordModal';
+import { OrgScanLoginModal, type OrgScanLoginModalRef } from './OrgScanLoginModal';
+import { SendMsgModal } from './SendMsgModal';
+import { SliderVerifyModal } from './SliderVerifyModal';
+import type { LoginFormType } from './types';
+import './LoginPage.scss';
 
-export default function RedesignLogin() {
+export default function LoginPage() {
   const { formatMessage } = useIntl();
   const { t } = useTranslation('common');
   const { t: assistantT } = useTranslation('assistant');
@@ -113,18 +113,18 @@ export default function RedesignLogin() {
   }, [handleSubmit]);
 
   return (
-    <div className="redesign-auth-page">
+    <div className="auth-page">
       <LoginShell
         header={
-          <div className="redesign-auth-page__header">
+          <div className="auth-page__header">
             <img
               src={logoBlue}
-              className="redesign-auth-page__logo"
+              className="auth-page__logo"
               alt={t('appName')}
               onDragStart={(event) => event.preventDefault()}
             />
             <button
-              className="redesign-auth-page__settings vd-auth-link"
+              className="auth-page__settings vd-auth-link"
               type="button"
               onClick={() => navigate('/configPage/serverSetting')}
             >
@@ -135,31 +135,31 @@ export default function RedesignLogin() {
         }
         footer={<Footer />}
         aside={
-          <div className="vd-auth-side-panel redesign-auth-page__side-panel">
-            <div className="redesign-auth-page__console">
-              <span className="redesign-auth-page__console-label">{assistantT('title')}</span>
+          <div className="vd-auth-side-panel auth-page__side-panel">
+            <div className="auth-page__console">
+              <span className="auth-page__console-label">{assistantT('title')}</span>
               <h1 className="vd-auth-side-panel__title">{t('appName')}</h1>
               <p className="vd-auth-side-panel__text">{assistantT('subtitle')}</p>
             </div>
-            <div className="redesign-auth-page__quick-list" aria-label={assistantT('title')}>
+            <div className="auth-page__quick-list" aria-label={assistantT('title')}>
               <span>{assistantT('quick.connectionHelp')}</span>
               <span>{assistantT('quick.openLogs')}</span>
               <span>{assistantT('quick.reportFault')}</span>
             </div>
-            <p className="vd-auth-side-panel__text redesign-auth-page__status">
+            <p className="vd-auth-side-panel__text auth-page__status">
               <span className={canSubmit ? 'is-online' : 'is-offline'} />
               {canSubmit ? t('status.online') : t('status.offline')}
             </p>
           </div>
         }
       >
-        <div className="vd-auth-card redesign-auth-page__card">
+        <div className="vd-auth-card auth-page__card">
           <div className="vd-auth-stack">
             {changeLoginWayVisible ? (
               <LoginWayChange onChange={() => setChangeLoginWayVisible(false)} />
             ) : (
               <>
-                <div className="vd-auth-row redesign-auth-page__login-way-row">
+                <div className="vd-auth-row auth-page__login-way-row">
                   <button
                     className="vd-auth-login-way"
                     type="button"
@@ -170,7 +170,7 @@ export default function RedesignLogin() {
                     }}
                   >
                     {loginTypes && loginTypes.length > 1 && (
-                      <span className="redesign-auth-page__login-way-icons">
+                      <span className="auth-page__login-way-icons">
                         <i className="iconfont icon-left" />
                         <i className="iconfont icon-minus" />
                       </span>
@@ -181,7 +181,7 @@ export default function RedesignLogin() {
                   {currentLoginWay === LoginAuthType.CORP && (
                     <button
                       aria-label={loginWayKv[currentLoginWay]}
-                      className="redesign-auth-page__qr"
+                      className="auth-page__qr"
                       disabled={!canScan}
                       type="button"
                       onClick={handleOrgScanLogin}
@@ -200,7 +200,7 @@ export default function RedesignLogin() {
                 </Form>
 
                 {showLocalLinks ? (
-                  <div className="vd-auth-row redesign-auth-page__links">
+                  <div className="vd-auth-row auth-page__links">
                     <button
                       className="vd-auth-link"
                       type="button"
@@ -225,17 +225,17 @@ export default function RedesignLogin() {
                     )}
                   </div>
                 ) : (
-                  <div className="redesign-auth-page__links-placeholder" />
+                  <div className="auth-page__links-placeholder" />
                 )}
 
                 <Button
                   aria-busy={loginLoading}
-                  className="redesign-auth-page__submit"
+                  className="auth-page__submit"
                   disabled={!canSubmit || loginLoading}
                   onClick={handleSubmit}
                   size="lg"
                 >
-                  {loginLoading && <span className="redesign-auth-page__submit-spinner" />}
+                  {loginLoading && <span className="auth-page__submit-spinner" />}
                   {formatMessage({ id: loginLoading ? 'LOGING' : 'LOGIN' })}
                 </Button>
 

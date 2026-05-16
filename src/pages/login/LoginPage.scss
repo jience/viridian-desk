@@ -1,4 +1,4 @@
-.redesign-auth-page {
+.auth-page {
   --vd-color-bg: #0d1110;
   --vd-color-panel: #151b19;
   --vd-color-panel-subtle: #202925;
@@ -115,20 +115,20 @@
   }
 }
 
-.redesign-auth-page__header {
+.auth-page__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
 
-.redesign-auth-page__logo {
+.auth-page__logo {
   width: 176px;
   height: 34px;
   object-fit: contain;
 }
 
-.redesign-auth-page__settings {
+.auth-page__settings {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -148,7 +148,7 @@
   }
 }
 
-.redesign-auth-page__card {
+.auth-page__card {
   position: relative;
 
   &::before {
@@ -161,11 +161,11 @@
   }
 }
 
-.redesign-auth-page__login-way-row {
+.auth-page__login-way-row {
   min-height: 34px;
 }
 
-.redesign-auth-page__login-way-icons {
+.auth-page__login-way-icons {
   position: relative;
   width: 16px;
   height: 16px;
@@ -185,7 +185,7 @@
   }
 }
 
-.redesign-auth-page__links {
+.auth-page__links {
   min-height: 22px;
 
   .vd-auth-link {
@@ -195,11 +195,11 @@
   }
 }
 
-.redesign-auth-page__links-placeholder {
+.auth-page__links-placeholder {
   min-height: 22px;
 }
 
-.redesign-auth-page__qr {
+.auth-page__qr {
   display: inline-grid;
   width: 34px;
   height: 34px;
@@ -217,21 +217,21 @@
   }
 }
 
-.redesign-auth-page__submit {
+.auth-page__submit {
   width: 100%;
 }
 
-.redesign-auth-page__submit-spinner {
+.auth-page__submit-spinner {
   width: 14px;
   height: 14px;
   border: 2px solid rgba(142, 242, 189, 0.28);
   border-top-color: var(--vd-color-accent);
   border-radius: 999px;
   margin-right: 8px;
-  animation: redesign-auth-spin 720ms linear infinite;
+  animation: auth-spin 720ms linear infinite;
 }
 
-.redesign-auth-page__side-panel {
+.auth-page__side-panel {
   position: relative;
   overflow: hidden;
 
@@ -250,13 +250,13 @@
   }
 }
 
-.redesign-auth-page__console {
+.auth-page__console {
   position: relative;
   z-index: 1;
   max-width: 460px;
 }
 
-.redesign-auth-page__console-label {
+.auth-page__console-label {
   display: inline-flex;
   margin-bottom: 18px;
   border: 1px solid rgba(142, 242, 189, 0.28);
@@ -267,7 +267,7 @@
   font-weight: 700;
 }
 
-.redesign-auth-page__quick-list {
+.auth-page__quick-list {
   position: relative;
   z-index: 1;
   display: grid;
@@ -284,7 +284,7 @@
   }
 }
 
-.redesign-auth-page__status {
+.auth-page__status {
   position: relative;
   z-index: 1;
   display: inline-flex;
@@ -308,20 +308,20 @@
   }
 }
 
-@keyframes redesign-auth-spin {
+@keyframes auth-spin {
   to {
     transform: rotate(360deg);
   }
 }
 
 @media (max-width: 860px) {
-  .redesign-auth-page {
+  .auth-page {
     .vd-login-shell__content {
       padding: 22px;
     }
   }
 
-  .redesign-auth-page__settings {
+  .auth-page__settings {
     font-size: 0;
 
     .iconfont {

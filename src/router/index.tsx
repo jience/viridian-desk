@@ -16,7 +16,7 @@ import { fetchTerminalInfo } from '@/store/feature/terminal';
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
 import ClientLayout from '../layouts/clientLayout';
 import { Component as Approval } from '../pages/approval';
-import RedesignLogin from '../pages/login/redesign';
+import LoginPage from '../pages/login/LoginPage';
 import { Component as Malfunction } from '../pages/malfunction';
 import { Component as PeripheralSetting } from '../pages/peripheralSetting';
 
@@ -88,7 +88,7 @@ const rootRoutes: RouteObject[] = [
       },
       {
         path: 'login',
-        element: <RedesignLogin />,
+        element: <LoginPage />,
       },
       {
         path: 'configPage',
