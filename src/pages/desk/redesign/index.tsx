@@ -346,10 +346,8 @@ export function Component() {
                           placement="bottomRight"
                           trigger={['click']}
                           classNames={{ root: 'desk-more-menu redesign-desk-page__more-menu' }}
-                          getPopupContainer={() =>
-                            document.querySelector(
-                              `.redesign-desk-card-item-${index}`,
-                            ) as HTMLElement
+                          getPopupContainer={(triggerNode: HTMLElement) =>
+                            triggerNode.ownerDocument.body
                           }
                         >
                           <Button
