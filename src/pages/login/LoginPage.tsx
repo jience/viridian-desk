@@ -9,7 +9,7 @@ import {
   selectTerminalRememberPasswordSwitch,
 } from '@/store/feature/client';
 import { selectConnected, selectNetwork } from '@/store/feature/gateway';
-import '@/styles/redesign.css';
+import '@/styles/design-system.css';
 import { Button } from '@/ui/components/button';
 import { LoginShell } from '@/ui/shell/login-shell';
 import { QrcodeOutlined } from '@ant-design/icons';

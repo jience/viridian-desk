@@ -6,7 +6,7 @@ import { GatewaySelect } from '@/components/GatewaySelect';
 import { AssistantPanel } from '@/ui/assistant/assistant-panel';
 import { Button } from '@/ui/components/button';
 import { AppShell, type AssistantState } from '@/ui/shell/app-shell';
-import '@/styles/redesign.css';
+import '@/styles/design-system.css';
 import './index.scss';
 
 const routeTitles = [

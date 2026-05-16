@@ -1,4 +1,4 @@
-import '@/styles/redesign.css';
+import '@/styles/design-system.css';
 import { Button } from '@/ui/components/button';
 import { PreLoginSettingsShell } from '@/ui/shell/pre-login-settings-shell';
 import { useCallback, useEffect, useMemo, useState } from 'react';
