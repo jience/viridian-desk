@@ -144,7 +144,7 @@ function Sidebar() {
     visible: false,
     cancelText: intl.formatMessage({ id: 'CANCEL' }),
     okText: intl.formatMessage({ id: 'SAVE' }),
-    width: '50%',
+    width: 520,
     centered: true,
   });
 

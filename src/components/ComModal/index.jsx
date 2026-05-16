@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal } from 'antd';
+import './index.scss';
 
 function ComModal({ modalData, children, onCancel, onOk, afterClose, ...other }) {
   return (
@@ -13,6 +14,7 @@ function ComModal({ modalData, children, onCancel, onOk, afterClose, ...other })
       cancelText={modalData.cancelText}
       okText={modalData.okText}
       width={modalData.width}
+      className={['com-modal', modalData.className].filter(Boolean).join(' ')}
       onCancel={onCancel}
       onOk={onOk}
       afterClose={afterClose}

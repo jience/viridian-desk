@@ -4,17 +4,13 @@ import { useIntl } from 'react-intl';
 import Regex from '../../utils/regex';
 import { getTerminalLoginConfig } from '@/services/public';
 import useRequest from '@/hooks/useRequest';
+import './index.scss';
 
 function PwdForm(props, ref) {
   const intl = useIntl();
   const [strongPasswordSwitch, setStrongPasswordSwitch] = useState();
-  /**
-   * @author zhoujingjing
-   * @description 表单实例
-   */
   const [formIns] = Form.useForm();
 
-  // 获取登录配置
   const { run: getTerminalLoginConfigRun } = useRequest(getTerminalLoginConfig, {
     manual: true,
     onSuccess: (res) => {
@@ -22,10 +18,6 @@ function PwdForm(props, ref) {
     },
   });
 
-  /**
-   * @author zhoujingjing
-   * @description 表单验证规则
-   */
   const formRules = {
     oldPassword: [
       {
@@ -52,11 +44,10 @@ function PwdForm(props, ref) {
         }),
       },
       ({ getFieldValue }) => ({
-        validator(rule, value) {
+        validator(_rule, value) {
           if (!value) {
             return Promise.resolve();
           }
-          // console.log(getFieldValue('oldPassword'))
           if (getFieldValue('oldPassword') !== value) {
             return Promise.resolve();
           }
@@ -80,7 +71,7 @@ function PwdForm(props, ref) {
         }),
       },
       ({ getFieldValue }) => ({
-        validator(rule, value) {
+        validator(_rule, value) {
           if (!value) {
             return Promise.resolve();
           }
@@ -93,16 +84,11 @@ function PwdForm(props, ref) {
     ],
   };
 
-  /**
-   * @author zhoujingjing
-   * @description 向外暴露的方法(可方便父组件调用子组件方法)
-   */
   useImperativeHandle(ref, () => ({
     validateFields: formIns.validateFields,
   }));
 
   useEffect(() => {
-    // 获取密码规则
     getTerminalLoginConfigRun();
   }, []);
 
@@ -111,15 +97,15 @@ function PwdForm(props, ref) {
   }, [props.formData]);
 
   return (
-    <Form form={formIns} className="basic-form" labelCol={{ span: 5 }} labelAlign="left">
+    <Form form={formIns} className="pwd-form" layout="vertical" requiredMark={false}>
       <Form.Item
         name="oldPassword"
         label={intl.formatMessage({ id: 'OLD_PASSWORD' })}
-        className="basic-form-item"
+        className="pwd-form__item"
         rules={formRules['oldPassword']}
       >
-        <Input
-          type="password"
+        <Input.Password
+          autoComplete="current-password"
           placeholder={intl.formatMessage(
             { id: 'FORM_ERROR_MSG' },
             { name: intl.formatMessage({ id: 'OLD_PASSWORD' }) },
@@ -129,11 +115,11 @@ function PwdForm(props, ref) {
       <Form.Item
         name="newPassword"
         label={intl.formatMessage({ id: 'NEW_PASSWORD' })}
-        className="basic-form-item"
+        className="pwd-form__item"
         rules={formRules['newPassword']}
       >
-        <Input
-          type="password"
+        <Input.Password
+          autoComplete="new-password"
           placeholder={intl.formatMessage(
             { id: 'FORM_ERROR_MSG' },
             { name: intl.formatMessage({ id: 'NEW_PASSWORD' }) },
@@ -143,11 +129,11 @@ function PwdForm(props, ref) {
       <Form.Item
         name="confirmPassword"
         label={intl.formatMessage({ id: 'CONFIRM_PASSWORD' })}
-        className="basic-form-item"
+        className="pwd-form__item"
         rules={formRules['confirmPassword']}
       >
-        <Input
-          type="password"
+        <Input.Password
+          autoComplete="new-password"
           placeholder={intl.formatMessage(
             { id: 'FORM_ERROR_MSG' },
             { name: intl.formatMessage({ id: 'CONFIRM_PASSWORD' }) },

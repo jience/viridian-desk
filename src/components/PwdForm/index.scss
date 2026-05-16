@@ -1,0 +1,18 @@
+.pwd-form {
+  display: grid;
+  gap: 2px;
+}
+
+.pwd-form__item {
+  margin-bottom: 16px;
+
+  .ant-form-item-label > label {
+    color: var(--app-muted-color, #6f7f90);
+    font-size: 13px;
+    font-weight: 550;
+  }
+
+  .ant-input-affix-wrapper {
+    border-radius: 8px;
+  }
+}
