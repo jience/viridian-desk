@@ -41,6 +41,13 @@ export function RedesignAppLayout() {
 
   const effectiveAssistantCollapsed = assistantCollapsed || isCompactAssistant;
   const assistantState: AssistantState = effectiveAssistantCollapsed ? 'collapsed' : 'expanded';
+  const toggleAssistant = () => {
+    if (isCompactAssistant) {
+      return;
+    }
+
+    setAssistantCollapsed((current) => !current);
+  };
 
   return (
     <div className="redesign-app-layout">
@@ -48,7 +55,7 @@ export function RedesignAppLayout() {
         assistant={
           <AssistantPanel
             collapsed={effectiveAssistantCollapsed}
-            onToggle={() => setAssistantCollapsed((current) => !current)}
+            onToggle={toggleAssistant}
           />
         }
         assistantState={assistantState}
@@ -63,7 +70,8 @@ export function RedesignAppLayout() {
             </div>
             <Button
               aria-pressed={!effectiveAssistantCollapsed}
-              onClick={() => setAssistantCollapsed((current) => !current)}
+              disabled={isCompactAssistant}
+              onClick={toggleAssistant}
               size="sm"
               variant="secondary"
             >
