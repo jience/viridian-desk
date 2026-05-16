@@ -21,6 +21,8 @@ import {
   type WorkflowStatusOption,
 } from './redesign';
 
+const APPROVAL_PAGE_SIZE = 7;
+
 export function Component() {
   const intl = useIntl();
   const { formatMessage } = intl;
@@ -31,7 +33,7 @@ export function Component() {
   const [approvalList, setApprovalList] = useState<ApprovalWorkflowItem[]>([]);
   const [queryParams, setQueryParams] = useState({
     pageNumber: 1,
-    pageSize: 10,
+    pageSize: APPROVAL_PAGE_SIZE,
   });
   const [total, setTotal] = useState(0);
   const [curWorkflowStatus, setCurWorkflowStatus] = useState<ViewWorkflowStatus>('all');
@@ -68,6 +70,9 @@ export function Component() {
     setSelectedRowKeys([]);
     setTableChecked([]);
   };
+
+  const workflowDisplayName = (row: ApprovalWorkflowItem) =>
+    `${getWorkflowTypeLabel(formatMessage, row.workflowType)}(${row.createUser || '-'})`;
 
   const fetchWorkflow = (
     pageNumber = queryParams.pageNumber,
@@ -132,6 +137,7 @@ export function Component() {
   };
 
   const handleRefresh = () => {
+    clearSelection();
     fetchWorkflow(queryParams.pageNumber, curWorkflowStatus);
   };
 
@@ -149,7 +155,7 @@ export function Component() {
     if (it) {
       label = `${formatMessage({ id: 'ConfirmCancel' })}${formatMessage({
         id: 'Approval',
-      })} ${getWorkflowTypeLabel(formatMessage, it.workflowType)}？`;
+      })} ${workflowDisplayName(it)}？`;
     } else {
       label = `${formatMessage({ id: 'ConfirmCancel' })}${formatMessage({
         id: 'Below',
@@ -165,7 +171,7 @@ export function Component() {
       selectedItemName: it
         ? []
         : tableChecked.map((row) => ({
-            name: `${getWorkflowTypeLabel(formatMessage, row.workflowType)}(${row.createUser || '-'})`,
+            name: workflowDisplayName(row),
             id: row.id,
           })),
     });
@@ -182,7 +188,7 @@ export function Component() {
       showQuickJumper: false,
       simple: true,
       size: 'small',
-      pageSize: 7,
+      pageSize: queryParams.pageSize,
       total,
       onChange: handlePageChange,
       current: queryParams.pageNumber,
