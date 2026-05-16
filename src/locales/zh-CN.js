@@ -823,6 +823,7 @@ export default {
   FaultCancel: '撤回',
   FaultDelete: '删除',
   FaultCreate: '创建工单',
+  REFRESH: '刷新',
   MalfunctionWorkbenchEyebrow: '故障工单',
   MalfunctionWorkbenchTitle: '故障工作台',
   MalfunctionWorkbenchSummary: '共 {count} 条记录，当前筛选：{type} / {status}',

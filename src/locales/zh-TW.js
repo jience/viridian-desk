@@ -821,6 +821,7 @@ export default {
   FaultCancel: '撤回',
   FaultDelete: '刪除',
   FaultCreate: '創建工單',
+  REFRESH: '刷新',
   MalfunctionWorkbenchEyebrow: '故障工單',
   MalfunctionWorkbenchTitle: '故障工作台',
   MalfunctionWorkbenchSummary: '共 {count} 條記錄，當前篩選：{type} / {status}',

@@ -746,6 +746,7 @@ export default {
   FaultCancel: 'CancelFault',
   FaultDelete: 'DeleteFault',
   FaultCreate: 'Create fault',
+  REFRESH: 'Refresh',
   MalfunctionWorkbenchEyebrow: 'Fault tickets',
   MalfunctionWorkbenchTitle: 'Fault workbench',
   MalfunctionWorkbenchSummary: '{count} records, filtered by {type} / {status}',
