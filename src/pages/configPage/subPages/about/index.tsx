@@ -12,13 +12,12 @@ import { SettingsSection } from '../../redesign/components';
 
 type PendingAboutKey = 'product' | 'product_description';
 
-const aboutKey = (key: PendingAboutKey) => `config_page.about.${key}`;
+const aboutKey = <T extends PendingAboutKey>(key: T) => `config_page.about.${key}` as const;
 
 export default function About(_props: any) {
   const { t } = useTranslation();
   const intl = useIntl();
-  const tPending = (key: PendingAboutKey) =>
-    (t as unknown as (translationKey: string) => string)(aboutKey(key));
+  const tPending = (key: PendingAboutKey) => t(aboutKey(key));
   const [aboutInfo, setAboutInfo] = useState<GetClientAboutResp>();
   const [getClientAboutLoading, setGetClientAboutLoading] = useState(false);
 

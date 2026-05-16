@@ -8,8 +8,6 @@ import { SettingsRow } from '../../../redesign/components';
 
 export const FullScreen: FC = () => {
   const { t } = useTranslation();
-  const tCommon = (key: 'full_screen_description') =>
-    (t as unknown as (translationKey: string) => string)(`config_page.common_setting.${key}`);
   const dispatch = useAppDispatch();
   const fullscreen = useAppSelector(selectFullScreen);
 
@@ -23,7 +21,7 @@ export const FullScreen: FC = () => {
       <SettingsRow
         icon={<i className="iconfont icon-stencil" />}
         title={t('config_page.common_setting.full_screen_mode')}
-        description={tCommon('full_screen_description')}
+        description={t('config_page.common_setting.full_screen_description')}
         action={<Switch size="small" checked={fullscreen} onChange={switchFullScreen} />}
       />
     </div>

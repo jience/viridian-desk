@@ -11,14 +11,12 @@ export interface LicenseContentProps {
 export const LicenseContent: FC<LicenseContentProps> = (props) => {
   const { aboutInfo } = props;
   const { t } = useTranslation();
-  const tPending = (key: 'license_description') =>
-    (t as unknown as (translationKey: string) => string)(`config_page.about.${key}`);
 
   return (
     <div className={style.licenseContentWrapper}>
       <SettingsGroup
         title={t('config_page.about.license_agreement')}
-        description={tPending('license_description')}
+        description={t('config_page.about.license_description')}
         className={style.licenseGroup}
       >
         <pre>{aboutInfo?.license || ''}</pre>

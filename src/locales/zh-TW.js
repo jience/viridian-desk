@@ -73,6 +73,12 @@ export default {
   SUCCESS_MOUSEADAPT_EDIT: '鼠標自適應方式更改成功',
   SUCCESS_AUTOUPDATE_EDIT: '自動更新更改成功',
   CONNECT: '連接',
+  SettingsWorkbenchEyebrow: '偏好設置',
+  SettingsWorkbenchTitle: '設置中心',
+  SettingsServerSubtitle: '配置登入前可用的接入閘道與預設連線。',
+  SettingsCommonSubtitle: '管理啟動、顯示、更新、語言和主題偏好。',
+  SettingsAdvancedSubtitle: '查看診斷、網路、開發者模式與日誌工具。',
+  SettingsAboutSubtitle: '查看客戶端版本、更新、許可協議和版權資訊。',
 
   // 服務器
   ADD: '添加',

@@ -8,8 +8,6 @@ import { SettingsRow } from '../../../redesign/components';
 
 export const AutoStart: FC = () => {
   const { t } = useTranslation();
-  const tCommon = (key: 'auto_start_description') =>
-    (t as unknown as (translationKey: string) => string)(`config_page.common_setting.${key}`);
   const dispatch = useAppDispatch();
   const autoStart = useAppSelector(selectAutoStart);
 
@@ -23,7 +21,7 @@ export const AutoStart: FC = () => {
       <SettingsRow
         icon={<i className="iconfont icon-stencil" />}
         title={t('config_page.common_setting.auto_start')}
-        description={tCommon('auto_start_description')}
+        description={t('config_page.common_setting.auto_start_description')}
         action={<Switch size="small" checked={autoStart} onChange={switchAutoStart} />}
       />
     </div>

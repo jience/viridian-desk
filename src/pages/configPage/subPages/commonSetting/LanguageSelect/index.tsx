@@ -9,8 +9,6 @@ import { SettingsRow } from '../../../redesign/components';
 
 export const LanguageSelect: FC = () => {
   const { t } = useTranslation();
-  const tCommon = (key: 'language_description') =>
-    (t as unknown as (translationKey: string) => string)(`config_page.common_setting.${key}`);
   const dispatch = useAppDispatch();
   const language = useAppSelector(selectLanguage);
 
@@ -32,7 +30,7 @@ export const LanguageSelect: FC = () => {
       <SettingsRow
         icon={<i className="iconfont icon-language" />}
         title={t('config_page.common_setting.language')}
-        description={tCommon('language_description')}
+        description={t('config_page.common_setting.language_description')}
         action={
           <Select
             className={style.languageSelect}

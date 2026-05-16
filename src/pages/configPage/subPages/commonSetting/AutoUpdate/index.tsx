@@ -8,8 +8,6 @@ import { SettingsRow } from '../../../redesign/components';
 
 export const AutoUpdate: FC = () => {
   const { t } = useTranslation();
-  const tCommon = (key: 'auto_update_description') =>
-    (t as unknown as (translationKey: string) => string)(`config_page.common_setting.${key}`);
   const dispatch = useAppDispatch();
   const autoUpdate = useAppSelector(selectAutoUpdate);
 
@@ -23,7 +21,7 @@ export const AutoUpdate: FC = () => {
       <SettingsRow
         icon={<i className="iconfont icon-stencil" />}
         title={t('config_page.common_setting.auto_update')}
-        description={tCommon('auto_update_description')}
+        description={t('config_page.common_setting.auto_update_description')}
         action={<Switch size="small" checked={autoUpdate} onChange={switchAutoUpdate} />}
       />
     </div>

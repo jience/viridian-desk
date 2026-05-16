@@ -52,12 +52,12 @@ type PendingServerSettingKey =
   | 'workbench_description'
   | 'workbench_title';
 
-const serverSettingKey = (key: PendingServerSettingKey) => `config_page.server_setting.${key}`;
+const serverSettingKey = <T extends PendingServerSettingKey>(key: T) =>
+  `config_page.server_setting.${key}` as const;
 
 export default function ServerSetting() {
   const { t } = useTranslation();
-  const tPending = (key: PendingServerSettingKey) =>
-    (t as unknown as (translationKey: string) => string)(serverSettingKey(key));
+  const tPending = (key: PendingServerSettingKey) => t(serverSettingKey(key));
   const { modal } = App.useApp();
   const dispatch = useAppDispatch();
   const serverEditModalRef = useRef<ServerEditModalRef>(null);

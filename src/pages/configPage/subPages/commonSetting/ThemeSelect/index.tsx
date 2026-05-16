@@ -10,8 +10,6 @@ import { SettingsRow } from '../../../redesign/components';
 
 export const ThemeSelect: FC = () => {
   const { t } = useTranslation();
-  const tCommon = (key: 'theme_description') =>
-    (t as unknown as (translationKey: string) => string)(`config_page.common_setting.${key}`);
   const dispatch = useAppDispatch();
   const currentTheme = useAppSelector(selectTheme);
 
@@ -45,7 +43,7 @@ export const ThemeSelect: FC = () => {
       <SettingsRow
         icon={<i className="iconfont icon-stencil" />}
         title={t('config_page.common_setting.theme')}
-        description={tCommon('theme_description')}
+        description={t('config_page.common_setting.theme_description')}
       >
         <div className={style.themeSelectContent}>
           {themeList.map((i) => {

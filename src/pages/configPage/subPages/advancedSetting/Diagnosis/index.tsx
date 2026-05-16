@@ -8,12 +8,12 @@ import { SettingsRow } from '../../../redesign/components';
 
 type PendingDiagnosisKey = 'diagnosis_description';
 
-const advancedSettingKey = (key: PendingDiagnosisKey) => `config_page.advanced_setting.${key}`;
+const advancedSettingKey = <T extends PendingDiagnosisKey>(key: T) =>
+  `config_page.advanced_setting.${key}` as const;
 
 export const Diagnosis: FC = () => {
   const { t } = useTranslation();
-  const tPending = (key: PendingDiagnosisKey) =>
-    (t as unknown as (translationKey: string) => string)(advancedSettingKey(key));
+  const tPending = (key: PendingDiagnosisKey) => t(advancedSettingKey(key));
   const diagnosisRef = useRef<DiagnosisModalRef>(null);
 
   const handleOpenDiagnosis = async () => {

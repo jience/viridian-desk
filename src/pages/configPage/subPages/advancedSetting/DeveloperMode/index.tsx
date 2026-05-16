@@ -8,12 +8,12 @@ import { SettingsRow } from '../../../redesign/components';
 
 type PendingDeveloperModeKey = 'developer_mode_description';
 
-const advancedSettingKey = (key: PendingDeveloperModeKey) => `config_page.advanced_setting.${key}`;
+const advancedSettingKey = <T extends PendingDeveloperModeKey>(key: T) =>
+  `config_page.advanced_setting.${key}` as const;
 
 export const DeveloperMode: FC = () => {
   const { t } = useTranslation();
-  const tPending = (key: PendingDeveloperModeKey) =>
-    (t as unknown as (translationKey: string) => string)(advancedSettingKey(key));
+  const tPending = (key: PendingDeveloperModeKey) => t(advancedSettingKey(key));
   const dispatch = useAppDispatch();
   const developerMode = useAppSelector(selectDeveloperMode);
 

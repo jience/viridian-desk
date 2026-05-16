@@ -19,7 +19,7 @@ type PendingAboutKey =
   | 'version_info'
   | 'version_info_description';
 
-const aboutKey = (key: PendingAboutKey) => `config_page.about.${key}`;
+const aboutKey = <T extends PendingAboutKey>(key: T) => `config_page.about.${key}` as const;
 
 export interface VersionInfoProps {
   aboutInfo?: GetClientAboutResp;
@@ -29,8 +29,7 @@ export const VersionInfo: FC<VersionInfoProps> = (props) => {
   const { aboutInfo } = props;
   const isThin = useAppSelector(selectIsThin);
   const { t } = useTranslation();
-  const tPending = (key: PendingAboutKey) =>
-    (t as unknown as (translationKey: string) => string)(aboutKey(key));
+  const tPending = (key: PendingAboutKey) => t(aboutKey(key));
   const [downloadVisible, setDownloadVisible] = useState(false);
   const [downloadData, setDownloadData] = useState<FetchUpdateResp>();
   const [checkUpgradeLoading, setCheckUpgradeLoading] = useState(false);

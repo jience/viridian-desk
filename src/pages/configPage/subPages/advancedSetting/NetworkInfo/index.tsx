@@ -14,12 +14,12 @@ import { SettingsRow } from '../../../redesign/components';
 
 type PendingNetworkInfoKey = 'network_info_description';
 
-const advancedSettingKey = (key: PendingNetworkInfoKey) => `config_page.advanced_setting.${key}`;
+const advancedSettingKey = <T extends PendingNetworkInfoKey>(key: T) =>
+  `config_page.advanced_setting.${key}` as const;
 
 export const NetworkInfo: FC = () => {
   const { t } = useTranslation();
-  const tPending = (key: PendingNetworkInfoKey) =>
-    (t as unknown as (translationKey: string) => string)(advancedSettingKey(key));
+  const tPending = (key: PendingNetworkInfoKey) => t(advancedSettingKey(key));
   const [copyIpMacInfo, setCopyIpMacInfo] = useState('');
   const [networkInfo, setNetworkInfo] = useState<NetProbeItemRender>();
   const [netCopied, setNetCopied] = useState(false);

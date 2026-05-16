@@ -17,14 +17,13 @@ type PendingAdvancedSettingKey =
   | 'support_tools'
   | 'support_tools_description';
 
-const advancedSettingKey = (key: PendingAdvancedSettingKey) =>
-  `config_page.advanced_setting.${key}`;
+const advancedSettingKey = <T extends PendingAdvancedSettingKey>(key: T) =>
+  `config_page.advanced_setting.${key}` as const;
 
 export default function AdvancedSetting() {
   const { t } = useTranslation();
   const intl = useIntl();
-  const tPending = (key: PendingAdvancedSettingKey) =>
-    (t as unknown as (translationKey: string) => string)(advancedSettingKey(key));
+  const tPending = (key: PendingAdvancedSettingKey) => t(advancedSettingKey(key));
   const developerMode = useAppSelector(selectDeveloperMode);
 
   // 网络信息编辑表单

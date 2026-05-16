@@ -73,6 +73,12 @@ export default {
   SUCCESS_MOUSEADAPT_EDIT: '鼠标自适应方式更改成功',
   SUCCESS_AUTOUPDATE_EDIT: '自动更新更改成功',
   CONNECT: '连接',
+  SettingsWorkbenchEyebrow: '偏好设置',
+  SettingsWorkbenchTitle: '设置中心',
+  SettingsServerSubtitle: '配置登录前可用的接入网关与默认连接。',
+  SettingsCommonSubtitle: '管理启动、显示、更新、语言和主题偏好。',
+  SettingsAdvancedSubtitle: '查看诊断、网络、开发者模式与日志工具。',
+  SettingsAboutSubtitle: '查看客户端版本、更新、许可协议和版权信息。',
 
   // 服务器
   ADD: '添加',

@@ -20,13 +20,13 @@ type PendingCommonSettingKey =
   | 'startup_display'
   | 'startup_display_description';
 
-const commonSettingKey = (key: PendingCommonSettingKey) => `config_page.common_setting.${key}`;
+const commonSettingKey = <T extends PendingCommonSettingKey>(key: T) =>
+  `config_page.common_setting.${key}` as const;
 
 export default function CommonSetting(_props: any) {
   const { t } = useTranslation();
   const intl = useIntl();
-  const tPending = (key: PendingCommonSettingKey) =>
-    (t as unknown as (translationKey: string) => string)(commonSettingKey(key));
+  const tPending = (key: PendingCommonSettingKey) => t(commonSettingKey(key));
   const isIntegrated = useAppSelector(selectIntegration);
   const isThin = useAppSelector(selectIsThin);
 
