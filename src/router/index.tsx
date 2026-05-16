@@ -6,7 +6,7 @@ import About from '@/pages/configPage/subPages/about';
 import AdvancedSetting from '@/pages/configPage/subPages/advancedSetting';
 import CurrencySetting from '@/pages/configPage/subPages/commonSetting';
 import ServerSetting from '@/pages/configPage/subPages/serverSetting';
-import { Component as RedesignDesk } from '@/pages/desk/redesign';
+import { DeskPage } from '@/pages/desk/DeskPage';
 import { Component as RedesignDeskDetail } from '@/pages/deskDetail/redesign';
 import { appStore } from '@/store';
 import { getLoginHistory, setCurrentLoginType } from '@/store/feature/app';
@@ -99,7 +99,7 @@ const rootRoutes: RouteObject[] = [
         path: 'app',
         element: <RedesignAppLayout />,
         children: createAppRoutes({
-          desk: <RedesignDesk />,
+          desk: <DeskPage />,
           deskDetail: <RedesignDeskDetail />,
         }),
       },

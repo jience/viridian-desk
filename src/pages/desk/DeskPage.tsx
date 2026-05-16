@@ -17,15 +17,15 @@ import ActionAuth from '@/utils/actionAuth';
 import Actions from '@/utils/actions';
 import { DESK_STATUS } from '@/utils/constant';
 import { transIcon } from '@/utils/utils';
-import DeskPoolModal from '../components/deskPoolDetail';
-import InUseLoading from '../components/loading';
-import useDeskHooks from '../useDeskHooks';
-import './index.scss';
+import DeskPoolModal from './components/deskPoolDetail';
+import InUseLoading from './components/loading';
+import useDeskHooks from './useDeskHooks';
+import './DeskPage.scss';
 
 const AuthButton = ActionAuth(Button);
 const AuthDropDown = ActionAuth(Dropdown);
 
-export function Component() {
+export function DeskPage() {
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const isFullScreen = useAppSelector(selectFullScreen);
@@ -215,14 +215,14 @@ export function Component() {
   ];
 
   return (
-    <main className="redesign-desk-page">
-      <header className="redesign-desk-page__toolbar">
+    <main className="desk-page">
+      <header className="desk-page__toolbar">
         <div>
-          <span className="redesign-desk-page__eyebrow">{formatMessage({ id: 'DESK' })}</span>
+          <span className="desk-page__eyebrow">{formatMessage({ id: 'DESK' })}</span>
           <h1>{formatMessage({ id: 'DESK' })}</h1>
         </div>
         <Button
-          className="redesign-desk-page__refresh"
+          className="desk-page__refresh"
           type="primary"
           loading={isRefreshing}
           icon={<i className="iconfont icon-refresh" />}
@@ -233,50 +233,50 @@ export function Component() {
       </header>
 
       <Spin spinning={isRefreshing}>
-        <div className="redesign-desk-page__scroll">
+        <div className="desk-page__scroll">
           {isEmpty && (
-            <section className="redesign-desk-page__empty">
+            <section className="desk-page__empty">
               <Empty description={formatMessage({ id: 'DESK' })} />
             </section>
           )}
 
           {!!deskData?.length && (
-            <section className="redesign-desk-page__section">
-              <div className="redesign-desk-page__section-header">
+            <section className="desk-page__section">
+              <div className="desk-page__section-header">
                 <div>
                   <span>{formatMessage({ id: 'DESK' })}</span>
                   <strong>{deskData.length}</strong>
                 </div>
               </div>
-              <div className="redesign-desk-page__grid">
+              <div className="desk-page__grid">
                 {deskData.map((item: any, index: number) => {
                   const isStopped = ['stop', 'stopretain'].includes(item?.status?.toLowerCase());
                   return (
                     <article
-                      className={`redesign-desk-card redesign-desk-card--${item?.desktopPool?.type} redesign-desk-card-item-${index} ${
-                        isStopped ? 'redesign-desk-card--disabled' : ''
+                      className={`desk-card desk-card--${item?.desktopPool?.type} desk-card-item-${index} ${
+                        isStopped ? 'desk-card--disabled' : ''
                       }`}
                       key={item?.id || `${item?.name}-${index}`}
                     >
                       <button
-                        className="redesign-desk-card__body"
+                        className="desk-card__body"
                         type="button"
                         onClick={() => enterDesk(item)}
                       >
-                        <div className="redesign-desk-card__status">
-                          <div className="redesign-desk-card__status-left">
+                        <div className="desk-card__status">
+                          <div className="desk-card__status-left">
                             {transStatus(item.status, item.isLock)}
                             {item?.sessionStatus == '1' && <InUseLoading />}
                           </div>
                           {item.isDefault && (
-                            <span className="redesign-desk-card__default">
+                            <span className="desk-card__default">
                               {formatMessage({ id: 'DEFAULT' })}
                             </span>
                           )}
                         </div>
-                        <div className="redesign-desk-card__os">
+                        <div className="desk-card__os">
                           {item.status.toLowerCase() === 'stop' ? (
-                            <span className="redesign-desk-card__os-shell">
+                            <span className="desk-card__os-shell">
                               <Close />
                             </span>
                           ) : (
@@ -285,13 +285,13 @@ export function Component() {
                           {transIcon(item.image?.os || item.os)}
                         </div>
                         <Tooltip title={item.name}>
-                          <p className="redesign-desk-card__name">
+                          <p className="desk-card__name">
                             <span>{item.name}</span>
                             {transType(item.desktopPool)}
                           </p>
                         </Tooltip>
                       </button>
-                      <div className="redesign-desk-card__actions">
+                      <div className="desk-card__actions">
                         <Popover content={connectLabel}>
                           <Button
                             type="text"
@@ -345,7 +345,7 @@ export function Component() {
                           menu={generateMenus(item, getPersonalDiskMenuActions())}
                           placement="bottomRight"
                           trigger={['click']}
-                          classNames={{ root: 'desk-more-menu redesign-desk-page__more-menu' }}
+                          classNames={{ root: 'desk-more-menu desk-page__more-menu' }}
                           getPopupContainer={(triggerNode: HTMLElement) =>
                             triggerNode.ownerDocument.body
                           }
@@ -366,36 +366,33 @@ export function Component() {
           )}
 
           {!!deskPoolData?.length && (
-            <section className="redesign-desk-page__section">
-              <div className="redesign-desk-page__section-header">
+            <section className="desk-page__section">
+              <div className="desk-page__section-header">
                 <div>
                   <span>{formatMessage({ id: 'DESK_POOL' })}</span>
                   <strong>{deskPoolData.length}</strong>
                 </div>
               </div>
-              <div className="redesign-desk-page__pool-grid">
+              <div className="desk-page__pool-grid">
                 {deskPoolData.map((item: any, index: number) => (
-                  <article
-                    className="redesign-desk-pool"
-                    key={item?.id || `${item?.name}-${index}`}
-                  >
+                  <article className="desk-pool" key={item?.id || `${item?.name}-${index}`}>
                     <button
                       type="button"
-                      className="redesign-desk-pool__detail"
+                      className="desk-pool__detail"
                       aria-label={`${detailLabel}: ${item.name}`}
                       onClick={() => {
                         getDeskPoolDetail(item.id);
                         setPoolDetailVisible(true);
                       }}
                     >
-                      <div className="redesign-desk-pool__os">
-                        <span className="redesign-desk-pool__os-shell">
+                      <div className="desk-pool__os">
+                        <span className="desk-pool__os-shell">
                           <Deskpool />
                         </span>
                         {transIcon(item?.os)}
                       </div>
                       <Tooltip title={item.name}>
-                        <p className="redesign-desk-pool__name">
+                        <p className="desk-pool__name">
                           <span>{item.name}</span>
                           {transType(item)}
                         </p>
@@ -406,7 +403,7 @@ export function Component() {
                         event.stopPropagation();
                         createDeskFromDeskPool(item);
                       }}
-                      className="redesign-desk-pool__create"
+                      className="desk-pool__create"
                     >
                       {formatMessage({ id: 'CreateDeskFromDeskPool' })}
                     </Button>
