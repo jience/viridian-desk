@@ -778,12 +778,6 @@ export default {
   SAVED_LOG_CONFIGURATION_SUCCESS: '保存日誌配置成功',
   EDIT_IP_MAC_SUCCESS: '編輯網絡信息成功',
 
-  // 系統設置
-  SystemSetting: '系統',
-  SystemVoice: '系統聲音',
-  SystemView: '顯示器分辨率',
-  SystemVote: '投屏設置',
-
   loginByphone: '手機號登錄',
   loginByUser: '賬號登錄',
   INPUT_TELEPHONE_NJUMBER: '請輸入手機號碼',

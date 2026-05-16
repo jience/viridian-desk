@@ -779,12 +779,6 @@ export default {
   SAVED_LOG_CONFIGURATION_SUCCESS: '保存日志配置成功',
   EDIT_IP_MAC_SUCCESS: '编辑网络信息成功',
 
-  // 系统设置
-  SystemSetting: '系统',
-  SystemVoice: '系统声音',
-  SystemView: '显示器分辨率',
-  SystemVote: '投屏设置',
-
   loginByphone: '手机号登录',
   loginByUser: '账号登录',
   INPUT_TELEPHONE_NJUMBER: '请输入手机号码',
