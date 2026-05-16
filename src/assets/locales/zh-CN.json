@@ -274,6 +274,7 @@
   "login_page.message_announcement": "消息公告",
   "login_page.help_document": "帮助文档",
   "login_page.shutdown": "关机",
+  "login_page.footer_controls": "登录页控制栏",
   "login_page.developer_mode_enabled": "开发者模式已开启",
   "login_page.current_server": "当前服务器: ",
   "login_page.username_placeholder": "请输入用户名",

@@ -13,9 +13,11 @@
   height: 100%;
   background:
     radial-gradient(circle at 18% 16%, rgba(142, 242, 189, 0.12), transparent 28%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px),
-    var(--vd-color-bg);
-  background-size: auto, 26px 26px, auto;
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px), var(--vd-color-bg);
+  background-size:
+    auto,
+    26px 26px,
+    auto;
   color: var(--vd-color-text);
 
   .vd-login-shell__main {
@@ -25,9 +27,11 @@
   .vd-login-shell__aside {
     background:
       linear-gradient(180deg, rgba(142, 242, 189, 0.12), transparent 38%),
-      linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px),
-      #101513;
-    background-size: auto, 32px 32px, auto;
+      linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px), #101513;
+    background-size:
+      auto,
+      32px 32px,
+      auto;
   }
 
   .vd-auth-card {
@@ -89,10 +93,10 @@
     gap: 8px;
   }
 
-  .footer-content {
+  .login-footer {
     color: var(--vd-color-muted);
 
-    .footer-left .option-button {
+    .login-footer__action {
       border-color: rgba(209, 255, 229, 0.14);
       background: rgba(255, 255, 255, 0.05);
 
@@ -101,12 +105,11 @@
       }
     }
 
-    .footer-left .option-button .client-button,
-    .footer-text-content {
+    .login-footer__action .iconfont {
       color: var(--vd-color-muted);
     }
 
-    .footer-right {
+    .login-footer__gateway {
       color: var(--vd-color-muted);
     }
   }
@@ -239,7 +242,9 @@
     background:
       linear-gradient(rgba(142, 242, 189, 0.06) 1px, transparent 1px),
       linear-gradient(90deg, rgba(142, 242, 189, 0.04) 1px, transparent 1px);
-    background-size: 100% 44px, 44px 100%;
+    background-size:
+      100% 44px,
+      44px 100%;
     content: '';
     mask-image: linear-gradient(90deg, transparent, #000 22%, #000 82%, transparent);
   }

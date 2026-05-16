@@ -1,4 +1,4 @@
-import { useMemo, type FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import { Tooltip, Modal } from 'antd';
 import { invoke } from '@tauri-apps/api/core';
@@ -10,6 +10,16 @@ import { selectMsgDot, setMsgDot, setMsgModalShow } from '@/store/feature/app';
 import { useTranslation } from 'react-i18next';
 import { GatewaySelect } from '../GatewaySelect';
 import { bridge } from '@/native';
+import { cn } from '@/ui/lib/cn';
+
+interface FooterAction {
+  key: string;
+  label: string;
+  icon: ReactNode;
+  onClick: () => void;
+  hidden?: boolean;
+  tone?: 'danger';
+}
 
 const Footer: FC = () => {
   const { t } = useTranslation();
@@ -35,32 +45,30 @@ const Footer: FC = () => {
     }
   };
 
-  const leftOptionButton = useMemo(() => {
-    return [
+  const actions = (
+    [
       {
         key: 'setting',
-        zh_cn_tip: t('login_page.setting'),
-        icon: <i className="iconfont icon-setting client-button" />,
-        callBack: () => {
-          navigate('/configPage/serverSetting');
+        label: t('login_page.setting'),
+        icon: <i className="iconfont icon-setting" />,
+        onClick: () => {
+          void navigate('/configPage/serverSetting');
         },
-        hidden: false,
       },
       {
         key: 'network',
-        zh_cn_tip: t('login_page.network'),
-        icon: <i className="iconfont icon-net client-button" />,
-        callBack: () => {
-          console.log('触发网络设置');
-          invoke('open_network_settings');
+        label: t('login_page.network'),
+        icon: <i className="iconfont icon-net" />,
+        onClick: () => {
+          void invoke('open_network_settings');
         },
         hidden: !isIntegratedMode,
       },
       {
         key: 'msg',
-        zh_cn_tip: t('login_page.message_announcement'),
-        icon: <i className="iconfont icon-message client-button" />,
-        callBack: () => {
+        label: t('login_page.message_announcement'),
+        icon: <i className="iconfont icon-message" />,
+        onClick: () => {
           dispatch(setMsgDot(false));
           dispatch(
             setMsgModalShow({
@@ -69,66 +77,63 @@ const Footer: FC = () => {
             }),
           );
         },
-        hidden: false,
       },
       {
         key: 'question',
-        zh_cn_tip: t('login_page.help_document'),
-        icon: <i className="iconfont icon-c_question-s client-button" />,
-        callBack: () => {
-          invoke('open_docs');
+        label: t('login_page.help_document'),
+        icon: <i className="iconfont icon-c_question-s" />,
+        onClick: () => {
+          void invoke('open_docs');
         },
-        hidden: false,
       },
       {
-        key: 'shatDown',
-        zh_cn_tip: t('login_page.shutdown'),
-        icon: <i className="iconfont icon-power-off-filled client-button" />,
-        callBack: shutdown,
-        // 非一体化隐藏
+        key: 'shutdown',
+        label: t('login_page.shutdown'),
+        icon: <i className="iconfont icon-power-off-filled" />,
+        onClick: () => {
+          void shutdown();
+        },
         hidden: !isIntegratedMode && !isThin,
+        tone: 'danger',
       },
-    ].filter((item: any) => !item.hidden);
-  }, [isIntegratedMode, isThin, navigate, dispatch]);
+    ] satisfies FooterAction[]
+  ).filter((item) => !item.hidden);
 
   return (
-    <div className="footer-content">
-      <div className="login-footer-content">
-        <div className="footer-left">
-          {/* 跳转到设置页 */}
-          {leftOptionButton.map((i: any) => {
+    <footer className="login-footer" aria-label={t('login_page.footer_controls')}>
+      <div className="login-footer__inner">
+        <div className="login-footer__actions">
+          {actions.map((action) => {
             return (
-              <div
-                key={i.key}
-                className={`option-button ${i.key === 'msg' && msgDot && 'msgdot'}`}
-                onClick={() => i.callBack()}
-              >
-                <Tooltip
-                  className={i?.name ? 'haveName' : ''}
-                  placement="top"
-                  title={i.zh_cn_tip}
-                  arrow={false}
+              <Tooltip key={action.key} placement="top" title={action.label} arrow={false}>
+                <button
+                  type="button"
+                  aria-label={action.label}
+                  className={cn(
+                    'login-footer__action',
+                    action.key === 'msg' && msgDot && 'login-footer__action--unread',
+                    action.tone === 'danger' && 'login-footer__action--danger',
+                  )}
+                  onClick={action.onClick}
                 >
-                  {i.icon}
-                  <span className="opt-name">{i?.name}</span>
-                </Tooltip>
-              </div>
+                  {action.icon}
+                </button>
+              </Tooltip>
             );
           })}
-          {/* 开发者模式 */}
           {developerMode && (
-            <div className="develop-mode">
+            <div className="login-footer__developer" role="status">
               <i className="iconfont icon-ConfigMap" />
               <span>{t('login_page.developer_mode_enabled')}</span>
             </div>
           )}
         </div>
-        <div className="footer-right">
+        <div className="login-footer__gateway">
           <GatewaySelect />
         </div>
       </div>
-      <>{contextHolder}</>
-    </div>
+      {contextHolder}
+    </footer>
   );
 };
 

@@ -1,220 +1,106 @@
-.footer-content {
+.login-footer {
+  position: relative;
+  width: 100%;
+  color: var(--gateway-select-color);
+}
+
+.login-footer__inner {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  gap: 16px;
   width: 100%;
+}
+
+.login-footer__actions,
+.login-footer__gateway {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.login-footer__actions {
+  gap: 8px;
+}
+
+.login-footer__action {
   position: relative;
-  .login-footer-content {
-    width: 100%;
-    justify-content: space-between;
-    display: flex;
-    align-items: flex-end;
-  }
-  .footer-left {
-    display: flex;
-    align-items: center;
-    min-width: 0;
-
-    .btn-group {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      justify-content: center;
-      align-items: center;
-
-      border-radius: 6px;
-    }
-
-    .option-button {
-      min-width: 28px;
-      height: 28px;
-      margin-right: 8px;
-      background: var(--footer-button-bg);
-      border-radius: 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      border: 1px solid var(--login-page-bottom-btn-border-color);
-      cursor: pointer;
-      .client-button {
-        color: var(--footer-button-color1);
-        font-size: 16px;
-        display: flex;
-        &:hover,
-        &:focus {
-          color: var(--primary-color);
-        }
-      }
-
-      .haveName {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0 8px;
-
-        .opt-name {
-          margin: 0 2px;
-          font-size: 12px;
-          font-weight: 800;
-          color: var(--footer-button-color1);
-        }
-      }
-
-      &:hover {
-        background: #ffffff;
-        .client-button {
-          color: var(--primary-color);
-        }
-      }
-      &.msgdot::after {
-        content: '';
-        position: absolute;
-        width: 7px;
-        height: 7px;
-        background-color: red;
-        border-radius: 10px;
-        border: 1px solid #fff;
-        top: 6px;
-        right: 5px;
-      }
-    }
-    .develop-mode {
-      padding: 6px 12px;
-      height: 28px;
-      background: var(--develop-mode-bac-color);
-      border-radius: 14px;
-      font-size: 12px;
-      color: var(--develop-mode-color);
-      display: flex;
-      align-items: center;
-      column-gap: 6px;
-      line-height: 1;
-
-      .iconfont {
-        font-size: 12px;
-      }
-    }
-  }
-  .footer-right {
-    display: flex;
-    align-items: center;
-    padding-bottom: 2px;
-  }
-  .archer-divider-vertical {
-    margin-left: 0px;
-  }
-  .public-net {
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    color: var(--confirm-content-color);
-    > span {
-      margin-right: 5px;
-    }
-  }
-  .network-card {
-    float: right;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  .network-card-green {
-    color: #5ab55e;
-  }
-  .network-card-grey {
-    color: #969696;
-  }
-
-  .network-card-content {
-    font-size: 12px;
-    .content-info {
-      color: rgba(0, 0, 0, 0.65);
-      margin-bottom: 8px;
-      display: flex;
-      .item-name {
-        width: 90px;
-      }
-      .item-detail {
-        flex: 1;
-        color: rgba(0, 0, 0, 0.85);
-        word-break: break-all;
-      }
-    }
-    .nic-info {
-      margin-top: 8px;
-    }
-  }
-  .ant-popover {
-    background: #ffffff;
-    border: 1px solid rgba(224, 224, 224, 1);
-    box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.08);
-  }
-  .ant-popover-content {
-    width: 240px;
-  }
-  .ant-popover-inner-content {
-    padding: 12px !important;
-  }
-  .ant-popover .ant-popover-arrow {
-    display: block !important;
-  }
-  .ant-popover-placement-top .ant-popover-arrow {
-    bottom: -15px;
-  }
-  .ant-popover-placement-topRight .ant-popover-arrow {
-    right: 11px;
-    bottom: -15px;
-  }
-  .copy-text {
-    margin-top: 10px;
-    font-size: 12px;
-    cursor: pointer;
-    text-align: center;
-    color: var(--ant-primary-color);
-  }
-  .copy-success {
-    color: #5ab55e;
-  }
-  .content-divider {
-    width: 100%;
-    border-bottom: 1px solid #d9d9d9;
-    margin-top: 4px;
-  }
-}
-.footer-text-content {
-  width: 100%;
-  height: 17px;
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
   color: var(--footer-button-color1);
-  text-align: right;
+  background: var(--footer-button-bg);
+  border: 1px solid var(--login-page-bottom-btn-border-color);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+
+  .iconfont {
+    display: flex;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(142, 242, 189, 0.28);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(142, 242, 189, 0.55);
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(1px) scale(0.98);
+  }
 }
-.testsss {
-  width: 100%;
+
+.login-footer__action--unread::after {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  content: '';
+  background: #e35d52;
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
 }
 
-.footer-msg {
-  max-width: 300px;
-  min-width: 200px;
-  margin: 0;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.login-footer__action--danger:hover,
+.login-footer__action--danger:focus-visible {
+  color: #f2766d;
+  border-color: rgba(242, 118, 109, 0.42);
 }
 
-.footer-title {
-  width: 100px;
-  margin: 0;
+.login-footer__developer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  color: var(--develop-mode-color);
+  font-size: 12px;
+  line-height: 1;
+  background: var(--develop-mode-bac-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  .iconfont {
+    font-size: 12px;
+  }
 }
 
-.malfunction-name-text {
-  display: block;
-  max-width: 130px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+.login-footer__gateway {
+  padding-bottom: 3px;
 }

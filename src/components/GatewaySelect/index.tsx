@@ -13,6 +13,7 @@ import { Select, Tooltip } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select';
 import { useMemo, type FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/ui/lib/cn';
 
 export interface GatewaySelectProps {
   readonly?: boolean;
@@ -29,6 +30,7 @@ export const GatewaySelect: FC<GatewaySelectProps> = (props) => {
   const connected = useAppSelector(selectConnected);
   const network = useAppSelector(selectNetwork);
   const gatewayAddrShowSwitch = useAppSelector(selectGatewayAddrShowSwitch);
+  const showGatewayAddress = gatewayAddrShowSwitch === 'Enabled' && connected && network;
 
   const getNetworkTip = () => {
     if (!autoGateway) return t('login_page.please_select_gateway');
@@ -72,9 +74,15 @@ export const GatewaySelect: FC<GatewaySelectProps> = (props) => {
   }, [gatewayList]);
 
   return (
-    <div className="gateway-select-wrapper">
+    <div
+      className={cn(
+        'gateway-select-wrapper',
+        readonly && 'gateway-select-wrapper--readonly',
+        !showGatewayAddress && 'gateway-select-wrapper--compact',
+      )}
+    >
       <Tooltip placement="top" title={getNetworkTip()}>
-        <div className={`network-status ${getNetworkClass}`}></div>
+        <div className={cn('network-status', getNetworkClass)}></div>
       </Tooltip>
       <span className="current-server-label">{t('login_page.current_server')}</span>
       <Select
@@ -86,9 +94,6 @@ export const GatewaySelect: FC<GatewaySelectProps> = (props) => {
         disabled={readonly}
         size="small"
         classNames={{ root: 'gateway-select' }}
-        style={
-          gatewayAddrShowSwitch === 'Enabled' && connected && network ? {} : { minWidth: '1rem' }
-        }
         options={options}
       />
     </div>

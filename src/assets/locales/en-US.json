@@ -274,6 +274,7 @@
   "login_page.message_announcement": "Message Announcement",
   "login_page.help_document": "Help Document",
   "login_page.shutdown": "Shutdown",
+  "login_page.footer_controls": "Login controls",
   "login_page.developer_mode_enabled": "Developer mode is enabled",
   "login_page.current_server": "Current server: ",
   "login_page.username_placeholder": "Please enter username",

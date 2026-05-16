@@ -1,53 +1,81 @@
 .gateway-select-wrapper {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  min-width: 0;
+  height: 24px;
   color: var(--gateway-select-color);
-  height: 16px;
-  .network-status {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-right: 4px;
-    margin-top: 2px;
-    background: #ff5500;
-    &.success {
-      background: #5ab55e;
-    }
-    &.danger {
-      background: #eb5f5c;
-    }
-    &.info {
-      background: #d9d9d9;
-    }
+  font-size: 12px;
+  line-height: 1;
+}
+
+.gateway-select-wrapper--readonly {
+  pointer-events: auto;
+}
+
+.gateway-select-wrapper--compact {
+  .gateway-select {
+    min-width: 1rem;
   }
-  .current-server-label {
+}
+
+.network-status {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  background: #d9d9d9;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(217, 217, 217, 0.14);
+
+  &.success {
+    background: #5ab55e;
+    box-shadow: 0 0 0 3px rgba(90, 181, 94, 0.16);
+  }
+
+  &.danger {
+    background: #eb5f5c;
+    box-shadow: 0 0 0 3px rgba(235, 95, 92, 0.16);
+  }
+
+  &.info {
+    background: #d9d9d9;
+  }
+}
+
+.current-server-label {
+  flex: 0 0 auto;
+  color: currentColor;
+}
+
+.gateway-select {
+  min-width: 112px;
+  max-width: min(280px, 36vw);
+
+  &.ant-select-disabled {
+    color: currentColor;
+    cursor: default;
+  }
+
+  .ant-select-selector {
+    padding-inline: 4px 0 !important;
+  }
+
+  .ant-select-selection-item {
+    color: currentColor;
     font-size: 12px;
+    text-overflow: ellipsis;
   }
-  .ant-select-single.ant-select-sm:not(.ant-select-customize-input).ant-select-show-arrow
-    .ant-select-selection-item {
-    font-size: 12px;
-    color: var(--gateway-select-color);
-    padding-inline-end: 16px;
-  }
-  .ant-select .ant-select-selection-item {
-    font-size: 12px;
-    color: var(--gateway-select-color);
-  }
-  .ant-select .ant-select-arrow {
-    color: var(--gateway-select-color);
+
+  .ant-select-arrow {
+    color: currentColor;
     font-size: 10px;
   }
-  .gateway-select {
-    background-color: transparent !important;
-    .ant-select-content,
-    .ant-select-suffix {
-      color: var(--gateway-select-color);
-    }
-    .ant-select-suffix {
-      font-size: 10px;
-    }
-    &.ant-select-disabled {
-      color: var(--gateway-select-color);
-    }
+}
+
+.gateway-select-wrapper--compact .gateway-select {
+  max-width: 1rem;
+
+  .ant-select-selection-item {
+    opacity: 0;
   }
 }
