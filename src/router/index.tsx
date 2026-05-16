@@ -1,5 +1,5 @@
 import { LoginAuthType } from '@/native/interfaces/login_history';
-import { RedesignAppLayout } from '@/layouts/RedesignAppLayout';
+import { AppLayout } from '@/layouts/AppLayout';
 import { Application } from '@/pages/application';
 import RedesignConfigPage from '@/pages/configPage/redesign';
 import About from '@/pages/configPage/subPages/about';
@@ -97,7 +97,7 @@ const rootRoutes: RouteObject[] = [
       },
       {
         path: 'app',
-        element: <RedesignAppLayout />,
+        element: <AppLayout />,
         children: createAppRoutes({
           desk: <DeskPage />,
           deskDetail: <DeskDetailPage />,

@@ -1,4 +1,4 @@
-.redesign-app-layout {
+.app-layout {
   --vd-color-bg: #101513;
   --vd-color-panel: #151b19;
   --vd-color-panel-subtle: #202925;
@@ -14,8 +14,7 @@
   overflow: hidden;
   background:
     radial-gradient(circle at 18% 12%, rgba(142, 242, 189, 0.1), transparent 28%),
-    linear-gradient(135deg, rgba(142, 242, 189, 0.04), transparent 38%),
-    var(--vd-color-bg);
+    linear-gradient(135deg, rgba(142, 242, 189, 0.04), transparent 38%), var(--vd-color-bg);
   color: var(--vd-color-text);
 
   .vd-app-shell {
@@ -25,18 +24,16 @@
   .vd-app-shell__rail {
     border-right: 1px solid rgba(209, 255, 229, 0.08);
     background:
-      linear-gradient(180deg, rgba(142, 242, 189, 0.06), transparent 34%),
-      var(--vd-color-rail);
+      linear-gradient(180deg, rgba(142, 242, 189, 0.06), transparent 34%), var(--vd-color-rail);
     box-shadow: 18px 0 40px rgba(0, 0, 0, 0.24);
   }
 
   .vd-app-shell__assistant {
     box-shadow: -18px 0 42px rgba(0, 0, 0, 0.18);
   }
-
 }
 
-.redesign-app-layout__workspace {
+.app-layout__workspace {
   display: grid;
   height: 100%;
   min-height: 0;
@@ -45,12 +42,11 @@
   border: 1px solid rgba(209, 255, 229, 0.1);
   border-radius: 18px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 42%),
-    rgba(21, 27, 25, 0.92);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 42%), rgba(21, 27, 25, 0.92);
   box-shadow: var(--vd-shadow-window);
 }
 
-.redesign-app-layout__header {
+.app-layout__header {
   display: flex;
   min-height: 72px;
   align-items: center;
@@ -60,7 +56,7 @@
   padding: 16px 18px 14px;
 }
 
-.redesign-app-layout__eyebrow {
+.app-layout__eyebrow {
   margin: 0 0 4px;
   color: var(--vd-color-accent);
   font-size: 11px;
@@ -70,7 +66,7 @@
   text-transform: uppercase;
 }
 
-.redesign-app-layout__title {
+.app-layout__title {
   margin: 0;
   color: var(--vd-color-text);
   font-size: 22px;
@@ -79,13 +75,13 @@
   line-height: 1.18;
 }
 
-.redesign-app-layout__content {
+.app-layout__content {
   min-height: 0;
   overflow: auto;
   padding: 18px;
 }
 
-.redesign-app-layout__footer {
+.app-layout__footer {
   display: flex;
   min-height: 56px;
   align-items: center;
@@ -96,7 +92,7 @@
 }
 
 @media (max-width: 1080px) {
-  .redesign-app-layout {
+  .app-layout {
     .vd-app-shell--assistant-expanded {
       grid-template-columns: 68px minmax(0, 1fr);
     }
@@ -113,16 +109,16 @@
     }
   }
 
-  .redesign-app-layout__header {
+  .app-layout__header {
     min-height: 64px;
     padding: 12px 14px;
   }
 
-  .redesign-app-layout__title {
+  .app-layout__title {
     font-size: 19px;
   }
 
-  .redesign-app-layout__content {
+  .app-layout__content {
     padding: 14px;
   }
 }
