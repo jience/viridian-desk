@@ -1,0 +1,42 @@
+.redesign-desk-detail-page {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+
+  .deskDetail {
+    display: grid;
+    grid-template-rows: 32px 32px minmax(0, 1fr);
+    height: 100%;
+    min-height: 0;
+    padding-bottom: 0;
+  }
+
+  .deskDetail-content {
+    min-height: 0;
+  }
+
+  .desk-detail-content,
+  .SnapBox {
+    border: 1px solid rgba(142, 159, 181, 0.18);
+    border-radius: 14px;
+    background: rgba(18, 26, 38, 0.92);
+    box-shadow: 0 18px 42px rgba(4, 10, 18, 0.24);
+  }
+
+  .desk-detail-content {
+    .detail-title {
+      .name-content {
+        .name,
+        .deskType {
+          color: var(--app-text-color, #e8eef7);
+        }
+      }
+    }
+  }
+
+  .SnapBox {
+    .title {
+      color: var(--app-text-color, #e8eef7);
+    }
+  }
+}
