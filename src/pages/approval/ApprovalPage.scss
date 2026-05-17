@@ -11,6 +11,9 @@
   --approval-page-focus: rgba(18, 116, 84, 0.46);
   --approval-page-button-bg: rgba(255, 255, 255, 0.82);
   --approval-page-header-bg: rgba(255, 255, 255, 0.9);
+  --approval-page-primary-text: #ffffff;
+  --approval-page-pagination-bg: rgba(255, 255, 255, 0.72);
+  --approval-page-pagination-active-bg: rgba(18, 116, 84, 0.12);
   --approval-page-table-head: var(--approval-page-surface-subtle);
   --approval-page-row-hover: rgba(18, 116, 84, 0.08);
   --approval-status-processing-text: #2374b7;
@@ -48,6 +51,9 @@
   --approval-page-focus: rgba(112, 227, 194, 0.68);
   --approval-page-button-bg: rgba(255, 255, 255, 0.045);
   --approval-page-header-bg: rgba(12, 19, 18, 0.68);
+  --approval-page-primary-text: #06120e;
+  --approval-page-pagination-bg: rgba(255, 255, 255, 0.045);
+  --approval-page-pagination-active-bg: rgba(112, 227, 194, 0.14);
   --approval-page-table-head: var(--approval-page-surface-subtle);
   --approval-page-row-hover: rgba(112, 227, 194, 0.09);
   --approval-status-processing-text: #8ccfff;
@@ -68,6 +74,7 @@
   border-radius: 10px;
   background: var(--approval-page-header-bg);
   box-shadow: var(--approval-page-shadow);
+  backdrop-filter: blur(16px);
 }
 
 .approval-page__heading {
@@ -120,6 +127,11 @@
     color: var(--approval-page-text);
     background: var(--approval-page-button-bg);
     font-weight: 550;
+    transition:
+      border-color 160ms ease,
+      color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
 
     &:hover,
     &:focus-visible {
@@ -132,25 +144,24 @@
       outline: 2px solid var(--approval-page-focus);
       outline-offset: 2px;
     }
+
+    &:active {
+      transform: translateY(1px) scale(0.98);
+    }
   }
 
   .ant-btn-primary {
     border-color: var(--approval-page-accent);
-    color: #ffffff;
+    color: var(--approval-page-primary-text);
     background: var(--approval-page-accent);
 
     &:hover,
     &:focus-visible {
       border-color: var(--approval-page-accent-strong);
-      color: #ffffff;
+      color: var(--approval-page-primary-text);
       background: var(--approval-page-accent-strong);
     }
   }
-}
-
-:root.dark .approval-page__actions .ant-btn-primary,
-:root[data-ui-theme='dark'] .approval-page__actions .ant-btn-primary {
-  color: #06120e;
 }
 
 .approval-page__filters {
@@ -160,6 +171,7 @@
   gap: 10px;
   overflow-x: auto;
   padding: 2px;
+  scrollbar-gutter: stable;
 }
 
 .approval-page__segmented {
@@ -185,7 +197,8 @@
     transition:
       border-color 160ms ease,
       color 160ms ease,
-      background-color 160ms ease;
+      background-color 160ms ease,
+      transform 160ms ease;
 
     &:hover,
     &:focus-visible {
@@ -203,6 +216,10 @@
       border-color: color-mix(in srgb, var(--approval-page-accent) 42%, transparent);
       color: var(--approval-page-accent-strong);
       background: var(--approval-page-accent-soft);
+    }
+
+    &:active {
+      transform: translateY(1px) scale(0.98);
     }
   }
 }
@@ -246,6 +263,7 @@
   color: var(--approval-page-text);
   background: var(--approval-page-surface);
   box-shadow: var(--approval-page-shadow);
+  backdrop-filter: blur(16px);
 
   .ant-spin-nested-loading,
   .ant-spin-container {
@@ -272,6 +290,7 @@
     flex: 1 1 auto;
     min-height: 0;
     overflow: auto;
+    scrollbar-gutter: stable;
   }
 
   .ant-table-content {
@@ -318,12 +337,34 @@
   .ant-pagination {
     margin: 12px 16px;
     color: var(--approval-page-muted);
+
+    .ant-pagination-item,
+    .ant-pagination-prev .ant-pagination-item-link,
+    .ant-pagination-next .ant-pagination-item-link {
+      border-color: var(--approval-page-border);
+      color: var(--approval-page-muted);
+      background: var(--approval-page-pagination-bg);
+    }
+
+    .ant-pagination-item a {
+      color: inherit;
+    }
+
+    .ant-pagination-item-active {
+      border-color: var(--approval-page-accent);
+      color: var(--approval-page-accent-strong);
+      background: var(--approval-page-pagination-active-bg);
+    }
   }
 
   .ant-btn-text {
     border-radius: 7px;
     color: var(--approval-page-accent-strong);
     font-weight: 550;
+    transition:
+      color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
 
     &:hover,
     &:focus-visible {
@@ -334,6 +375,10 @@
     &:focus-visible {
       outline: 2px solid var(--approval-page-focus);
       outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(1px) scale(0.98);
     }
   }
 }
@@ -408,14 +453,18 @@
   .ant-btn {
     border-color: var(--approval-page-accent);
     border-radius: 7px;
-    color: #ffffff;
+    color: var(--approval-page-primary-text);
     background: var(--approval-page-accent);
     font-weight: 550;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
 
     &:hover,
     &:focus-visible {
       border-color: var(--approval-page-accent-strong);
-      color: #ffffff;
+      color: var(--approval-page-primary-text);
       background: var(--approval-page-accent-strong);
     }
 
@@ -423,12 +472,11 @@
       outline: 2px solid var(--approval-page-focus);
       outline-offset: 2px;
     }
-  }
-}
 
-:root.dark .approval-page__empty .ant-btn,
-:root[data-ui-theme='dark'] .approval-page__empty .ant-btn {
-  color: #06120e;
+    &:active {
+      transform: translateY(1px) scale(0.98);
+    }
+  }
 }
 
 @container (max-width: 760px) {
