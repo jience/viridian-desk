@@ -1,16 +1,4 @@
-.desk-loading-background-mask {
-  background-image: url('@/assets/images/app_layout_bg.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-clip: padding-box;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 999;
-  cursor: not-allowed;
-}
+.desk-loading-background-mask,
 .is_thin_no_drag .desk-loading-background-mask {
   background-image: url('@/assets/images/app_layout_bg.png');
   background-size: cover;
@@ -21,17 +9,21 @@
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 999;
+  z-index: var(--vd-z-loading, 30);
   cursor: not-allowed;
 }
 .desk-loading-mid {
+  --desk-loading-panel-highlight: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--vd-color-panel, #1c211f) 18%, white),
+    color-mix(in srgb, var(--vd-color-panel, #1c211f) 94%, transparent)
+  );
+
   width: 120px;
   height: 120px;
   border: 1px solid var(--vd-color-border, rgba(209, 255, 229, 0.12));
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
-    var(--vd-color-panel, #1c211f);
-  border-radius: 12px;
+  background: var(--desk-loading-panel-highlight), var(--vd-color-panel, #1c211f);
+  border-radius: 14px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -40,7 +32,8 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.36);
+  box-shadow: var(--vd-shadow-window, 0 30px 90px rgba(0, 0, 0, 0.42));
+  backdrop-filter: blur(16px);
 
   .image-container {
     background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
@@ -49,7 +42,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 10px;
+    border-radius: 12px;
   }
   .loading-image {
     width: 55px;

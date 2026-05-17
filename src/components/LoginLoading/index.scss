@@ -5,10 +5,16 @@
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 999;
+  z-index: var(--vd-z-loading, 30);
   cursor: not-allowed;
 }
 .loginLoading-mid {
+  --login-loading-panel-highlight: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--vd-color-panel, #1c211f) 18%, white),
+    color-mix(in srgb, var(--vd-color-panel, #1c211f) 94%, transparent)
+  );
+
   width: 130px;
   height: 130px;
   position: absolute;
@@ -16,15 +22,14 @@
   left: 50%;
   transform: translate(-50%, -50%);
   border: 1px solid var(--vd-color-border, rgba(209, 255, 229, 0.12));
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
-    var(--vd-color-panel, #1c211f);
-  border-radius: 8px;
+  background: var(--login-loading-panel-highlight), var(--vd-color-panel, #1c211f);
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.36);
+  box-shadow: var(--vd-shadow-window, 0 30px 90px rgba(0, 0, 0, 0.42));
+  backdrop-filter: blur(16px);
 
   & i {
     font-size: 32px;

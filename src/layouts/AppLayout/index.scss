@@ -10,6 +10,16 @@
   --vd-color-on-rail: rgba(255, 253, 248, 0.72);
   --vd-color-on-rail-strong: #fffdf8;
   --vd-shadow-window: 0 24px 64px rgba(55, 48, 38, 0.14);
+  --vd-shadow-rail: 18px 0 40px rgba(55, 48, 38, 0.12);
+  --vd-shadow-assistant: -18px 0 42px rgba(55, 48, 38, 0.12);
+  --vd-shadow-assistant-floating: -18px 0 42px rgba(55, 48, 38, 0.16);
+  --vd-workspace-highlight: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--vd-color-panel) 44%, transparent),
+    transparent 42%
+  );
+  --vd-z-assistant-overlay: 10;
+  --vd-z-loading: 30;
   --card-borderColor-default: var(--vd-color-border);
   --config-card-background-default: rgba(255, 253, 248, 0.9);
   --config-card-border-default: var(--vd-color-border);
@@ -42,12 +52,13 @@
         transparent 34%
       ),
       var(--vd-color-rail);
-    box-shadow: 18px 0 40px rgba(55, 48, 38, 0.12);
+    box-shadow: var(--vd-shadow-rail);
   }
 
   .vd-app-shell__assistant {
     background: color-mix(in srgb, var(--vd-color-panel) 92%, transparent);
-    box-shadow: -18px 0 42px rgba(55, 48, 38, 0.12);
+    box-shadow: var(--vd-shadow-assistant);
+    backdrop-filter: blur(18px);
   }
 }
 
@@ -64,6 +75,10 @@
   --vd-color-on-rail: rgba(238, 245, 239, 0.68);
   --vd-color-on-rail-strong: #eef5ef;
   --vd-shadow-window: 0 30px 90px rgba(0, 0, 0, 0.42);
+  --vd-shadow-rail: 18px 0 40px rgba(0, 0, 0, 0.24);
+  --vd-shadow-assistant: -18px 0 42px rgba(0, 0, 0, 0.18);
+  --vd-shadow-assistant-floating: -18px 0 42px rgba(0, 0, 0, 0.2);
+  --vd-workspace-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 42%);
   --card-borderColor-default: var(--vd-color-border);
   --config-card-background-default: rgba(21, 27, 25, 0.78);
   --config-card-border-default: var(--vd-color-border);
@@ -77,11 +92,6 @@
 
   .vd-app-shell__rail {
     border-right-color: rgba(209, 255, 229, 0.08);
-    box-shadow: 18px 0 40px rgba(0, 0, 0, 0.24);
-  }
-
-  .vd-app-shell__assistant {
-    box-shadow: -18px 0 42px rgba(0, 0, 0, 0.18);
   }
 }
 
@@ -93,10 +103,10 @@
   overflow: hidden;
   border: 1px solid var(--vd-color-border);
   border-radius: 18px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent 42%),
+  background: var(--vd-workspace-highlight),
     color-mix(in srgb, var(--vd-color-panel) 92%, transparent);
   box-shadow: var(--vd-shadow-window);
+  backdrop-filter: blur(18px);
 }
 
 .app-layout__header {
@@ -155,10 +165,10 @@
       top: 0;
       right: 0;
       bottom: 0;
-      z-index: 10;
+      z-index: var(--vd-z-assistant-overlay);
       width: min(304px, calc(100% - 68px));
       min-width: min(304px, calc(100% - 68px));
-      box-shadow: -18px 0 42px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--vd-shadow-assistant-floating);
     }
   }
 
