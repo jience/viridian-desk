@@ -24,6 +24,13 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.76), 0 18px 42px rgba(31, 57, 45, 0.11);
   --application-page-card-hover-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.86), 0 24px 52px rgba(31, 57, 45, 0.15);
+  --application-page-card-highlight-border: rgba(255, 255, 255, 0.32);
+  --application-page-card-disabled-opacity: 0.68;
+  --application-page-icon-bg:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(236, 244, 239, 0.58)),
+    radial-gradient(circle at 30% 20%, rgba(22, 111, 72, 0.16), transparent 42%);
+  --application-page-icon-border: rgba(64, 93, 77, 0.16);
+  --application-page-icon-shadow: 0 14px 28px rgba(31, 57, 45, 0.12);
   --application-page-meta-bg: rgba(22, 111, 72, 0.06);
   --application-page-meta-border: rgba(64, 93, 77, 0.18);
   --application-page-meta-text: #506258;
@@ -84,6 +91,13 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 20px 48px rgba(0, 0, 0, 0.26);
   --application-page-card-hover-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 26px 58px rgba(0, 0, 0, 0.34);
+  --application-page-card-highlight-border: rgba(255, 255, 255, 0.08);
+  --application-page-card-disabled-opacity: 0.62;
+  --application-page-icon-bg:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025)),
+    radial-gradient(circle at 30% 20%, rgba(142, 242, 189, 0.16), transparent 42%);
+  --application-page-icon-border: rgba(209, 255, 229, 0.12);
+  --application-page-icon-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
   --application-page-meta-bg: transparent;
   --application-page-meta-border: rgba(148, 163, 184, 0.16);
   --application-page-meta-text: #a9bacb;
@@ -108,6 +122,7 @@
   border-radius: 10px;
   background: var(--application-page-toolbar-bg);
   box-shadow: var(--application-page-toolbar-shadow);
+  backdrop-filter: blur(16px);
 }
 
 .application-page__heading {
@@ -153,6 +168,11 @@
     color: var(--application-page-text);
     background: var(--application-page-button-bg);
     font-weight: 550;
+    transition:
+      border-color 160ms ease,
+      color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
 
     &:hover,
     &:focus-visible {
@@ -164,6 +184,10 @@
     &:focus-visible {
       outline: 2px solid var(--application-page-focus-outline);
       outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(1px) scale(0.98);
     }
   }
 
@@ -199,7 +223,8 @@
     transition:
       border-color 160ms ease,
       color 160ms ease,
-      background-color 160ms ease;
+      background-color 160ms ease,
+      transform 160ms ease;
   }
 
   button:hover,
@@ -219,6 +244,10 @@
     color: var(--application-page-accent-strong);
     background: var(--application-page-filter-active-bg);
   }
+
+  button:active {
+    transform: translateY(1px) scale(0.98);
+  }
 }
 
 .application-page__grid {
@@ -228,9 +257,11 @@
   min-height: 0;
   overflow: auto;
   padding: 2px 2px 16px;
+  scrollbar-gutter: stable both-edges;
 }
 
 .application-card {
+  position: relative;
   min-height: 196px;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto auto;
@@ -240,10 +271,20 @@
   padding: 14px;
   background: var(--application-page-card-bg);
   box-shadow: var(--application-page-card-shadow);
+  overflow: hidden;
   transition:
     border-color 180ms ease,
     box-shadow 180ms ease,
     transform 180ms ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-top: 1px solid var(--application-page-card-highlight-border);
+    opacity: 0.72;
+  }
 
   &:hover {
     border-color: var(--application-page-card-border-hover);
@@ -260,10 +301,13 @@
   text-align: left;
   background: transparent;
   cursor: pointer;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
 
   &:disabled {
     cursor: progress;
-    opacity: 0.72;
+    opacity: var(--application-page-card-disabled-opacity);
   }
 
   &:focus-visible {
@@ -271,6 +315,21 @@
     outline-offset: 4px;
     border-radius: 6px;
   }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+}
+
+.application-card__main .app-svg {
+  width: 72px;
+  height: 72px;
+  box-sizing: border-box;
+  padding: 4px;
+  border: 1px solid var(--application-page-icon-border);
+  border-radius: 16px;
+  background: var(--application-page-icon-bg);
+  box-shadow: var(--application-page-icon-shadow);
 }
 
 .application-card__name,
@@ -325,6 +384,11 @@
     border-radius: 6px;
     color: var(--application-page-text);
     background: var(--application-page-button-bg);
+    transition:
+      border-color 160ms ease,
+      color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
 
     &:hover,
     &:focus-visible {
@@ -336,6 +400,10 @@
     &:focus-visible {
       outline: 2px solid var(--application-page-focus-outline);
       outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(1px) scale(0.98);
     }
   }
 
