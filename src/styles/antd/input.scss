@@ -17,3 +17,39 @@
   --ant-input-input-font-size-lg: 16px;
   --ant-input-input-font-size-sm: 12px;
 }
+
+:root.dark,
+:root[data-ui-theme='dark'] {
+  :where(.ant-input, .ant-input-affix-wrapper, .ant-input-number) {
+    border-color: var(--vd-color-border, rgba(209, 255, 229, 0.14));
+    background: color-mix(in srgb, var(--vd-color-panel-subtle, #242b27) 72%, transparent);
+    color: var(--vd-color-text, #e9eee8);
+  }
+
+  :where(.ant-input, .ant-input-affix-wrapper) {
+    &::placeholder,
+    input::placeholder {
+      color: var(--vd-color-muted, #8d978e);
+    }
+
+    &:hover,
+    &:focus,
+    &:focus-within {
+      border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 38%, transparent);
+      background: color-mix(in srgb, var(--vd-color-panel-subtle, #242b27) 82%, transparent);
+    }
+  }
+
+  .ant-input-affix-wrapper {
+    > input.ant-input {
+      background: transparent;
+      color: var(--vd-color-text, #e9eee8);
+    }
+
+    .ant-input-password-icon,
+    .ant-input-prefix,
+    .ant-input-suffix {
+      color: var(--vd-color-muted, #8d978e);
+    }
+  }
+}

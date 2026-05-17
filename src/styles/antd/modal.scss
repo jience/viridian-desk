@@ -1,7 +1,18 @@
 .ant-modal {
+  .ant-modal-container {
+    background: var(--ant-modal-body-bac-color);
+  }
+
+  .ant-modal-content {
+    padding: 0;
+    overflow: hidden;
+    background: var(--ant-modal-body-bac-color);
+    color: var(--ant-modal-content-color);
+  }
   .ant-modal-close {
     top: 8px;
     inset-inline-end: 8px;
+    color: var(--ant-modal-content-color);
   }
   .ant-modal-close-x {
     font-size: 14px;
@@ -14,6 +25,7 @@
     margin-bottom: 0px;
     border-bottom: 1px solid var(--ant-modal-header-border-bottom-color);
     background: var(--ant-modal-header-bac-color);
+    border-radius: 4px 4px 0 0;
   }
   .ant-modal-title {
     height: 100%;
@@ -37,11 +49,13 @@
   .ant-modal-body {
     padding: 16px 16px 0px 16px;
     background-color: var(--ant-modal-body-bac-color);
+    color: var(--ant-modal-content-color);
   }
   .ant-modal-footer {
     margin-top: 0px;
     padding: 16px 16px 10px 16px;
     background-color: var(--ant-modal-body-bac-color);
+    border-radius: 0 0 4px 4px;
   }
 }
 

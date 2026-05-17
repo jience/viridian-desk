@@ -29,5 +29,5 @@ ul {
 // 表单前缀图标样式
 .form-prefix-icon {
   font-size: 12px;
-  color: #7c98b6;
+  color: var(--vd-color-muted, var(--text-color1));
 }
