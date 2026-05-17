@@ -3,10 +3,19 @@
     overflow: hidden;
     border: 1px solid var(--app-border-color);
     border-radius: 10px;
+    background: var(--app-surface-color);
+    box-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
+    backdrop-filter: blur(16px);
   }
 
   .ant-modal-header {
     margin-bottom: 16px;
+    background: transparent;
+  }
+
+  .ant-modal-title {
+    color: var(--app-text-color, #20231e);
+    font-weight: 650;
   }
 
   .ant-table-wrapper {
@@ -15,14 +24,32 @@
 
   .ant-table {
     border-radius: 8px;
+    color: var(--app-text-color, #20231e);
+    background: transparent;
     overflow: hidden;
   }
 
   .ant-table-thead > tr > th {
+    border-bottom: 1px solid var(--app-border-color);
     background: color-mix(in srgb, var(--app-surface-subtle-color) 72%, transparent);
     color: var(--app-muted-color, #6f7f90);
     font-size: 12px;
     font-weight: 650;
+  }
+
+  .ant-table-tbody > tr > td {
+    border-bottom: 1px solid var(--app-border-color);
+    color: var(--app-text-color, #20231e);
+    background: transparent;
+  }
+
+  .ant-table-tbody > tr.ant-table-row:hover > td,
+  .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+    background: color-mix(in srgb, var(--vd-color-accent) 8%, transparent);
+  }
+
+  .ant-table-pagination {
+    color: var(--app-muted-color, #6f7f90);
   }
 }
 
@@ -39,8 +66,26 @@
 
   .ant-radio-button-wrapper {
     height: 32px;
+    border-color: var(--app-border-color);
     border-radius: 8px;
+    color: var(--app-muted-color, #6f7f90);
+    background: color-mix(in srgb, var(--app-surface-subtle-color) 52%, transparent);
     line-height: 30px;
+    transition:
+      border-color 160ms ease,
+      color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .ant-radio-button-wrapper-checked {
+    border-color: color-mix(in srgb, var(--vd-color-accent) 42%, transparent);
+    color: var(--vd-color-accent);
+    background: color-mix(in srgb, var(--vd-color-accent) 12%, transparent);
+  }
+
+  .ant-radio-button-wrapper:active {
+    transform: translateY(1px) scale(0.98);
   }
 }
 
@@ -54,7 +99,17 @@
 
 .message-notice-modal__search {
   .ant-input-affix-wrapper {
+    border-color: var(--app-border-color);
     border-radius: 8px;
+    color: var(--app-text-color, #20231e);
+    background: color-mix(in srgb, var(--app-surface-subtle-color) 52%, transparent);
+
+    &:hover,
+    &:focus,
+    &.ant-input-affix-wrapper-focused {
+      border-color: color-mix(in srgb, var(--vd-color-accent) 42%, transparent);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--vd-color-accent) 18%, transparent);
+    }
   }
 }
 
@@ -62,6 +117,14 @@
   width: 34px;
   height: 32px;
   border-radius: 8px;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+
+  &:active {
+    transform: translateY(1px) scale(0.98);
+  }
 }
 
 .message-notice-modal__summary {
@@ -122,6 +185,12 @@
 
 .message-notice-modal__delete {
   color: var(--vd-color-danger);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--vd-color-danger);
+    background: color-mix(in srgb, var(--vd-color-danger) 10%, transparent);
+  }
 }
 
 @media (max-width: 760px) {

@@ -3,6 +3,18 @@
     overflow: hidden;
     border: 1px solid var(--app-border-color);
     border-radius: 10px;
+    background: var(--app-surface-color);
+    box-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
+    backdrop-filter: blur(16px);
+  }
+
+  .ant-modal-header {
+    background: transparent;
+  }
+
+  .ant-modal-title {
+    color: var(--app-text-color, #20231e);
+    font-weight: 650;
   }
 }
 
@@ -22,6 +34,7 @@
       transparent 54%
     ),
     color-mix(in srgb, var(--app-surface-subtle-color) 48%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--app-surface-color) 56%, transparent);
 }
 
 .user-info-modal__avatar {
@@ -38,6 +51,7 @@
     ),
     var(--vd-color-rail);
   color: var(--vd-color-on-rail-strong, #eaf8ef);
+  box-shadow: 0 14px 28px color-mix(in srgb, var(--vd-color-accent) 16%, transparent);
   font-size: 20px;
   font-weight: 700;
 }
@@ -79,8 +93,17 @@
   align-items: center;
   min-height: 42px;
   padding: 10px 12px;
+  border: 1px solid transparent;
   border-radius: 8px;
   background: color-mix(in srgb, var(--app-surface-subtle-color) 72%, transparent);
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--vd-color-accent) 20%, transparent);
+    background: color-mix(in srgb, var(--app-surface-subtle-color) 86%, transparent);
+  }
 
   dt {
     color: var(--app-muted-color, #6f7f90);

@@ -1,11 +1,32 @@
 .silent-update {
+  --silent-update-border: var(--vd-color-border, rgba(82, 72, 52, 0.16));
+  --silent-update-panel-bg: var(--vd-color-panel, #fffdf8);
+  --silent-update-body-bg: url('@/assets/images/upgrade-bgc.png');
+  --silent-update-shadow: 0 22px 60px rgba(55, 48, 38, 0.14);
+  --silent-update-progress-glow: color-mix(
+    in srgb,
+    var(--vd-color-accent, #4d7c3f) 18%,
+    transparent
+  );
+
   width: 480px !important;
   border-radius: 8px;
   overflow: hidden;
+
+  .ant-modal-container,
+  .ant-modal-content {
+    overflow: hidden;
+    border: 1px solid var(--silent-update-border);
+    border-radius: 10px;
+    background: var(--silent-update-panel-bg);
+    box-shadow: var(--silent-update-shadow);
+    backdrop-filter: blur(16px);
+  }
+
   .archer-modal-body {
     width: 480px;
     height: 280px;
-    background: url('@/assets/images/upgrade-bgc.png');
+    background: var(--silent-update-body-bg);
     background-size: 100% 100%;
     padding: 0;
   }
@@ -94,22 +115,34 @@
       }
     }
   }
+
+  .ant-progress-bg {
+    box-shadow: 0 0 18px var(--silent-update-progress-glow);
+  }
 }
 
 :root.dark,
 :root[data-ui-theme='dark'] {
   .silent-update {
+    --silent-update-border: var(--vd-color-border, rgba(209, 255, 229, 0.12));
+    --silent-update-panel-bg:
+      radial-gradient(
+        circle at 20% 15%,
+        color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 16%, transparent),
+        transparent 32%
+      ),
+      var(--vd-color-panel, #1c211f);
+    --silent-update-body-bg: transparent;
+    --silent-update-shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+    --silent-update-progress-glow: color-mix(
+      in srgb,
+      var(--vd-color-accent, #8ef2bd) 26%,
+      transparent
+    );
+
     .ant-modal-container,
     .ant-modal-content {
-      border: 1px solid var(--vd-color-border, rgba(209, 255, 229, 0.12));
-      background:
-        radial-gradient(
-          circle at 20% 15%,
-          color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 16%, transparent),
-          transparent 32%
-        ),
-        var(--vd-color-panel, #1c211f);
-      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+      background: var(--silent-update-panel-bg);
     }
 
     .ant-modal-body {
@@ -126,9 +159,6 @@
       padding: 0 30px;
     }
 
-    .ant-progress-bg {
-      box-shadow: 0 0 18px color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 26%, transparent);
-    }
   }
 }
 
