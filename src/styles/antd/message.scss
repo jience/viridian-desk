@@ -3,63 +3,71 @@
   position: absolute;
   bottom: 0;
   top: auto !important;
+  --ant-message-radius: 12px;
+  --ant-message-shadow: 0 14px 40px color-mix(in srgb, var(--vd-color-rail, #20231e) 16%, transparent);
+  --ant-message-surface: color-mix(in srgb, var(--app-surface-color, #fffdf8) 94%, transparent);
+  --ant-message-text: var(--app-text-color, #20231e);
 }
 .ant-message .ant-message-notice-wrapper .ant-message-notice-content {
   background: transparent;
   box-shadow: none;
 }
 .ant-message .ant-message-notice-content {
-  border-radius: 20px;
+  border-radius: var(--ant-message-radius);
   min-width: auto;
   font-size: 14px;
 }
 
 .ant-message .ant-message-notice-content .ant-message-custom-content {
-  padding: 7px 9px;
-  border-radius: 20px;
-}
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--ant-message-border, var(--vd-color-border, rgba(82, 72, 52, 0.14)));
+  border-radius: var(--ant-message-radius);
+  background: var(--ant-message-surface);
+  box-shadow: var(--ant-message-shadow);
+  color: var(--ant-message-text);
+  backdrop-filter: blur(14px);
 
-.ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-error {
-  border: 1px solid color-mix(in srgb, var(--vd-color-danger, #cf4f45) 26%, transparent);
-  border-radius: 20px;
-  background: var(--app-surface-color, #fffdf8);
-  color: var(--app-text-color, #20231e);
-  height: auto;
+  .anticon {
+    font-size: 14px;
+  }
 
   span {
-    line-height: unset;
-    word-break: break-all;
+    line-height: 1.45;
+    word-break: break-word;
   }
 }
 
+.ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-error {
+  --ant-message-border: color-mix(in srgb, var(--vd-color-danger, #cf4f45) 32%, transparent);
+  --ant-message-text: var(--app-text-color, #20231e);
+  height: auto;
+}
+
 .ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-success {
-  border: 1px solid color-mix(in srgb, var(--vd-color-success, #37b56d) 26%, transparent);
-  box-shadow: 0px 3px 18px 0px color-mix(in srgb, var(--vd-color-rail, #20231e) 12%, transparent);
-  border-radius: 20px;
-  background: var(--app-surface-color, #fffdf8);
-  color: var(--app-text-color, #20231e);
+  --ant-message-border: color-mix(in srgb, var(--vd-color-success, #37b56d) 32%, transparent);
 }
 
 .ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-info {
-  background: var(--app-surface-color, #fffdf8);
-  border: 1px solid color-mix(in srgb, var(--vd-color-info, #2f6690) 26%, transparent);
-  box-shadow: 0px 3px 18px 0px color-mix(in srgb, var(--vd-color-rail, #20231e) 12%, transparent);
-  border-radius: 20px;
-  color: var(--app-text-color, #20231e);
+  --ant-message-border: color-mix(in srgb, var(--vd-color-info, #2f6690) 32%, transparent);
 }
 
 .ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-warning {
-  background: var(--app-surface-color, #fffdf8);
-  border: 1px solid color-mix(in srgb, var(--vd-color-warning, #d89f32) 28%, transparent);
-  box-shadow: 0px 3px 18px 0px color-mix(in srgb, var(--vd-color-rail, #20231e) 12%, transparent);
-  border-radius: 20px;
-  color: var(--app-text-color, #20231e);
+  --ant-message-border: color-mix(in srgb, var(--vd-color-warning, #d89f32) 34%, transparent);
 }
 
 .ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-loading {
-  background: var(--app-surface-color, #fffdf8);
-  border: 1px solid color-mix(in srgb, var(--vd-color-warning, #d89f32) 28%, transparent);
-  box-shadow: 0px 3px 18px 0px color-mix(in srgb, var(--vd-color-rail, #20231e) 12%, transparent);
-  border-radius: 20px;
-  color: var(--app-text-color, #20231e);
+  --ant-message-border: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 30%, transparent);
+}
+
+:root.dark,
+:root[data-ui-theme='dark'] {
+  .ant-message {
+    --ant-message-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+    --ant-message-surface: color-mix(in srgb, var(--vd-color-panel, #1c211f) 86%, transparent);
+    --ant-message-text: var(--vd-color-text, #e9eee8);
+  }
 }
