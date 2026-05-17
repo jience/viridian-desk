@@ -209,8 +209,8 @@ const DiagnosisModal: FC<DiagnosisModalProps> = ({ ref }) => {
         strokeLinecap="square"
         size="small"
         strokeColor={{
-          '0%': '#8EF2BD',
-          '100%': '#6EE7B7',
+          '0%': 'var(--vd-color-accent, #8ef2bd)',
+          '100%': 'var(--vd-color-success, #37b56d)',
         }}
       />
       <DiagnosisInfo diagnosing={diagnosing} info={diagnosisData} pingContent={pingContent} />

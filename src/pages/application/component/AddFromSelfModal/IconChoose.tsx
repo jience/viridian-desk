@@ -81,7 +81,7 @@ const IconChoose: React.FC<IconChooseProps> = ({ value, onChange }) => {
           </div>
         );
       })}
-      <div onClick={handleAddBySelf} style={{ display: 'inline-block' }}>
+      <div className="upload-trigger" onClick={handleAddBySelf}>
         <div className="iconModel-modal">
           <i className="iconfont icon-add iconModel-modal-icon" />
         </div>
