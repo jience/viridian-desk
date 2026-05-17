@@ -35,6 +35,19 @@
       }
     }
   }
+
+  .ant-table-tbody > tr.ant-table-placeholder {
+    background: transparent;
+
+    > td {
+      background: transparent;
+      color: var(--app-muted-color, var(--text-color1));
+    }
+
+    &:hover > td {
+      background: transparent;
+    }
+  }
 }
 
 .pretty-large-table {
