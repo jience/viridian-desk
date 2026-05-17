@@ -354,13 +354,11 @@ const FindPasswordModal = (props: any) => {
           </p>
         )}
         {curentStep == 1 && (
-          <div style={{ display: 'flex' }}>
+          <div className="find-pwd-code-row">
             <Form.Item
               name="verifyCode"
               rules={formRules['verifyCode']}
-              style={{
-                flex: 1,
-              }}
+              className="find-pwd-code-item"
             >
               <Input
                 placeholder={intl.formatMessage(

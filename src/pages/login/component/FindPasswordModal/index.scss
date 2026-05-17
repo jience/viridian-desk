@@ -119,6 +119,15 @@
     background: var(--login-modal-surface-subtle) !important;
   }
 
+  .find-pwd-code-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .find-pwd-code-item {
+    flex: 1;
+  }
+
   .ant-btn {
     border-radius: 7px;
     transition:
