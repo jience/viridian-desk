@@ -103,7 +103,7 @@
   .ant-select-dropdown {
     border: 1px solid var(--vd-color-border, rgba(255, 255, 255, 0.08));
     background: color-mix(in srgb, var(--vd-color-panel, #1c211f) 88%, transparent);
-    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+    box-shadow: 0 18px 48px color-mix(in srgb, var(--vd-color-rail, #050705) 44%, transparent);
 
     .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
       background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 14%, transparent);
