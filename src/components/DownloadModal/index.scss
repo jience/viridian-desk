@@ -1,7 +1,7 @@
 .download-update {
   --download-modal-border: var(--vd-color-border, rgba(82, 72, 52, 0.16));
   --download-modal-panel-bg: var(--download-modal-bac-img);
-  --download-modal-shadow: 0 22px 60px rgba(55, 48, 38, 0.14);
+  --download-modal-shadow: var(--vd-shadow-window, 0 28px 80px rgba(50, 45, 34, 0.18));
   --download-modal-arrow-bg: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, transparent);
   --download-modal-arrow-border: color-mix(
     in srgb,
@@ -14,16 +14,17 @@
     var(--vd-color-accent, #4d7c3f) 18%,
     transparent
   );
+  --download-modal-radius: 14px;
 
   width: 480px !important;
-  border-radius: 10px;
+  border-radius: var(--download-modal-radius);
   overflow: hidden;
 
   .ant-modal-container {
     width: 480px;
     overflow: hidden;
     border: 1px solid var(--download-modal-border);
-    border-radius: 10px;
+    border-radius: var(--download-modal-radius);
     background: var(--download-modal-panel-bg);
     background-size: 100% 100%;
     box-shadow: var(--download-modal-shadow);
@@ -38,6 +39,12 @@
     justify-content: center;
     background-color: transparent;
     padding: var(--download-modal-body-padding);
+  }
+
+  .ant-modal-content {
+    border-radius: var(--download-modal-radius);
+    background: transparent;
+    box-shadow: none;
   }
 
   .ant-modal-footer {
@@ -208,7 +215,7 @@
         transparent 34%
       ),
       linear-gradient(135deg, rgba(36, 43, 39, 0.98), rgba(18, 24, 21, 0.99));
-    --download-modal-shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+    --download-modal-shadow: var(--vd-shadow-window, 0 30px 90px rgba(0, 0, 0, 0.42));
     --download-modal-arrow-bg: color-mix(
       in srgb,
       var(--vd-color-accent, #8ef2bd) 10%,
