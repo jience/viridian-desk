@@ -6,7 +6,7 @@
 }
 
 .spinner > div {
-  background-color: #fff;
+  background-color: var(--vd-color-accent, #8ef2bd);
   height: 100%;
   width: 2px;
   display: inline-block;
