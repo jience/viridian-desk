@@ -198,7 +198,6 @@ const CreateForm = (props: any, _ref: any) => {
   const deskPoolDetial: any = useMemo(() => {
     if (deskPoolValue) {
       const list: any = deskPoolList.find((c: any) => c.id == deskPoolValue);
-      console.log(deskPoolValue, deskPoolList);
       const { os, flavor, name, network, disks = [], image } = list;
       const systemDisk = disks
         .filter((val: any) => val.isSystem && val.size != undefined)

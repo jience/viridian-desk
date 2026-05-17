@@ -1,5 +1,6 @@
 .approval_modal_create {
   width: 500px !important;
+
   .ant-modal-body {
     padding-bottom: 16px;
   }
@@ -16,29 +17,38 @@
 
 .deskpool-info {
   margin: 0px 5px 0;
-  color: var(--confirm-content-color);
-  background: var(--config-infoTable-background-default);
+  overflow: hidden;
+  border: 1px solid var(--app-border-color, rgba(61, 91, 78, 0.18));
+  border-radius: 7px;
+  color: var(--app-text-color, var(--confirm-content-color));
+  background: color-mix(in srgb, var(--app-surface-subtle-color, #f4f8f6) 82%, transparent);
 
   .item-info {
-    display: flex;
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
     align-items: center;
+    min-height: 38px;
+
+    & + .item-info {
+      border-top: 1px solid var(--app-border-color, rgba(61, 91, 78, 0.18));
+    }
 
     .vertical-line {
-      background-color: var(--config-formModel-title-default);
+      background-color: var(--app-border-color, rgba(61, 91, 78, 0.18));
     }
 
     .title {
-      width: 80px;
-      background: var(--confirm-content-tag-bg);
+      align-self: stretch;
       padding: 12px;
       font-size: 13px;
-      color: var(--config-formModel-title-default);
-      transform: inherit;
-      margin-right: 12px;
+      color: var(--app-muted-color, var(--config-formModel-title-default));
+      background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 8%, transparent);
+      transform: none;
     }
 
+    .deskpool-spec,
     .deskpool-image {
-      width: calc(100% - 110px);
+      min-width: 0;
       height: 100%;
       overflow: hidden;
       white-space: nowrap;
@@ -47,7 +57,7 @@
     }
 
     .deskpool-network {
-      width: calc(100% - 110px);
+      min-width: 0;
       height: 100%;
       overflow: hidden;
       white-space: nowrap;
@@ -80,7 +90,7 @@
 
   .cancel-approval {
     font-size: 14px;
-    color: var(--confirm-content-color);
+    color: var(--app-text-color, var(--confirm-content-color));
   }
 
   .cancel-title {
@@ -103,8 +113,9 @@
 
       border-radius: 3px;
       padding: 3px 8px;
-      background-color: var(--confirm-content-tag-bg);
-      color: var(--text-hight-color1);
+      border: 1px solid color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 24%, transparent);
+      background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
+      color: var(--app-text-color, var(--text-hight-color1));
       margin-right: 8px;
       margin-top: 8px;
     }

@@ -15,7 +15,7 @@ const IconWithTooltip: React.FC<IconWithTooltipProps> = ({
     <Tooltip
       getPopupContainer={getPopupContainer}
       title={<div style={{ padding: '0 12px' }}>{tips}</div>}
-      color="#516f90"
+      color="var(--vd-color-panel, #1c211f)"
     >
       {/* <Icon type={`icon-${icon}`} /> */}
     </Tooltip>
