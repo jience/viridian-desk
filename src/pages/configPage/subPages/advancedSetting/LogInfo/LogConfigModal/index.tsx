@@ -131,7 +131,7 @@ export const LogConfigModal: FC<LogConfigModalProps> = ({ ref }) => {
           ]}
         >
           <InputNumber
-            style={{ width: '100%' }}
+            className="log-config-field"
             min={1}
             max={1024}
             precision={0}
@@ -158,7 +158,7 @@ export const LogConfigModal: FC<LogConfigModalProps> = ({ ref }) => {
           ]}
         >
           <InputNumber
-            style={{ width: '100%' }}
+            className="log-config-field"
             min={7}
             max={500}
             precision={0}
@@ -178,7 +178,7 @@ export const LogConfigModal: FC<LogConfigModalProps> = ({ ref }) => {
           ]}
         >
           <Input
-            style={{ width: '100%' }}
+            className="log-config-field"
             placeholder={t('config_page.advanced_setting.log_path_placeholder')}
             addonAfter={
               <span className="log-save-path-select" onClick={handleSelectDirectory}>
