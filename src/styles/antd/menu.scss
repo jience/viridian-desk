@@ -130,3 +130,50 @@
     1.6568542494923806px 100%
   );
 }
+
+:root.dark,
+:root[data-ui-theme='dark'] {
+  .ant-popover {
+    .ant-popover-container,
+    .ant-popover-inner,
+    .ant-popover-content {
+      background: var(--vd-color-panel, #1c211f);
+      color: var(--vd-color-text, #e9eee8);
+    }
+
+    .ant-popover-arrow::before,
+    .ant-popover-arrow::after {
+      background: var(--vd-color-panel, #1c211f);
+    }
+
+    .ant-menu {
+      background: var(--vd-color-panel, #1c211f);
+      color: var(--vd-color-text, #e9eee8);
+    }
+
+    .ant-menu-item {
+      color: var(--vd-color-text, #e9eee8);
+
+      &:hover,
+      &.ant-menu-item-active {
+        background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 12%, transparent);
+      }
+    }
+  }
+
+  .ant-dropdown {
+    .ant-dropdown-menu {
+      background: var(--vd-color-panel, #1c211f);
+      color: var(--vd-color-text, #e9eee8);
+    }
+
+    .ant-dropdown-menu-item {
+      color: var(--vd-color-text, #e9eee8);
+
+      &:hover,
+      &.ant-dropdown-menu-item-active {
+        background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 12%, transparent);
+      }
+    }
+  }
+}

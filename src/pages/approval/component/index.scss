@@ -9,7 +9,7 @@
   }
 
   .cpu-mem-tip {
-    color: #eb5f5c;
+    color: var(--confirm-error-color);
     font-size: 12px;
   }
 }
@@ -17,7 +17,7 @@
 .deskpool-info {
   margin: 0px 5px 0;
   color: var(--confirm-content-color);
-  background: #f5f8fa;
+  background: var(--config-infoTable-background-default);
 
   .item-info {
     display: flex;
@@ -68,7 +68,7 @@
 
   .title {
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.65);
+    color: var(--app-muted-color, var(--text-color1));
     line-height: 30px;
     margin-bottom: 10px;
     margin-right: 20px;

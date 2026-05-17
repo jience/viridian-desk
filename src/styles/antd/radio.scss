@@ -4,3 +4,23 @@
   --ant-radio-button-padding-inline: 15px;
   --ant-radio-wrapper-margin-inline-end: 8px;
 }
+
+:root.dark,
+:root[data-ui-theme='dark'] {
+  .ant-radio-button-wrapper {
+    border-color: var(--vd-color-border, rgba(255, 255, 255, 0.08));
+    background: color-mix(in srgb, var(--vd-color-panel-subtle, #242b27) 72%, transparent);
+    color: var(--vd-color-muted, #8d978e);
+  }
+
+  .ant-radio-button-wrapper:not(.ant-radio-button-wrapper-checked):hover {
+    color: var(--vd-color-text, #e9eee8);
+    background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
+  }
+
+  .ant-radio-button-wrapper-checked {
+    border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 42%, transparent);
+    background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 28%, transparent);
+    color: var(--vd-color-text, #e9eee8);
+  }
+}
