@@ -23,4 +23,30 @@
     background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 28%, transparent);
     color: var(--vd-color-text, #e9eee8);
   }
+
+  .ant-radio-wrapper {
+    color: var(--vd-color-muted, #8d978e);
+
+    &:hover {
+      color: var(--vd-color-text, #e9eee8);
+    }
+
+    .ant-radio-inner {
+      border-color: var(--vd-color-border, rgba(255, 255, 255, 0.16));
+      background: color-mix(in srgb, var(--vd-color-panel-subtle, #242b27) 72%, transparent);
+    }
+
+    .ant-radio-inner::after {
+      background: var(--vd-color-on-accent, #06120e);
+    }
+
+    .ant-radio-checked .ant-radio-inner {
+      border-color: var(--vd-color-accent, #8ef2bd);
+      background: var(--vd-color-accent, #8ef2bd);
+    }
+
+    .ant-radio-checked + span {
+      color: var(--vd-color-text, #e9eee8);
+    }
+  }
 }

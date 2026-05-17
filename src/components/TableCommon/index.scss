@@ -16,8 +16,8 @@
   }
 
   .row-detail-selected {
-    background-color: #e6f1fd;
-    border: 1px solid #c9e2fc;
+    background-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 28%, transparent);
 
     td {
       &:last-child {
@@ -25,7 +25,7 @@
 
         &::before {
           content: '✔';
-          color: white;
+          color: var(--vd-color-on-accent, #06120e);
           width: 14px;
           height: 14px;
           position: absolute;
@@ -41,7 +41,7 @@
           text-align: end;
           width: 0;
           height: 0;
-          border-top: 24px solid #4d8cca;
+          border-top: 24px solid var(--vd-color-accent, #8ef2bd);
           border-left: 24px solid transparent;
 
           position: absolute;

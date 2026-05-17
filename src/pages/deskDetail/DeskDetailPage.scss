@@ -433,10 +433,10 @@
 
   &__item {
     padding: 7px 12px;
-    color: #364a5d;
+    color: var(--vd-color-text, #e9eee8);
 
     &:nth-child(odd) {
-      background: #f5f8fa;
+      background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
     }
   }
 }

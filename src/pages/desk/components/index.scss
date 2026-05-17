@@ -1,5 +1,86 @@
 .deskPoolInDesk {
   width: 400px !important;
+
+  .ant-modal-header {
+    height: auto;
+    min-height: 72px;
+  }
+
+  .ant-modal-title {
+    align-items: center;
+    padding: 12px 18px;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .deskPoolInDesk-title {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .os {
+    position: relative;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+
+    .stop-bg,
+    .stop-bg > svg {
+      width: 42px;
+      height: 42px;
+    }
+
+    .stop-bg svg * {
+      fill: color-mix(
+        in srgb,
+        var(--vd-color-accent, #8ef2bd) 16%,
+        var(--vd-color-panel, #1c211f)
+      ) !important;
+      stroke: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 26%, transparent) !important;
+    }
+
+    > i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      color: var(--vd-color-text, #e9eee8);
+      font-size: 18px;
+      transform: translate(-50%, -52%);
+    }
+  }
+
+  .title-box {
+    min-width: 0;
+  }
+
+  .pool-name {
+    margin: 0;
+    overflow: hidden;
+    color: var(--my-ant-modal-title-color);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .show-type {
+    display: block;
+    margin-top: 4px;
+    overflow: hidden;
+    color: var(--vd-color-muted, #8d978e);
+    font-size: 12px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .detailList {
     .antd-tooltip {
       left: 6px !important;

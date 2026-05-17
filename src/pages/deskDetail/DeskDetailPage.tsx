@@ -214,7 +214,7 @@ export function DeskDetailPage() {
                               <Tooltip
                                 title={renderDisks(snapshot.disk)}
                                 trigger="hover"
-                                color="#ffffff"
+                                color="var(--vd-color-panel, #1c211f)"
                                 placement="right"
                                 overlayInnerStyle={{ maxWidth: 'unset' }}
                                 showArrow={false}

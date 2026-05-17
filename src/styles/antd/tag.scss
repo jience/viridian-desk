@@ -4,3 +4,18 @@
   align-items: center;
   width: fit-content;
 }
+
+:root.dark,
+:root[data-ui-theme='dark'] {
+  .ant-tag {
+    border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 24%, transparent);
+    background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 12%, transparent);
+    color: var(--vd-color-accent, #8ef2bd);
+  }
+
+  .ant-tag-blue {
+    border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 28%, transparent);
+    background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 14%, transparent);
+    color: var(--vd-color-accent, #8ef2bd);
+  }
+}
