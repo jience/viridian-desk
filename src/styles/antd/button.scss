@@ -1,3 +1,59 @@
+.ant-btn {
+  font-weight: 600;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:not(:disabled):not(.ant-btn-disabled):focus-visible {
+    box-shadow: var(--vd-focus-ring, 0 0 0 3px rgba(77, 124, 63, 0.22));
+  }
+
+  &:not(:disabled):not(.ant-btn-disabled):active {
+    transform: translateY(1px);
+  }
+}
+
+.ant-btn-primary,
+.ant-btn-color-primary.ant-btn-variant-solid {
+  border-color: var(--vd-color-accent, #4d7c3f);
+  background: var(--vd-color-accent, #4d7c3f);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 24%, transparent);
+  color: var(--vd-color-accent-contrast, #ffffff);
+
+  &:hover,
+  &:focus-visible {
+    border-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 86%, #ffffff);
+    background: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 86%, #ffffff);
+    color: var(--vd-color-accent-contrast, #ffffff);
+  }
+
+  &:active {
+    border-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 82%, #000000);
+    background: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 82%, #000000);
+    color: var(--vd-color-accent-contrast, #ffffff);
+  }
+}
+
+.ant-btn-default.ant-btn-variant-outlined {
+  border-color: var(--vd-color-border, rgba(82, 72, 52, 0.14));
+  background: color-mix(in srgb, var(--vd-color-panel, #fffdf8) 88%, transparent);
+  color: var(--vd-color-muted, #6c7268);
+
+  &:hover,
+  &:focus-visible {
+    border-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 34%, transparent);
+    background: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, var(--vd-color-panel));
+    color: var(--vd-color-text, #20231e);
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 14%, var(--vd-color-panel));
+  }
+}
+
 .ant-btn-sm {
   background-color: var(--antd-sm-btn-bac-color);
   color: var(--antd-sm-btn-color);
@@ -51,23 +107,25 @@
 
 :root.dark,
 :root[data-ui-theme='dark'] {
+  --vd-color-accent-contrast: #06120e;
+
   .ant-btn-primary,
   .ant-btn-color-primary.ant-btn-variant-solid {
     border-color: var(--vd-color-accent, #8ef2bd);
     background: var(--vd-color-accent, #8ef2bd);
-    color: #06120e;
+    color: var(--vd-color-accent-contrast);
 
     &:hover,
     &:focus-visible {
       border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 88%, #ffffff);
       background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 88%, #ffffff);
-      color: #06120e;
+      color: var(--vd-color-accent-contrast);
     }
 
     &:active {
       border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 82%, #000000);
       background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 82%, #000000);
-      color: #06120e;
+      color: var(--vd-color-accent-contrast);
     }
   }
 
