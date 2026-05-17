@@ -9,12 +9,12 @@
   --antd-sm-btn-border-color: #d9d9d9;
 
   // antd modal控制
-  --ant-modal-header-border-bottom-color: #e7ebf3;
-  --ant-modal-header-bac-color: #f5f8fa;
-  --my-ant-modal-title-color: #516f90;
-  --ant-modal-title-before-color: #2491ff;
-  --ant-modal-body-bac-color: #fff;
-  --ant-modal-content-color: #33475b;
+  --ant-modal-header-border-bottom-color: rgba(82, 72, 52, 0.16);
+  --ant-modal-header-bac-color: #eee8dc;
+  --my-ant-modal-title-color: #20231e;
+  --ant-modal-title-before-color: #4d7c3f;
+  --ant-modal-body-bac-color: #fffdf8;
+  --ant-modal-content-color: #20231e;
 
   --ant-table-thead-before-bac-color: #dfe3eb;
 
@@ -47,8 +47,8 @@
   --theme-select-item-hover-box-shadow: rgba(51, 71, 91, 0.16);
 
   // develop-mode-tag
-  --develop-mode-bac-color: #daeeff;
-  --develop-mode-color: #4c8cca;
+  --develop-mode-bac-color: rgba(77, 124, 63, 0.12);
+  --develop-mode-color: #4d7c3f;
 
   --login-page-bottom-btn-border-color: transparent;
 
@@ -76,12 +76,12 @@
   --app-detail-modal-detail-item-color: #33475b;
   --app-detail-modal-detail-item-icon-color: #7c98b6;
 
-  --gateway-select-color: #516f90;
+  --gateway-select-color: #6c7268;
 
-  --primary-color: #2491ff; //主色
-  --primary-shadow-color: #2491ff; // 主色 阴影
-  --text-color1: #516f90; // 文案颜色
-  --text-hight-color1: #4c8cca;
+  --primary-color: #4d7c3f; //主色
+  --primary-shadow-color: rgba(77, 124, 63, 0.34); // 主色 阴影
+  --text-color1: #6c7268; // 文案颜色
+  --text-hight-color1: #4d7c3f;
 
   // confirm modal
   --confirm-success-color: #5ab55e; // 成功图标颜色
@@ -99,7 +99,7 @@
   //菜单按钮 次
   --downMenu-btn-default: #ffffff; //按钮背景
   //菜单 设置
-  --menu-setting-hover: #daeeff;
+  --menu-setting-hover: rgba(77, 124, 63, 0.1);
   --menu-slider-bg: rgba(255, 255, 255, 0.8);
 
   //桌面 列表
@@ -150,10 +150,10 @@
   --config-infoTable-color-default: #516f90;
 
   // footer 操作按钮
-  --footer-button-bg: #fffc; // 操作按钮高亮背景色
-  --footer-dev-mode-color1: #4c8cca; // 开发模式文案色
-  --footer-dev-mode-color2: #daeeff; // 开发模式背景色
-  --footer-button-color1: #516f90; // 操作按钮 & 右侧网关文案 default 颜色
+  --footer-button-bg: rgba(238, 232, 220, 0.58); // 操作按钮高亮背景色
+  --footer-dev-mode-color1: #4d7c3f; // 开发模式文案色
+  --footer-dev-mode-color2: rgba(77, 124, 63, 0.12); // 开发模式背景色
+  --footer-button-color1: #6c7268; // 操作按钮 & 右侧网关文案 default 颜色
 
   // login
   --login-text-1: #7c98b6; // 登录方式文案默认色
@@ -173,10 +173,10 @@
   --list-content-color: #33475b;
 
   // selector
-  --selector-container-bg: rgba(255, 255, 255, 0.6);
-  --selector-container-color: #33475b;
+  --selector-container-bg: rgba(255, 253, 248, 0.82);
+  --selector-container-color: #20231e;
 
-  --menu-item-text-color: #33475b;
+  --menu-item-text-color: #20231e;
   --menu-item-icon-color: #7c98b6;
 }
 
@@ -191,12 +191,12 @@
   --antd-sm-btn-border-color: rgba(144, 148, 185, 1);
 
   // antd modal控制
-  --ant-modal-header-border-bottom-color: #7075a2;
-  --ant-modal-header-bac-color: #656a99;
-  --my-ant-modal-title-color: #fff;
-  --ant-modal-title-before-color: #fff;
-  --ant-modal-body-bac-color: #555c84;
-  --ant-modal-content-color: #fff;
+  --ant-modal-header-border-bottom-color: rgba(209, 255, 229, 0.12);
+  --ant-modal-header-bac-color: #202925;
+  --my-ant-modal-title-color: #eef5ef;
+  --ant-modal-title-before-color: #8ef2bd;
+  --ant-modal-body-bac-color: #151b19;
+  --ant-modal-content-color: #eef5ef;
 
   --ant-table-thead-before-bac-color: #7075a2;
 
@@ -229,10 +229,10 @@
   --theme-select-item-hover-box-shadow: rgba(175, 215, 255, 0.58);
 
   // develop-mode-tag
-  --develop-mode-bac-color: rgba(105, 109, 157, 0.6);
-  --develop-mode-color: #fff;
+  --develop-mode-bac-color: rgba(142, 242, 189, 0.12);
+  --develop-mode-color: #8ef2bd;
 
-  --login-page-bottom-btn-border-color: rgba(105, 109, 157, 1);
+  --login-page-bottom-btn-border-color: rgba(209, 255, 229, 0.12);
 
   --diagnosis-info-content-row-key-color: #fff;
   --diagnosis-info-content-row-val-color: #fff;
@@ -258,12 +258,12 @@
   --app-detail-modal-detail-item-color: #fff;
   --app-detail-modal-detail-item-icon-color: #fff;
 
-  --gateway-select-color: #dfe3eb;
+  --gateway-select-color: #8f9c94;
 
-  --primary-color: #2491ff; //主色
-  --primary-shadow-color: #2491ff; // 主色 阴影
-  --text-color1: #516f90; // 文案颜色
-  --text-hight-color1: #4c8cca;
+  --primary-color: #8ef2bd; //主色
+  --primary-shadow-color: rgba(142, 242, 189, 0.34); // 主色 阴影
+  --text-color1: #8f9c94; // 文案颜色
+  --text-hight-color1: #8ef2bd;
 
   // confirm modal
   --confirm-warning-color: #f0a332; // 警告图标颜色
@@ -279,8 +279,8 @@
   //菜单按钮 次
   --downMenu-btn-default: #696d9d; //按钮背景
   //菜单 设置
-  --menu-setting-hover: #daeeff;
-  --menu-slider-bg: rgba(105, 109, 157, 0.6);
+  --menu-setting-hover: rgba(142, 242, 189, 0.12);
+  --menu-slider-bg: rgba(255, 255, 255, 0.045);
 
   //桌面 列表
   --desk-card-share-bg: linear-gradient(225deg, #d194de 0%, #4665ea 100%);
@@ -330,10 +330,10 @@
   --config-infoTable-color-default: #ffffff;
 
   // footer 操作按钮
-  --footer-button-bg: rgba(105, 109, 157, 0.6); // 操作按钮高亮背景色
-  --footer-dev-mode-color1: #ffffff; // 开发模式文案色
-  --footer-dev-mode-color2: rgba(105, 109, 157, 0.6); // 开发模式背景色
-  --footer-button-color1: #dfe3eb; // 操作按钮 & 右侧网关文案 default 颜色
+  --footer-button-bg: rgba(32, 41, 37, 0.58); // 操作按钮高亮背景色
+  --footer-dev-mode-color1: #8ef2bd; // 开发模式文案色
+  --footer-dev-mode-color2: rgba(142, 242, 189, 0.12); // 开发模式背景色
+  --footer-button-color1: #8f9c94; // 操作按钮 & 右侧网关文案 default 颜色
 
   // login
   --login-text-1: #dfe3eb; // 登录方式文案默认色
@@ -353,9 +353,9 @@
   --list-content-color: #ffffff;
 
   // selector
-  --selector-container-bg: rgba(105, 109, 157, 0.6);
-  --selector-container-color: #ffffff;
+  --selector-container-bg: rgba(255, 255, 255, 0.045);
+  --selector-container-color: #e9eee8;
 
-  --menu-item-text-color: #ffffff;
+  --menu-item-text-color: #e9eee8;
   --menu-item-icon-color: #ffffff;
 }
