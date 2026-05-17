@@ -23,9 +23,9 @@ export const IntegerStep: React.FC = (props: any) => {
         </Col>
         <Col span={6}>
           <InputNumber
+            className="form-item-number"
             min={1}
             max={20}
-            style={{ margin: '0 16px' }}
             value={inputValue}
             onChange={onChange}
             {...props}
@@ -61,9 +61,9 @@ export const DecimalStep: React.FC = (props: any) => {
         </Col>
         <Col span={6}>
           <InputNumber
+            className="form-item-number"
             min={0}
             max={1}
-            style={{ margin: '0 16px' }}
             step={0.01}
             value={inputValue}
             onChange={onChange}
