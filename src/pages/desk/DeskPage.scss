@@ -15,6 +15,9 @@
   --desk-page-button-border: rgba(126, 186, 197, 0.35);
   --desk-page-button-border-hover: rgba(169, 218, 223, 0.7);
   --desk-page-section-count-bg: rgba(15, 27, 35, 0.86);
+  --desk-page-toolbar-shadow: 0 18px 60px color-mix(in srgb, #000000 24%, transparent);
+  --desk-page-button-shadow: 0 12px 26px
+    color-mix(in srgb, var(--desk-page-accent-strong) 28%, transparent);
   --desk-page-card-bg:
     linear-gradient(180deg, rgba(20, 35, 45, 0.94), rgba(11, 22, 30, 0.95)),
     radial-gradient(circle at 16% 10%, rgba(69, 133, 147, 0.26), transparent 34%);
@@ -33,11 +36,11 @@
   --desk-page-card-bg-pool:
     linear-gradient(180deg, rgba(25, 34, 43, 0.96), rgba(13, 22, 31, 0.96)),
     radial-gradient(circle at 18% 15%, rgba(119, 140, 154, 0.2), transparent 36%);
-  --desk-page-card-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
-  --desk-page-card-shadow-hover: 0 26px 58px rgba(0, 0, 0, 0.36);
+  --desk-page-card-shadow: 0 20px 48px color-mix(in srgb, #000000 28%, transparent);
+  --desk-page-card-shadow-hover: 0 26px 58px color-mix(in srgb, #000000 36%, transparent);
   --desk-page-card-highlight-border: rgba(255, 255, 255, 0.08);
   --desk-page-card-highlight-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 42%);
-  --desk-page-card-icon-shadow: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.35));
+  --desk-page-card-icon-shadow: drop-shadow(0 12px 18px color-mix(in srgb, #000000 35%, transparent));
   --desk-page-action-hover-bg: rgba(87, 142, 151, 0.22);
   --desk-page-create-hover-bg: rgba(38, 87, 96, 0.42);
   --desk-page-default-badge-bg: rgba(23, 75, 83, 0.45);
@@ -63,7 +66,7 @@
       linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
     background-size: 32px 32px;
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), transparent 70%);
+    mask-image: linear-gradient(to bottom, color-mix(in srgb, #000000 75%, transparent), transparent 70%);
   }
 
   .ant-spin-nested-loading,
@@ -97,7 +100,7 @@
   border: 1px solid var(--desk-page-border);
   border-radius: 8px;
   background: var(--desk-page-surface);
-  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
+  box-shadow: var(--desk-page-toolbar-shadow);
   backdrop-filter: blur(18px);
 
   h1 {
@@ -123,7 +126,7 @@
   border-radius: 6px;
   color: var(--desk-page-text-strong);
   background: var(--desk-page-button-bg);
-  box-shadow: 0 12px 26px rgba(20, 94, 110, 0.28);
+  box-shadow: var(--desk-page-button-shadow);
 
   &:not(:disabled):hover {
     border-color: var(--desk-page-button-border-hover);
@@ -478,11 +481,19 @@
       linear-gradient(180deg, rgba(238, 232, 220, 0.86), rgba(245, 242, 234, 0.92)),
       radial-gradient(circle at 16% 12%, rgba(108, 114, 104, 0.1), transparent 38%);
     --desk-page-card-bg-pool: var(--desk-page-card-bg);
-    --desk-page-card-shadow: 0 18px 40px rgba(55, 48, 38, 0.12);
-    --desk-page-card-shadow-hover: 0 22px 48px rgba(55, 48, 38, 0.16);
+    --desk-page-toolbar-shadow: 0 18px 54px
+      color-mix(in srgb, var(--vd-color-rail, #20231e) 14%, transparent);
+    --desk-page-button-shadow: 0 10px 22px
+      color-mix(in srgb, var(--desk-page-accent) 18%, transparent);
+    --desk-page-card-shadow: 0 18px 40px
+      color-mix(in srgb, var(--vd-color-rail, #20231e) 12%, transparent);
+    --desk-page-card-shadow-hover: 0 22px 48px
+      color-mix(in srgb, var(--vd-color-rail, #20231e) 16%, transparent);
     --desk-page-card-highlight-border: rgba(255, 255, 255, 0.62);
     --desk-page-card-highlight-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 42%);
-    --desk-page-card-icon-shadow: drop-shadow(0 10px 16px rgba(55, 48, 38, 0.16));
+    --desk-page-card-icon-shadow: drop-shadow(
+      0 10px 16px color-mix(in srgb, var(--vd-color-rail, #20231e) 16%, transparent)
+    );
     --desk-page-action-hover-bg: rgba(77, 124, 63, 0.1);
     --desk-page-create-hover-bg: rgba(77, 124, 63, 0.1);
     --desk-page-default-badge-bg: rgba(77, 124, 63, 0.1);
@@ -496,12 +507,8 @@
       background-image:
         linear-gradient(rgba(82, 72, 52, 0.06) 1px, transparent 1px),
         linear-gradient(90deg, rgba(82, 72, 52, 0.04) 1px, transparent 1px);
-      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.42), transparent 70%);
+      mask-image: linear-gradient(to bottom, color-mix(in srgb, #000000 42%, transparent), transparent 70%);
     }
-  }
-
-  .desk-page__toolbar {
-    box-shadow: 0 18px 54px rgba(55, 48, 38, 0.14);
   }
 
   .desk-page__empty {
