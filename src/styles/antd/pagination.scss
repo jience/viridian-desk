@@ -1,13 +1,55 @@
 .ant-pagination {
   font-size: 12px;
+
+  .ant-pagination-item,
+  .ant-pagination-prev,
+  .ant-pagination-next {
+    min-width: 24px;
+    height: 24px;
+    border-color: var(--vd-color-border, rgba(82, 72, 52, 0.14));
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--vd-color-panel, #fffdf8) 86%, transparent);
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .ant-pagination-item:hover,
+  .ant-pagination-prev:hover,
+  .ant-pagination-next:hover {
+    border-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 34%, transparent);
+    background: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, transparent);
+  }
+
   .ant-pagination-item-active {
     height: 24px;
     width: 24px;
-    border: 1px solid color-mix(in srgb, var(--primary-color) 30%, transparent);
-    background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--vd-color-accent, var(--primary-color)) 34%, transparent);
+    background-color: color-mix(in srgb, var(--vd-color-accent, var(--primary-color)) 14%, transparent);
     a {
-      color: var(--primary-color);
-      font-weight: 500;
+      color: var(--vd-color-text, #20231e);
+      font-weight: 600;
+    }
+  }
+}
+
+:root.dark,
+:root[data-ui-theme='dark'] {
+  .ant-pagination {
+    .ant-pagination-item,
+    .ant-pagination-prev,
+    .ant-pagination-next {
+      background: color-mix(in srgb, var(--vd-color-panel-subtle, #242b27) 72%, transparent);
+    }
+
+    .ant-pagination-item-active {
+      border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 34%, transparent);
+      background-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 16%, transparent);
+
+      a {
+        color: var(--vd-color-text, #e9eee8);
+      }
     }
   }
 }

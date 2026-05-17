@@ -1,22 +1,79 @@
 .ant-popover {
+  --ant-floating-surface: color-mix(in srgb, var(--vd-color-panel, #fffdf8) 94%, transparent);
+  --ant-floating-border: var(--vd-color-border, rgba(82, 72, 52, 0.14));
+  --ant-floating-shadow: 0 18px 48px
+    color-mix(in srgb, var(--vd-color-rail, #20231e) 16%, transparent);
+
+  .ant-popover-inner,
+  .ant-popover-content {
+    border: 1px solid var(--ant-floating-border);
+    border-radius: 12px;
+    background: var(--ant-floating-surface);
+    box-shadow: var(--ant-floating-shadow);
+    color: var(--vd-color-text, #20231e);
+    backdrop-filter: blur(16px);
+  }
+
+  .ant-popover-arrow::before,
+  .ant-popover-arrow::after {
+    background: var(--ant-floating-surface);
+  }
+
   .ant-popover-container {
-    padding: 8px 2px;
+    padding: 8px;
     .ant-menu {
+      border: 0;
+      background: transparent;
       .ant-menu-item {
         width: auto;
-        border-radius: 0px;
-        margin: 0;
+        border-radius: 8px;
+        margin: 1px 0;
         padding: 0 12px;
         height: 28px;
         line-height: 28px;
         color: var(--menu-item-text-color);
         font-size: 12px;
+        transition:
+          background-color 160ms ease,
+          color 160ms ease;
         i {
           margin-right: 10px;
           font-size: 12px;
           color: var(--menu-item-icon-color);
         }
       }
+    }
+  }
+}
+
+.ant-dropdown {
+  --ant-floating-surface: color-mix(in srgb, var(--vd-color-panel, #fffdf8) 94%, transparent);
+  --ant-floating-border: var(--vd-color-border, rgba(82, 72, 52, 0.14));
+  --ant-floating-shadow: 0 18px 48px
+    color-mix(in srgb, var(--vd-color-rail, #20231e) 16%, transparent);
+
+  .ant-dropdown-menu {
+    border: 1px solid var(--ant-floating-border);
+    border-radius: 12px;
+    padding: 8px;
+    background: var(--ant-floating-surface);
+    box-shadow: var(--ant-floating-shadow);
+    color: var(--vd-color-text, #20231e);
+    backdrop-filter: blur(16px);
+  }
+
+  .ant-dropdown-menu-item {
+    border-radius: 8px;
+    color: var(--menu-item-text-color);
+    transition:
+      background-color 160ms ease,
+      color 160ms ease;
+
+    &:hover,
+    &.ant-dropdown-menu-item-active,
+    &.ant-dropdown-menu-item-selected {
+      background: var(--menu-setting-hover);
+      color: var(--vd-color-text, #20231e);
     }
   }
 }
@@ -34,6 +91,11 @@
 .ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover {
   background-color: var(--menu-setting-hover);
   color: var(--menu-item-text-color);
+}
+
+.ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 14%, transparent);
+  color: var(--vd-color-text, #20231e);
 }
 
 .client-css-var.ant-popover {
@@ -134,20 +196,24 @@
 :root.dark,
 :root[data-ui-theme='dark'] {
   .ant-popover {
+    --ant-floating-surface: color-mix(in srgb, var(--vd-color-panel, #1c211f) 88%, transparent);
+    --ant-floating-border: var(--vd-color-border, rgba(209, 255, 229, 0.12));
+    --ant-floating-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+
     .ant-popover-container,
     .ant-popover-inner,
     .ant-popover-content {
-      background: var(--vd-color-panel, #1c211f);
+      background: var(--ant-floating-surface);
       color: var(--vd-color-text, #e9eee8);
     }
 
     .ant-popover-arrow::before,
     .ant-popover-arrow::after {
-      background: var(--vd-color-panel, #1c211f);
+      background: var(--ant-floating-surface);
     }
 
     .ant-menu {
-      background: var(--vd-color-panel, #1c211f);
+      background: transparent;
       color: var(--vd-color-text, #e9eee8);
     }
 
@@ -162,8 +228,12 @@
   }
 
   .ant-dropdown {
+    --ant-floating-surface: color-mix(in srgb, var(--vd-color-panel, #1c211f) 88%, transparent);
+    --ant-floating-border: var(--vd-color-border, rgba(209, 255, 229, 0.12));
+    --ant-floating-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+
     .ant-dropdown-menu {
-      background: var(--vd-color-panel, #1c211f);
+      background: var(--ant-floating-surface);
       color: var(--vd-color-text, #e9eee8);
     }
 
