@@ -24,8 +24,8 @@ export function Component() {
     const transDeviceType = (typeStr: string) => {
       return typeStr?.split(',').map((val) => {
         return {
-          color: '#E6F1FD',
-          textColor: '#4C8CCA',
+          color: 'var(--vd-info-soft-bg)',
+          textColor: 'var(--vd-info-soft-text)',
           optIcon: '',
           name: deviceTransLocal[val as keyof typeof deviceTransLocal],
         };

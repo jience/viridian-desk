@@ -38,11 +38,11 @@
   margin: 10px auto;
   padding: 0;
   place-items: center;
-  border: 1px solid rgba(209, 255, 229, 0.1);
+  border: 1px solid color-mix(in srgb, var(--vd-color-on-rail-strong) 14%, transparent);
   border-radius: 12px;
-  background: rgba(238, 245, 239, 0.04);
+  background: color-mix(in srgb, var(--vd-color-on-rail-strong) 6%, transparent);
   box-shadow: none;
-  color: rgba(238, 245, 239, 0.68);
+  color: var(--vd-color-on-rail);
   cursor: pointer;
   outline: none;
   transition:
@@ -59,9 +59,9 @@
   &:hover,
   &:focus-visible {
     transform: translateY(-1px);
-    border-color: rgba(142, 242, 189, 0.28);
-    background: rgba(142, 242, 189, 0.12);
-    color: var(--vd-color-text, #eef5ef);
+    border-color: color-mix(in srgb, var(--vd-color-accent) 34%, transparent);
+    background: color-mix(in srgb, var(--vd-color-accent) 12%, transparent);
+    color: var(--vd-color-on-rail-strong);
   }
 
   &:active {
@@ -70,13 +70,17 @@
 }
 
 .sidebar__button--active {
-  border-color: rgba(142, 242, 189, 0.74);
+  border-color: color-mix(in srgb, var(--vd-color-accent) 74%, transparent);
   background:
-    linear-gradient(135deg, rgba(142, 242, 189, 0.26), rgba(142, 242, 189, 0.1)),
-    rgba(142, 242, 189, 0.12);
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--vd-color-accent) 26%, transparent),
+      color-mix(in srgb, var(--vd-color-accent) 10%, transparent)
+    ),
+    color-mix(in srgb, var(--vd-color-accent) 12%, transparent);
   box-shadow:
-    0 0 0 1px rgba(142, 242, 189, 0.08),
-    0 12px 26px rgba(0, 0, 0, 0.28);
+    0 0 0 1px color-mix(in srgb, var(--vd-color-accent) 8%, transparent),
+    0 12px 26px rgba(0, 0, 0, 0.22);
   color: var(--vd-color-accent, #8ef2bd);
 }
 
@@ -93,13 +97,13 @@
 }
 
 .sidebar__button--danger {
-  color: #ff6b63;
+  color: var(--vd-color-danger);
 
   &:hover,
   &:focus-visible {
-    border-color: rgba(255, 107, 99, 0.35);
-    background: rgba(255, 107, 99, 0.12);
-    color: #ff8a84;
+    border-color: color-mix(in srgb, var(--vd-color-danger) 35%, transparent);
+    background: color-mix(in srgb, var(--vd-color-danger) 12%, transparent);
+    color: var(--vd-color-danger);
   }
 }
 

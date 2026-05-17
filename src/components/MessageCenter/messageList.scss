@@ -1,7 +1,7 @@
 .message-notice-modal {
   .ant-modal-content {
     overflow: hidden;
-    border: 1px solid rgba(142, 159, 181, 0.16);
+    border: 1px solid var(--app-border-color);
     border-radius: 10px;
   }
 
@@ -19,7 +19,7 @@
   }
 
   .ant-table-thead > tr > th {
-    background: rgba(127, 143, 160, 0.08);
+    background: color-mix(in srgb, var(--app-surface-subtle-color) 72%, transparent);
     color: var(--app-muted-color, #6f7f90);
     font-size: 12px;
     font-weight: 650;
@@ -108,20 +108,20 @@
 
 .message-notice-modal__tag {
   margin-inline-end: 0;
-  border-color: rgba(76, 140, 202, 0.2);
+  border-color: color-mix(in srgb, var(--vd-color-info) 24%, transparent);
   border-radius: 6px;
-  background: rgba(76, 140, 202, 0.12);
-  color: #4c8cca;
+  background: var(--vd-info-soft-bg);
+  color: var(--vd-info-soft-text);
 }
 
 .message-notice-modal__tag--warning {
-  border-color: rgba(240, 163, 50, 0.26);
-  background: rgba(240, 163, 50, 0.14);
-  color: #c47f20;
+  border-color: color-mix(in srgb, var(--vd-color-warning) 28%, transparent);
+  background: var(--vd-warning-soft-bg);
+  color: var(--vd-warning-soft-text);
 }
 
 .message-notice-modal__delete {
-  color: #d85f5f;
+  color: var(--vd-color-danger);
 }
 
 @media (max-width: 760px) {

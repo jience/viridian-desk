@@ -10,8 +10,29 @@
   --vd-color-success: #37b56d;
   --vd-color-warning: #d89f32;
   --vd-color-danger: #cf4f45;
+  --vd-color-info: #2f6690;
   --vd-shadow-window: 0 28px 80px rgba(50, 45, 34, 0.18);
   --vd-focus-ring: 0 0 0 3px rgba(217, 255, 92, 0.4);
+  --app-text-color: var(--vd-color-text);
+  --app-muted-color: var(--vd-color-muted);
+  --text-color1: var(--vd-color-muted);
+  --app-surface-color: var(--vd-color-panel);
+  --app-surface-subtle-color: var(--vd-color-panel-subtle);
+  --app-border-color: var(--vd-color-border);
+  --gateway-select-color: var(--vd-color-muted);
+  --footer-button-bg: color-mix(in srgb, var(--vd-color-panel-subtle) 58%, transparent);
+  --footer-button-color1: var(--vd-color-muted);
+  --login-page-bottom-btn-border-color: var(--vd-color-border);
+  --develop-mode-bac-color: color-mix(in srgb, var(--vd-color-accent) 12%, transparent);
+  --develop-mode-color: var(--vd-color-accent);
+  --primary-color: var(--vd-color-accent);
+  --primary-shadow-color: color-mix(in srgb, var(--vd-color-accent) 34%, transparent);
+  --vd-info-soft-bg: color-mix(in srgb, var(--vd-color-info) 12%, transparent);
+  --vd-info-soft-text: var(--vd-color-info);
+  --vd-warning-soft-bg: color-mix(in srgb, var(--vd-color-warning) 14%, transparent);
+  --vd-warning-soft-text: #9a651e;
+  --vd-danger-soft-bg: color-mix(in srgb, var(--vd-color-danger) 12%, transparent);
+  --vd-danger-soft-text: var(--vd-color-danger);
 }
 
 :root.dark,
@@ -27,8 +48,10 @@
   --vd-color-success: #6ee7b7;
   --vd-color-warning: #f5c76b;
   --vd-color-danger: #f06b63;
+  --vd-color-info: #7db6e8;
   --vd-shadow-window: 0 28px 80px rgba(10, 12, 11, 0.38);
   --vd-focus-ring: 0 0 0 3px rgba(110, 231, 183, 0.32);
+  --vd-warning-soft-text: #ffd48a;
 }
 
 .vd-focus-ring {

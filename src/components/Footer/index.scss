@@ -51,12 +51,12 @@
   &:hover,
   &:focus-visible {
     color: var(--primary-color);
-    background: rgba(255, 255, 255, 0.92);
-    border-color: rgba(142, 242, 189, 0.28);
+    background: var(--app-surface-color);
+    border-color: color-mix(in srgb, var(--primary-color) 32%, transparent);
   }
 
   &:focus-visible {
-    outline: 2px solid rgba(142, 242, 189, 0.55);
+    outline: 2px solid color-mix(in srgb, var(--primary-color) 48%, transparent);
     outline-offset: 2px;
   }
 
@@ -72,15 +72,15 @@
   width: 7px;
   height: 7px;
   content: '';
-  background: #e35d52;
-  border: 1px solid rgba(255, 255, 255, 0.92);
+  background: var(--vd-color-danger);
+  border: 1px solid var(--app-surface-color);
   border-radius: 50%;
 }
 
 .login-footer__action--danger:hover,
 .login-footer__action--danger:focus-visible {
-  color: #f2766d;
-  border-color: rgba(242, 118, 109, 0.42);
+  color: var(--vd-color-danger);
+  border-color: color-mix(in srgb, var(--vd-color-danger) 42%, transparent);
 }
 
 .login-footer__developer {
@@ -93,7 +93,7 @@
   font-size: 12px;
   line-height: 1;
   background: var(--develop-mode-bac-color);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid color-mix(in srgb, var(--develop-mode-color) 16%, transparent);
   border-radius: 10px;
 
   .iconfont {

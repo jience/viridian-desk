@@ -11,10 +11,11 @@
   height: 30px;
   padding: 0;
   place-items: center;
-  border: 1px solid rgba(142, 159, 181, 0.2);
+  border: 1px solid
+    color-mix(in srgb, var(--vd-color-on-rail-strong, var(--vd-color-text)) 18%, transparent);
   border-radius: 8px;
-  background: rgba(10, 14, 13, 0.48);
-  color: rgba(238, 245, 239, 0.74);
+  background: color-mix(in srgb, var(--vd-color-rail, var(--vd-color-panel)) 72%, transparent);
+  color: var(--vd-color-on-rail, var(--vd-color-muted));
   cursor: pointer;
   outline: none;
   transition:
@@ -35,9 +36,9 @@
   &:hover,
   &:focus-visible {
     transform: translateY(-1px);
-    border-color: rgba(142, 242, 189, 0.3);
-    background: rgba(142, 242, 189, 0.12);
-    color: #eef5ef;
+    border-color: color-mix(in srgb, var(--vd-color-accent) 30%, transparent);
+    background: color-mix(in srgb, var(--vd-color-accent) 12%, transparent);
+    color: var(--vd-color-on-rail-strong, var(--vd-color-text));
   }
 
   &:active {
@@ -47,7 +48,7 @@
 
 .control-window-content__button--close:hover,
 .control-window-content__button--close:focus-visible {
-  border-color: rgba(255, 107, 99, 0.38);
-  background: rgba(255, 107, 99, 0.12);
-  color: #ff8a84;
+  border-color: color-mix(in srgb, var(--vd-color-danger) 38%, transparent);
+  background: color-mix(in srgb, var(--vd-color-danger) 12%, transparent);
+  color: var(--vd-color-danger);
 }

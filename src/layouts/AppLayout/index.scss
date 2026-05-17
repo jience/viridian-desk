@@ -7,7 +7,19 @@
   --vd-color-muted: #6c7268;
   --vd-color-border: rgba(82, 72, 52, 0.16);
   --vd-color-accent: #4d7c3f;
+  --vd-color-on-rail: rgba(255, 253, 248, 0.72);
+  --vd-color-on-rail-strong: #fffdf8;
   --vd-shadow-window: 0 24px 64px rgba(55, 48, 38, 0.14);
+  --card-borderColor-default: var(--vd-color-border);
+  --config-card-background-default: rgba(255, 253, 248, 0.9);
+  --config-card-border-default: var(--vd-color-border);
+  --config-card-bullet-default: var(--vd-color-accent);
+  --config-card-content-color: var(--vd-color-muted);
+  --config-card-divider-default: var(--vd-color-border);
+  --config-card-icon-default: var(--vd-color-muted);
+  --config-card-shadow-default: rgba(55, 48, 38, 0.12);
+  --config-card-sub-title-color: var(--vd-color-muted);
+  --config-card-title-default: var(--vd-color-text);
 
   height: 100%;
   min-height: 0;
@@ -49,7 +61,19 @@
   --vd-color-muted: #8f9c94;
   --vd-color-border: rgba(209, 255, 229, 0.12);
   --vd-color-accent: #8ef2bd;
+  --vd-color-on-rail: rgba(238, 245, 239, 0.68);
+  --vd-color-on-rail-strong: #eef5ef;
   --vd-shadow-window: 0 30px 90px rgba(0, 0, 0, 0.42);
+  --card-borderColor-default: var(--vd-color-border);
+  --config-card-background-default: rgba(21, 27, 25, 0.78);
+  --config-card-border-default: var(--vd-color-border);
+  --config-card-bullet-default: var(--vd-color-accent);
+  --config-card-content-color: var(--vd-color-muted);
+  --config-card-divider-default: var(--vd-color-border);
+  --config-card-icon-default: var(--vd-color-muted);
+  --config-card-shadow-default: rgba(0, 0, 0, 0.24);
+  --config-card-sub-title-color: var(--vd-color-muted);
+  --config-card-title-default: var(--vd-color-text);
 
   .vd-app-shell__rail {
     border-right-color: rgba(209, 255, 229, 0.08);
