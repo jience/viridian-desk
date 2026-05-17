@@ -9,7 +9,7 @@
       color: var(--app-text-color);
       font-weight: 400;
       strong {
-        color: #eb5f5c;
+        color: var(--vd-color-danger, #cf4f45);
         font-weight: 400;
       }
     }
