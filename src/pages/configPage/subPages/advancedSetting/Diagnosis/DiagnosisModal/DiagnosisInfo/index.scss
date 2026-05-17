@@ -7,10 +7,10 @@
   align-items: center;
   padding: 12px 18px;
   .normal {
-    color: #5ab55e;
+    color: var(--config-card-icon-success);
   }
   .error {
-    color: #f0a332;
+    color: var(--config-card-icon-warning);
   }
 
   .diagnosisInfo-content {
@@ -67,8 +67,8 @@
   pre {
     border-radius: 3px;
     margin: 10px 0;
-    background-color: #231f1f;
-    color: #93ebff;
+    background-color: color-mix(in srgb, var(--vd-color-rail, #0f1211) 86%, transparent);
+    color: var(--vd-color-accent, #8ef2bd);
     padding: 10px;
   }
 }

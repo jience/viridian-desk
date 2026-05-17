@@ -48,3 +48,23 @@
   --ant-button-padding-block-sm: 0px;
   --ant-button-padding-block-lg: 4px;
 }
+
+:root.dark,
+:root[data-ui-theme='dark'] {
+  .ant-btn-default.ant-btn-variant-outlined {
+    border-color: var(--vd-color-border, rgba(255, 255, 255, 0.08));
+    background: var(--vd-color-panel-subtle, #242b27);
+    color: var(--vd-color-text, #e9eee8);
+
+    &:hover,
+    &:focus-visible {
+      border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 36%, transparent);
+      background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
+      color: var(--vd-color-text, #e9eee8);
+    }
+
+    &:active {
+      background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 14%, transparent);
+    }
+  }
+}

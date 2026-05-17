@@ -268,7 +268,7 @@
   // confirm modal
   --confirm-warning-color: #f0a332; // 警告图标颜色
   --confirm-content-color: #eef5ef; // 内容部分文案默认颜色
-  --confirm-content-tag-bg: #e6f1fd; // 内容部分涉及tag背景颜色
+  --confirm-content-tag-bg: rgba(142, 242, 189, 0.12); // 内容部分涉及tag背景颜色
 
   //菜单按钮 主
   --menu-icon-color: #dfe3eb; //icon颜色
@@ -286,7 +286,7 @@
   --desk-card-share-bg: linear-gradient(225deg, #d194de 0%, #4665ea 100%);
   --desk-card-restore-bg: linear-gradient(45deg, #484aca 0%, #6eadf7 100%);
   --desk-card-exclusive-bg: linear-gradient(225deg, #3d7c5c 0%, #8ef2bd 100%);
-  --desk-card-disabled-bg: #eaf0f6;
+  --desk-card-disabled-bg: #242b27;
   --desk-card-disabled-title-color: #8f9c94;
   --desk-card-desk-pool-bg: rgba(255, 255, 255, 0.45);
   --desk-card-operate-open-color: #fff;
@@ -314,16 +314,16 @@
   --config-card-sub-title-color: #dfe3eb; // 设置页卡片副标题颜色
   --config-card-content-color: #ffffff; // 设置页卡片内容字体颜色
   --config-card-background-default: rgba(21, 27, 25, 0.78); // 卡片组件的背景色
-  --config-card-divider-default: #e7ebf3; // 分割线颜色
+  --config-card-divider-default: rgba(209, 255, 229, 0.12); // 分割线颜色
   --config-card-shadow-default: rgba(62, 81, 100, 0.12); // 卡片阴影色
-  --config-card-border-default: rgba(255, 255, 255, 1); // 卡片边框线
+  --config-card-border-default: rgba(209, 255, 229, 0.12); // 卡片边框线
   --config-card-bullet-default: #8ef2bd; // 卡片项目符号颜色
-  --config-card-icon-default: #506e91; // 卡片右侧插槽icon颜色
+  --config-card-icon-default: #8f9c94; // 卡片右侧插槽icon颜色
   --config-card-icon-success: #5ab55e; // 卡片icon成功色
   --config-card-icon-warning: #f0a332; // 卡片icon异常色
   // 设置页 表单弹窗标题色
   --config-formModel-title-default: #eef5ef; // 弹窗标题色
-  --config-formModel-addonAfter-back: #eaf0f6;
+  --config-formModel-addonAfter-back: #242b27;
 
   // 设置页 卡片 infoTable
   --config-infoTable-background-default: rgba(21, 27, 25, 0.78);

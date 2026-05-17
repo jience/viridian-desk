@@ -113,11 +113,13 @@ export const IPv4Input: FC<IPv4InputProps> = ({
               style={{
                 width: 60,
                 textAlign: 'center',
-                borderColor: val && !isValidNumber(val) ? '#ff4d4f' : undefined,
+                borderColor: val && !isValidNumber(val) ? 'var(--vd-color-danger)' : undefined,
               }}
               maxLength={3}
             />
-            {index < 3 && <span style={{ margin: '0 4px', color: '#666' }}>.</span>}
+            {index < 3 && (
+              <span style={{ margin: '0 4px', color: 'var(--vd-color-muted)' }}>.</span>
+            )}
           </div>
         ))}
       </div>
