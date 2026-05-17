@@ -1,8 +1,7 @@
 import './index.scss';
-import { useMemo, useState, useEffect, useRef, type CSSProperties } from 'react';
+import { useMemo, useEffect, useRef, type CSSProperties } from 'react';
 import useSharedState from './useSharedState';
 import { convertFileSrc, invoke } from '@tauri-apps/api/core';
-import NoviceGuidance from '../../components/NoviceGuidance';
 import { Outlet } from 'react-router';
 import MessageListModal from '@/components/MessageCenter';
 import { globalEmitter } from '@/utils/mitt';
@@ -27,9 +26,6 @@ const ClientLayout = () => {
 
   const clientOnlineMonitorRef = useRef<UnlistenFn>(null);
   const desktopConnectMonitorRef = useRef<UnlistenFn>(null);
-
-  // 是否展示新手引导
-  const [isNoviceGuidance, setIsNoviceGuidance] = useState(localStorage.getItem('noviceGuidance'));
 
   const { getGateWays, reconnectGateWay, getClientConfig } = useSharedState();
 
@@ -163,8 +159,7 @@ const ClientLayout = () => {
       <div className="client-layout-shell__controls">
         <ControlWindow />
       </div>
-      {!isNoviceGuidance && <NoviceGuidance setIsNoviceGuidance={setIsNoviceGuidance} />}
-      {isNoviceGuidance && <Outlet />}
+      <Outlet />
 
       {msgModalShow && (
         <MessageListModal

@@ -20,10 +20,10 @@
 }
 
 .ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-error {
-  border: 1px solid rgba(249, 207, 206, 1);
+  border: 1px solid color-mix(in srgb, var(--vd-color-danger, #cf4f45) 26%, transparent);
   border-radius: 20px;
-  background: #ffffff;
-  color: #33475b;
+  background: var(--app-surface-color, #fffdf8);
+  color: var(--app-text-color, #20231e);
   height: auto;
 
   span {
@@ -33,33 +33,33 @@
 }
 
 .ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-success {
-  border: 1px solid rgba(205, 232, 206, 1);
-  box-shadow: 0px 3px 18px 0px rgba(165, 165, 165, 0.22);
+  border: 1px solid color-mix(in srgb, var(--vd-color-success, #37b56d) 26%, transparent);
+  box-shadow: 0px 3px 18px 0px color-mix(in srgb, var(--vd-color-rail, #20231e) 12%, transparent);
   border-radius: 20px;
-  background: #ffffff;
-  color: #33475b;
+  background: var(--app-surface-color, #fffdf8);
+  color: var(--app-text-color, #20231e);
 }
 
 .ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-info {
-  background: #ffffff;
-  border: 1px solid rgba(182, 217, 251, 1);
-  box-shadow: 0px 3px 18px 0px rgba(165, 165, 165, 0.22);
+  background: var(--app-surface-color, #fffdf8);
+  border: 1px solid color-mix(in srgb, var(--vd-color-info, #2f6690) 26%, transparent);
+  box-shadow: 0px 3px 18px 0px color-mix(in srgb, var(--vd-color-rail, #20231e) 12%, transparent);
   border-radius: 20px;
-  color: #33475b;
+  color: var(--app-text-color, #20231e);
 }
 
 .ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-warning {
-  background: #ffffff;
-  border: 1px solid rgba(243, 222, 186, 1);
-  box-shadow: 0px 3px 18px 0px rgba(165, 165, 165, 0.22);
+  background: var(--app-surface-color, #fffdf8);
+  border: 1px solid color-mix(in srgb, var(--vd-color-warning, #d89f32) 28%, transparent);
+  box-shadow: 0px 3px 18px 0px color-mix(in srgb, var(--vd-color-rail, #20231e) 12%, transparent);
   border-radius: 20px;
-  color: #33475b;
+  color: var(--app-text-color, #20231e);
 }
 
 .ant-message .ant-message-notice-content .ant-message-custom-content.ant-message-loading {
-  background: #ffffff;
-  border: 1px solid rgba(243, 222, 186, 1);
-  box-shadow: 0px 3px 18px 0px rgba(165, 165, 165, 0.22);
+  background: var(--app-surface-color, #fffdf8);
+  border: 1px solid color-mix(in srgb, var(--vd-color-warning, #d89f32) 28%, transparent);
+  box-shadow: 0px 3px 18px 0px color-mix(in srgb, var(--vd-color-rail, #20231e) 12%, transparent);
   border-radius: 20px;
-  color: #33475b;
+  color: var(--app-text-color, #20231e);
 }

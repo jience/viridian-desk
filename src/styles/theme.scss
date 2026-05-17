@@ -3,9 +3,9 @@
 
   // antd小按钮控制
   --antd-sm-btn-bac-color: #eaf0f6; // antd小按钮背景色
-  --antd-sm-btn-color: #516f90; // antd小按钮文字颜色
+  --antd-sm-btn-color: #6c7268; // antd小按钮文字颜色
   --antd-sm-btn-bac-hover-color: #f5f8fa; // antd小按钮hover背景色
-  --antd-sm-btn-hover-color: #516f90; // antd小按钮hover文字颜色
+  --antd-sm-btn-hover-color: #20231e; // antd小按钮hover文字颜色
   --antd-sm-btn-border-color: #d9d9d9;
 
   // antd modal控制
@@ -21,27 +21,27 @@
   --pretty-table-box-shadow-color: rgba(62, 81, 100, 0.12);
   --pretty-table-bac-color: rgba(255, 255, 255, 0.8);
   --pretty-table-page-btn-bac-color: #eaf0f6;
-  --pretty-table-page-btn-border-color: #cbd6e2;
-  --pretty-table-page-btn-color: #cbd6e2;
-  --pretty-table-page-input-color: #33475b;
+  --pretty-table-page-btn-border-color: rgba(82, 72, 52, 0.16);
+  --pretty-table-page-btn-color: #6c7268;
+  --pretty-table-page-input-color: #20231e;
   --pretty-table-page-input-bac-color: #ffffff;
-  --pretty-table-page-input-border-color: #cbd6e2;
+  --pretty-table-page-input-border-color: rgba(82, 72, 52, 0.16);
 
   //SettingItem
   --setting-item-wrapper-box-shadow-color: rgba(62, 81, 100, 0.12);
   --setting-item-title-wrapper-bac-color: rgba(255, 255, 255, 0.8);
   --setting-item-title-wrapper-border-color: rgba(255, 255, 255, 1);
-  --setting-item-main-title-color: #516f90;
-  --setting-item-has-subtitle-or-content-color: #33475b;
-  --setting-item-main-title-before-bac-color: #4c8cca;
-  --setting-item-sub-title-color: #516f90;
+  --setting-item-main-title-color: #20231e;
+  --setting-item-has-subtitle-or-content-color: #20231e;
+  --setting-item-main-title-before-bac-color: #4d7c3f;
+  --setting-item-sub-title-color: #6c7268;
   --setting-item-content-wrapper-bac-color: rgba(255, 255, 255, 1);
   --setting-item-content-wrapper-shadow-color: rgba(62, 81, 100, 0.12);
 
   // infoTable
   --info-table-row-item-border-bottom-color: rgba(231, 236, 242, 1);
-  --info-table-key-color: #516f90;
-  --info-table-value-color: #33475b;
+  --info-table-key-color: #6c7268;
+  --info-table-value-color: #20231e;
 
   // themeSelect
   --theme-select-item-hover-box-shadow: rgba(51, 71, 91, 0.16);
@@ -52,29 +52,29 @@
 
   --login-page-bottom-btn-border-color: transparent;
 
-  --diagnosis-info-content-row-key-color: #516f90;
-  --diagnosis-info-content-row-val-color: #33475b;
+  --diagnosis-info-content-row-key-color: #6c7268;
+  --diagnosis-info-content-row-val-color: #20231e;
 
   // download-modal
   --download-modal-bac-img: url('@/assets/images/upgrade-bgc.png');
   --download-modal-body-padding: 16px 16px 0px 16px;
   --download-modal-footer-padding: 16px 16px 10px 16px;
-  --download-modal-update-msg-color: #33475b;
-  --download-modal-start-version-color: #33475b;
-  --download-modal-end-version-color: #516f90;
-  --download-modal-start-version-desc-color: #33475b;
-  --download-modal-end-version-desc-color: #516f90;
+  --download-modal-update-msg-color: #20231e;
+  --download-modal-start-version-color: #20231e;
+  --download-modal-end-version-color: #6c7268;
+  --download-modal-start-version-desc-color: #20231e;
+  --download-modal-end-version-desc-color: #6c7268;
 
   --application-item-shadow-color: rgba(62, 81, 100, 0.12);
   --application-item-bac-color: rgba(255, 255, 255, 0.45);
   --application-item-hover-bac-color: rgba(255, 255, 255, 0.7);
   --application-item-hover-border-color: rgba(255, 255, 255, 0.85);
-  --application-item-name-color: #33475b;
+  --application-item-name-color: #20231e;
 
-  --app-detail-modal-title-color: #33475b;
+  --app-detail-modal-title-color: #20231e;
   --app-detail-modal-detail-item-border-color: #dfe3eb;
-  --app-detail-modal-detail-item-color: #33475b;
-  --app-detail-modal-detail-item-icon-color: #7c98b6;
+  --app-detail-modal-detail-item-color: #20231e;
+  --app-detail-modal-detail-item-icon-color: #6c7268;
 
   --gateway-select-color: #6c7268;
 
@@ -87,15 +87,15 @@
   --confirm-success-color: #5ab55e; // 成功图标颜色
   --confirm-warning-color: #f0a332; // 警告图标颜色
   --confirm-error-color: #eb5f5c; // 警告图标颜色
-  --confirm-content-color: #33475b; // 内容部分文案默认颜色
+  --confirm-content-color: #20231e; // 内容部分文案默认颜色
   --confirm-content-tag-bg: #e6f1fd; // 内容部分涉及tag背景颜色
 
   //菜单按钮 主
-  --menu-icon-color: #516f90; //icon颜色
+  --menu-icon-color: #6c7268; //icon颜色
   --menu-icon-color-selected: #ffffff; //icon颜色选中
-  --menu-icon-color-disabled: #b0c1d4; //icon颜色禁用
+  --menu-icon-color-disabled: #a9a99d; //icon颜色禁用
   --menu-btn-hover: #e7ebf3; //按钮 hover 背景
-  --menu-btn-selected-shadow: rgba(36, 145, 255, 0.4); //按钮 hover 背景
+  --menu-btn-selected-shadow: rgba(77, 124, 63, 0.34); //按钮 hover 背景
   //菜单按钮 次
   --downMenu-btn-default: #ffffff; //按钮背景
   //菜单 设置
@@ -105,49 +105,49 @@
   //桌面 列表
   --desk-card-share-bg: linear-gradient(225deg, #d194de 0%, #4665ea 100%);
   --desk-card-restore-bg: linear-gradient(45deg, #484aca 0%, #6eadf7 100%);
-  --desk-card-exclusive-bg: linear-gradient(225deg, #60c8ff 0%, #2491ff 100%);
+  --desk-card-exclusive-bg: linear-gradient(225deg, #6ea476 0%, #4d7c3f 100%);
   --desk-card-disabled-bg: #eaf0f6;
-  --desk-card-disabled-title-color: #33475b;
+  --desk-card-disabled-title-color: #20231e;
   --desk-card-desk-pool-bg: rgba(255, 255, 255, 0.45);
   --desk-card-operate-open-color: #fff;
-  --desk-card-operate-close-color: #516f90;
+  --desk-card-operate-close-color: #6c7268;
   --desk-card-operate-open-hover-bg: rgba(255, 255, 255, 0.2);
-  --desk-card-desk-pool-color: #b0c1d4;
+  --desk-card-desk-pool-color: #a9a99d;
   //桌面 详情
-  --desk-detail-bg: linear-gradient(225deg, #60c8ff 0%, #2491ff 100%);
+  --desk-detail-bg: linear-gradient(225deg, #6ea476 0%, #4d7c3f 100%);
   --desk-detail-snap-bg: #ffffff;
   --desk-detail-snap-bd: rgba(62, 81, 100, 0.12);
-  --desk-detail-snap-title: #33475b;
-  --desk-detail-snap-sub-title: #7c98b6;
+  --desk-detail-snap-title: #20231e;
+  --desk-detail-snap-sub-title: #6c7268;
   --desk-detail-snap-card-bg: #ffffff;
   --desk-detail-snap-card-bg-disabled: #e7ebf3;
   --desk-detail-snap-btn-content-disabled: #828486;
-  --desk-detail-snap-card-bd: #7c98b6;
+  --desk-detail-snap-card-bd: #6c7268;
   --desk-detail-snap-btn-bd: rgba(203, 214, 226, 1);
-  --desk-detail-snap-btn-content: #2491ff;
+  --desk-detail-snap-btn-content: #4d7c3f;
 
   // 设置页 顶部页签
-  --config-tab-default: #7c98b6; // 页签字体颜色
+  --config-tab-default: #6c7268; // 页签字体颜色
 
   // 设置页 卡片组件
-  --config-card-title-default: #33475b; // 设置页卡片标题字体颜色
-  --config-card-sub-title-color: #7c98b6; // 设置页卡片副标题颜色
-  --config-card-content-color: #516f90;
+  --config-card-title-default: #20231e; // 设置页卡片标题字体颜色
+  --config-card-sub-title-color: #6c7268; // 设置页卡片副标题颜色
+  --config-card-content-color: #6c7268;
   --config-card-background-default: rgba(255, 255, 255, 0.8); // 卡片组件的背景色
   --config-card-divider-default: #e7ebf3; // 分割线颜色
   --config-card-shadow-default: rgba(62, 81, 100, 0.12); // 卡片阴影色
   --config-card-border-default: rgba(255, 255, 255, 1); // 卡片边框线
-  --config-card-bullet-default: #4c8cca; // 卡片项目符号颜色
+  --config-card-bullet-default: #4d7c3f; // 卡片项目符号颜色
   --config-card-icon-default: #506e91; // 卡片右侧插槽icon颜色
   --config-card-icon-success: #5ab55e; // 卡片icon成功色
   --config-card-icon-warning: #f0a332; // 卡片icon异常色
   // 设置页 表单弹窗标题色
-  --config-formModel-title-default: #516f90; // 弹窗标题色
+  --config-formModel-title-default: #20231e; // 弹窗标题色
   --config-formModel-addonAfter-back: #eaf0f6;
 
   // 设置页 卡片 infoTable
   --config-infoTable-background-default: #f5f8fa;
-  --config-infoTable-color-default: #516f90;
+  --config-infoTable-color-default: #6c7268;
 
   // footer 操作按钮
   --footer-button-bg: rgba(238, 232, 220, 0.58); // 操作按钮高亮背景色
@@ -156,39 +156,39 @@
   --footer-button-color1: #6c7268; // 操作按钮 & 右侧网关文案 default 颜色
 
   // login
-  --login-text-1: #7c98b6; // 登录方式文案默认色
-  --login-text-2: #516f90; // 登录方式文案高亮色
+  --login-text-1: #6c7268; // 登录方式文案默认色
+  --login-text-2: #20231e; // 登录方式文案高亮色
   --login-bg-1: #fff9; // 登录方式背景高亮色
-  --login-textBtn-color: #516f90; // 登录页text按钮文字颜色
-  --login-textBtn-hover-color: #4c8cca; // 登录页text按钮文字颜色
+  --login-textBtn-color: #6c7268; // 登录页text按钮文字颜色
+  --login-textBtn-hover-color: #4d7c3f; // 登录页text按钮文字颜色
   --login-textBtn-disable-color: #ada3a3; // 登录页text按钮文字颜色
 
   // approval
-  --approval-add-hover-bg: #64affa; // 新增流程按钮hover
+  --approval-add-hover-bg: rgba(77, 124, 63, 0.14); // 新增流程按钮hover
 
   // list-container
   --list-container-bg: rgba(255, 255, 255, 0.8);
   --list-container-bg-hover: rgba(255, 255, 255, 0.7);
   --list-container-bd: rgba(255, 255, 255, 1);
-  --list-content-color: #33475b;
+  --list-content-color: #20231e;
 
   // selector
   --selector-container-bg: rgba(255, 253, 248, 0.82);
   --selector-container-color: #20231e;
 
   --menu-item-text-color: #20231e;
-  --menu-item-icon-color: #7c98b6;
+  --menu-item-icon-color: #6c7268;
 }
 
 :root.dark {
   --app-layout-bg-image: url('@/assets/images/app_layout_bg_dark.png');
 
   // antd小按钮控制
-  --antd-sm-btn-bac-color: #696d9d; // antd小按钮背景色
-  --antd-sm-btn-color: #fff; // antd小按钮文字颜色
-  --antd-sm-btn-bac-hover-color: #696d9d; // antd小按钮hover背景色
-  --antd-sm-btn-hover-color: #fff; // antd小按钮hover文字颜色
-  --antd-sm-btn-border-color: rgba(144, 148, 185, 1);
+  --antd-sm-btn-bac-color: #242b27; // antd小按钮背景色
+  --antd-sm-btn-color: #8f9c94; // antd小按钮文字颜色
+  --antd-sm-btn-bac-hover-color: #2b332e; // antd小按钮hover背景色
+  --antd-sm-btn-hover-color: #eef5ef; // antd小按钮hover文字颜色
+  --antd-sm-btn-border-color: rgba(209, 255, 229, 0.12);
 
   // antd modal控制
   --ant-modal-header-border-bottom-color: rgba(209, 255, 229, 0.12);
@@ -198,30 +198,30 @@
   --ant-modal-body-bac-color: #151b19;
   --ant-modal-content-color: #eef5ef;
 
-  --ant-table-thead-before-bac-color: #7075a2;
+  --ant-table-thead-before-bac-color: rgba(209, 255, 229, 0.12);
 
   --pretty-table-box-shadow-color: rgba(0, 0, 0, 0.15);
-  --pretty-table-bac-color: rgba(105, 109, 157, 0.6);
-  --pretty-table-page-btn-bac-color: #696d9d;
-  --pretty-table-page-btn-border-color: #9094b9;
+  --pretty-table-bac-color: rgba(21, 27, 25, 0.78);
+  --pretty-table-page-btn-bac-color: #242b27;
+  --pretty-table-page-btn-border-color: rgba(209, 255, 229, 0.12);
   --pretty-table-page-btn-color: #dfe3eb;
   --pretty-table-page-input-color: #fff;
-  --pretty-table-page-input-bac-color: rgba(105, 109, 157, 0.2);
-  --pretty-table-page-input-border-color: #9094b9;
+  --pretty-table-page-input-bac-color: rgba(255, 255, 255, 0.045);
+  --pretty-table-page-input-border-color: rgba(209, 255, 229, 0.12);
 
   //SettingItem
   --setting-item-wrapper-box-shadow-color: rgba(0, 0, 0, 0.15);
-  --setting-item-title-wrapper-bac-color: rgba(105, 109, 157, 0.6);
-  --setting-item-title-wrapper-border-color: rgba(105, 109, 157, 1);
+  --setting-item-title-wrapper-bac-color: rgba(21, 27, 25, 0.78);
+  --setting-item-title-wrapper-border-color: rgba(209, 255, 229, 0.12);
   --setting-item-main-title-color: #fff;
   --setting-item-has-subtitle-or-content-color: #fff;
-  --setting-item-main-title-before-bac-color: #2491ff;
-  --setting-item-sub-title-color: #b0c1d4; // 设置页卡片副标题颜色
-  --setting-item-content-wrapper-bac-color: #696d9d;
+  --setting-item-main-title-before-bac-color: #8ef2bd;
+  --setting-item-sub-title-color: #8f9c94; // 设置页卡片副标题颜色
+  --setting-item-content-wrapper-bac-color: #202925;
   --setting-item-content-wrapper-shadow-color: rgba(0, 0, 0, 0.15);
 
   // infoTable
-  --info-table-row-item-border-bottom-color: rgba(144, 148, 185, 1);
+  --info-table-row-item-border-bottom-color: rgba(209, 255, 229, 0.12);
   --info-table-key-color: #fff;
   --info-table-value-color: #dfe3eb;
 
@@ -243,18 +243,18 @@
   --download-modal-footer-padding: 24px 24px 16px 24px;
   --download-modal-update-msg-color: #dfe3eb;
   --download-modal-start-version-color: #dfe3eb;
-  --download-modal-end-version-color: #2491ff;
+  --download-modal-end-version-color: #8ef2bd;
   --download-modal-start-version-desc-color: #dfe3eb;
-  --download-modal-end-version-desc-color: #2491ff;
+  --download-modal-end-version-desc-color: #8ef2bd;
 
   --application-item-shadow-color: rgba(0, 0, 0, 0.15);
-  --application-item-bac-color: rgba(105, 109, 157, 0.4);
-  --application-item-hover-bac-color: rgba(105, 109, 157, 0.7);
-  --application-item-hover-border-color: rgba(105, 109, 157, 0.85);
+  --application-item-bac-color: rgba(21, 27, 25, 0.62);
+  --application-item-hover-bac-color: rgba(32, 41, 37, 0.8);
+  --application-item-hover-border-color: rgba(142, 242, 189, 0.22);
   --application-item-name-color: #fff;
 
   --app-detail-modal-title-color: #fff;
-  --app-detail-modal-detail-item-border-color: #7075a2;
+  --app-detail-modal-detail-item-border-color: rgba(209, 255, 229, 0.12);
   --app-detail-modal-detail-item-color: #fff;
   --app-detail-modal-detail-item-icon-color: #fff;
 
@@ -267,17 +267,17 @@
 
   // confirm modal
   --confirm-warning-color: #f0a332; // 警告图标颜色
-  --confirm-content-color: #33475b; // 内容部分文案默认颜色
+  --confirm-content-color: #eef5ef; // 内容部分文案默认颜色
   --confirm-content-tag-bg: #e6f1fd; // 内容部分涉及tag背景颜色
 
   //菜单按钮 主
   --menu-icon-color: #dfe3eb; //icon颜色
   --menu-icon-color-selected: #ffffff; //icon颜色选中
-  --menu-icon-color-disabled: #b0c1d4; //icon颜色禁用
-  --menu-btn-hover: rgba(36, 145, 255, 0.5); //按钮 hover 背景
-  --menu-btn-selected-shadow: rgba(36, 145, 255, 0.4); //按钮 hover 背景
+  --menu-icon-color-disabled: #59635c; //icon颜色禁用
+  --menu-btn-hover: rgba(142, 242, 189, 0.12); //按钮 hover 背景
+  --menu-btn-selected-shadow: rgba(142, 242, 189, 0.34); //按钮 hover 背景
   //菜单按钮 次
-  --downMenu-btn-default: #696d9d; //按钮背景
+  --downMenu-btn-default: #242b27; //按钮背景
   //菜单 设置
   --menu-setting-hover: rgba(142, 242, 189, 0.12);
   --menu-slider-bg: rgba(255, 255, 255, 0.045);
@@ -285,48 +285,48 @@
   //桌面 列表
   --desk-card-share-bg: linear-gradient(225deg, #d194de 0%, #4665ea 100%);
   --desk-card-restore-bg: linear-gradient(45deg, #484aca 0%, #6eadf7 100%);
-  --desk-card-exclusive-bg: linear-gradient(225deg, #60c8ff 0%, #2491ff 100%);
+  --desk-card-exclusive-bg: linear-gradient(225deg, #3d7c5c 0%, #8ef2bd 100%);
   --desk-card-disabled-bg: #eaf0f6;
-  --desk-card-disabled-title-color: #33475b;
+  --desk-card-disabled-title-color: #8f9c94;
   --desk-card-desk-pool-bg: rgba(255, 255, 255, 0.45);
   --desk-card-operate-open-color: #fff;
-  --desk-card-operate-close-color: #516f90;
+  --desk-card-operate-close-color: #8f9c94;
   --desk-card-operate-open-hover-bg: rgba(255, 255, 255, 0.2);
-  --desk-card-desk-pool-color: #b0c1d4;
+  --desk-card-desk-pool-color: #59635c;
   //桌面 详情;
-  --desk-detail-bg: linear-gradient(225deg, #60c8ff 0%, #2491ff 100%);
-  --desk-detail-snap-bg: rgba(105, 109, 157, 0.6);
-  --desk-detail-snap-bd: rgba(105, 109, 157, 1);
+  --desk-detail-bg: linear-gradient(225deg, #3d7c5c 0%, #8ef2bd 100%);
+  --desk-detail-snap-bg: rgba(21, 27, 25, 0.78);
+  --desk-detail-snap-bd: rgba(209, 255, 229, 0.12);
   --desk-detail-snap-title: #ffffff;
   --desk-detail-snap-sub-title: #dfe3eb;
-  --desk-detail-snap-card-bg: #696d9d;
+  --desk-detail-snap-card-bg: #202925;
   --desk-detail-snap-card-bg-disabled: #4f5277;
   --desk-detail-snap-btn-content-disabled: #c9cbcf;
   --desk-detail-snap-card-bd: rgba(125, 128, 170, 1);
-  --desk-detail-snap-btn-bd: rgba(144, 148, 185, 1);
+  --desk-detail-snap-btn-bd: rgba(209, 255, 229, 0.12);
   --desk-detail-snap-btn-content: #e7ebf3;
 
   // 设置页 顶部页签
-  --config-tab-default: #7c98b6; // 页签字体颜色
+  --config-tab-default: #8f9c94; // 页签字体颜色
 
   // 设置页 卡片组件
   --config-card-title-default: #ffffff; // 设置页卡片标题字体颜色
   --config-card-sub-title-color: #dfe3eb; // 设置页卡片副标题颜色
   --config-card-content-color: #ffffff; // 设置页卡片内容字体颜色
-  --config-card-background-default: rgba(105, 109, 157, 0.6); // 卡片组件的背景色
+  --config-card-background-default: rgba(21, 27, 25, 0.78); // 卡片组件的背景色
   --config-card-divider-default: #e7ebf3; // 分割线颜色
   --config-card-shadow-default: rgba(62, 81, 100, 0.12); // 卡片阴影色
   --config-card-border-default: rgba(255, 255, 255, 1); // 卡片边框线
-  --config-card-bullet-default: #4c8cca; // 卡片项目符号颜色
+  --config-card-bullet-default: #8ef2bd; // 卡片项目符号颜色
   --config-card-icon-default: #506e91; // 卡片右侧插槽icon颜色
   --config-card-icon-success: #5ab55e; // 卡片icon成功色
   --config-card-icon-warning: #f0a332; // 卡片icon异常色
   // 设置页 表单弹窗标题色
-  --config-formModel-title-default: #516f90; // 弹窗标题色
+  --config-formModel-title-default: #eef5ef; // 弹窗标题色
   --config-formModel-addonAfter-back: #eaf0f6;
 
   // 设置页 卡片 infoTable
-  --config-infoTable-background-default: rgba(105, 109, 157, 0.6);
+  --config-infoTable-background-default: rgba(21, 27, 25, 0.78);
   --config-infoTable-color-default: #ffffff;
 
   // footer 操作按钮
@@ -338,18 +338,18 @@
   // login
   --login-text-1: #dfe3eb; // 登录方式文案默认色
   --login-text-2: #ffffff; // 登录方式文案高亮色
-  --login-bg-1: rgba(105, 109, 157, 0.6); // 登录方式背景高亮色
+  --login-bg-1: rgba(142, 242, 189, 0.12); // 登录方式背景高亮色
   --login-textBtn-color: #dfe3eb; // 登录页text按钮文字颜色
   --login-textBtn-hover-color: #ffffff; // 登录页text按钮文字颜色
   --login-textBtn-disable-color: #ada3a3; // 登录页text按钮文字颜色
 
   // approval
-  --approval-add-hover-bg: #64affa; // 新增流程按钮hover
+  --approval-add-hover-bg: rgba(142, 242, 189, 0.14); // 新增流程按钮hover
 
   // list-container
-  --list-container-bg: rgba(105, 109, 157, 0.6);
-  --list-container-bg-hover: rgba(105, 109, 157, 0.8);
-  --list-container-bd: rgba(105, 109, 157, 0);
+  --list-container-bg: rgba(21, 27, 25, 0.78);
+  --list-container-bg-hover: rgba(32, 41, 37, 0.88);
+  --list-container-bd: rgba(209, 255, 229, 0.08);
   --list-content-color: #ffffff;
 
   // selector

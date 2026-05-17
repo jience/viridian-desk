@@ -3,10 +3,10 @@
   .ant-pagination-item-active {
     height: 24px;
     width: 24px;
-    border: 1px solid #b6d9fb;
-    background-color: #e6f1fd;
+    border: 1px solid color-mix(in srgb, var(--primary-color) 30%, transparent);
+    background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
     a {
-      color: #4c8cca;
+      color: var(--primary-color);
       font-weight: 500;
     }
   }
