@@ -133,12 +133,11 @@ export const SendMsgModal: FC<SendMsgModalProps> = (props) => {
     >
       <Form layout="vertical" form={form} className="send-msg-form">
         <p className="send-title"></p>
-        <div style={{ display: 'flex' }}>
+        <div className="send-msg-code-row">
           <Form.Item
             name="verifyCode"
             className="send-msg-form-item"
             rules={formRules['verifyCode']}
-            style={{ flex: 1 }}
           >
             <Input placeholder={t('login_page.sms_modal.placeholder')} />
           </Form.Item>

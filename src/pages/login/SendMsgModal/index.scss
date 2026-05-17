@@ -52,8 +52,13 @@
     margin-bottom: 0;
   }
 
-  .send-msg-form > div {
+  .send-msg-code-row {
+    display: flex;
     gap: 8px;
+  }
+
+  .send-msg-form-item {
+    flex: 1;
   }
 
   .ant-input,
