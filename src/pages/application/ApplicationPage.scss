@@ -10,7 +10,8 @@
   --application-page-surface-subtle: rgba(246, 250, 247, 0.88);
   --application-page-toolbar-bg: rgba(255, 255, 255, 0.9);
   --application-page-toolbar-border: rgba(64, 93, 77, 0.18);
-  --application-page-toolbar-shadow: 0 16px 38px rgba(31, 57, 45, 0.1);
+  --application-page-toolbar-shadow: 0 16px 38px
+    color-mix(in srgb, var(--application-page-accent-strong) 10%, transparent);
   --application-page-filter-bg: rgba(255, 255, 255, 0.72);
   --application-page-filter-border: rgba(64, 93, 77, 0.18);
   --application-page-filter-hover-bg: rgba(22, 111, 72, 0.08);
@@ -21,16 +22,19 @@
     linear-gradient(135deg, rgba(22, 111, 72, 0.08), transparent 42%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 247, 243, 0.95));
   --application-page-card-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.76), 0 18px 42px rgba(31, 57, 45, 0.11);
+    inset 0 1px 0 rgba(255, 255, 255, 0.76),
+    0 18px 42px color-mix(in srgb, var(--application-page-accent-strong) 11%, transparent);
   --application-page-card-hover-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.86), 0 24px 52px rgba(31, 57, 45, 0.15);
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 24px 52px color-mix(in srgb, var(--application-page-accent-strong) 15%, transparent);
   --application-page-card-highlight-border: rgba(255, 255, 255, 0.32);
   --application-page-card-disabled-opacity: 0.68;
   --application-page-icon-bg:
     linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(236, 244, 239, 0.58)),
     radial-gradient(circle at 30% 20%, rgba(22, 111, 72, 0.16), transparent 42%);
   --application-page-icon-border: rgba(64, 93, 77, 0.16);
-  --application-page-icon-shadow: 0 14px 28px rgba(31, 57, 45, 0.12);
+  --application-page-icon-shadow: 0 14px 28px
+    color-mix(in srgb, var(--application-page-accent-strong) 12%, transparent);
   --application-page-meta-bg: rgba(22, 111, 72, 0.06);
   --application-page-meta-border: rgba(64, 93, 77, 0.18);
   --application-page-meta-text: #506258;
@@ -77,7 +81,7 @@
   --application-page-surface-subtle: rgba(255, 255, 255, 0.04);
   --application-page-toolbar-bg: rgba(10, 14, 13, 0.58);
   --application-page-toolbar-border: rgba(209, 255, 229, 0.12);
-  --application-page-toolbar-shadow: 0 18px 44px rgba(0, 0, 0, 0.2);
+  --application-page-toolbar-shadow: 0 18px 44px color-mix(in srgb, #000000 20%, transparent);
   --application-page-filter-bg: rgba(255, 255, 255, 0.04);
   --application-page-filter-border: rgba(209, 255, 229, 0.1);
   --application-page-filter-hover-bg: rgba(142, 242, 189, 0.08);
@@ -88,16 +92,18 @@
     linear-gradient(135deg, rgba(44, 65, 73, 0.18), transparent 42%),
     linear-gradient(180deg, rgba(20, 35, 45, 0.94), rgba(11, 22, 30, 0.95));
   --application-page-card-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 20px 48px rgba(0, 0, 0, 0.26);
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 20px 48px color-mix(in srgb, #000000 26%, transparent);
   --application-page-card-hover-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 26px 58px rgba(0, 0, 0, 0.34);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 26px 58px color-mix(in srgb, #000000 34%, transparent);
   --application-page-card-highlight-border: rgba(255, 255, 255, 0.08);
   --application-page-card-disabled-opacity: 0.62;
   --application-page-icon-bg:
     linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025)),
     radial-gradient(circle at 30% 20%, rgba(142, 242, 189, 0.16), transparent 42%);
   --application-page-icon-border: rgba(209, 255, 229, 0.12);
-  --application-page-icon-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+  --application-page-icon-shadow: 0 16px 34px color-mix(in srgb, #000000 28%, transparent);
   --application-page-meta-bg: transparent;
   --application-page-meta-border: rgba(148, 163, 184, 0.16);
   --application-page-meta-text: #a9bacb;
