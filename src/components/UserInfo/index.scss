@@ -54,14 +54,14 @@
   }
 
   strong {
-    color: var(--app-text-color, #26333f);
+    color: var(--app-text-color, #20231e);
     font-size: 16px;
     line-height: 1.35;
   }
 
   span {
     margin-top: 4px;
-    color: var(--app-muted-color, #7c8a9a);
+    color: var(--app-muted-color, #6f7f90);
     font-size: 13px;
   }
 }
@@ -90,7 +90,7 @@
   dd {
     margin: 0;
     overflow: hidden;
-    color: var(--app-text-color, #26333f);
+    color: var(--app-text-color, #20231e);
     font-size: 13px;
     font-weight: 550;
     text-overflow: ellipsis;

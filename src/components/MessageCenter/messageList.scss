@@ -73,7 +73,7 @@
   font-size: 12px;
 
   strong {
-    color: var(--app-text-color, #26333f);
+    color: var(--app-text-color, #20231e);
     font-size: 20px;
     font-variant-numeric: tabular-nums;
     line-height: 1;
@@ -87,7 +87,7 @@
 .message-notice-modal__text {
   display: block;
   overflow: hidden;
-  color: var(--app-text-color, #26333f);
+  color: var(--app-text-color, #20231e);
   text-overflow: ellipsis;
   white-space: nowrap;
 }

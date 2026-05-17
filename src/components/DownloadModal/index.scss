@@ -32,7 +32,7 @@
     justify-content: center;
     .icon {
       font-size: 40px;
-      color: #5ab55e;
+      color: var(--vd-color-success, #37b56d);
       margin-bottom: 12px;
     }
     .info {
@@ -55,7 +55,7 @@
     justify-content: center;
     .icon {
       font-size: 40px;
-      color: red;
+      color: var(--vd-color-danger, #cf4f45);
       margin-bottom: 12px;
     }
     .info {

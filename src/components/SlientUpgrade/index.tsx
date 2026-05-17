@@ -24,8 +24,8 @@ const SlientUpgrade = (props: any) => {
               status="active"
               showInfo={false}
               strokeColor={{
-                '0%': '#8EF2BD',
-                '100%': '#4ADE80',
+                '0%': 'var(--vd-color-accent, #8ef2bd)',
+                '100%': 'var(--vd-color-success, #37b56d)',
               }}
               percent={silentData?.progress.toFixed(2) || ''}
             ></Progress>

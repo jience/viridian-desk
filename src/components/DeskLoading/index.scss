@@ -1,5 +1,4 @@
 .desk-loading-background-mask {
-  // background-color: transparent;
   background-image: url('@/assets/images/app_layout_bg.png');
   background-size: cover;
   background-repeat: no-repeat;
@@ -28,7 +27,10 @@
 .desk-loading-mid {
   width: 120px;
   height: 120px;
-  // background: rgba(51,71,91,0.60);
+  border: 1px solid var(--vd-color-border, rgba(209, 255, 229, 0.12));
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+    var(--vd-color-panel, #1c211f);
   border-radius: 12px;
   position: absolute;
   top: 50%;
@@ -38,9 +40,10 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  // box-shadow: 0 1px 5px 0 rgba(0,0,0,0.20);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.36);
+
   .image-container {
-    background: #fff;
+    background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
     width: 100px;
     height: 100px;
     display: flex;
@@ -57,7 +60,7 @@
     display: block;
     margin-top: 16px;
     font-size: 14px;
-    color: var(--list-content-color);
+    color: var(--vd-color-text, #e9eee8);
     font-weight: 600;
   }
 }
