@@ -121,7 +121,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      color: #ffffff;
+      color: var(--vd-color-on-rail-strong, #eaf8ef);
       font-size: 28px;
       transform: translate(-50%, -55%);
     }
@@ -137,7 +137,7 @@
       width: 17px;
       height: 17px;
       border-radius: 999px;
-      background: #ffffff;
+      background: var(--detail-surface-strong);
       text-align: center;
       line-height: 17px;
 
@@ -236,7 +236,7 @@
   --detail-success: #48b884;
 
   .desk-detail-page__icon-button:hover {
-    color: #ffffff;
+    color: var(--vd-color-on-rail-strong, #eaf8ef);
   }
 }
 

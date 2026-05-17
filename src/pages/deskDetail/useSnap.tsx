@@ -60,7 +60,7 @@ const useSnap = ({ id, formatMessage, desk }: any) => {
           <i
             className="iconfont icon-malfunction1"
             style={{
-              color: '#F0A332',
+              color: 'var(--vd-color-warning, #d89f32)',
               marginRight: '5px',
             }}
           />
@@ -95,7 +95,7 @@ const useSnap = ({ id, formatMessage, desk }: any) => {
           <i
             className="iconfont icon-malfunction1"
             style={{
-              color: '#F0A332',
+              color: 'var(--vd-color-warning, #d89f32)',
               marginRight: '5px',
             }}
           />
