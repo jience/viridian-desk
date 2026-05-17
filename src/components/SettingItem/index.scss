@@ -1,10 +1,16 @@
 .setting-item-wrapper {
   width: 100%;
-  box-shadow: 0px 0px 6px 0px var(--setting-item-wrapper-box-shadow-color);
+  border-radius: 12px;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--vd-color-rail, #20231e) 10%, transparent);
+
   .title-wrapper {
-    background: var(--setting-item-title-wrapper-bac-color);
-    border: 1px solid var(--setting-item-title-wrapper-border-color);
-    border-radius: 4px;
+    background: color-mix(
+      in srgb,
+      var(--setting-item-title-wrapper-bac-color, var(--vd-color-panel)) 88%,
+      transparent
+    );
+    border: 1px solid var(--setting-item-title-wrapper-border-color, var(--vd-color-border));
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -13,14 +19,15 @@
     &.sticky {
       position: sticky;
       top: 0px;
-      z-index: 1;
+      z-index: 2;
+      backdrop-filter: blur(14px);
     }
     &.has-subtitle-or-content {
       padding: 12px 18px 12px 0px;
       height: auto;
     }
     &.has-children {
-      border-radius: 4px 4px 0px 0px;
+      border-radius: 12px 12px 0px 0px;
       border-bottom: none;
     }
     .left-content {
@@ -36,7 +43,7 @@
         &.has-subtitle-or-content {
           font-size: 16px;
           color: var(--setting-item-has-subtitle-or-content-color);
-          font-weight: 700;
+          font-weight: 650;
         }
         &::before {
           content: '';
@@ -67,10 +74,14 @@
     }
   }
   .content-wrapper {
-    box-shadow: 0px 0px 6px 0px var(--setting-item-content-wrapper-shadow-color);
-    background: var(--config-infoTable-background-default);
-    border: 1px solid var(--setting-item-content-wrapper-bac-color);
-    border-radius: 0px 0px 4px 4px;
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--vd-color-panel, #fffdf8) 46%, transparent);
+    background: color-mix(
+      in srgb,
+      var(--config-infoTable-background-default, var(--vd-color-panel-subtle)) 86%,
+      transparent
+    );
+    border: 1px solid var(--setting-item-content-wrapper-bac-color, var(--vd-color-border));
+    border-radius: 0px 0px 12px 12px;
     position: relative;
   }
 }

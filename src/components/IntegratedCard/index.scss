@@ -125,7 +125,7 @@ $cardMarginRow: 16px;
                 font-family: SourceHanSansSC-Regular;
                 font-size: 12px;
                 font-weight: 400;
-                border-radius: 3px;
+                border-radius: 8px;
               }
             }
           }
@@ -171,7 +171,7 @@ $cardMarginRow: 16px;
 
         .ant-btn {
           border: 1px solid var(--app-border-color);
-          border-radius: 3px;
+          border-radius: 8px;
           padding: 0px 6px;
           margin: 0 0 0 6px;
           background-color: var(--config-card-background-default);
@@ -243,8 +243,8 @@ $cardMarginRow: 16px;
 
   background-color: var(--config-card-background-default);
   border: 1px solid var(--card-borderColor-default);
-  box-shadow: 0px 0px 5px 0px var(--config-card-shadow-default);
-  border-radius: 4px;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--vd-color-rail, #20231e) 9%, transparent);
+  border-radius: 12px;
   transition: all 0.2s ease-in-out;
 
   @include Card;
@@ -263,7 +263,7 @@ $cardMarginRow: 16px;
       font-size: 12px;
       letter-spacing: 0;
       font-weight: 400;
-      border-radius: 3px;
+      border-radius: 8px;
       min-width: 64px;
       height: 28px;
       display: flex;
@@ -284,11 +284,13 @@ $cardMarginRow: 16px;
   }
 
   &:hover {
-    -webkit-box-shadow: 0px 0px 5px 0px var(--primary-shadow-color);
-    box-shadow: 0px 0px 1px 1px var(--primary-shadow-color);
+    -webkit-box-shadow: 0 18px 42px
+      color-mix(in srgb, var(--config-card-bullet-default, var(--vd-color-accent)) 18%, transparent);
+    box-shadow: 0 18px 42px
+      color-mix(in srgb, var(--config-card-bullet-default, var(--vd-color-accent)) 18%, transparent);
     background-color: var(--config-card-background-default);
     border: 1px solid var(--card-borderColor-default);
-    border-radius: 4px;
+    border-radius: 12px;
   }
 }
 
@@ -304,8 +306,8 @@ $cardMarginRow: 16px;
 
   background-color: var(--config-card-background-default);
   border: 1px solid var(--card-borderColor-default);
-  box-shadow: 0px 0px 5px 0px var(--config-card-shadow-default);
-  border-radius: 4px;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--vd-color-rail, #20231e) 9%, transparent);
+  border-radius: 12px;
   transition: all 0.2s ease-in-out;
 
   @include Card;
@@ -324,7 +326,7 @@ $cardMarginRow: 16px;
       font-size: 12px;
       letter-spacing: 0;
       font-weight: 400;
-      border-radius: 3px;
+      border-radius: 8px;
       min-width: 64px;
       height: 28px;
       display: flex;
@@ -345,12 +347,14 @@ $cardMarginRow: 16px;
   }
 
   &:hover {
-    -webkit-box-shadow: 0px 0px 5px 0px var(--primary-shadow-color);
-    box-shadow: 0px 0px 1px 1px var(--primary-shadow-color);
+    -webkit-box-shadow: 0 18px 42px
+      color-mix(in srgb, var(--config-card-bullet-default, var(--vd-color-accent)) 18%, transparent);
+    box-shadow: 0 18px 42px
+      color-mix(in srgb, var(--config-card-bullet-default, var(--vd-color-accent)) 18%, transparent);
 
     background-color: var(--config-card-background-default);
     border: 1px solid var(--card-borderColor-default);
-    border-radius: 4px;
+    border-radius: 12px;
   }
 }
 
@@ -366,8 +370,8 @@ $cardMarginRow: 16px;
 
   background-color: var(--config-card-background-default);
   border: 1px solid var(--card-borderColor-default);
-  box-shadow: 0px 0px 5px 1px var(--config-card-shadow-default);
-  border-radius: 4px;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--vd-color-rail, #20231e) 9%, transparent);
+  border-radius: 12px;
   transition: all 0.2s ease-in-out;
 
   @include Card;
@@ -378,8 +382,8 @@ $cardMarginRow: 16px;
     &-main {
       .titleText {
         font-size: 18px;
-        font-weight: 700;
-        font-family: SourceHanSansSC-Bold;
+        font-weight: 650;
+        font-family: inherit;
       }
 
       .titleText-tag {
@@ -402,7 +406,7 @@ $cardMarginRow: 16px;
       font-size: 12px;
       letter-spacing: 0;
       font-weight: 400;
-      border-radius: 3px;
+      border-radius: 8px;
       background-color: var(--config-card-background-default);
       color: var(--config-card-content-color);
       display: flex;
@@ -427,11 +431,59 @@ $cardMarginRow: 16px;
   }
 
   &:hover {
-    -webkit-box-shadow: 0px 0px 5px 0px var(--primary-shadow-color);
-    box-shadow: 0px 0px 1px 1px var(--primary-shadow-color);
+    -webkit-box-shadow: 0 18px 42px
+      color-mix(in srgb, var(--config-card-bullet-default, var(--vd-color-accent)) 18%, transparent);
+    box-shadow: 0 18px 42px
+      color-mix(in srgb, var(--config-card-bullet-default, var(--vd-color-accent)) 18%, transparent);
 
     background-color: var(--config-card-background-default);
     border: 1px solid var(--card-borderColor-default);
-    border-radius: 4px;
+    border-radius: 12px;
+  }
+}
+
+:where(.integratedCard-normal-row, .integratedCard-normal, .integratedCard-overSize) {
+  border-color: var(--config-card-border-default, var(--vd-color-border));
+  border-radius: 12px;
+  background: color-mix(
+    in srgb,
+    var(--config-card-background-default, var(--vd-color-panel)) 92%,
+    transparent
+  );
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--vd-color-rail, #20231e) 9%, transparent);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--config-card-bullet-default, var(--vd-color-accent)) 34%, transparent);
+    border-radius: 12px;
+    background: color-mix(
+      in srgb,
+      var(--config-card-background-default, var(--vd-color-panel)) 96%,
+      transparent
+    );
+    -webkit-box-shadow: 0 18px 42px
+      color-mix(in srgb, var(--config-card-bullet-default, var(--vd-color-accent)) 18%, transparent);
+    box-shadow: 0 18px 42px
+      color-mix(in srgb, var(--config-card-bullet-default, var(--vd-color-accent)) 18%, transparent);
+  }
+
+  .integratedCard-title-right {
+    :where(.ant-btn, .special, .archer-btn) {
+      border-radius: 8px;
+    }
+  }
+}
+
+.integratedCard-overSize {
+  .integratedCard-title-left-main {
+    .titleText {
+      font-family: inherit;
+      font-weight: 650;
+    }
   }
 }
