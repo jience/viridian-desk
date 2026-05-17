@@ -1,3 +1,82 @@
 .add-self-Modal {
+  --app-modal-border: var(--app-border-color, rgba(61, 91, 78, 0.18));
+  --app-modal-surface: var(--app-surface-color, rgba(255, 253, 248, 0.92));
+  --app-modal-surface-subtle: color-mix(
+    in srgb,
+    var(--app-surface-subtle-color, #f5f8f6) 72%,
+    transparent
+  );
+  --app-modal-accent-soft: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, transparent);
+  --app-modal-accent-border: color-mix(
+    in srgb,
+    var(--vd-color-accent, #4d7c3f) 34%,
+    transparent
+  );
+  --app-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
+
   width: 500px !important;
+
+  .ant-modal-content {
+    overflow: hidden;
+    border: 1px solid var(--app-modal-border);
+    border-radius: 10px;
+    background: var(--app-modal-surface);
+    box-shadow: var(--app-modal-shadow);
+    backdrop-filter: blur(16px);
+  }
+
+  .ant-modal-header,
+  .ant-modal-footer {
+    background: transparent;
+  }
+
+  .ant-modal-title {
+    color: var(--app-text-color, #20231e);
+    font-weight: 650;
+  }
+
+  .ant-form-item-label > label {
+    color: var(--app-muted-color, #6f7f90);
+    font-size: 13px;
+    font-weight: 550;
+  }
+
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-select-selector,
+  .ant-input-outlined {
+    border-color: var(--app-modal-border) !important;
+    border-radius: 7px !important;
+    color: var(--app-text-color, #20231e);
+    background: var(--app-modal-surface-subtle) !important;
+  }
+
+  .ant-input::placeholder,
+  .ant-select-selection-placeholder {
+    color: var(--app-muted-color, #6f7f90);
+  }
+
+  .ant-input:hover,
+  .ant-input:focus,
+  .ant-input-affix-wrapper:hover,
+  .ant-input-affix-wrapper-focused,
+  .ant-select-focused .ant-select-selector,
+  .ant-select-selector:focus,
+  .ant-select-selector:focus-within {
+    border-color: var(--app-modal-accent-border) !important;
+    box-shadow: 0 0 0 2px var(--app-modal-accent-soft) !important;
+  }
+
+  .ant-btn {
+    border-radius: 7px;
+    transition:
+      border-color 160ms ease,
+      color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
+
+    &:active {
+      transform: translateY(1px) scale(0.98);
+    }
+  }
 }

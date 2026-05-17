@@ -1,25 +1,83 @@
 .app-detail {
+  --app-detail-modal-border: var(--app-border-color, rgba(61, 91, 78, 0.18));
+  --app-detail-modal-surface: var(--app-surface-color, rgba(255, 253, 248, 0.92));
+  --app-detail-modal-surface-subtle: color-mix(
+    in srgb,
+    var(--app-surface-subtle-color, #f5f8f6) 72%,
+    transparent
+  );
+  --app-detail-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
+  --app-detail-modal-icon-bg: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, transparent);
+
   width: 400px !important;
+
+  .ant-modal-content {
+    overflow: hidden;
+    border: 1px solid var(--app-detail-modal-border);
+    border-radius: 10px;
+    background: var(--app-detail-modal-surface);
+    box-shadow: var(--app-detail-modal-shadow);
+    backdrop-filter: blur(16px);
+  }
+
   .ant-modal-header {
-    height: 88px;
+    min-height: 88px;
+    margin-bottom: 0;
+    padding: 18px 24px 14px;
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 12%, transparent),
+        transparent 58%
+      ),
+      transparent;
+
     .ant-modal-title {
+      display: flex;
+      align-items: center;
+      min-width: 0;
       font-size: 16px;
       color: var(--app-detail-modal-title-color);
       font-weight: 700;
       column-gap: 14px;
+
       &:before {
         display: none;
       }
+
+      .app-svg {
+        flex: 0 0 auto;
+        width: 58px;
+        height: 58px;
+        box-sizing: border-box;
+        padding: 4px;
+        border: 1px solid var(--app-detail-modal-border);
+        border-radius: 14px;
+        background: var(--app-detail-modal-icon-bg);
+      }
+
+      .title {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
+
   .ant-modal-body {
-    padding: 0px 24px;
+    padding: 0 24px 18px;
   }
+
   .detail-list {
+    margin: 0;
+    padding: 0;
+
     .detail-item {
       min-height: 48px;
-      padding: 12px 0px;
+      padding: 12px;
       border-bottom: 1px solid var(--app-detail-modal-detail-item-border-color);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       column-gap: 16px;
@@ -27,12 +85,26 @@
       font-size: 12px;
       color: var(--app-detail-modal-detail-item-color);
       font-weight: 400;
+
+      &:hover {
+        background: var(--app-detail-modal-surface-subtle);
+      }
+
       &:last-child {
         border-bottom: none;
       }
+
       .iconfont {
+        flex: 0 0 auto;
         font-size: 16px;
         color: var(--app-detail-modal-detail-item-icon-color);
+      }
+
+      span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }

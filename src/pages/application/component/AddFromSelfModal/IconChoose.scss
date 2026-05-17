@@ -8,16 +8,21 @@
     width: 48px;
     height: 48px;
     border: 1px solid var(--app-border-color, rgba(61, 91, 78, 0.18));
-    border-radius: 4px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--app-surface-subtle-color, #f5f8f6) 68%, transparent);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    transition: all 0.3s;
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease,
+      transform 160ms ease;
 
     &:hover {
       border-color: var(--vd-color-accent, #8ef2bd);
+      transform: translateY(-1px);
     }
 
     &.active {
@@ -36,16 +41,25 @@
     width: 48px;
     height: 48px;
     border: 1px dashed var(--app-border-color, rgba(61, 91, 78, 0.18));
-    border-radius: 4px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--app-surface-subtle-color, #f5f8f6) 44%, transparent);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
 
     &:hover {
       border-color: var(--vd-color-accent, #8ef2bd);
       background-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 8%, transparent);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(1px) scale(0.98);
     }
 
     .iconModel-modal-icon {
