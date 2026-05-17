@@ -95,6 +95,43 @@
     }
   }
 }
+
+:root.dark,
+:root[data-ui-theme='dark'] {
+  .silent-update {
+    .ant-modal-container,
+    .ant-modal-content {
+      border: 1px solid var(--vd-color-border, rgba(209, 255, 229, 0.12));
+      background:
+        radial-gradient(
+          circle at 20% 15%,
+          color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 16%, transparent),
+          transparent 32%
+        ),
+        var(--vd-color-panel, #1c211f);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+    }
+
+    .ant-modal-body {
+      min-height: 180px;
+      background: transparent;
+      padding: 24px;
+    }
+
+    .upgrade-modal-content {
+      color: var(--vd-color-text, #e9eee8);
+    }
+
+    .upgrade-modal-content .content {
+      padding: 0 30px;
+    }
+
+    .ant-progress-bg {
+      box-shadow: 0 0 18px color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 26%, transparent);
+    }
+  }
+}
+
 @keyframes round {
   from {
     transform: rotate(0);

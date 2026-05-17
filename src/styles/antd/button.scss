@@ -51,6 +51,26 @@
 
 :root.dark,
 :root[data-ui-theme='dark'] {
+  .ant-btn-primary,
+  .ant-btn-color-primary.ant-btn-variant-solid {
+    border-color: var(--vd-color-accent, #8ef2bd);
+    background: var(--vd-color-accent, #8ef2bd);
+    color: #06120e;
+
+    &:hover,
+    &:focus-visible {
+      border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 88%, #ffffff);
+      background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 88%, #ffffff);
+      color: #06120e;
+    }
+
+    &:active {
+      border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 82%, #000000);
+      background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 82%, #000000);
+      color: #06120e;
+    }
+  }
+
   .ant-btn-default.ant-btn-variant-outlined {
     border-color: var(--vd-color-border, rgba(255, 255, 255, 0.08));
     background: var(--vd-color-panel-subtle, #242b27);

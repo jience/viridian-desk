@@ -174,3 +174,71 @@
     }
   }
 }
+
+:root.dark,
+:root[data-ui-theme='dark'] {
+  .download-update {
+    .ant-modal-container {
+      overflow: hidden;
+      border: 1px solid var(--vd-color-border, rgba(209, 255, 229, 0.12));
+      border-radius: 10px;
+      background:
+        radial-gradient(
+          circle at 16% 18%,
+          color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 18%, transparent),
+          transparent 34%
+        ),
+        linear-gradient(135deg, rgba(36, 43, 39, 0.98), rgba(18, 24, 21, 0.99));
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+    }
+
+    .ant-modal-body,
+    .ant-modal-footer {
+      background: transparent !important;
+    }
+
+    .download-ready-wrapper {
+      min-height: 230px;
+    }
+
+    .version-info-wrapper {
+      position: relative;
+    }
+
+    .version-info-wrapper::before {
+      content: '->';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      display: grid;
+      width: 46px;
+      height: 30px;
+      place-items: center;
+      border: 1px solid color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 28%, transparent);
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
+      color: var(--vd-color-accent, #8ef2bd);
+      font-weight: 700;
+      transform: translate(-50%, -50%);
+    }
+
+    .version-info-wrapper img {
+      visibility: hidden;
+    }
+
+    .update-msg {
+      color: var(--vd-color-text, #e9eee8);
+    }
+
+    .download-ready-wrapper,
+    .download-progress-wrapper,
+    .latest-version-wrapper,
+    .download-error-wrapper {
+      color: var(--vd-color-text, #e9eee8);
+    }
+
+    .ant-progress-bg {
+      box-shadow: 0 0 18px color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 26%, transparent);
+    }
+  }
+}

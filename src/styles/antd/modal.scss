@@ -1,6 +1,9 @@
 .ant-modal {
+  color: var(--ant-modal-content-color);
+
   .ant-modal-container {
     background: var(--ant-modal-body-bac-color);
+    color: var(--ant-modal-content-color);
   }
 
   .ant-modal-content {
@@ -56,6 +59,7 @@
     padding: 16px 16px 10px 16px;
     background-color: var(--ant-modal-body-bac-color);
     border-radius: 0 0 4px 4px;
+    color: var(--ant-modal-content-color);
   }
 }
 

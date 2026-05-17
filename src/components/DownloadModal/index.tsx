@@ -116,8 +116,8 @@ const DownloadModal: FC<DownloadModalProps> = (props) => {
             </div>
             <Progress
               strokeColor={{
-                '0%': '#24DAFF',
-                '100%': '#2491FF',
+                '0%': '#8EF2BD',
+                '100%': '#4ADE80',
               }}
               percent={downloadProgress}
               status={downloadProgress === 100 ? 'success' : 'active'}
