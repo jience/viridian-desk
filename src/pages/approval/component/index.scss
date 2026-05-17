@@ -19,7 +19,7 @@
   margin: 0px 5px 0;
   overflow: hidden;
   border: 1px solid var(--app-border-color, rgba(61, 91, 78, 0.18));
-  border-radius: 7px;
+  border-radius: 10px;
   color: var(--app-text-color, var(--confirm-content-color));
   background: color-mix(in srgb, var(--app-surface-subtle-color, #f4f8f6) 82%, transparent);
 
@@ -111,7 +111,7 @@
       align-items: center;
       justify-content: center;
 
-      border-radius: 3px;
+      border-radius: 7px;
       padding: 3px 8px;
       border: 1px solid color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 24%, transparent);
       background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
@@ -160,7 +160,7 @@
     font-size: 30px;
     border-width: 1px;
     border-style: dotted;
-    border-radius: 4px;
+    border-radius: 7px;
   }
 
   .watermark-success {

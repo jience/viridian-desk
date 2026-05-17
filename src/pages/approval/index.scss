@@ -35,10 +35,14 @@
   }
   .list-container {
     padding: 0 0 8px 0;
-    background: var(--list-container-bg);
+    background: color-mix(in srgb, var(--list-container-bg) 94%, transparent);
     border: 1px solid var(--list-container-bd);
     box-shadow: 0 14px 34px color-mix(in srgb, var(--vd-color-rail, #20231e) 10%, transparent);
-    border-radius: 4px;
+    border-radius: 12px;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease,
+      box-shadow 160ms ease;
 
     .archer-table {
       color: var(--list-content-color);
@@ -75,10 +79,11 @@
     }
 
     .approval-status {
-      border-radius: 3px;
+      border-radius: 999px;
       text-align: center;
       padding: 3px 8px;
       font-size: 12px;
+      font-weight: 650;
     }
 
     .archer-empty .archer-empty-description {
@@ -164,7 +169,7 @@
   line-height: 32px;
   color: var(--app-text-color, #20231e);
   font-size: 14px;
-  border-radius: 0;
+  border-radius: 7px;
 }
 
 .ult-ui-confirm {
@@ -206,7 +211,7 @@
       padding: 4px 8px;
       background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
       border: 1px solid color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 24%, transparent);
-      border-radius: 3px;
+      border-radius: 7px;
       color: var(--app-text-color, #20231e);
       margin-right: 16px;
       margin-bottom: 8px;

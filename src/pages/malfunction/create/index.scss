@@ -22,10 +22,10 @@
     }
 
     .title {
-      font-family: SourceHanSansSC-Bold;
+      font-family: inherit;
       font-size: 16px;
       color: var(--config-formModel-title-default);
-      font-weight: 700;
+      font-weight: 650;
       margin: 0 4px;
     }
   }
@@ -38,7 +38,7 @@
     > .antd-select-selector {
       background: var(--config-formModel-addonAfter-back);
       border: 1px solid var(--app-border-color);
-      border-end-end-radius: 3px;
+      border-end-end-radius: 7px;
 
       font-family: SourceHanSansSC-Regular;
       font-size: 12px;
