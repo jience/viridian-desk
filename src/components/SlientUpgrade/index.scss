@@ -134,7 +134,10 @@
       ),
       var(--vd-color-panel, #1c211f);
     --silent-update-body-bg: transparent;
-    --silent-update-shadow: var(--vd-shadow-window, 0 30px 90px rgba(0, 0, 0, 0.42));
+    --silent-update-shadow: var(
+      --vd-shadow-window,
+      0 30px 90px color-mix(in srgb, var(--vd-color-rail, #050705) 42%, transparent)
+    );
     --silent-update-progress-glow: color-mix(
       in srgb,
       var(--vd-color-accent, #8ef2bd) 26%,

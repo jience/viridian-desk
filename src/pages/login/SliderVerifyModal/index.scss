@@ -23,7 +23,10 @@
         color-mix(in srgb, var(--vd-color-panel, #1c211f) 94%, transparent)
       ),
       var(--vd-color-panel, #1c211f);
-    box-shadow: var(--vd-shadow-window, 0 30px 90px rgba(0, 0, 0, 0.42));
+    box-shadow: var(
+      --vd-shadow-window,
+      0 30px 90px color-mix(in srgb, var(--vd-color-rail, #050705) 42%, transparent)
+    );
     backdrop-filter: blur(16px);
     cursor: pointer;
   }

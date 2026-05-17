@@ -121,7 +121,7 @@
   --vd-color-muted: #8f9c94;
   --vd-color-border: rgba(209, 255, 229, 0.12);
   --vd-color-accent: #8ef2bd;
-  --vd-shadow-window: 0 30px 90px rgba(0, 0, 0, 0.42);
+  --vd-shadow-window: 0 30px 90px color-mix(in srgb, var(--vd-color-rail) 42%, transparent);
 }
 
 .auth-page__header {

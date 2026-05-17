@@ -215,7 +215,10 @@
         transparent 34%
       ),
       linear-gradient(135deg, rgba(36, 43, 39, 0.98), rgba(18, 24, 21, 0.99));
-    --download-modal-shadow: var(--vd-shadow-window, 0 30px 90px rgba(0, 0, 0, 0.42));
+    --download-modal-shadow: var(
+      --vd-shadow-window,
+      0 30px 90px color-mix(in srgb, var(--vd-color-rail, #050705) 42%, transparent)
+    );
     --download-modal-arrow-bg: color-mix(
       in srgb,
       var(--vd-color-accent, #8ef2bd) 10%,

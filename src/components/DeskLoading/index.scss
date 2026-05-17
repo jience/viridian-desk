@@ -32,7 +32,10 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  box-shadow: var(--vd-shadow-window, 0 30px 90px rgba(0, 0, 0, 0.42));
+  box-shadow: var(
+    --vd-shadow-window,
+    0 30px 90px color-mix(in srgb, var(--vd-color-rail, #050705) 42%, transparent)
+  );
   backdrop-filter: blur(16px);
 
   .image-container {

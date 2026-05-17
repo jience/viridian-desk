@@ -147,6 +147,9 @@
 :root.dark,
 :root[data-ui-theme='dark'] {
   .ant-modal {
-    --vd-modal-shadow: var(--vd-shadow-window, 0 30px 90px rgba(0, 0, 0, 0.42));
+    --vd-modal-shadow: var(
+      --vd-shadow-window,
+      0 30px 90px color-mix(in srgb, var(--vd-color-rail, #050705) 42%, transparent)
+    );
   }
 }

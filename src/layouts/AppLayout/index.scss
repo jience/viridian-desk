@@ -74,7 +74,7 @@
   --vd-color-accent: #8ef2bd;
   --vd-color-on-rail: rgba(238, 245, 239, 0.68);
   --vd-color-on-rail-strong: #eef5ef;
-  --vd-shadow-window: 0 30px 90px rgba(0, 0, 0, 0.42);
+  --vd-shadow-window: 0 30px 90px color-mix(in srgb, var(--vd-color-rail) 42%, transparent);
   --vd-shadow-rail: 18px 0 40px rgba(0, 0, 0, 0.24);
   --vd-shadow-assistant: -18px 0 42px rgba(0, 0, 0, 0.18);
   --vd-shadow-assistant-floating: -18px 0 42px rgba(0, 0, 0, 0.2);

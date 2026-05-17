@@ -245,7 +245,11 @@ $cardMarginRow: 16px;
   border: 1px solid var(--card-borderColor-default);
   box-shadow: 0 14px 34px color-mix(in srgb, var(--vd-color-rail, #20231e) 9%, transparent);
   border-radius: 12px;
-  transition: all 0.2s ease-in-out;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
 
   @include Card;
 
@@ -308,7 +312,11 @@ $cardMarginRow: 16px;
   border: 1px solid var(--card-borderColor-default);
   box-shadow: 0 14px 34px color-mix(in srgb, var(--vd-color-rail, #20231e) 9%, transparent);
   border-radius: 12px;
-  transition: all 0.2s ease-in-out;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
 
   @include Card;
 
@@ -372,7 +380,11 @@ $cardMarginRow: 16px;
   border: 1px solid var(--card-borderColor-default);
   box-shadow: 0 14px 34px color-mix(in srgb, var(--vd-color-rail, #20231e) 9%, transparent);
   border-radius: 12px;
-  transition: all 0.2s ease-in-out;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
 
   @include Card;
 

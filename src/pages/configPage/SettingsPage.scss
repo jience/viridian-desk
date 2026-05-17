@@ -89,7 +89,8 @@
   --settings-page-warning: #f0c46d;
   --settings-page-danger: #ef746b;
   --settings-page-info: #7db6e8;
-  --settings-page-shadow: 0 26px 70px rgba(0, 0, 0, 0.34);
+  --settings-page-shadow: 0 26px 70px
+    color-mix(in srgb, var(--settings-page-bg) 42%, transparent);
   --settings-page-focus: 0 0 0 3px rgba(126, 220, 166, 0.28);
 }
 
