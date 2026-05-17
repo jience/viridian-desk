@@ -13,11 +13,52 @@
 }
 
 .ant-table-wrapper {
+  --vd-table-surface: color-mix(in srgb, var(--app-surface-color, #fffdf8) 92%, transparent);
+  --vd-table-header-surface: color-mix(
+    in srgb,
+    var(--app-surface-subtle-color, #eee8dc) 86%,
+    transparent
+  );
+  --vd-table-hover-surface: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 8%, transparent);
+  --vd-table-border: var(--vd-color-border, rgba(82, 72, 52, 0.14));
+
   table {
-    border-top: 1px solid var(--ant-table-thead-before-bac-color);
-    border-left: 1px solid var(--ant-table-thead-before-bac-color);
-    border-right: 1px solid var(--ant-table-thead-before-bac-color);
+    border-top: 1px solid var(--vd-table-border);
+    border-left: 1px solid var(--vd-table-border);
+    border-right: 1px solid var(--vd-table-border);
   }
+
+  .ant-table,
+  .ant-table-container {
+    background: var(--vd-table-surface);
+    color: var(--vd-color-text, #20231e);
+  }
+
+  .ant-table-container {
+    border-radius: 12px;
+  }
+
+  .ant-table-thead > tr > th {
+    border-color: var(--vd-table-border);
+    background: var(--vd-table-header-surface);
+    color: var(--vd-color-muted, #6c7268);
+    font-weight: 650;
+  }
+
+  .ant-table-tbody > tr > td {
+    border-color: var(--vd-table-border);
+    background: var(--vd-table-surface);
+    color: var(--vd-color-text, #20231e);
+    transition:
+      background-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .ant-table-tbody > tr:hover > td,
+  .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+    background: var(--vd-table-hover-surface);
+  }
+
   td.ant-table-cell {
     font-size: 12px;
     font-weight: 400;
@@ -51,7 +92,11 @@
 }
 
 .pretty-large-table {
-  box-shadow: 0px 0px 6px 0px var(--pretty-table-box-shadow-color);
+  border: 1px solid var(--vd-table-border, var(--app-border-color));
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--vd-color-rail, #20231e) 10%, transparent);
+
   .ant-table-tbody > tr.ant-table-placeholder {
     background: transparent;
     .ant-table-cell {
@@ -69,7 +114,7 @@
     padding: 0 16px;
   }
   .ant-table {
-    background: var(--pretty-table-bac-color);
+    background: var(--vd-table-surface, var(--pretty-table-bac-color));
   }
   table {
     border: none;
@@ -97,14 +142,14 @@
   }
   .ant-table-cell {
     &.ant-table-cell-row-hover {
-      background: transparent;
+      background: var(--vd-table-hover-surface, transparent);
     }
     &.ant-table-selection-column {
       padding-left: 0px;
     }
   }
   .ant-table-thead > tr > th {
-    background: transparent;
+    background: var(--vd-table-header-surface, transparent);
     &:last-child {
       padding-right: 0px;
     }
@@ -116,10 +161,12 @@
     }
   }
   .ant-table-pagination.ant-pagination {
-    background: var(--pretty-table-bac-color);
+    background: var(--vd-table-surface, var(--pretty-table-bac-color));
     margin: 0px;
     padding: 12px 16px 16px 16px;
-    border-bottom-left-radius: 4px;
+    border-top: 1px solid var(--vd-table-border, var(--app-border-color));
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
   }
   .ant-pagination.ant-pagination-mini {
     .ant-pagination-item-link {
@@ -130,7 +177,7 @@
       align-items: center;
       justify-content: center;
       &:hover {
-        background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+        background-color: var(--vd-table-hover-surface);
       }
     }
     .ant-pagination-disabled {
@@ -179,7 +226,7 @@
   --ant-table-cell-padding-inline-md: 16px;
   --ant-table-cell-padding-block-sm: 8px;
   --ant-table-cell-padding-inline-sm: 8px;
-  --ant-table-header-border-radius: 4px;
+  --ant-table-header-border-radius: 12px;
   --ant-table-cell-font-size: 14px;
   --ant-table-cell-font-size-md: 14px;
   --ant-table-cell-font-size-sm: 14px;
@@ -193,26 +240,35 @@
 :root.dark,
 :root[data-ui-theme='dark'] {
   .ant-table-wrapper {
+    --vd-table-surface: color-mix(in srgb, var(--vd-color-panel, #1c211f) 88%, transparent);
+    --vd-table-header-surface: color-mix(
+      in srgb,
+      var(--vd-color-panel-subtle, #242b27) 82%,
+      transparent
+    );
+    --vd-table-hover-surface: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 9%, transparent);
+    --vd-table-border: var(--vd-color-border, rgba(209, 255, 229, 0.12));
+
     .ant-table,
     .ant-table-container {
-      background: var(--vd-color-panel, #1c211f);
+      background: var(--vd-table-surface);
       color: var(--vd-color-text, #e9eee8);
     }
 
     .ant-table-thead > tr > th {
-      border-color: var(--vd-color-border, rgba(255, 255, 255, 0.08));
-      background: color-mix(in srgb, var(--vd-color-panel-subtle, #242b27) 82%, transparent);
+      border-color: var(--vd-table-border);
+      background: var(--vd-table-header-surface);
       color: var(--vd-color-muted, #8d978e);
     }
 
     .ant-table-tbody > tr > td {
-      border-color: var(--vd-color-border, rgba(255, 255, 255, 0.08));
-      background: var(--vd-color-panel, #1c211f);
+      border-color: var(--vd-table-border);
+      background: var(--vd-table-surface);
       color: var(--vd-color-text, #e9eee8);
     }
 
     .ant-table-tbody > tr.ant-table-placeholder > td {
-      background: var(--vd-color-panel, #1c211f);
+      background: var(--vd-table-surface);
       color: var(--vd-color-muted, #8d978e);
     }
 
