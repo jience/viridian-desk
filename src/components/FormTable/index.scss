@@ -13,15 +13,17 @@ $formtable-prefix-cls: archer-formtable;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--app-surface-color);
-  border: 1px solid transparent;
-  border-radius: 3px;
+  background: color-mix(in srgb, var(--app-surface-subtle-color, #f5f8f6) 72%, transparent);
+  border: 1px solid var(--app-border-color, rgba(61, 91, 78, 0.18));
+  border-radius: 7px;
   transition:
-    border 0.3s,
-    box-shadow 0.3s;
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
 
   &:hover {
     border-color: color-mix(in srgb, var(--primary-color) 36%, transparent);
+    background: color-mix(in srgb, var(--app-surface-subtle-color, #f5f8f6) 84%, transparent);
   }
 
   &.#{$formtable-prefix-cls}-disabled {
@@ -40,7 +42,11 @@ $formtable-prefix-cls: archer-formtable;
   border-color: var(--vd-color-danger, #cf4f45);
 
   &.#{$formtable-prefix-cls}-focus {
-    border-color: color-mix(in srgb, var(--vd-color-danger, #cf4f45) 74%, #ffffff);
+    border-color: color-mix(
+      in srgb,
+      var(--vd-color-danger, #cf4f45) 74%,
+      var(--app-surface-color, #fffdf8)
+    );
     outline: 0;
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--vd-color-danger, #cf4f45) 20%, transparent);
   }
