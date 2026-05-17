@@ -19,6 +19,21 @@
 
 .tag-wrapper :global(.ant-tag) {
   margin-inline-end: 0;
+  border-radius: 7px;
+  font-weight: 650;
+}
+
+.client-type-tag {
+  border-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 28%, transparent);
+  background: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 11%, transparent);
+  color: var(--settings-page-accent-strong, var(--vd-color-accent));
+}
+
+.version-tag,
+.sku-tag {
+  border-color: color-mix(in srgb, var(--vd-color-info, #2f6690) 28%, transparent);
+  background: color-mix(in srgb, var(--vd-color-info, #2f6690) 11%, transparent);
+  color: var(--vd-info-soft-text, var(--settings-page-info));
 }
 
 .sub-title-wrapper {

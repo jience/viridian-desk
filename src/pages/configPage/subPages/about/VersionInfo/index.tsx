@@ -39,17 +39,17 @@ export const VersionInfo: FC<VersionInfoProps> = (props) => {
   const mainTitle = useMemo(() => {
     const mainTitleTags = [
       {
-        color: '#A6C682',
+        className: style.clientTypeTag,
         text: aboutInfo?.clientType,
       },
       {
-        color: '#38A59B',
+        className: style.versionTag,
         text: aboutInfo?.clientVersion,
       },
     ];
     if (isThin) {
       mainTitleTags.push({
-        color: '#38A59B',
+        className: style.skuTag,
         text: aboutInfo?.sku || '-',
       });
     }
@@ -59,7 +59,7 @@ export const VersionInfo: FC<VersionInfoProps> = (props) => {
         <span>{aboutInfo?.clientName}</span>
         <div className={style.tagWrapper}>
           {mainTitleTags.map((tag, index) => (
-            <Tag key={index} color={tag.color}>
+            <Tag key={index} className={tag.className}>
               {tag.text}
             </Tag>
           ))}
