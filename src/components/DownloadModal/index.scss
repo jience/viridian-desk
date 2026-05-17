@@ -43,7 +43,7 @@
     }
     .current-version {
       font-size: 14px;
-      color: #7c98b6;
+      color: var(--download-modal-end-version-desc-color);
       font-weight: 400;
     }
   }
@@ -66,7 +66,7 @@
     }
     .error-message {
       font-size: 14px;
-      color: #7c98b6;
+      color: var(--download-modal-end-version-desc-color);
       font-weight: 400;
       text-align: center;
     }
@@ -149,7 +149,7 @@
         color: var(--download-modal-start-version-color);
         font-weight: 700;
         .version-number {
-          color: #2491ff;
+          color: var(--download-modal-end-version-color);
         }
       }
       .download-progress-percent {
@@ -162,13 +162,13 @@
       display: flex;
       align-items: center;
       font-size: 14px;
-      color: #516f90;
+      color: var(--download-modal-end-version-desc-color);
       font-weight: 400;
       column-gap: 8px;
     }
     .current-version {
       font-size: 14px;
-      color: #7c98b6;
+      color: var(--download-modal-end-version-desc-color);
       text-align: right;
       font-weight: 400;
     }

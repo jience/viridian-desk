@@ -9,10 +9,10 @@
       align-items: center;
       height: 40px;
       color: var(--text-color1);
-      border: 1px solid #fff;
+      border: 1px solid var(--app-border-color);
       border-radius: 4px;
-      box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.1);
-      background-color: rgba(255, 255, 255, 0.45);
+      box-shadow: 0px 0px 6px 0px color-mix(in srgb, var(--vd-color-rail) 10%, transparent);
+      background-color: color-mix(in srgb, var(--app-surface-color) 45%, transparent);
       cursor: pointer;
       &:before {
         position: absolute;
@@ -70,14 +70,14 @@
       }
       &:hover {
         color: var(--text-color1);
-        background-color: rgba(255, 255, 255, 0.8);
-        box-shadow: 0px 0px 5px 0px rgba(62, 81, 100, 0.12);
+        background-color: color-mix(in srgb, var(--app-surface-color) 80%, transparent);
+        box-shadow: 0px 0px 5px 0px color-mix(in srgb, var(--vd-color-rail) 12%, transparent);
         .right-icon {
           opacity: 1;
         }
       }
       &.on:before {
-        background-color: #4c8cca;
+        background-color: var(--primary-color);
       }
     }
   }

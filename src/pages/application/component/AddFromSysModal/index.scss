@@ -6,7 +6,7 @@
     align-items: center;
     .selected-count {
       font-size: 14px;
-      color: #33475b;
+      color: var(--app-text-color);
       font-weight: 400;
       strong {
         color: #eb5f5c;

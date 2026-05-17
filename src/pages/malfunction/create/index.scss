@@ -37,7 +37,7 @@
 
     > .antd-select-selector {
       background: var(--config-formModel-addonAfter-back);
-      border: 1px solid rgba(203, 214, 226, 1);
+      border: 1px solid var(--app-border-color);
       border-end-end-radius: 3px;
 
       font-family: SourceHanSansSC-Regular;

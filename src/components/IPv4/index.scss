@@ -6,15 +6,15 @@ $ipv4-prefix-cls: archer-ipv4;
   width: 100%;
   box-sizing: border-box;
   margin: 0;
-  color: #cbd6e2;
+  color: var(--app-muted-color);
   font-size: 14px;
   font-variant: tabular-nums;
   line-height: 1.5715;
   list-style: none;
   display: inline-flex;
   align-items: center;
-  background: #fff;
-  border: 1px solid #cbd6e2;
+  background: var(--app-surface-color);
+  border: 1px solid var(--app-border-color);
   border-radius: 3px;
   transition:
     border 0.3s,
@@ -22,13 +22,13 @@ $ipv4-prefix-cls: archer-ipv4;
   height: 32px;
 
   &:hover {
-    border-color: #74a8d6;
+    border-color: color-mix(in srgb, var(--primary-color) 36%, transparent);
   }
 
   &.#{$ipv4-prefix-cls}-disabled {
     .#{$prefix}-input-borderless.#{$prefix}-input-disabled,
     .#{$prefix}-input-borderless.#{$prefix}-input-disabled + .ip-split {
-      background-color: #eaf0f6;
+      background-color: var(--app-surface-subtle-color);
       border-radius: 0;
       height: 30px;
     }
@@ -47,7 +47,7 @@ $ipv4-prefix-cls: archer-ipv4;
     background-color: transparent;
 
     &::placeholder {
-      color: #516f90;
+      color: var(--app-muted-color);
     }
   }
 }

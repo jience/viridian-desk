@@ -22,7 +22,7 @@
 
       > .ant-select-selector {
         background: var(--config-formModel-addonAfter-back);
-        border: 1px solid rgba(203, 214, 226, 1);
+        border: 1px solid var(--app-border-color);
         border-radius: 0 6px 6px 0;
 
         font-family: SourceHanSansSC-Regular;
@@ -95,7 +95,7 @@
 
     .ant-btn-text {
       padding: 0;
-      color: #4c8cca;
+      color: var(--primary-color);
     }
   }
 
@@ -114,13 +114,13 @@
 
     .ant-btn-text {
       padding: 0;
-      color: #4c8cca;
+      color: var(--primary-color);
     }
   }
 
   .shadow-form-item .ant-form-item-control-input {
     padding: 0 8px;
     border-radius: 6px;
-    background-color: #f6faff;
+    background-color: color-mix(in srgb, var(--app-surface-subtle-color) 72%, transparent);
   }
 }

@@ -22,7 +22,7 @@
       bottom: 16px;
       right: 24px;
       font-size: 14px;
-      color: #7c98b6;
+      color: var(--download-modal-end-version-desc-color);
     }
     .content {
       flex: 1;
@@ -33,11 +33,11 @@
         justify-content: space-between;
         p {
           font-size: 16px;
-          color: #33475b;
+          color: var(--download-modal-start-version-color);
           font-weight: 700;
           span {
             font-size: 16px;
-            color: #2491ff;
+            color: var(--download-modal-end-version-color);
             font-weight: 700;
             margin-left: 8px;
           }
@@ -45,7 +45,7 @@
       }
       .download-progress {
         font-size: 14px;
-        color: #516f90;
+        color: var(--download-modal-end-version-desc-color);
         font-weight: 400;
       }
     }
@@ -60,11 +60,11 @@
       > p {
         margin-top: 16px;
         font-size: 16px;
-        color: #33475b;
+        color: var(--download-modal-start-version-color);
         font-weight: 700;
         span {
           font-size: 16px;
-          color: #2491ff;
+          color: var(--download-modal-end-version-color);
           font-weight: 700;
           margin-left: 8px;
         }
@@ -83,13 +83,13 @@
       }
       .err {
         font-size: 18px;
-        color: #33475b;
+        color: var(--download-modal-start-version-color);
         margin-top: 12px;
         font-weight: 700;
       }
       .current-version-fail {
         font-size: 14px;
-        color: #7c98b6;
+        color: var(--download-modal-end-version-desc-color);
         font-weight: 400;
       }
     }

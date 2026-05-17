@@ -6,7 +6,7 @@
     gap: 12px;
     .app-add-container {
       width: 100%;
-      border: 1px dashed #99acc2;
+      border: 1px dashed var(--app-border-color);
       border-radius: 4px;
       display: flex;
       align-items: center;
@@ -27,7 +27,7 @@
         cursor: pointer;
         row-gap: 8px;
         font-size: 14px;
-        color: #7c98b6;
+        color: var(--app-muted-color);
         &:hover {
           color: var(--text-hight-color1);
         }

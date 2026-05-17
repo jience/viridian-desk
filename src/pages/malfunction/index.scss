@@ -34,33 +34,33 @@
     }
 
     .success-status {
-      background: #f2f9f3;
-      border: 1px solid rgba(205, 232, 206, 1);
-      color: #5ab55e;
+      background: color-mix(in srgb, var(--vd-color-success) 12%, transparent);
+      border: 1px solid color-mix(in srgb, var(--vd-color-success) 28%, transparent);
+      color: var(--vd-color-success);
     }
 
     .danger-status {
-      background: #fef3f2;
-      border: 1px solid rgba(249, 207, 206, 1);
-      color: #eb5f5c;
+      background: color-mix(in srgb, var(--vd-color-danger) 12%, transparent);
+      border: 1px solid color-mix(in srgb, var(--vd-color-danger) 28%, transparent);
+      color: var(--vd-color-danger);
     }
 
     .processing-status {
-      background: #e6f1fd;
-      color: #4c8cca;
-      border: 1px solid rgba(182, 217, 251, 1);
+      background: var(--vd-info-soft-bg);
+      color: var(--vd-info-soft-text);
+      border: 1px solid color-mix(in srgb, var(--vd-color-info) 28%, transparent);
     }
 
     .warning-status {
-      background: #fef8ef;
-      border: 1px solid rgba(243, 222, 186, 1);
-      color: #f0a332;
+      background: var(--vd-warning-soft-bg);
+      border: 1px solid color-mix(in srgb, var(--vd-color-warning) 28%, transparent);
+      color: var(--vd-warning-soft-text);
     }
 
     .default-status {
-      background: #eaf0f6;
-      border: 1px solid rgba(203, 214, 226, 1);
-      color: #b0c1d4;
+      background: color-mix(in srgb, var(--app-surface-subtle-color) 72%, transparent);
+      border: 1px solid var(--app-border-color);
+      color: var(--app-muted-color);
     }
   }
 
@@ -68,16 +68,16 @@
     min-width: 1.77rem;
     min-height: 0.32rem;
     margin: 0;
-    border-bottom: 0.01rem solid #f0f0f0;
+    border-bottom: 0.01rem solid var(--app-border-color);
     font-size: 12px;
-    color: #516f90;
+    color: var(--app-muted-color);
     letter-spacing: 0;
     line-height: 22px;
   }
 
   .archer-popover-inner-content {
     font-size: 12px;
-    color: #33475b;
+    color: var(--app-text-color);
   }
 }
 
@@ -198,7 +198,7 @@
 .poptitle {
   font-family: SourceHanSansSC-Regular;
   font-size: 12px;
-  color: #516f90;
+  color: var(--app-muted-color);
   letter-spacing: 0;
   line-height: 22px;
   font-weight: 400;
@@ -214,7 +214,7 @@
   .popreply {
     font-family: SourceHanSansSC-Regular;
     font-size: 12px;
-    color: #33475b;
+    color: var(--app-text-color);
     letter-spacing: 0;
     line-height: 18px;
     font-weight: 400;
@@ -223,7 +223,7 @@
   .poptime {
     font-family: SourceHanSansSC-Regular;
     font-size: 12px;
-    color: #99acc2;
+    color: var(--app-muted-color);
     letter-spacing: 0;
     text-align: right;
     line-height: 18px;

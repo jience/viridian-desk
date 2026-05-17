@@ -13,11 +13,11 @@
   .divider {
     width: 60px;
     height: 1px;
-    background-color: #dfe3eb;
+    background-color: var(--app-border-color);
   }
   .status {
-    background: #ffffff;
-    border: 1px solid #cbd6e2;
+    background: var(--app-surface-color);
+    border: 1px solid var(--app-border-color);
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -28,12 +28,12 @@
     align-items: center;
     span {
       font-size: 12px;
-      color: #7c98b6;
+      color: var(--app-muted-color);
       font-weight: normal;
     }
     .status-ok {
       display: none;
-      color: #99bfe4;
+      color: var(--primary-color);
       font-size: 12px;
     }
   }
@@ -45,8 +45,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      box-shadow: inset 0px 0px 0px 4px rgba(255, 255, 255, 1);
-      box-shadow: 0px 0px 0px 1px rgba(189, 211, 233, 1);
+      box-shadow:
+        inset 0px 0px 0px 4px var(--app-surface-color),
+        0px 0px 0px 1px color-mix(in srgb, var(--primary-color) 28%, transparent);
     }
     .status-inside {
       width: 8px;
@@ -62,7 +63,7 @@
   .divider-1,
   .divider-2,
   .divider2-2 {
-    background-color: #a2c2e1;
+    background-color: color-mix(in srgb, var(--primary-color) 38%, transparent);
   }
 
   .title-content-one-1,
