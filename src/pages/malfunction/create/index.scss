@@ -40,7 +40,7 @@
       border: 1px solid var(--app-border-color);
       border-end-end-radius: 7px;
 
-      font-family: SourceHanSansSC-Regular;
+      font-family: inherit;
       font-size: 12px;
       color: var(--config-formModel-title-default);
       letter-spacing: 0;
@@ -50,7 +50,7 @@
 
   .item-Info {
     margin: 4px 0 0 0;
-    font-family: SourceHanSansSC-Regular;
+    font-family: inherit;
     font-size: 12px;
     color: var(--config-tab-default);
     letter-spacing: 0;

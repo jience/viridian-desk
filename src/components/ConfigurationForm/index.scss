@@ -9,7 +9,7 @@
       width: 65%;
       margin: 0;
 
-      border-start-start-radius: 3px;
+      border-start-start-radius: 7px;
 
       .ant-input-number,
       .ant-input {
@@ -23,9 +23,9 @@
       > .ant-select-selector {
         background: var(--config-formModel-addonAfter-back);
         border: 1px solid var(--app-border-color);
-        border-radius: 0 6px 6px 0;
+        border-radius: 0 7px 7px 0;
 
-        font-family: SourceHanSansSC-Regular;
+        font-family: inherit;
         font-size: 12px;
         letter-spacing: 0;
         font-weight: 400;
@@ -33,18 +33,18 @@
     }
 
     .ant-btn {
-      border-radius: 0 6px 6px 0;
+      border-radius: 0 7px 7px 0;
 
-      font-family: SourceHanSansSC-Regular;
+      font-family: inherit;
       font-size: 12px;
       letter-spacing: 0;
       font-weight: 400;
     }
 
     .ant-btn-loading {
-      border-radius: 0 6px 6px 0;
+      border-radius: 0 7px 7px 0;
 
-      font-family: SourceHanSansSC-Regular;
+      font-family: inherit;
       font-size: 12px;
       letter-spacing: 0;
       font-weight: 400;
@@ -87,7 +87,7 @@
   }
 
   .item-Info-line {
-    font-family: SourceHanSansSC-Regular;
+    font-family: inherit;
     font-size: 12px;
     color: var(--config-tab-default);
     letter-spacing: 0;
@@ -106,7 +106,7 @@
 
   .item-Info {
     margin: 4px 0 0 0;
-    font-family: SourceHanSansSC-Regular;
+    font-family: inherit;
     font-size: 12px;
     color: var(--config-tab-default);
     letter-spacing: 0;

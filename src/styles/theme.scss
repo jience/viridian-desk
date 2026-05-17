@@ -123,7 +123,7 @@
   --desk-detail-snap-card-bg-disabled: #e7ebf3;
   --desk-detail-snap-btn-content-disabled: #828486;
   --desk-detail-snap-card-bd: #6c7268;
-  --desk-detail-snap-btn-bd: rgba(203, 214, 226, 1);
+  --desk-detail-snap-btn-bd: var(--app-border-color, rgba(61, 91, 78, 0.18));
   --desk-detail-snap-btn-content: #4d7c3f;
 
   // 设置页 顶部页签
