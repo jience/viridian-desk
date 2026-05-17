@@ -10,10 +10,17 @@
       height: 40px;
       color: var(--text-color1);
       border: 1px solid var(--app-border-color);
-      border-radius: 4px;
-      box-shadow: 0px 0px 6px 0px color-mix(in srgb, var(--vd-color-rail) 10%, transparent);
+      border-radius: 12px;
+      box-shadow: 0 12px 30px color-mix(in srgb, var(--vd-color-rail) 8%, transparent);
       background-color: color-mix(in srgb, var(--app-surface-color) 45%, transparent);
       cursor: pointer;
+      transition:
+        transform 160ms ease,
+        border-color 160ms ease,
+        background-color 160ms ease,
+        box-shadow 160ms ease,
+        color 160ms ease;
+
       &:before {
         position: absolute;
         content: '';
@@ -69,13 +76,20 @@
         content: '\e659';
       }
       &:hover {
+        transform: translateY(-1px);
+        border-color: color-mix(in srgb, var(--primary-color) 28%, transparent);
         color: var(--text-color1);
         background-color: color-mix(in srgb, var(--app-surface-color) 80%, transparent);
-        box-shadow: 0px 0px 5px 0px color-mix(in srgb, var(--vd-color-rail) 12%, transparent);
+        box-shadow: 0 16px 36px color-mix(in srgb, var(--vd-color-rail) 12%, transparent);
         .right-icon {
           opacity: 1;
         }
       }
+
+      &:active {
+        transform: translateY(0) scale(0.99);
+      }
+
       &.on:before {
         background-color: var(--primary-color);
       }

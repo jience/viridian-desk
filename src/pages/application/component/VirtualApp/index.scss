@@ -7,10 +7,22 @@
     .app-add-container {
       width: 100%;
       border: 1px dashed var(--app-border-color);
-      border-radius: 4px;
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--app-surface-subtle-color, #f5f8f6) 54%, transparent);
       display: flex;
       align-items: center;
       justify-content: space-around;
+      transition:
+        border-color 160ms ease,
+        background-color 160ms ease,
+        transform 160ms ease;
+
+      &:hover {
+        border-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 36%, transparent);
+        background: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 8%, transparent);
+        transform: translateY(-1px);
+      }
+
       .redDot {
         position: absolute;
         right: 8px;
@@ -35,15 +47,19 @@
     }
 
     .app-item {
-      border-radius: 4px;
+      border-radius: 12px;
       height: 88px;
       padding: 18px 16px;
-      box-shadow: 0px 0px 6px 0px var(--application-item-shadow-color);
+      box-shadow: 0 14px 34px color-mix(in srgb, var(--vd-color-rail, #20231e) 9%, transparent);
       background: var(--application-item-bac-color);
       cursor: pointer;
       display: flex;
       justify-content: space-between;
-      transition: all 0.3s;
+      transition:
+        transform 160ms ease,
+        border-color 160ms ease,
+        background-color 160ms ease,
+        box-shadow 160ms ease;
       border: 1px solid transparent;
 
       align-items: center;
@@ -63,8 +79,11 @@
         }
       }
       &:hover {
+        transform: translateY(-1px);
         background-color: var(--application-item-hover-bac-color);
         border: 1px solid var(--application-item-hover-border-color);
+        box-shadow: 0 18px 42px
+          color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 16%, transparent);
       }
     }
   }
