@@ -1,5 +1,32 @@
 .scan-modal {
+  --login-modal-border: var(--app-border-color, rgba(61, 91, 78, 0.18));
+  --login-modal-surface: var(--app-surface-color, rgba(255, 253, 248, 0.92));
+  --login-modal-surface-subtle: color-mix(
+    in srgb,
+    var(--app-surface-subtle-color, #f5f8f6) 72%,
+    transparent
+  );
+  --login-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
+
   width: 320px !important;
+
+  .ant-modal-content {
+    overflow: hidden;
+    border: 1px solid var(--login-modal-border);
+    border-radius: 10px;
+    background: var(--login-modal-surface);
+    box-shadow: var(--login-modal-shadow);
+    backdrop-filter: blur(16px);
+  }
+
+  .ant-modal-header {
+    background: transparent;
+  }
+
+  .ant-modal-title {
+    color: var(--app-text-color, #20231e);
+    font-weight: 650;
+  }
 }
 
 .scan-code-content {
@@ -7,6 +34,9 @@
   height: 160px;
   overflow: hidden;
   margin: 0 auto;
+  border: 1px solid var(--login-modal-border, var(--app-border-color));
+  border-radius: 10px;
+  background: var(--login-modal-surface-subtle, var(--app-surface-subtle-color));
 }
 
 .login-tip {

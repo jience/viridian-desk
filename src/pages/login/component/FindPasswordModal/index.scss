@@ -1,9 +1,31 @@
 .find-pwd-modal {
+  --login-modal-border: var(--app-border-color, rgba(61, 91, 78, 0.18));
+  --login-modal-surface: var(--app-surface-color, rgba(255, 253, 248, 0.92));
+  --login-modal-surface-subtle: color-mix(
+    in srgb,
+    var(--app-surface-subtle-color, #f5f8f6) 72%,
+    transparent
+  );
+  --login-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
+
   width: 500px !important;
+
+  .ant-modal-content,
+  .archer-modal-content {
+    overflow: hidden;
+    border: 1px solid var(--login-modal-border);
+    border-radius: 10px;
+    background: var(--login-modal-surface);
+    box-shadow: var(--login-modal-shadow);
+    backdrop-filter: blur(16px);
+  }
+
   .archer-modal-header {
     height: 68px !important;
     padding: 24px !important;
+    background: transparent;
   }
+
   .find-pwd-title {
     width: 100%;
     display: flex;
@@ -16,8 +38,8 @@
     background-color: var(--app-border-color);
   }
   .status {
-    background: var(--app-surface-color);
-    border: 1px solid var(--app-border-color);
+    background: var(--login-modal-surface);
+    border: 1px solid var(--login-modal-border);
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -26,11 +48,13 @@
   .title-content {
     display: flex;
     align-items: center;
+
     span {
       font-size: 12px;
       color: var(--app-muted-color);
       font-weight: normal;
     }
+
     .status-ok {
       display: none;
       color: var(--primary-color);
@@ -55,6 +79,7 @@
       border-radius: 50%;
       background-color: var(--text-hight-color1);
     }
+
     span {
       color: var(--confirm-content-color);
     }
@@ -82,6 +107,28 @@
     }
     .status-ok {
       display: block;
+    }
+  }
+
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-select-selector {
+    border-color: var(--login-modal-border) !important;
+    border-radius: 7px !important;
+    color: var(--app-text-color, #20231e);
+    background: var(--login-modal-surface-subtle) !important;
+  }
+
+  .ant-btn {
+    border-radius: 7px;
+    transition:
+      border-color 160ms ease,
+      color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
+
+    &:active {
+      transform: translateY(1px) scale(0.98);
     }
   }
 }
