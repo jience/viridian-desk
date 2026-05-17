@@ -1,5 +1,83 @@
 .desk-detail-create-snap-modal {
+  --desk-detail-modal-border: var(--app-border-color, rgba(61, 91, 78, 0.18));
+  --desk-detail-modal-surface: var(--app-surface-color, rgba(255, 253, 248, 0.92));
+  --desk-detail-modal-surface-subtle: color-mix(
+    in srgb,
+    var(--app-surface-subtle-color, #f5f8f6) 72%,
+    transparent
+  );
+  --desk-detail-modal-accent-soft: color-mix(
+    in srgb,
+    var(--vd-color-accent, #4d7c3f) 10%,
+    transparent
+  );
+  --desk-detail-modal-accent-border: color-mix(
+    in srgb,
+    var(--vd-color-accent, #4d7c3f) 34%,
+    transparent
+  );
+  --desk-detail-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
+
+  .ant-modal-content {
+    overflow: hidden;
+    border: 1px solid var(--desk-detail-modal-border);
+    border-radius: 10px;
+    background: var(--desk-detail-modal-surface);
+    box-shadow: var(--desk-detail-modal-shadow);
+    backdrop-filter: blur(16px);
+  }
+
+  .ant-modal-header,
+  .ant-modal-footer {
+    background: transparent;
+  }
+
+  .ant-modal-title {
+    color: var(--app-text-color, #20231e);
+    font-weight: 650;
+  }
+
   .basic-form-item {
     margin-bottom: 18px;
+  }
+
+  .ant-form-item-label > label {
+    color: var(--app-muted-color, #6f7f90);
+    font-size: 13px;
+    font-weight: 550;
+  }
+
+  .ant-input,
+  .ant-input-affix-wrapper {
+    border-color: var(--desk-detail-modal-border);
+    border-radius: 7px;
+    color: var(--app-text-color, #20231e);
+    background: var(--desk-detail-modal-surface-subtle);
+  }
+
+  .ant-input:hover,
+  .ant-input:focus,
+  .ant-input-affix-wrapper:hover,
+  .ant-input-affix-wrapper-focused {
+    border-color: var(--desk-detail-modal-accent-border);
+    box-shadow: 0 0 0 2px var(--desk-detail-modal-accent-soft);
+  }
+
+  .ant-radio-wrapper {
+    color: var(--app-text-color, #20231e);
+  }
+
+  .ant-radio-button-wrapper,
+  .ant-btn {
+    border-radius: 7px;
+    transition:
+      border-color 160ms ease,
+      color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
+
+    &:active {
+      transform: translateY(1px) scale(0.98);
+    }
   }
 }

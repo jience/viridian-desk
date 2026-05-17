@@ -1,4 +1,86 @@
 .AllDiskListModal {
+  --disk-modal-border: var(--app-border-color, rgba(61, 91, 78, 0.18));
+  --disk-modal-surface: var(--app-surface-color, rgba(255, 253, 248, 0.92));
+  --disk-modal-surface-subtle: color-mix(
+    in srgb,
+    var(--app-surface-subtle-color, #f5f8f6) 72%,
+    transparent
+  );
+  --disk-modal-accent-soft: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, transparent);
+  --disk-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
+
+  .ant-modal-content {
+    overflow: hidden;
+    border: 1px solid var(--disk-modal-border);
+    border-radius: 10px;
+    background: var(--disk-modal-surface);
+    box-shadow: var(--disk-modal-shadow);
+    backdrop-filter: blur(16px);
+  }
+
+  .ant-modal-header,
+  .ant-modal-footer {
+    background: transparent;
+  }
+
+  .ant-modal-title {
+    color: var(--app-text-color, #20231e);
+    font-weight: 650;
+  }
+
+  .titleSlot-box {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: 10px;
+
+    .icon {
+      color: var(--vd-color-accent, #4d7c3f);
+      font-size: 18px;
+    }
+
+    .title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .ant-table {
+    color: var(--app-text-color, #20231e);
+    background: transparent;
+  }
+
+  .ant-table-container {
+    border: 1px solid var(--disk-modal-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .ant-table-thead > tr > th {
+    border-bottom: 1px solid var(--disk-modal-border);
+    color: var(--app-muted-color, #6f7f90);
+    background: var(--disk-modal-surface-subtle);
+    font-size: 12px;
+    font-weight: 650;
+  }
+
+  .ant-table-tbody > tr > td {
+    border-bottom: 1px solid var(--disk-modal-border);
+    color: var(--app-text-color, #20231e);
+    background: transparent;
+  }
+
+  .ant-table-tbody > tr.ant-table-row:hover > td,
+  .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+    background: var(--disk-modal-accent-soft);
+  }
+
+  .ant-pagination {
+    color: var(--app-muted-color, #6f7f90);
+  }
+
   .statuBox {
     display: flex;
     flex-direction: row;
@@ -11,6 +93,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+  }
+
+  .ant-btn {
+    border-radius: 7px;
+    transition:
+      border-color 160ms ease,
+      color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
+
+    &:active {
+      transform: translateY(1px) scale(0.98);
     }
   }
 }
