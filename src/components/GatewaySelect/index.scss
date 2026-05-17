@@ -23,22 +23,22 @@
   width: 8px;
   height: 8px;
   margin-right: 6px;
-  background: #d9d9d9;
+  background: var(--app-muted-color, #6f7f90);
   border-radius: 50%;
-  box-shadow: 0 0 0 3px rgba(217, 217, 217, 0.14);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--app-muted-color, #6f7f90) 14%, transparent);
 
   &.success {
-    background: #5ab55e;
-    box-shadow: 0 0 0 3px rgba(90, 181, 94, 0.16);
+    background: var(--vd-color-success, #37b56d);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--vd-color-success, #37b56d) 16%, transparent);
   }
 
   &.danger {
-    background: #eb5f5c;
-    box-shadow: 0 0 0 3px rgba(235, 95, 92, 0.16);
+    background: var(--vd-color-danger, #cf4f45);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--vd-color-danger, #cf4f45) 16%, transparent);
   }
 
   &.info {
-    background: #d9d9d9;
+    background: var(--app-muted-color, #6f7f90);
   }
 }
 

@@ -32,16 +32,16 @@ $formtable-prefix-cls: archer-formtable;
   }
 
   &.#{$formtable-prefix-cls}-status-error {
-    border-color: #eb5f5c;
+    border-color: var(--vd-color-danger, #cf4f45);
   }
 }
 
 .archer-form-item-has-error .#{$formtable-prefix-cls} {
-  border-color: #eb5f5c;
+  border-color: var(--vd-color-danger, #cf4f45);
 
   &.#{$formtable-prefix-cls}-focus {
-    border-color: #f78e88;
+    border-color: color-mix(in srgb, var(--vd-color-danger, #cf4f45) 74%, #ffffff);
     outline: 0;
-    box-shadow: 0 0 0 2px rgb(235 95 92 / 20%);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--vd-color-danger, #cf4f45) 20%, transparent);
   }
 }

@@ -413,7 +413,7 @@ const TableCommon = ({
             {slotRight}
             {otherOperateButtons.map((button, index) => {
               return (
-                <Tooltip title={button.name} key={index} color="#516f90">
+                <Tooltip title={button.name} key={index} color="var(--vd-color-panel, #1c211f)">
                   {renderSearchBarButton}
                 </Tooltip>
               );

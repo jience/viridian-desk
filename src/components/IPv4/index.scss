@@ -35,7 +35,7 @@ $ipv4-prefix-cls: archer-ipv4;
   }
 
   &.#{$ipv4-prefix-cls}-status-error {
-    border-color: #eb5f5c;
+    border-color: var(--vd-color-danger, #cf4f45);
   }
 
   .ip-split {
@@ -53,11 +53,11 @@ $ipv4-prefix-cls: archer-ipv4;
 }
 
 .archer-form-item-has-error .#{$ipv4-prefix-cls} {
-  border-color: #eb5f5c;
+  border-color: var(--vd-color-danger, #cf4f45);
 
   &.#{$ipv4-prefix-cls}-focus {
-    border-color: #f78e88;
+    border-color: color-mix(in srgb, var(--vd-color-danger, #cf4f45) 74%, #ffffff);
     outline: 0;
-    box-shadow: 0 0 0 2px rgb(235 95 92 / 20%);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--vd-color-danger, #cf4f45) 20%, transparent);
   }
 }
