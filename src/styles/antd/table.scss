@@ -215,5 +215,15 @@
       background: var(--vd-color-panel, #1c211f);
       color: var(--vd-color-muted, #8d978e);
     }
+
+    .ant-empty-description,
+    .ant-table-filter-trigger {
+      color: var(--vd-color-muted, #8d978e);
+    }
+
+    .ant-table-filter-trigger:hover {
+      color: var(--vd-color-accent, #8ef2bd);
+      background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
+    }
   }
 }

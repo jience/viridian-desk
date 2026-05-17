@@ -15,3 +15,25 @@
   --ant-form-vertical-label-margin: 0px;
   --ant-form-inline-item-margin-bottom: 0px;
 }
+
+:root.dark,
+:root[data-ui-theme='dark'] {
+  .ant-form {
+    .ant-form-item-label > label {
+      color: var(--vd-color-muted, #8d978e);
+    }
+
+    .ant-form-item-required::before {
+      color: var(--vd-color-danger, #cf4f45);
+    }
+
+    .ant-form-item-explain,
+    .ant-form-item-extra {
+      color: var(--vd-color-muted, #8d978e);
+    }
+
+    .ant-form-item-explain-error {
+      color: var(--vd-color-danger, #cf4f45);
+    }
+  }
+}
