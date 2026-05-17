@@ -15,20 +15,25 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(30, 136, 229, 0.85);
-  border-radius: 3px;
+  border: 1px solid var(--vd-color-border, rgba(209, 255, 229, 0.12));
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+    var(--vd-color-panel, #1c211f);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.36);
+
   & i {
     font-size: 32px;
-    color: #fff;
+    color: var(--vd-color-accent, #8ef2bd);
     display: block;
     margin-bottom: 20px;
   }
+
   & span {
-    color: #fff;
+    color: var(--vd-color-text, #e9eee8);
   }
 }

@@ -19,14 +19,14 @@
   height: 40px;
   line-height: 40px;
   margin-top: 10px;
-  background: #f7f9fa;
-  color: #45494c;
-  border: 1px solid #e4e7eb;
+  background: var(--app-surface-subtle-color, #f4f8f6);
+  color: var(--app-text-color, #20231e);
+  border: 1px solid var(--app-border-color, rgba(61, 91, 78, 0.18));
 }
 .vertifyWrap .sliderContainer_active .slider {
   height: 38px;
   top: -1px;
-  border: 1px solid #486cd6;
+  border: 1px solid var(--vd-color-accent, #8ef2bd);
 }
 .vertifyWrap .sliderContainer_active .sliderMask {
   height: 38px;
@@ -35,13 +35,13 @@
 .vertifyWrap .sliderContainer_success .slider {
   height: 38px;
   top: -1px;
-  border: 1px solid #0db87f;
-  background-color: #0ca14a !important;
+  border: 1px solid var(--vd-color-success, #37b56d);
+  background-color: var(--vd-color-success, #37b56d) !important;
 }
 .vertifyWrap .sliderContainer_success .sliderMask {
   height: 38px;
-  border: 1px solid #0db87f;
-  background-color: #d2f4ef;
+  border: 1px solid var(--vd-color-success, #37b56d);
+  background-color: color-mix(in srgb, var(--vd-color-success, #37b56d) 18%, transparent);
 }
 .vertifyWrap .sliderContainer_success .sliderIcon {
   background-position: 0 -26px !important;
@@ -49,13 +49,13 @@
 .vertifyWrap .sliderContainer_fail .slider {
   height: 38px;
   top: -1px;
-  border: 1px solid #f57a7a;
-  background-color: #f57a7a !important;
+  border: 1px solid var(--vd-color-danger, #cf4f45);
+  background-color: var(--vd-color-danger, #cf4f45) !important;
 }
 .vertifyWrap .sliderContainer_fail .sliderMask {
   height: 38px;
-  border: 1px solid #f57a7a;
-  background-color: #fce1e1;
+  border: 1px solid var(--vd-color-danger, #cf4f45);
+  background-color: color-mix(in srgb, var(--vd-color-danger, #cf4f45) 18%, transparent);
 }
 .vertifyWrap .sliderContainer_fail .sliderIcon {
   top: 14px;
@@ -72,8 +72,8 @@
   left: 0;
   top: 0;
   height: 40px;
-  border: 0 solid #486cd6;
-  background: #d1e9fe;
+  border: 0 solid var(--vd-color-accent, #8ef2bd);
+  background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 18%, transparent);
 }
 .vertifyWrap .slider {
   position: absolute;
@@ -82,8 +82,8 @@
   left: 0;
   width: 38px;
   height: 38px;
-  background: #fff;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  background: var(--app-surface-color, #fffdf8);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--vd-color-rail, #20231e) 18%, transparent);
   transition: background 0.2s linear;
   cursor: pointer;
   cursor: grab;
@@ -92,14 +92,14 @@
   cursor: grabbing;
 }
 .vertifyWrap .slider:hover {
-  background: #486cd6;
+  background: var(--vd-color-accent, #8ef2bd);
 }
 .vertifyWrap .sliderIcon {
   font-size: 18px;
-  color: #000;
+  color: var(--app-text-color, #20231e);
 }
 .vertifyWrap .slider:hover .sliderIcon {
-  color: #fff;
+  color: var(--vd-color-on-accent, #06120e);
 }
 .vertifyWrap .refreshIcon {
   position: absolute;
@@ -116,8 +116,8 @@
   width: 100%;
   height: 12%;
   cursor: pointer;
-  background: #118dd6ba;
-  color: #ffffff;
+  background: color-mix(in srgb, var(--vd-color-info, #2f6690) 82%, transparent);
+  color: var(--vd-color-on-rail-strong, #eaf8ef);
   font-size: 100%;
   text-align: center;
   line-height: 25px;
@@ -133,9 +133,9 @@
   justify-content: center;
   align-items: center;
   font-size: 14px;
-  color: #45494c;
+  color: var(--app-text-color, #20231e);
   z-index: 2;
-  background: #edf0f2;
+  background: var(--app-surface-subtle-color, #f4f8f6);
 }
 .vertifyWrap .loadingIcon {
   width: 32px;

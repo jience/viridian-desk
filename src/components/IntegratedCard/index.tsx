@@ -3,38 +3,6 @@ import './index.scss';
 // UI
 import { Divider, Tag, Tooltip } from 'antd';
 
-/** config demo
-    testCardConfig = {
-       cardType: 'normal',
-       titleConfig: {
-           mainTitle: '测试卡片-主标题',
-           mainTitle_tags: [
-               {
-                   color: '#F2F9F3',
-                   textColor: '#5AB55E',
-                   optIcon: '',
-                   name: '当前',
-               },{
-                   color: 'rgba(255,255,255,0.80)',
-                   textColor: '#5AB55E',
-                   optIcon:  <Icon type='icon-binding' style={{color: '#5AB55E'}}/>,
-                   name: '',
-               }
-           ],
-           subTitle: [{
-                color: '',
-                textColor: '',
-                optIcon?: React.ReactNode,
-                name: '子标题',
-           }],
-           middleSlot: <Checkbox>重定向</Checkbox>,
-           rightSlot: <Switch defaultChecked />
-       },
-
-       content: '内容',
-    }
-*/
-
 interface tagObject {
   color: string;
   textColor: string;

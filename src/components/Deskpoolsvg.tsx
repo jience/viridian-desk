@@ -10,7 +10,12 @@ const Icon: FC = () => (
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
     <g id="VDI1.6终端改版2" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-      <g id="2桌面" transform="translate(-576.000000, -341.000000)" fill="#F5F8FA" stroke="#DFE3EB">
+      <g
+        id="2桌面"
+        transform="translate(-576.000000, -341.000000)"
+        fill="currentColor"
+        stroke="var(--vd-color-border, rgba(209, 255, 229, 0.18))"
+      >
         <g id="编组-10" transform="translate(494.000000, 315.000000)">
           <g id="编组-13备份" transform="translate(83.000000, 27.000000)">
             <path

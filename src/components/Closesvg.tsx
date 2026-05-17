@@ -13,7 +13,7 @@ const Icon: FC = () => (
       <g
         id="2桌面"
         transform="translate(-351.000000, -342.000000)"
-        fill="#B0C1D4"
+        fill="currentColor"
         fillRule="nonzero"
       >
         <g id="编组-16" transform="translate(351.000000, 342.000000)">
