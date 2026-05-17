@@ -13,3 +13,45 @@
   --ant-switch-inner-min-margin-sm: 6px;
   --ant-switch-inner-max-margin-sm: 18px;
 }
+
+.ant-switch {
+  background: color-mix(in srgb, var(--vd-color-muted, #6c7268) 28%, transparent);
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:hover:not(.ant-switch-disabled) {
+    background: color-mix(in srgb, var(--vd-color-muted, #6c7268) 36%, transparent);
+  }
+
+  &:focus-visible {
+    box-shadow: var(--vd-focus-ring, 0 0 0 3px rgba(77, 124, 63, 0.22));
+  }
+
+  &.ant-switch-checked {
+    background: var(--vd-color-accent, #4d7c3f);
+
+    &:hover:not(.ant-switch-disabled) {
+      background: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 88%, #ffffff);
+    }
+  }
+}
+
+:root.dark,
+:root[data-ui-theme='dark'] {
+  .ant-switch {
+    background: color-mix(in srgb, var(--vd-color-muted, #8d978e) 26%, transparent);
+
+    &:hover:not(.ant-switch-disabled) {
+      background: color-mix(in srgb, var(--vd-color-muted, #8d978e) 34%, transparent);
+    }
+
+    &.ant-switch-checked {
+      background: var(--vd-color-accent, #8ef2bd);
+
+      &:hover:not(.ant-switch-disabled) {
+        background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 88%, #ffffff);
+      }
+    }
+  }
+}

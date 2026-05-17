@@ -2,6 +2,55 @@
   font-size: 12px;
 }
 
+:where(.ant-input, .ant-input-affix-wrapper, .ant-input-number) {
+  border-color: var(--vd-color-border, rgba(82, 72, 52, 0.16));
+  background: color-mix(in srgb, var(--vd-color-panel, #fffdf8) 88%, transparent);
+  color: var(--vd-color-text, #20231e);
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+:where(.ant-input, .ant-input-affix-wrapper) {
+  &::placeholder,
+  input::placeholder {
+    color: var(--vd-color-muted, #6c7268);
+  }
+
+  &:hover,
+  &:focus,
+  &:focus-within {
+    border-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 38%, transparent);
+    background: color-mix(in srgb, var(--vd-color-panel, #fffdf8) 96%, transparent);
+  }
+}
+
+.ant-input-number {
+  &:hover,
+  &.ant-input-number-focused {
+    border-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 38%, transparent);
+    background: color-mix(in srgb, var(--vd-color-panel, #fffdf8) 96%, transparent);
+  }
+
+  .ant-input-number-input::placeholder {
+    color: var(--vd-color-muted, #6c7268);
+  }
+}
+
+.ant-input-affix-wrapper {
+  > input.ant-input {
+    background: transparent;
+    color: var(--vd-color-text, #20231e);
+  }
+
+  .ant-input-password-icon,
+  .ant-input-prefix,
+  .ant-input-suffix {
+    color: var(--vd-color-muted, #6c7268);
+  }
+}
+
 .client-css-var.ant-input-css-var {
   --ant-font-size: 12px;
   --ant-input-padding-block: 4px;
@@ -10,9 +59,12 @@
   --ant-input-padding-inline: 10px;
   --ant-input-padding-inline-sm: 7px;
   --ant-input-padding-inline-lg: 11px;
-  --ant-input-active-shadow: 0 0 0 2px rgba(5, 172, 255, 0.06);
-  --ant-input-error-active-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06);
-  --ant-input-warning-active-shadow: 0 0 0 2px rgba(255, 215, 5, 0.1);
+  --ant-input-active-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 18%, transparent);
+  --ant-input-error-active-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--vd-color-danger, #cf4f45) 16%, transparent);
+  --ant-input-warning-active-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--vd-color-warning, #d89f32) 18%, transparent);
   --ant-input-input-font-size: 12px;
   --ant-input-input-font-size-lg: 16px;
   --ant-input-input-font-size-sm: 12px;
@@ -21,17 +73,10 @@
 :root.dark,
 :root[data-ui-theme='dark'] {
   :where(.ant-input, .ant-input-affix-wrapper, .ant-input-number) {
-    border-color: var(--vd-color-border, rgba(209, 255, 229, 0.14));
     background: color-mix(in srgb, var(--vd-color-panel-subtle, #242b27) 72%, transparent);
-    color: var(--vd-color-text, #e9eee8);
   }
 
   :where(.ant-input, .ant-input-affix-wrapper) {
-    &::placeholder,
-    input::placeholder {
-      color: var(--vd-color-muted, #8d978e);
-    }
-
     &:hover,
     &:focus,
     &:focus-within {
@@ -40,16 +85,11 @@
     }
   }
 
-  .ant-input-affix-wrapper {
-    > input.ant-input {
-      background: transparent;
-      color: var(--vd-color-text, #e9eee8);
-    }
-
-    .ant-input-password-icon,
-    .ant-input-prefix,
-    .ant-input-suffix {
-      color: var(--vd-color-muted, #8d978e);
+  .ant-input-number {
+    &:hover,
+    &.ant-input-number-focused {
+      border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 38%, transparent);
+      background: color-mix(in srgb, var(--vd-color-panel-subtle, #242b27) 82%, transparent);
     }
   }
 
