@@ -159,19 +159,40 @@
 }
 
 .settings-page__exit {
-  width: 100%;
-  height: 32px;
-  gap: 8px;
+  display: inline-grid;
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  place-items: center;
   border: 1px solid var(--settings-page-border);
-  background: var(--settings-page-surface);
-  color: var(--settings-page-text);
-  font-size: 12px;
-  justify-content: flex-start;
+  border-radius: 10px;
+  padding: 0;
+  background: color-mix(in srgb, var(--settings-page-surface) 88%, transparent);
+  color: var(--settings-page-muted);
+  font-size: 14px;
+  justify-content: center;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
 }
 
-.settings-page__exit:hover {
+.settings-page__exit:hover,
+.settings-page__exit:focus-visible {
   border-color: var(--settings-page-border-strong);
   background: var(--settings-page-surface-muted);
+  color: var(--settings-page-accent-strong);
+  transform: translateY(-1px);
+}
+
+.settings-page__exit:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.settings-page__exit .iconfont {
+  font-size: 14px;
+  line-height: 1;
 }
 
 .settings-page__nav-button {
@@ -211,7 +232,9 @@
 }
 
 .settings-page__sidebar-footer {
+  display: flex;
   align-self: end;
+  justify-content: center;
 }
 
 .settings-page__content {

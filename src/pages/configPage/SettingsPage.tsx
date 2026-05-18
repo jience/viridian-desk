@@ -160,13 +160,14 @@ export default function SettingsPage() {
 
             <div className="settings-page__sidebar-footer">
               <Button
+                aria-label={intl.formatMessage({ id: 'ExitSetting' })}
                 className="settings-page__exit"
+                title={intl.formatMessage({ id: 'ExitSetting' })}
                 type="button"
                 variant="secondary"
                 onClick={goBack}
               >
-                <i className="iconfont icon-signout" />
-                {intl.formatMessage({ id: 'ExitSetting' })}
+                <i className="iconfont icon-left" aria-hidden="true" />
               </Button>
             </div>
           </div>

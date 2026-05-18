@@ -215,12 +215,51 @@
 .auth-page__brand-header {
   display: flex;
   align-items: center;
+  min-height: 42px;
+}
+
+.auth-page__brand-lockup {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  color: var(--auth-text);
+}
+
+.auth-page__brand-mark {
+  display: inline-grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--auth-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--auth-panel-strong) 70%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 12px 28px rgba(55, 48, 38, 0.08);
+  backdrop-filter: blur(16px);
+}
+
+.auth-page__brand-name {
+  overflow: hidden;
+  color: var(--auth-text);
+  font-size: 15px;
+  font-weight: 760;
+  letter-spacing: 0;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-transform: lowercase;
+  white-space: nowrap;
 }
 
 .auth-page__logo {
-  width: 176px;
-  height: 34px;
+  display: block;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
+  pointer-events: none;
+  user-select: none;
 }
 
 .auth-page__hero {

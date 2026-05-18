@@ -1,4 +1,4 @@
-import logoBlue from '@/assets/images/logoBlue1.png';
+import loginLogo from '@/assets/images/logo.svg';
 import Footer from '@/components/Footer';
 import { LoginAuthType } from '@/native/interfaces/login_history';
 import { useAppSelector } from '@/store';
@@ -126,12 +126,17 @@ export default function LoginPage() {
       <section className="auth-page__window">
         <section className="auth-page__brand-zone" aria-label={t('appName')}>
           <header className="auth-page__brand-header">
-            <img
-              src={logoBlue}
-              className="auth-page__logo"
-              alt={t('appName')}
-              onDragStart={(event) => event.preventDefault()}
-            />
+            <div className="auth-page__brand-lockup" aria-label="viridian desk">
+              <span className="auth-page__brand-mark" aria-hidden="true">
+                <img
+                  src={loginLogo}
+                  className="auth-page__logo"
+                  alt=""
+                  onDragStart={(event) => event.preventDefault()}
+                />
+              </span>
+              <span className="auth-page__brand-name">viridian desk</span>
+            </div>
           </header>
 
           <div className="auth-page__hero">
