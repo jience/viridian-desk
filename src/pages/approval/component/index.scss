@@ -15,6 +15,17 @@
   }
 }
 
+.approval-form-full-width,
+.approval-peripheral-option {
+  width: 100%;
+}
+
+.approval-peripheral-option {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .deskpool-info {
   margin: 0px 5px 0;
   overflow: hidden;

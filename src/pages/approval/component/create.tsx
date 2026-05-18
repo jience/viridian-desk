@@ -672,7 +672,7 @@ const CreateForm = (props: any, _ref: any) => {
         ]}
       >
         <InputNumber
-          style={{ width: '100%' }}
+          className="approval-form-full-width"
           precision={0}
           min={
             (diskDetial?.size + 1 > diskDetial?.createMaxNum
@@ -707,7 +707,7 @@ const CreateForm = (props: any, _ref: any) => {
         ]}
       >
         <InputNumber
-          style={{ width: '100%' }}
+          className="approval-form-full-width"
           precision={0}
           min={10}
           max={10240}
@@ -868,12 +868,8 @@ const CreateForm = (props: any, _ref: any) => {
             {peripheralList.map((it: any) => (
               <Option key={`${it['DEVICE_NAME']}|${it['PID']}|${it['VID']}|${it['DEVICE_TYPE']}`}>
                 <div
+                  className="approval-peripheral-option"
                   title={`${it['DEVICE_NAME']}|${transDeviceType(it['DEVICE_TYPE']).join(',')}`}
-                  style={{
-                    width: '100%',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
                 >
                   {`${it['DEVICE_NAME']}`}
                   {transDeviceType(it['DEVICE_TYPE']).map((type: any) => {
