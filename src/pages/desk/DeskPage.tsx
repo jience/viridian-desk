@@ -333,9 +333,15 @@ export function DeskPage() {
                     <article
                       className={`desk-card desk-card--${item?.desktopPool?.type} desk-card-item-${index} ${
                         isStopped ? 'desk-card--disabled' : ''
-                      }`}
+                      } ${item.isDefault ? 'desk-card--default' : ''}`}
                       key={item?.id || `${item?.name}-${index}`}
                     >
+                      {item.isDefault && (
+                        <span className="desk-card__default-mark">
+                          {formatMessage({ id: 'DEFAULT' })}
+                        </span>
+                      )}
+
                       <Dropdown
                         menu={getDesktopMenu(item)}
                         placement="bottomRight"
@@ -362,11 +368,6 @@ export function DeskPage() {
                       >
                         <div className="desk-card__icon">
                           {transIcon(item.image?.os || item.os)}
-                          {item.isDefault && (
-                            <span className="desk-card__default">
-                              {formatMessage({ id: 'DEFAULT' })}
-                            </span>
-                          )}
                         </div>
 
                         <div className="desk-card__identity">
