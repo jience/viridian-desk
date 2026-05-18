@@ -1,5 +1,5 @@
-import { Select } from 'antd';
-import type { DefaultOptionType } from 'antd/es/select';
+import { Select } from '@/ui';
+import type { DefaultOptionType } from '@/ui';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/store';

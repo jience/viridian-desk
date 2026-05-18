@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import './index.scss';
-import { Empty, Tooltip } from 'antd';
+import { Empty, Tooltip } from '@/ui';
 import IntegratedCard from '@/components/IntegratedCard';
 import { deviceTransLocal } from '@/utils/constant';
 import { _list_usb_devices } from '@/services/invokeServices';

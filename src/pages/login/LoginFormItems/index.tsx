@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/store';
 import { selectCurrentLoginType } from '@/store/feature/app';
-import type { FormInstance } from 'antd';
+import type { FormInstance } from '@/ui';
 import type { LoginFormType } from '../types';
 import { DomainFormItem } from './DomainFormItem';
 import { LocalFormItem } from './LocalFormItem';

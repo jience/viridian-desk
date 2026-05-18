@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type FC } from 'react';
-import { Button, Dropdown, Empty, Modal, Spin, Tooltip } from 'antd';
-import type { ItemType } from 'antd/es/menu/interface';
-import type { ModalFunc } from 'antd/es/modal/confirm';
+import { Button, Dropdown, Empty, Modal, Spin, Tooltip } from '@/ui';
+import type { ItemType } from '@/ui';
+import type { ModalFunc } from '@/ui';
 import { Trans, useTranslation } from 'react-i18next';
 import { AppDetailModal } from './component/AppDetailModal';
 import { AppIcon } from './component/AppIcon';
@@ -16,7 +16,7 @@ import type {
   VappCategory,
 } from '@/services/api/vapp/types';
 import type { ConnectVappReq } from '@/services/invoke/vapp/types';
-import type { DefaultOptionType } from 'antd/es/select';
+import type { DefaultOptionType } from '@/ui';
 import './ApplicationPage.scss';
 
 export interface ApplicationPageProps {

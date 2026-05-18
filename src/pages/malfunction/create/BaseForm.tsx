@@ -11,7 +11,7 @@ import {
   InputNumber,
   DatePicker,
   Form,
-} from 'antd';
+} from '@/ui';
 import { isEmpty } from 'lodash-es';
 // other
 

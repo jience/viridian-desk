@@ -1,7 +1,7 @@
 import diffLoginImg from '@/assets/images/difflogin.png';
 import { useAppSelector } from '@/store';
 import { selectCurrentUser } from '@/store/feature/app';
-import { Modal } from 'antd';
+import { Modal } from '@/ui';
 import dayjs from 'dayjs';
 import { useIntl } from 'react-intl';
 import './index.scss';

@@ -11,8 +11,8 @@ import {
 import { selectAutoGateway, selectConnected, selectNetwork } from '@/store/feature/gateway';
 import '@/styles/design-system.css';
 import { Button } from '@/ui/components/button';
-import { QrcodeOutlined } from '@ant-design/icons';
-import { Checkbox, Form } from 'antd';
+import { QrcodeOutlined } from '@/ui/icons';
+import { Checkbox, Form } from '@/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';

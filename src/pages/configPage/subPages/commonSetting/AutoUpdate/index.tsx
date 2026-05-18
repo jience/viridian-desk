@@ -1,7 +1,7 @@
 import style from './index.module.scss';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { message, Switch } from 'antd';
+import { message, Switch } from '@/ui';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { configAutoUpdate, selectAutoUpdate } from '@/store/feature/config';
 import { SettingsRow } from '../../../components';

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import './index.scss';
 
 import { useRef, type FC } from 'react';
-import { Button } from 'antd';
+import { Button } from '@/ui';
 import DiagnosisModal, { type DiagnosisModalRef } from './DiagnosisModal';
 import { SettingsRow } from '../../../components';
 

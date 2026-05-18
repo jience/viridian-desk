@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import './index.scss';
 import BaseForm from './BaseForm';
-import { Modal } from 'antd';
+import { Modal } from '@/ui';
 
 const CreatedModal = (props: any) => {
   const {

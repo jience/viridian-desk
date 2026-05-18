@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo, memo, useContext } from 'react';
 // eslint-disable-next-line import/named
-import { Table, Button, Checkbox, Row, Col, Menu, Dropdown as Dropdown } from 'antd';
+import { Table, Button, Checkbox, Row, Col, Menu, Dropdown as Dropdown } from '@/ui';
 import SearchBar from '../SearchBar';
 import { clearEmpty } from '@/utils/utils';
-import { Divider } from 'antd';
+import { Divider } from '@/ui';
 import { useIntl } from 'react-intl';
 import ActionAuth from '@/utils/actionAuth';
 import { map, isEmpty, get, cloneDeep, isFunction, slice } from 'lodash-es';

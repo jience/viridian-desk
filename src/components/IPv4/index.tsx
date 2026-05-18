@@ -1,4 +1,4 @@
-import { ConfigProvider, Input } from 'antd';
+import { ConfigProvider, Input } from '@/ui';
 import cx from 'classnames';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import './index.scss';

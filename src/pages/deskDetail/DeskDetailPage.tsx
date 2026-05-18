@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Button, Dropdown, Empty, Spin, Tag, Tooltip } from 'antd';
+import { Button, Dropdown, Empty, Spin, Tag, Tooltip } from '@/ui';
 import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from 'react-router';
 import Close from '@/components/Closesvg';

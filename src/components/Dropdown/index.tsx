@@ -1,7 +1,7 @@
-import { Dropdown, Button } from 'antd';
+import { Dropdown, Button } from '@/ui';
 import './index.scss';
-import type { ItemType } from 'antd/es/menu/interface';
-import { EllipsisOutlined } from '@ant-design/icons';
+import type { ItemType } from '@/ui';
+import { EllipsisOutlined } from '@/ui/icons';
 
 export interface DropdownBtnProps {
   disabled?: boolean;

@@ -1,7 +1,7 @@
 import { FaultStatus, FaultType, type FaultItem } from '@/services/api/fault/types';
-import type { SelectProps, TablePaginationConfig } from 'antd';
-import { Button, Empty, Popover, Select, Space, Table, Tag, Tooltip } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import type { SelectProps, TablePaginationConfig } from '@/ui';
+import { Button, Empty, Popover, Select, Space, Table, Tag, Tooltip } from '@/ui';
+import type { ColumnsType } from '@/ui';
 import type { Key, ReactNode } from 'react';
 import type { IntlShape } from 'react-intl';
 import type { ViewFaultStatus, ViewFaultType } from './types';

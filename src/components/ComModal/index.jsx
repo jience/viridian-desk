@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'antd';
+import { Modal } from '@/ui';
 import './index.scss';
 
 function ComModal({ modalData, children, onCancel, onOk, afterClose, ...other }) {

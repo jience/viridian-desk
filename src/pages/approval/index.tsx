@@ -4,7 +4,7 @@ import { useAppSelector } from '@/store';
 import { selectCurrentUser } from '@/store/feature/app';
 import Actions from '@/utils/actions';
 import { hasPermission } from '@/utils/permission';
-import type { TablePaginationConfig } from 'antd';
+import type { TablePaginationConfig } from '@/ui';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { ApprovalDetailModal, type ApprovalDetailModalRef } from './ApprovalDetailModal';

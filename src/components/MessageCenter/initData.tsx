@@ -2,8 +2,8 @@ import { HistoryMessageLevel, type HistoryMessageItem } from '@/services/api/msg
 import type { NoticeItem } from '@/services/api/notice/types';
 import { useAppSelector } from '@/store';
 import { selectIsLogin } from '@/store/feature/app';
-import { Button, Tag, Tooltip, type CheckboxOptionType } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import { Button, Tag, Tooltip, type CheckboxOptionType } from '@/ui';
+import type { ColumnsType } from '@/ui';
 import { useTranslation } from 'react-i18next';
 
 export const useInitData = (opt: {

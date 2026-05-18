@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Switch } from 'antd';
+import { Form, Input, Modal, Switch } from '@/ui';
 import { useImperativeHandle, useMemo, useRef, useState, type FC, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import { validateAddress, validateName } from '@/utils/validate';

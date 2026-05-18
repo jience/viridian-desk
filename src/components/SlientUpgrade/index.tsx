@@ -1,4 +1,4 @@
-import { Modal, Progress } from 'antd';
+import { Modal, Progress } from '@/ui';
 import { useIntl } from 'react-intl';
 import './index.scss';
 import UpgradeLoading from '@/assets/images/upgradeLoading.svg?react';

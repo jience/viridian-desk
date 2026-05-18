@@ -2,7 +2,7 @@ import type { LoginAuthType } from '@/native/interfaces/login_history';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { selectCurrentLoginType, setCurrentLoginType } from '@/store/feature/app';
 import { selectLoginTypes } from '@/store/feature/client';
-import { Divider } from 'antd';
+import { Divider } from '@/ui';
 import { useMemo, type FC } from 'react';
 import './index.scss';
 import { useLoginWay } from './initData';

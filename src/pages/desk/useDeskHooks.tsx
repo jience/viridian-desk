@@ -8,8 +8,8 @@ import Actions from '@/utils/actions';
 import { DESK_STATUS, getStatus } from '@/utils/constant';
 import { formatI18NKey } from '@/utils/utils';
 import { invoke } from '@tauri-apps/api/core';
-import type { MenuProps } from 'antd';
-import { message, Modal, Tag, Tooltip } from 'antd';
+import type { MenuProps } from '@/ui';
+import { message, Modal, Tag, Tooltip } from '@/ui';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import {

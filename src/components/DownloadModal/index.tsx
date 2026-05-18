@@ -1,10 +1,10 @@
-import { Modal, Progress } from 'antd';
+import { Modal, Progress } from '@/ui';
 import { useIntl } from 'react-intl';
 import './index.scss';
 import upgradeCon from '@/assets/images/upgrade-con.svg';
 import { useEffect, useMemo, useState, type FC } from 'react';
 import { transformSize, transformSpeed } from '@/utils/common';
-import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
+import { CheckCircleFilled, CloseCircleFilled } from '@/ui/icons';
 import { bridge } from '@/native';
 import type { FetchUpdateResp } from '@/native/interfaces/app_updates';
 

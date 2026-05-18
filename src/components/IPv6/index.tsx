@@ -1,4 +1,4 @@
-import { Input } from 'antd';
+import { Input } from '@/ui';
 
 const IPv6 = (props: any) => {
   const { value, size = 'large', ...restProps } = props;

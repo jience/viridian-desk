@@ -1,4 +1,4 @@
-import { Modal, Tooltip } from 'antd';
+import { Modal, Tooltip } from '@/ui';
 import { EmptyText } from '@/utils/constant';
 import { AppIcon } from '../AppIcon';
 

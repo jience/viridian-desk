@@ -1,5 +1,5 @@
 import React, { useEffect, useImperativeHandle, forwardRef, useState } from 'react';
-import { Form, Input } from 'antd';
+import { Form, Input } from '@/ui';
 import { useIntl } from 'react-intl';
 import Regex from '../../utils/regex';
 import { getTerminalLoginConfig } from '@/services/public';

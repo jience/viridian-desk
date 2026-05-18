@@ -15,7 +15,7 @@ import {
   Form,
   Divider,
   TreeSelect,
-} from 'antd';
+} from '@/ui';
 
 import IPv4Cidr from '@/components/IPv4-cidr';
 import IPv4 from '@/components/IPv4';

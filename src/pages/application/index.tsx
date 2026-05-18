@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { message } from 'antd';
+import { message } from '@/ui';
 import { useInitData } from './initData';
 import { useTranslation } from 'react-i18next';
 import { deleteVapp, listVapp, removeVapp, VappApi } from '@/services/api/vapp';

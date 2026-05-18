@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 // UI
-import { Button } from 'antd';
+import { Button } from '@/ui';
 
 import { useIntl } from 'react-intl';
 

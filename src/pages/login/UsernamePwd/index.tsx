@@ -6,7 +6,7 @@ import {
   selectLastLoginEntry,
   selectLoginHistory,
 } from '@/store/feature/app';
-import { AutoComplete, Form, Input, type FormInstance } from 'antd';
+import { AutoComplete, Form, Input, type FormInstance } from '@/ui';
 import { debounce } from 'lodash-es';
 import { useEffect, useMemo, useState, type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';

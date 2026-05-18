@@ -1,5 +1,5 @@
 import { invoke as tauriInvoke, type InvokeArgs, type InvokeOptions } from '@tauri-apps/api/core';
-import { message } from 'antd';
+import { message } from '@/ui';
 
 export type InvokeOpt = Partial<
   InvokeOptions & {

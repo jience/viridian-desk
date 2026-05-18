@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { useNavigate } from 'react-router';
-import { Tooltip, Modal } from 'antd';
+import { Tooltip, Modal } from '@/ui';
 import { invoke } from '@tauri-apps/api/core';
 import './index.scss';
 import { useAppDispatch, useAppSelector } from '@/store';

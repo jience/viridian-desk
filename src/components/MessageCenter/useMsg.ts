@@ -1,7 +1,7 @@
 import { useLoading } from '@/hooks/useLoading';
 import { MsgApi, deleteTerminalMsg, listHistoryMessage } from '@/services/api/msg';
 import type { HistoryMessageItem, HistoryMessageListRequest } from '@/services/api/msg/types';
-import { Modal } from 'antd';
+import { Modal } from '@/ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

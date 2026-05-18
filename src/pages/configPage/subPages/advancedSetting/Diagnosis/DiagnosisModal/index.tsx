@@ -10,7 +10,7 @@ import {
   type FC,
 } from 'react';
 import { DiagnosisInfo } from './DiagnosisInfo';
-import { Button, Modal, Progress, Space } from 'antd';
+import { Button, Modal, Progress, Space } from '@/ui';
 import type { DiagnosisData } from './DiagnosisInfo/types';
 import { useAppSelector } from '@/store';
 import { selectClientType, selectVersionName } from '@/store/feature/terminal';
@@ -20,7 +20,7 @@ import { getNetworkType } from '@/utils/common';
 import type { UnlistenFn } from '@tauri-apps/api/event';
 import { useTranslation } from 'react-i18next';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { CheckCircleFilled, CopyOutlined } from '@ant-design/icons';
+import { CheckCircleFilled, CopyOutlined } from '@/ui/icons';
 import type { NetProbeItemRender } from '@/native/interfaces/cmd';
 import { bridge } from '@/native';
 

@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { message, Modal } from 'antd';
+import { message, Modal } from '@/ui';
 import { cancelWorkflow } from '@/services/resource';
 import useRequest from '@/hooks/useRequest';
 import './index.scss';

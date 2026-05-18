@@ -1,12 +1,12 @@
-import { Button, Input, message, Modal, Space, Table } from 'antd';
+import { Button, Input, message, Modal, Space, Table } from '@/ui';
 import { useEffect, useState, type FC } from 'react';
 import './index.scss';
 // import * as AppAjax from '@/services/application';
 import { useLoading } from '@/hooks/useLoading';
 import { addVapp, listVapp, VappApi } from '@/services/api/vapp';
 import type { ListVappItem, ListVappReq, VappCategory } from '@/services/api/vapp/types';
-import { ReloadOutlined } from '@ant-design/icons';
-import type { ColumnsType, TableProps } from 'antd/es/table';
+import { ReloadOutlined } from '@/ui/icons';
+import type { ColumnsType, TableProps } from '@/ui';
 import { Trans, useTranslation } from 'react-i18next';
 import { useInitData } from '../../initData';
 

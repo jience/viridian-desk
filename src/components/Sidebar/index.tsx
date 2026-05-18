@@ -25,7 +25,7 @@ import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
 import { cn } from '@/ui/lib/cn';
 import { authActionShow } from '@/utils/actionAuth';
 import { listen } from '@tauri-apps/api/event';
-import { Menu, message, Modal, Popover, Tooltip } from 'antd';
+import { Menu, message, Modal, Popover, Tooltip } from '@/ui';
 import { Buffer } from 'buffer';
 import { isEmpty } from 'lodash-es';
 import { Sparkles } from 'lucide-react';

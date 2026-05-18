@@ -5,7 +5,7 @@ import { convertFileSrc, invoke } from '@tauri-apps/api/core';
 import { Outlet } from 'react-router';
 import MessageListModal from '@/components/MessageCenter';
 import { globalEmitter } from '@/utils/mitt';
-import { message } from 'antd';
+import { message } from '@/ui';
 import { useInitState } from './useInitState';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { selectBackgroundImage } from '@/store/feature/client';

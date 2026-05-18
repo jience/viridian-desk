@@ -19,7 +19,6 @@
     "prepare-resources": "pnpm run update-i18n"
   },
   "dependencies": {
-    "@ant-design/icons": "^6.1.0",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-switch": "^1.2.6",
@@ -34,7 +33,6 @@
     "@tauri-apps/plugin-updater": "~2.9.0",
     "@tauri-apps/plugin-websocket": "^2.4.1",
     "ahooks": "^3.9.6",
-    "antd": "^6.1.2",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",

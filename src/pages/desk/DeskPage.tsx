@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router';
-import { Button, Dropdown, Empty, message, Modal, Spin, Tooltip } from 'antd';
+import { Button, Dropdown, Empty, message, Modal, Spin, Tooltip } from '@/ui';
 import { listen } from '@tauri-apps/api/event';
 import { get } from 'lodash-es';
 import DeskLoading from '@/components/DeskLoading';

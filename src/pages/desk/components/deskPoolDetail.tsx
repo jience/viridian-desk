@@ -1,4 +1,4 @@
-import { Modal, Tooltip } from 'antd';
+import { Modal, Tooltip } from '@/ui';
 import Deskpool from '@/components/Deskpoolsvg';
 import { EmptyText } from '@/utils/constant';
 import { transRam } from '@/utils/utils';

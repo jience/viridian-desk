@@ -1,4 +1,4 @@
-import { Tooltip } from 'antd';
+import { Tooltip } from '@/ui';
 import './index.scss';
 
 interface IconWithTooltipProps {

@@ -8,9 +8,9 @@ import {
   selectNetwork,
   switchGateway,
 } from '@/store/feature/gateway';
-import { CaretDownOutlined } from '@ant-design/icons';
-import { Select, Tooltip } from 'antd';
-import type { DefaultOptionType } from 'antd/es/select';
+import { CaretDownOutlined } from '@/ui/icons';
+import { Select, Tooltip } from '@/ui';
+import type { DefaultOptionType } from '@/ui';
 import { useMemo, type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/ui/lib/cn';

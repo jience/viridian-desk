@@ -1,5 +1,5 @@
 import './index.scss';
-import { Modal, Form, Switch } from 'antd';
+import { Modal, Form, Switch } from '@/ui';
 import { useImperativeHandle, useRef, useState, type FC, type Ref } from 'react';
 import { IPv4Input } from './IPv4Input';
 import { useTranslation } from 'react-i18next';

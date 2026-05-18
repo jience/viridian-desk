@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Form, Input, Select, Modal, message } from 'antd';
+import { Form, Input, Select, Modal, message } from '@/ui';
 import regex from '@/utils/regex';
 import './index.scss';
 import { useInitData } from '../../initData';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/store';
 import { selectLanguage } from '@/store/feature/config';
-import type { DefaultOptionType } from 'antd/es/select';
+import type { DefaultOptionType } from '@/ui';
 import { listResourceUser } from '@/services/api/desktop';
 import IconChoose from './IconChoose';
 import type { CreateVappReq } from '@/services/api/vapp/types';

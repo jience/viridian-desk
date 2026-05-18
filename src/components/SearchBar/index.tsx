@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { Button, Input } from 'antd';
+import { Button, Input } from '@/ui';
 import { useIntl } from 'react-intl';
-import { SearchOutlined, DeleteOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined } from '@/ui/icons';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { Tag } from 'antd';
+import { Tag } from '@/ui';
 import './index.scss';
 import { cloneDeep, isArray, isEmpty, isFunction, isNil } from 'lodash-es';
 

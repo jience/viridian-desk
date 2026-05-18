@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/store';
 import { selectCurrentUser } from '@/store/feature/app';
-import { Modal } from 'antd';
+import { Modal } from '@/ui';
 import { useIntl } from 'react-intl';
 import './index.scss';
 

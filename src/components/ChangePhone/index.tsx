@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useIntl } from 'react-intl';
-import { Button, Form, Input, Modal, message } from 'antd';
+import { Button, Form, Input, Modal, message } from '@/ui';
 import Regex from '@/utils/regex';
 import { formatTel } from '@/utils/utils';
 import './index.scss';

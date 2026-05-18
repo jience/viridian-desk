@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { MenuProps } from 'antd';
-import { Modal } from 'antd';
+import type { MenuProps } from '@/ui';
+import { Modal } from '@/ui';
 import { DESK_STATUS } from '@/utils/constant';
 import Actions from '@/utils/actions';
 import { getSnapshot, deleteSnapshot, applySnapshot } from '@/services/resource';

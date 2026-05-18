@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import './index.scss';
 import ConfigurationForm from '@/components/ConfigurationForm';
-import { Modal } from 'antd';
+import { Modal } from '@/ui';
 import { isEmpty } from 'lodash-es';
 
 export interface modelProps {

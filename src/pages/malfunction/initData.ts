@@ -1,5 +1,5 @@
 import { FaultStatus, FaultType, type FaultListRequest } from '@/services/api/fault/types';
-import type { SelectProps } from 'antd';
+import type { SelectProps } from '@/ui';
 import { useIntl } from 'react-intl';
 
 export const initQueryParams: FaultListRequest = {

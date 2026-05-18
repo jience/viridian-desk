@@ -1,6 +1,6 @@
 import './index.scss';
-import { InfoCircleFilled } from '@ant-design/icons';
-import { Tooltip, Empty } from 'antd';
+import { InfoCircleFilled } from '@/ui/icons';
+import { Tooltip, Empty } from '@/ui';
 import type { ReactNode } from 'react';
 
 export interface InfoItem {

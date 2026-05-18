@@ -1,4 +1,4 @@
-import { Input } from 'antd';
+import { Input } from '@/ui';
 import IPv6 from '../IPv6';
 import './index.scss';
 

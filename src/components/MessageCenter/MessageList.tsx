@@ -1,11 +1,11 @@
 import './messageList.scss';
 import { useState, useEffect } from 'react';
-import { Button, Empty, Input, Modal, Radio, Table } from 'antd';
+import { Button, Empty, Input, Modal, Radio, Table } from '@/ui';
 
 import { useInitData } from './initData';
 
 import { useTranslation } from 'react-i18next';
-import { ReloadOutlined, SearchOutlined } from '@ant-design/icons';
+import { ReloadOutlined, SearchOutlined } from '@/ui/icons';
 import { useMsg } from './useMsg';
 import { useNotice } from './useNotice';
 

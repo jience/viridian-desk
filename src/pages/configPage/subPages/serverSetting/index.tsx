@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import './index.scss';
-import { Button, App, message } from 'antd';
+import { Button, App, message } from '@/ui';
 import { useAppDispatch, useAppSelector } from '@/store';
 import {
   fetchGatewayList,
@@ -16,7 +16,7 @@ import {
 import { selectGatewayAddrShowSwitch } from '@/store/feature/client';
 import { desensitizeText } from '@/utils/common';
 import { DropdownBtn } from '@/components/Dropdown';
-import type { ItemType } from 'antd/es/menu/interface';
+import type { ItemType } from '@/ui';
 import { ServerEditModal, type ServerEditModalRef } from './ServerEditModal';
 import { useTranslation } from 'react-i18next';
 import type {

@@ -1,7 +1,7 @@
 import './index.scss';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Switch } from 'antd';
+import { Switch } from '@/ui';
 import { configDeveloperMode, selectDeveloperMode } from '@/store/feature/config';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { SettingsRow } from '../../../components';

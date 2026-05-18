@@ -1,7 +1,7 @@
-import { Button, Dropdown, Empty, Select, Space, Table, Tooltip } from 'antd';
-import type { TablePaginationConfig } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import type { ItemType } from 'antd/es/menu/interface';
+import { Button, Dropdown, Empty, Select, Space, Table, Tooltip } from '@/ui';
+import type { TablePaginationConfig } from '@/ui';
+import type { ColumnsType } from '@/ui';
+import type { ItemType } from '@/ui';
 import type { Key, ReactNode } from 'react';
 import type { IntlShape } from 'react-intl';
 import {

@@ -1,4 +1,4 @@
-import { Input } from 'antd';
+import { Input } from '@/ui';
 import { useEffect, useState, type FC } from 'react';
 
 export interface IPv4InputProps {

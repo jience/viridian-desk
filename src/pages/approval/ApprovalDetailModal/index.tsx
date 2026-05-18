@@ -1,6 +1,6 @@
 import InfoTable from '@/components/InfoTable';
 import { SettingItem } from '@/components/SettingItem';
-import { Modal, Spin } from 'antd';
+import { Modal, Spin } from '@/ui';
 import { useImperativeHandle, useRef, useState, type FC, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useInfoTable } from './useInfoTable';

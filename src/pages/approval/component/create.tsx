@@ -11,7 +11,7 @@ import {
   DatePicker,
   Tag,
   message,
-} from 'antd';
+} from '@/ui';
 import { EmptyText, deviceTransLocal } from '@/utils/constant';
 import './index.scss';
 import Regex from '@/utils/regex';

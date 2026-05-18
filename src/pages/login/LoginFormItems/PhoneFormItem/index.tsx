@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Regex from '@/utils/regex.ts';
 import { useAppSelector } from '@/store';
-import { Button, Form, Input, Space, type FormInstance } from 'antd';
+import { Button, Form, Input, Space, type FormInstance } from '@/ui';
 import type { LoginFormType } from '../../types';
 import { selectConnected } from '@/store/feature/gateway';
 import useSmsCountdown from '@/hooks/useSmsCountdown';

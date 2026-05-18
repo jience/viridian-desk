@@ -1,4 +1,4 @@
-import { Form, Input, message, Modal, Radio } from 'antd';
+import { Form, Input, message, Modal, Radio } from '@/ui';
 import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import Regex from '@/utils/regex';

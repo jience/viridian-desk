@@ -1,7 +1,7 @@
 import './index.scss';
 
 // UI
-import { Divider, Tag, Tooltip } from 'antd';
+import { Divider, Tag, Tooltip } from '@/ui';
 
 interface tagObject {
   color: string;

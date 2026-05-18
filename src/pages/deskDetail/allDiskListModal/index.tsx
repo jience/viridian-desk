@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import './index.scss';
-import { Modal, Empty } from 'antd';
+import { Modal, Empty } from '@/ui';
 import TableCommon from '@/components/TableCommon';
 import useDeskDetail from '../useDeskDetail';
 

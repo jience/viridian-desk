@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button } from '@/ui';
 import './index.scss';
 const TableBtn = (props: any) => {
   const { icon, className, ...rest } = props;

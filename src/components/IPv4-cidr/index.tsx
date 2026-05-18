@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { Input } from 'antd';
+import { Input } from '@/ui';
 import IPv4 from '../IPv4';
 import './index.scss';
 

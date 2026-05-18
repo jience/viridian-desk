@@ -12,7 +12,7 @@ import {
 import { selectIsThin } from '@/store/feature/terminal';
 import Actions from '@/utils/actions';
 import { encryption } from '@/utils/utils';
-import { message } from 'antd';
+import { message } from '@/ui';
 import { useNavigate } from 'react-router';
 
 export const useLoginSuccessHandler = (opt: {

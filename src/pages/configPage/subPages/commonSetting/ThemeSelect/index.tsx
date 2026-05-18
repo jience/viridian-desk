@@ -1,10 +1,10 @@
 import style from './index.module.scss';
 import { useMemo, type FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { message } from 'antd';
+import { message } from '@/ui';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { configTheme, selectTheme } from '@/store/feature/config';
-import { CheckOutlined } from '@ant-design/icons';
+import { CheckOutlined } from '@/ui/icons';
 import { ThemeType } from '@/native/interfaces/config';
 import { SettingsRow } from '../../../components';
 

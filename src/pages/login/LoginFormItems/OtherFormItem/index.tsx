@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { UsernamePwd, type UsernamePwdProps } from '../../UsernamePwd';
-import { Form, Select } from 'antd';
+import { Form, Select } from '@/ui';
 import type { CorpItem } from '@/native/interfaces/api';
 import { bridge } from '@/native';
 import { useAppSelector } from '@/store';

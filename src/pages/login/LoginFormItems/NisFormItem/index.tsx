@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '@/store';
 import { UsernamePwd, type UsernamePwdProps } from '../../UsernamePwd';
-import { Form, Select } from 'antd';
+import { Form, Select } from '@/ui';
 import { selectConnected } from '@/store/feature/gateway';
 import { selectLastLoginEntry } from '@/store/feature/app';
 import { bridge } from '@/native';

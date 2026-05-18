@@ -1,6 +1,6 @@
 import * as WwLoginNew from '@/assets/js/wwLogin-1.2.7';
 import { bridge } from '@/native';
-import { Modal } from 'antd';
+import { Modal } from '@/ui';
 import { useEffect, useImperativeHandle, useRef, useState, type FC, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import './index.scss';

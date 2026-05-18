@@ -1,5 +1,5 @@
 import { useState, useEffect, type FC, useRef } from 'react';
-import { Modal, Spin } from 'antd';
+import { Modal, Spin } from '@/ui';
 
 import { AppDetailModal } from '../AppDetailModal';
 import { AppIcon } from '../AppIcon';
@@ -9,10 +9,10 @@ import './index.scss';
 import { hasPermission } from '@/utils/permission';
 import { useTranslation } from 'react-i18next';
 import type { ListVappItem } from '@/services/api/vapp/types';
-import type { ItemType } from 'antd/es/menu/interface';
+import type { ItemType } from '@/ui';
 import { useLoading } from '@/hooks/useLoading';
 import { VappApi } from '@/services/api/vapp';
-import type { ModalFunc } from 'antd/es/modal/confirm';
+import type { ModalFunc } from '@/ui';
 import type { ConnectVappReq } from '@/services/invoke/vapp/types';
 
 export interface VirtualAppProps {

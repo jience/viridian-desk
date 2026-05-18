@@ -1,6 +1,6 @@
 import './index.scss';
 import { useState, useImperativeHandle, type FC, type Ref, useRef } from 'react';
-import { Modal, Form, InputNumber, Input, Select } from 'antd';
+import { Modal, Form, InputNumber, Input, Select } from '@/ui';
 import { getBSize, SizeType, transformSize } from '@/utils/common';
 import { sizeTypeOptions } from './initData';
 import { useTranslation } from 'react-i18next';

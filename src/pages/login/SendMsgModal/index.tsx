@@ -1,7 +1,7 @@
 import useSmsCountdown from '@/hooks/useSmsCountdown';
 import { bridge } from '@/native';
 import type { GetSmsCaptchaReq } from '@/native/interfaces/api';
-import { Button, Form, Input, Modal } from 'antd';
+import { Button, Form, Input, Modal } from '@/ui';
 import {
   useEffect,
   useImperativeHandle,

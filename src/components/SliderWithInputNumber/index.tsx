@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, InputNumber, Row, Slider } from 'antd';
+import { Col, InputNumber, Row, Slider } from '@/ui';
 import './index.scss';
 
 export const IntegerStep: React.FC = (props: any) => {

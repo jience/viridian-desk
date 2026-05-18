@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './index.scss';
-import { Skeleton } from 'antd';
+import { Skeleton } from '@/ui';
 
 import { VersionInfo } from './VersionInfo';
 import { LicenseContent } from './LicenseContent';

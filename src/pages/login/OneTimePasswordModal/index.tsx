@@ -1,6 +1,6 @@
 import { bridge } from '@/native';
 import type { GetDynamicPwdQrCodeReq } from '@/native/interfaces/api';
-import { Alert, Button, Input, Modal, QRCode } from 'antd';
+import { Alert, Button, Input, Modal, QRCode } from '@/ui';
 import { useImperativeHandle, useRef, useState, type FC, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import './index.scss';

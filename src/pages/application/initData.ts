@@ -1,5 +1,5 @@
 import { VappCategory } from '@/services/api/vapp/types';
-import type { DefaultOptionType } from 'antd/es/select';
+import type { DefaultOptionType } from '@/ui';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 

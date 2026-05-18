@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useContext } from 'react';
 
-import { Button, Input, Switch, InputNumber, Table, ConfigProvider } from 'antd';
+import { Button, Input, Switch, InputNumber, Table, ConfigProvider } from '@/ui';
 import IPv4Cidr from '@/components/IPv4-cidr';
 import IPv4 from '@/components/IPv4';
 import IPv6Cidr from '@/components/IPv6-cidr';

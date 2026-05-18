@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { message } from 'antd';
+import { message } from '@/ui';
 import { useTranslation } from 'react-i18next';
 import { listVappIcon } from '@/services/api/vapp';
 import { open } from '@tauri-apps/plugin-dialog';

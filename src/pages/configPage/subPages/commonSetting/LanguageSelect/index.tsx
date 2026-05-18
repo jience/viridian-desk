@@ -1,7 +1,7 @@
 import style from './index.module.scss';
 import { useMemo, type FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Select } from 'antd';
+import { Select } from '@/ui';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { configLanguage, selectLanguage } from '@/store/feature/config';
 import { LanguageType } from '@/native/interfaces/config';

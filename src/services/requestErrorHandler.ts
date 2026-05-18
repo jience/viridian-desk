@@ -1,5 +1,5 @@
 import type { NativeResponse } from '@/native/interfaces/types';
-import { message as antdMessage } from 'antd';
+import { message as antdMessage } from '@/ui';
 import { t, type Resources } from 'i18next';
 import { isEmpty } from 'lodash-es';
 
