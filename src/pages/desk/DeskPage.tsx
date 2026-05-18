@@ -263,7 +263,7 @@ export function DeskPage() {
           )}
 
           {!!deskData?.length && (
-            <section className="desk-page__section">
+            <section className="desk-page__section desk-page__section--desktops">
               <div className="desk-page__grid">
                 {deskData.map((item: any, index: number) => {
                   const isStopped = ['stop', 'stopretain'].includes(item?.status?.toLowerCase());
@@ -277,7 +277,7 @@ export function DeskPage() {
                       key={item?.id || `${item?.name}-${index}`}
                     >
                       <button
-                        className="desk-card__body"
+                        className="desk-card__preview"
                         type="button"
                         onClick={() => enterDesk(item)}
                       >
@@ -294,16 +294,25 @@ export function DeskPage() {
                             {formatMessage({ id: desktopType })}
                           </span>
                         </div>
-                        <div className="desk-card__visual">
-                          <div className="desk-card__os">
-                            {item.status.toLowerCase() === 'stop' ? (
-                              <span className="desk-card__os-shell">
-                                <Close />
-                              </span>
-                            ) : (
-                              <Open />
-                            )}
-                            {transIcon(item.image?.os || item.os)}
+
+                        <div className="desk-card__stage">
+                          <div className="desk-card__screen">
+                            <div className="desk-card__screen-chrome">
+                              <span />
+                              <span />
+                              <span />
+                            </div>
+                            <div className="desk-card__os">
+                              {item.status.toLowerCase() === 'stop' ? (
+                                <span className="desk-card__os-shell">
+                                  <Close />
+                                </span>
+                              ) : (
+                                <Open />
+                              )}
+                              {transIcon(item.image?.os || item.os)}
+                            </div>
+                            <span className="desk-card__screen-tag">{statusInfo.title}</span>
                           </div>
                           {item.isDefault && (
                             <span className="desk-card__default">
@@ -311,83 +320,99 @@ export function DeskPage() {
                             </span>
                           )}
                         </div>
-                        <Tooltip title={item.name}>
-                          <p className="desk-card__name">
-                            <span>{item.name}</span>
-                          </p>
-                        </Tooltip>
-                        <div className="desk-card__meta" aria-hidden="true">
-                          <span>{getDesktopSpec(item)}</span>
-                          <span>{getPrimaryIp(item?.interfaces)}</span>
+
+                        <div className="desk-card__identity">
+                          <Tooltip title={item.name}>
+                            <h3 className="desk-card__name">
+                              <span>{item.name}</span>
+                            </h3>
+                          </Tooltip>
+                          <p className="desk-card__os-name">{getOsLabel(item)}</p>
                         </div>
-                        <p className="desk-card__os-name">{getOsLabel(item)}</p>
                       </button>
+
+                      <div className="desk-card__facts" aria-label={item.name}>
+                        <div className="desk-card__fact">
+                          <span>{formatMessage({ id: 'DESK_STANDARD' })}</span>
+                          <strong>{getDesktopSpec(item)}</strong>
+                        </div>
+                        <div className="desk-card__fact">
+                          <span>{formatMessage({ id: 'DESK_NETWORK' })}</span>
+                          <strong>{getPrimaryIp(item?.interfaces)}</strong>
+                        </div>
+                      </div>
+
                       <div className="desk-card__actions">
                         <Popover content={connectLabel}>
                           <Button
-                            type="text"
+                            className="desk-card__connect"
+                            type="primary"
                             icon={<i className="iconfont icon-boot" />}
                             aria-label={connectLabel}
                             title={connectLabel}
                             onClick={() => enterDesk(item)}
-                          />
+                          >
+                            {connectLabel}
+                          </Button>
                         </Popover>
-                        <Popover content={restartLabel}>
-                          <AuthButton
-                            actions={[Actions.TerminalRWDesktopForceReboot]}
-                            disabled={item.status !== DESK_STATUS.START || item.isLock}
-                            type="text"
-                            icon={<i className="iconfont icon-reboot" />}
-                            aria-label={restartLabel}
-                            title={restartLabel}
-                            onClick={() => restartDesk(item, false)}
-                          />
-                        </Popover>
-                        <Popover content={shutdownLabel}>
-                          <AuthButton
-                            actions={[Actions.TerminalRWDesktopShutdown]}
-                            disabled={item.status !== DESK_STATUS.START || item.isLock}
-                            type="text"
-                            icon={<i className="iconfont icon-shutdown" />}
-                            aria-label={shutdownLabel}
-                            title={shutdownLabel}
-                            onClick={() => shutDownDesktop(item)}
-                          />
-                        </Popover>
-                        <Popover content={detailLabel}>
-                          <Button
-                            type="text"
-                            icon={<i className="iconfont icon-info-o" />}
-                            disabled={item.status === DESK_STATUS.DELETING}
-                            aria-label={detailLabel}
-                            title={detailLabel}
-                            onClick={() => {
-                              navigate('/app/deskDetail', {
-                                state: { id: item.id },
-                              });
-                            }}
-                          />
-                        </Popover>
-                        <AuthDropDown
-                          actions={[
-                            Actions.TerminalRWDesktopSetOrUnsetDefault,
-                            Actions.TerminalRWDesktopAttachOrDetachPrivateDisk,
-                          ]}
-                          menu={generateMenus(item, getPersonalDiskMenuActions())}
-                          placement="bottomRight"
-                          trigger={['click']}
-                          classNames={{ root: 'desk-more-menu desk-page__more-menu' }}
-                          getPopupContainer={(triggerNode: HTMLElement) =>
-                            triggerNode.ownerDocument.body
-                          }
-                        >
-                          <Button
-                            type="text"
-                            icon={<i className="iconfont icon-more" />}
-                            aria-label={moreLabel}
-                            title={moreLabel}
-                          />
-                        </AuthDropDown>
+                        <div className="desk-card__quick-actions">
+                          <Popover content={restartLabel}>
+                            <AuthButton
+                              actions={[Actions.TerminalRWDesktopForceReboot]}
+                              disabled={item.status !== DESK_STATUS.START || item.isLock}
+                              type="text"
+                              icon={<i className="iconfont icon-reboot" />}
+                              aria-label={restartLabel}
+                              title={restartLabel}
+                              onClick={() => restartDesk(item, false)}
+                            />
+                          </Popover>
+                          <Popover content={shutdownLabel}>
+                            <AuthButton
+                              actions={[Actions.TerminalRWDesktopShutdown]}
+                              disabled={item.status !== DESK_STATUS.START || item.isLock}
+                              type="text"
+                              icon={<i className="iconfont icon-shutdown" />}
+                              aria-label={shutdownLabel}
+                              title={shutdownLabel}
+                              onClick={() => shutDownDesktop(item)}
+                            />
+                          </Popover>
+                          <Popover content={detailLabel}>
+                            <Button
+                              type="text"
+                              icon={<i className="iconfont icon-info-o" />}
+                              disabled={item.status === DESK_STATUS.DELETING}
+                              aria-label={detailLabel}
+                              title={detailLabel}
+                              onClick={() => {
+                                navigate('/app/deskDetail', {
+                                  state: { id: item.id },
+                                });
+                              }}
+                            />
+                          </Popover>
+                          <AuthDropDown
+                            actions={[
+                              Actions.TerminalRWDesktopSetOrUnsetDefault,
+                              Actions.TerminalRWDesktopAttachOrDetachPrivateDisk,
+                            ]}
+                            menu={generateMenus(item, getPersonalDiskMenuActions())}
+                            placement="bottomRight"
+                            trigger={['click']}
+                            classNames={{ root: 'desk-more-menu desk-page__more-menu' }}
+                            getPopupContainer={(triggerNode: HTMLElement) =>
+                              triggerNode.ownerDocument.body
+                            }
+                          >
+                            <Button
+                              type="text"
+                              icon={<i className="iconfont icon-more" />}
+                              aria-label={moreLabel}
+                              title={moreLabel}
+                            />
+                          </AuthDropDown>
+                        </div>
                       </div>
                     </article>
                   );
@@ -397,13 +422,13 @@ export function DeskPage() {
           )}
 
           {!!deskPoolData?.length && (
-            <section className="desk-page__section">
+            <section className="desk-page__section desk-page__section--pools">
               <div className="desk-page__pool-grid">
                 {deskPoolData.map((item: any, index: number) => (
                   <article className="desk-pool" key={item?.id || `${item?.name}-${index}`}>
                     <button
                       type="button"
-                      className="desk-pool__detail"
+                      className="desk-pool__preview"
                       aria-label={`${detailLabel}: ${item.name}`}
                       onClick={() => {
                         getDeskPoolDetail(item.id);
@@ -419,27 +444,49 @@ export function DeskPage() {
                           {formatMessage({ id: 'DESK_POOL' })}
                         </span>
                       </div>
-                      <div className="desk-card__visual desk-pool__visual">
-                        <div className="desk-pool__os">
-                          <span className="desk-pool__os-shell">
-                            <Deskpool />
+
+                      <div className="desk-card__stage desk-pool__stage">
+                        <div className="desk-card__screen desk-pool__screen">
+                          <div className="desk-card__screen-chrome">
+                            <span />
+                            <span />
+                            <span />
+                          </div>
+                          <div className="desk-pool__os">
+                            <span className="desk-pool__os-shell">
+                              <Deskpool />
+                            </span>
+                            {transIcon(item?.os)}
+                          </div>
+                          <span className="desk-card__screen-tag">
+                            {formatMessage({ id: 'DESK_POOL' })}
                           </span>
-                          {transIcon(item?.os)}
                         </div>
                       </div>
-                      <Tooltip title={item.name}>
-                        <p className="desk-pool__name">
-                          <span>{item.name}</span>
+
+                      <div className="desk-card__identity">
+                        <Tooltip title={item.name}>
+                          <h3 className="desk-pool__name">
+                            <span>{item.name}</span>
+                          </h3>
+                        </Tooltip>
+                        <p className="desk-card__os-name">
+                          {item?.image?.name || item?.os || EmptyText}
                         </p>
-                      </Tooltip>
-                      <div className="desk-card__meta" aria-hidden="true">
-                        <span>{getDesktopSpec(item)}</span>
-                        <span>{item?.network?.subnets?.[0]?.cidr || EmptyText}</span>
                       </div>
-                      <p className="desk-card__os-name">
-                        {item?.image?.name || item?.os || EmptyText}
-                      </p>
                     </button>
+
+                    <div className="desk-card__facts">
+                      <div className="desk-card__fact">
+                        <span>{formatMessage({ id: 'DESK_STANDARD' })}</span>
+                        <strong>{getDesktopSpec(item)}</strong>
+                      </div>
+                      <div className="desk-card__fact">
+                        <span>{formatMessage({ id: 'DESK_NETWORK' })}</span>
+                        <strong>{item?.network?.subnets?.[0]?.cidr || EmptyText}</strong>
+                      </div>
+                    </div>
+
                     <Button
                       onClick={(event) => {
                         event.stopPropagation();
