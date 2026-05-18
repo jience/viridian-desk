@@ -223,18 +223,6 @@ function Sidebar() {
   };
 
   useEffect(() => {
-    // res 是null 则不是绑定并自动登录， res不为空，则是绑定并自动登录
-    // window.ipcRenderer.send(globalAjax.GetBindUser, {});
-    // globalAjax.GetBindUserRes({
-    //   success: (res: any) => {
-    //     console.log('GetBindUser res', res);
-    //     setBindLogin(isEmpty(res));
-    //   },
-    //   error: (err: any) => {},
-    // });
-  }, []);
-
-  useEffect(() => {
     const path = location.pathname;
     let activePath = '';
     for (const index in menus) {

@@ -66,7 +66,6 @@ export const LogConfigModal: FC<LogConfigModalProps> = ({ ref }) => {
         multiple: false,
         title: t('config_page.advanced_setting.select_dir_tip'),
       });
-      console.log('Selected directory:', res);
       if (res) {
         form.setFieldValue('dirPath', res);
       }
@@ -79,7 +78,6 @@ export const LogConfigModal: FC<LogConfigModalProps> = ({ ref }) => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      console.log('Form values:', values);
       const result: LogConfigModalResData = {
         max_file_size: getBSize(values.logSaveMaxSize, logSaveSizeType),
         log_retention_files: values.logSaveNum,

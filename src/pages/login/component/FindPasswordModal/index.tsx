@@ -81,25 +81,6 @@ const FindPasswordModal = (props: any) => {
    */
   const checkUserAndphone = useCallback(() => {
     form.validateFields().then((_res: any) => {
-      // const { loginName } = res;
-      // 调用接口校验用户名并获取手机号
-      // window.ipcRenderer.send(userAjax.CheckTerminalUser, {
-      //   loginName: loginName,
-      //   authType: "LocalAuth",
-      // })
-      // userAjax.checkTerminalUser({
-      //   success: (res: any) => {
-      //     const { phone, id } = res.data;
-      //     setFormData({
-      //       loginName,
-      //       phone
-      //     })
-      //     setCurrentStep(1)
-      //   },
-      //   error: (err: any) => {
-      //     //console.log(err)
-      //   }
-      // })
     });
   }, [form]);
 

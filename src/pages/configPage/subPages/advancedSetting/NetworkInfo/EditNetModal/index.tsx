@@ -39,7 +39,6 @@ export const EditNetModal: FC<EditNetModalProps> = ({ ref }) => {
     () => ({
       openModal: (initData?: Partial<EditNetModalReqType>): Promise<EditNetModalRespType> => {
         return new Promise<EditNetModalRespType>((resolvePromise) => {
-          console.log('initData', initData);
           setVisible(true);
           resolveRef.current = resolvePromise;
 

@@ -228,17 +228,6 @@ const TableCommon = ({
           },
         };
       }
-      // console.log({
-      //     ...prev,
-      //     [item]: {
-      //         title: intl[item] || '',
-      //         value: get(
-      //             options.find((v) => params[item] === v.value),
-      //             'title',
-      //             '',
-      //         ),
-      //     },
-      // })
       return {
         ...prev,
         [item]: {

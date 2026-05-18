@@ -113,7 +113,6 @@ export function DeskPage() {
 
     registerListener(
       listen('desktop-idle-close', async () => {
-        console.log('用户闲置策略生效，关闭桌面');
         // TODO 用户闲置策略生效，关闭桌面 待实现
       }),
     );

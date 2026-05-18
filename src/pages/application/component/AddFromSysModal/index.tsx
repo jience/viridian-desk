@@ -149,10 +149,8 @@ export const AddFromSysModal: FC<AddFromSysModalProps> = (props) => {
   const handleTableChange: TableProps<ListVappItem>['onChange'] = async (
     pagination,
     filters,
-    sorter,
+    _sorter,
   ) => {
-    console.log('Table changed:', pagination, filters, sorter);
-
     const [category] = (filters.category || []) as (VappCategory | 'all')[];
 
     await getListVapp({

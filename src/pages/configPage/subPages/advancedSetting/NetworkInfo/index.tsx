@@ -75,9 +75,7 @@ export const NetworkInfo: FC = () => {
       netmask: networkInfo?.netmask,
     };
 
-    const result = await editNetModalRef.current?.openModal(initData);
-
-    console.log('编辑网络配置结果:', result);
+    await editNetModalRef.current?.openModal(initData);
     message.success(t('config_page.advanced_setting.edit_network_success'));
   };
 

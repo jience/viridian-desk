@@ -452,7 +452,6 @@ const useDeskHooks = (props: any) => {
           req.desktopIp = data.interfaces[0].ip;
           req.macAddress = data.interfaces[0].macAddress;
         }
-        console.log('req:', req);
         await invoke('connect_desktop', req);
       } catch (error) {
         console.error('Error connecting to desktop:', error);

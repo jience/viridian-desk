@@ -95,7 +95,6 @@ const DiagnosisModal: FC<DiagnosisModalProps> = ({ ref }) => {
           setTotalDiagnosisProgress(e.data.totalItems);
         } else if (e.event === 'Progress') {
           const { diagnosedItems, status } = e.data;
-          console.log('诊断进度', e.data);
           const { is_open, port } = status;
           setPingContent((prev) => prev + `端口 ${port}: ${is_open ? '正常' : '异常'}\n`);
           const progress = Math.round((diagnosedItems / totalDiagnosisProgress) * 100);
