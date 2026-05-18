@@ -5,7 +5,6 @@ import ComModal from '@/components/ComModal';
 import DiffLoginTip from '@/components/DiffLoginTip';
 import PwdForm from '@/components/PwdForm';
 import UserInfo from '@/components/UserInfo';
-import logoBlue from '@/assets/images/logoBlue1.png';
 import useRequest from '@/hooks/useRequest';
 import { bridge } from '@/native';
 import { LoginUserType } from '@/native/interfaces/api';
@@ -34,6 +33,8 @@ import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from 'react-router';
 import { initMenus as menus } from './initData';
+
+const sidebarLogo = new URL('../../../docs/images/logo.svg', import.meta.url).href;
 
 interface SidebarProps {
   assistantOpen?: boolean;
@@ -304,7 +305,7 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
             type="button"
             onClick={() => navigate('/app/desk')}
           >
-            <img src={logoBlue} alt="" draggable={false} />
+            <img src={sidebarLogo} alt="" draggable={false} />
           </button>
         </Tooltip>
         <ul className="sidebar__menus" aria-label={commonT('appName')}>
