@@ -1,22 +1,22 @@
 :root {
   --app-layout-bg-image: url('@/assets/images/app_layout_bg.png');
 
-  // antd小按钮控制
-  --antd-sm-btn-bac-color: #eaf0f6; // antd小按钮背景色
-  --antd-sm-btn-color: #6c7268; // antd小按钮文字颜色
-  --antd-sm-btn-bac-hover-color: #f5f8fa; // antd小按钮hover背景色
-  --antd-sm-btn-hover-color: #20231e; // antd小按钮hover文字颜色
-  --antd-sm-btn-border-color: #d9d9d9;
+  // 小按钮控制
+  --vd-sm-btn-bac-color: #eaf0f6; // 本地UI小按钮背景色
+  --vd-sm-btn-color: #6c7268; // 本地UI小按钮文字颜色
+  --vd-sm-btn-bac-hover-color: #f5f8fa; // 本地UI小按钮hover背景色
+  --vd-sm-btn-hover-color: #20231e; // 本地UI小按钮hover文字颜色
+  --vd-sm-btn-border-color: #d9d9d9;
 
-  // antd modal控制
-  --ant-modal-header-border-bottom-color: rgba(82, 72, 52, 0.16);
-  --ant-modal-header-bac-color: #eee8dc;
-  --my-ant-modal-title-color: #20231e;
-  --ant-modal-title-before-color: #4d7c3f;
-  --ant-modal-body-bac-color: #fffdf8;
-  --ant-modal-content-color: #20231e;
+  // 弹窗控制
+  --vd-modal-header-border-bottom-color: rgba(82, 72, 52, 0.16);
+  --vd-modal-header-bac-color: #eee8dc;
+  --vd-modal-title-color: #20231e;
+  --vd-modal-title-before-color: #4d7c3f;
+  --vd-modal-body-bac-color: #fffdf8;
+  --vd-modal-content-color: #20231e;
 
-  --ant-table-thead-before-bac-color: #dfe3eb;
+  --vd-table-thead-before-bac-color: #dfe3eb;
 
   --pretty-table-box-shadow-color: rgba(62, 81, 100, 0.12);
   --pretty-table-bac-color: rgba(255, 255, 255, 0.8);
@@ -183,22 +183,22 @@
 :root.dark {
   --app-layout-bg-image: url('@/assets/images/app_layout_bg_dark.png');
 
-  // antd小按钮控制
-  --antd-sm-btn-bac-color: #242b27; // antd小按钮背景色
-  --antd-sm-btn-color: #8f9c94; // antd小按钮文字颜色
-  --antd-sm-btn-bac-hover-color: #2b332e; // antd小按钮hover背景色
-  --antd-sm-btn-hover-color: #eef5ef; // antd小按钮hover文字颜色
-  --antd-sm-btn-border-color: rgba(209, 255, 229, 0.12);
+  // 小按钮控制
+  --vd-sm-btn-bac-color: #242b27; // 本地UI小按钮背景色
+  --vd-sm-btn-color: #8f9c94; // 本地UI小按钮文字颜色
+  --vd-sm-btn-bac-hover-color: #2b332e; // 本地UI小按钮hover背景色
+  --vd-sm-btn-hover-color: #eef5ef; // 本地UI小按钮hover文字颜色
+  --vd-sm-btn-border-color: rgba(209, 255, 229, 0.12);
 
-  // antd modal控制
-  --ant-modal-header-border-bottom-color: rgba(209, 255, 229, 0.12);
-  --ant-modal-header-bac-color: #202925;
-  --my-ant-modal-title-color: #eef5ef;
-  --ant-modal-title-before-color: #8ef2bd;
-  --ant-modal-body-bac-color: #151b19;
-  --ant-modal-content-color: #eef5ef;
+  // 弹窗控制
+  --vd-modal-header-border-bottom-color: rgba(209, 255, 229, 0.12);
+  --vd-modal-header-bac-color: #202925;
+  --vd-modal-title-color: #eef5ef;
+  --vd-modal-title-before-color: #8ef2bd;
+  --vd-modal-body-bac-color: #151b19;
+  --vd-modal-content-color: #eef5ef;
 
-  --ant-table-thead-before-bac-color: rgba(209, 255, 229, 0.12);
+  --vd-table-thead-before-bac-color: rgba(209, 255, 229, 0.12);
 
   --pretty-table-box-shadow-color: rgba(0, 0, 0, 0.15);
   --pretty-table-bac-color: rgba(21, 27, 25, 0.78);

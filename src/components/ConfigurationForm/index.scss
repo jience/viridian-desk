@@ -1,5 +1,5 @@
 .baseForm {
-  .ant-space-compact {
+  .archer-space-compact {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -11,8 +11,8 @@
 
       border-start-start-radius: 7px;
 
-      .ant-input-number,
-      .ant-input {
+      .archer-input-number,
+      .archer-input {
         width: 100%;
       }
     }
@@ -20,7 +20,7 @@
     .addon-after {
       width: 35%;
 
-      > .ant-select-selector {
+      > .archer-select {
         background: var(--config-formModel-addonAfter-back);
         border: 1px solid var(--app-border-color);
         border-radius: 0 7px 7px 0;
@@ -32,7 +32,7 @@
       }
     }
 
-    .ant-btn {
+    .archer-btn {
       border-radius: 0 7px 7px 0;
 
       font-family: inherit;
@@ -41,7 +41,7 @@
       font-weight: 400;
     }
 
-    .ant-btn-loading {
+    .archer-btn-loading {
       border-radius: 0 7px 7px 0;
 
       font-family: inherit;
@@ -51,7 +51,7 @@
     }
   }
 
-  .noSeparator > .ant-form-item:nth-child(n + 2) {
+  .noSeparator > .archer-form-item:nth-child(n + 2) {
     margin-left: 10px;
   }
 
@@ -76,12 +76,12 @@
       align-items: center;
       justify-content: center;
 
-      .ant-divider {
+      .archer-divider {
         margin: 2px 0;
       }
     }
 
-    .ant-form-item:last-child {
+    .archer-form-item:last-child {
       margin-bottom: 0;
     }
   }
@@ -93,7 +93,7 @@
     letter-spacing: 0;
     font-weight: 400;
 
-    .ant-btn-text {
+    .archer-btn-text {
       padding: 0;
       color: var(--primary-color);
     }
@@ -112,13 +112,13 @@
     letter-spacing: 0;
     font-weight: 400;
 
-    .ant-btn-text {
+    .archer-btn-text {
       padding: 0;
       color: var(--primary-color);
     }
   }
 
-  .shadow-form-item .ant-form-item-control-input {
+  .shadow-form-item .archer-form-item-control-input {
     padding: 0 8px;
     border-radius: 6px;
     background-color: color-mix(in srgb, var(--app-surface-subtle-color) 72%, transparent);

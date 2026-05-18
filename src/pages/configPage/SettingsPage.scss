@@ -526,24 +526,24 @@
 }
 
 .settings-page {
-  :where(.ant-btn, .ant-select-selector, .ant-input, .ant-input-affix-wrapper) {
+  :where(.archer-btn, .archer-select, .archer-input, .archer-input-affix-wrapper) {
     border-radius: 8px;
     box-shadow: none;
   }
 
   :where(
-    .ant-btn:focus-visible,
-    .ant-select-focused .ant-select-selector,
-    .ant-input:focus,
-    .ant-input-focused,
-    .ant-input-affix-wrapper:focus,
-    .ant-input-affix-wrapper-focused
+    .archer-btn:focus-visible,
+    .archer-select-focused .archer-select,
+    .archer-input:focus,
+    .archer-input-focused,
+    .archer-input-affix-wrapper:focus,
+    .archer-input-affix-wrapper-focused
   ) {
     border-color: var(--settings-page-accent);
     box-shadow: var(--settings-page-focus);
   }
 
-  :where(.ant-select-selector, .ant-input, .ant-input-affix-wrapper) {
+  :where(.archer-select, .archer-input, .archer-input-affix-wrapper) {
     border-color: var(--settings-page-border);
     background: var(--settings-page-surface-strong);
     color: var(--settings-page-text);

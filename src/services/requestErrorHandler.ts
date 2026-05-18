@@ -1,5 +1,5 @@
 import type { NativeResponse } from '@/native/interfaces/types';
-import { message as antdMessage } from '@/ui';
+import { message as uiMessage } from '@/ui';
 import { t, type Resources } from 'i18next';
 import { isEmpty } from 'lodash-es';
 
@@ -72,7 +72,7 @@ function handleError(res: NativeResponse<any>) {
   }
   //  else if (httpStatus) message = t(httpStatus);
   // 抛错
-  antdMessage.error(message || res?.msg);
+  uiMessage.error(message || res?.msg);
 }
 
 export default handleError;

@@ -27,7 +27,7 @@ const FormModal = (props: any) => {
     labelType = 'default',
     visiable,
     setVisiable,
-    transitionName = 'ant-zoom-big-fast',
+    transitionName = 'vd-modal-fade',
 
     formFeatures,
     setFormFeatures,

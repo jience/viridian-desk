@@ -32,17 +32,17 @@
   }
 
   .vd-auth-form {
-    :where(.ant-form-item) {
+    :where(.archer-form-item) {
       margin-bottom: 14px;
     }
 
-    :where(.ant-form-item-label > label) {
+    :where(.archer-form-item-label > label) {
       color: var(--auth-muted);
       font-size: 12px;
       font-weight: 680;
     }
 
-    :where(.ant-input, .ant-input-affix-wrapper, .ant-select-selector) {
+    :where(.archer-input, .archer-input-affix-wrapper, .archer-select) {
       min-height: 46px;
       border-color: var(--auth-border) !important;
       border-radius: 12px !important;
@@ -56,26 +56,26 @@
     }
 
     :where(
-      .ant-input-affix-wrapper-focused,
-      .ant-input:focus,
-      .ant-select-focused .ant-select-selector
+      .archer-input-affix-wrapper-focused,
+      .archer-input:focus,
+      .archer-select-focused .archer-select
     ) {
       border-color: color-mix(in srgb, var(--auth-accent) 42%, transparent) !important;
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--auth-accent) 13%, transparent) !important;
     }
 
-    :where(.ant-input::placeholder) {
+    :where(.archer-input::placeholder) {
       color: color-mix(in srgb, var(--auth-muted) 76%, transparent);
     }
 
-    :where(.ant-input-affix-wrapper .ant-input) {
+    :where(.archer-input-affix-wrapper .archer-input) {
       min-height: auto;
       background: transparent !important;
     }
   }
 
   .vd-auth-checkboxes {
-    .ant-checkbox-wrapper {
+    .archer-checkbox-wrapper {
       color: var(--auth-muted);
       font-size: 12px;
     }

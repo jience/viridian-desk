@@ -17,7 +17,7 @@
     margin-bottom: 12px;
     justify-content: space-between;
 
-    .ant-btn-variant-outlined {
+    .archer-btn-variant-outlined {
       border: 1px solid var(--app-border-color, rgba(61, 91, 78, 0.18));
       background: color-mix(in srgb, var(--app-surface-color, #fffdf8) 82%, transparent);
       color: var(--app-text-color, #20231e);
@@ -98,17 +98,17 @@
   color: var(--app-text-color, #20231e);
 }
 
-.ant-layout-content {
-  .ant-popover {
+.vd-layout-content {
+  .archer-popover {
     background: transparent;
     border: 0;
     box-shadow: none;
 
-    .ant-popover-arrow {
+    .archer-popover-arrow {
       display: block;
     }
 
-    .ant-popover-inner-content {
+    .archer-popover-inner-content {
       max-width: 300px;
     }
   }

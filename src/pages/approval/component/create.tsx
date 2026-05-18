@@ -975,7 +975,7 @@ const CreateForm = (props: any, _ref: any) => {
       destroyOnHidden={true}
       open={visible}
       keyboard={false}
-      transitionName="ant-zoom-big-fast"
+      transitionName="vd-modal-fade"
       title={formatMessage({ id: 'CreateWorkflow' })}
       onCancel={() => setVisible()}
       onOk={() => submitForm()}

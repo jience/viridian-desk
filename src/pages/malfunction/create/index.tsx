@@ -9,7 +9,7 @@ const CreatedModal = (props: any) => {
     labelType = 'left',
     visiable,
     setVisiable,
-    transitionName = 'ant-zoom-big-fast',
+    transitionName = 'vd-modal-fade',
 
     formFeatures,
     setFormFeatures,

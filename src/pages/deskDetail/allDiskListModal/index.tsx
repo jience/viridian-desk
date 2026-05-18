@@ -8,7 +8,7 @@ import useDeskDetail from '../useDeskDetail';
 const AllDiskListModal = (props: any) => {
   const { formatMessage } = useIntl();
 
-  const { title, visiable, setVisiable, transitionName = 'ant-zoom-big-fast', desktopId } = props;
+  const { title, visiable, setVisiable, transitionName = 'vd-modal-fade', desktopId } = props;
 
   const { loading, totalDiskCount, diskList, diskListParams, setDiskListParams, refreshDiskList } =
     useDeskDetail({

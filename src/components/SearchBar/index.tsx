@@ -149,13 +149,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
       });
 
     return (
-      <Scrollbars autoHeight className="antd-search-bar-tags-scroll">
-        <div className="antd-search-bar-tag-container">
+      <Scrollbars autoHeight className="vd-search-bar-tags-scroll">
+        <div className="vd-search-bar-tag-container">
           {tags}
           {!disabled && !isEmpty(tags) ? (
             <DeleteOutlined
               // type="icon-delete"
-              className="antd-search-bar-tag-delete"
+              className="vd-search-bar-tag-delete"
               onClick={handleDelete}
             />
           ) : null}
@@ -168,14 +168,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
     if (!isFunction(slot)) {
       return;
     }
-    return <div className="antd-search-bar-slot-container">{slot()}</div>;
+    return <div className="vd-search-bar-slot-container">{slot()}</div>;
   };
 
   const renderSlotLeft = () => {
     if (!isFunction(slotLeft)) {
       return;
     }
-    return <div className="antd-search-bar-slot-left-container">{slotLeft()}</div>;
+    return <div className="vd-search-bar-slot-left-container">{slotLeft()}</div>;
   };
 
   const renderRefresh = () => {
@@ -210,7 +210,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           placeholder={`${formatMessage({ id: 'PleaseInput' })}${searchOption.title}`}
           suffix={
             <SearchOutlined
-              className={`antd-search-bar-search-icon${searchOption.disabled ? ' is-hidden' : ''}`}
+              className={`vd-search-bar-search-icon${searchOption.disabled ? ' is-hidden' : ''}`}
               onClick={handleSearch}
             />
           }
@@ -227,7 +227,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className={`antd-table-search-bar ${className}`} {...resProps}>
+    <div className={`vd-table-search-bar ${className}`} {...resProps}>
       {renderRefresh()}
       {sticky}
       {renderSearch()}

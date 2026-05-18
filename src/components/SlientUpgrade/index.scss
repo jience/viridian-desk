@@ -14,8 +14,8 @@
   border-radius: var(--silent-update-radius);
   overflow: hidden;
 
-  .ant-modal-container,
-  .ant-modal-content {
+  .archer-modal-root,
+  .archer-modal-content {
     overflow: hidden;
     border: 1px solid var(--silent-update-border);
     border-radius: var(--silent-update-radius);
@@ -117,7 +117,7 @@
     }
   }
 
-  .ant-progress-bg {
+  .archer-progress-bg {
     box-shadow: 0 0 18px var(--silent-update-progress-glow);
   }
 }
@@ -144,12 +144,12 @@
       transparent
     );
 
-    .ant-modal-container,
-    .ant-modal-content {
+    .archer-modal-root,
+    .archer-modal-content {
       background: var(--silent-update-panel-bg);
     }
 
-    .ant-modal-body {
+    .archer-modal-body {
       min-height: 180px;
       background: transparent;
       padding: 24px;

@@ -14,7 +14,7 @@ import './index.scss';
 
 /**
  * 列表组件
- * 大部分属性都可直接参考antd https://ant-design.gitee.io/components/table-cn/
+ * 大部分属性都可直接参考本地 UI
  * @param {*} param0
  */
 const TableCommon = ({
@@ -111,7 +111,7 @@ const TableCommon = ({
   onColumnChange,
   // 忽略行点击触发的刷新
   noRowRefresh = false,
-  // 其他参数支持antd table原生参数
+  // 其他参数支持本地UI table原生参数
   containerStyle = {},
   ...other
 }) => {

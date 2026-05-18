@@ -51,22 +51,22 @@
   min-width: 112px;
   max-width: min(280px, 36vw);
 
-  &.ant-select-disabled {
+  &.archer-select-disabled {
     color: currentColor;
     cursor: default;
   }
 
-  .ant-select-selector {
+  .archer-select {
     padding-inline: 4px 0 !important;
   }
 
-  .ant-select-selection-item {
+  .archer-select-selection-item {
     color: currentColor;
     font-size: 12px;
     text-overflow: ellipsis;
   }
 
-  .ant-select-arrow {
+  .archer-select-arrow {
     color: currentColor;
     font-size: 10px;
   }
@@ -75,7 +75,7 @@
 .gateway-select-wrapper--compact .gateway-select {
   max-width: 1rem;
 
-  .ant-select-selection-item {
+  .archer-select-selection-item {
     opacity: 0;
   }
 }

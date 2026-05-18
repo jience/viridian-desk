@@ -10,7 +10,7 @@
 
   width: 500px !important;
 
-  .ant-modal-content,
+  .archer-modal-content,
   .archer-modal-content {
     overflow: hidden;
     border: 1px solid var(--login-modal-border);
@@ -110,9 +110,9 @@
     }
   }
 
-  .ant-input,
-  .ant-input-affix-wrapper,
-  .ant-select-selector {
+  .archer-input,
+  .archer-input-affix-wrapper,
+  .archer-select {
     border-color: var(--login-modal-border) !important;
     border-radius: 7px !important;
     color: var(--app-text-color, #20231e);
@@ -128,7 +128,7 @@
     flex: 1;
   }
 
-  .ant-btn {
+  .archer-btn {
     border-radius: 7px;
     transition:
       border-color 160ms ease,

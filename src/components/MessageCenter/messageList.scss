@@ -1,5 +1,5 @@
 .message-notice-modal {
-  .ant-modal-content {
+  .archer-modal-content {
     overflow: hidden;
     border: 1px solid var(--app-border-color);
     border-radius: 10px;
@@ -8,28 +8,28 @@
     backdrop-filter: blur(16px);
   }
 
-  .ant-modal-header {
+  .archer-modal-header {
     margin-bottom: 16px;
     background: transparent;
   }
 
-  .ant-modal-title {
+  .archer-modal-title {
     color: var(--app-text-color, #20231e);
     font-weight: 650;
   }
 
-  .ant-table-wrapper {
+  .archer-table-wrapper {
     min-height: 360px;
   }
 
-  .ant-table {
+  .archer-table {
     border-radius: 8px;
     color: var(--app-text-color, #20231e);
     background: transparent;
     overflow: hidden;
   }
 
-  .ant-table-thead > tr > th {
+  .archer-table-thead > tr > th {
     border-bottom: 1px solid var(--app-border-color);
     background: color-mix(in srgb, var(--app-surface-subtle-color) 72%, transparent);
     color: var(--app-muted-color, #6f7f90);
@@ -37,18 +37,18 @@
     font-weight: 650;
   }
 
-  .ant-table-tbody > tr > td {
+  .archer-table-tbody > tr > td {
     border-bottom: 1px solid var(--app-border-color);
     color: var(--app-text-color, #20231e);
     background: transparent;
   }
 
-  .ant-table-tbody > tr.ant-table-row:hover > td,
-  .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+  .archer-table-tbody > tr.archer-table-row:hover > td,
+  .archer-table-tbody > tr > td.archer-table-cell-row-hover {
     background: color-mix(in srgb, var(--vd-color-accent) 8%, transparent);
   }
 
-  .ant-table-pagination {
+  .archer-pagination {
     color: var(--app-muted-color, #6f7f90);
   }
 }
@@ -64,7 +64,7 @@
 .message-notice-modal__tabs {
   white-space: nowrap;
 
-  .ant-radio-button-wrapper {
+  .archer-radio-button-wrapper {
     height: 32px;
     border-color: var(--app-border-color);
     border-radius: 8px;
@@ -78,13 +78,13 @@
       transform 160ms ease;
   }
 
-  .ant-radio-button-wrapper-checked {
+  .archer-radio-button-wrapper-checked {
     border-color: color-mix(in srgb, var(--vd-color-accent) 42%, transparent);
     color: var(--vd-color-accent);
     background: color-mix(in srgb, var(--vd-color-accent) 12%, transparent);
   }
 
-  .ant-radio-button-wrapper:active {
+  .archer-radio-button-wrapper:active {
     transform: translateY(1px) scale(0.98);
   }
 }
@@ -98,7 +98,7 @@
 }
 
 .message-notice-modal__search {
-  .ant-input-affix-wrapper {
+  .archer-input-affix-wrapper {
     border-color: var(--app-border-color);
     border-radius: 8px;
     color: var(--app-text-color, #20231e);
@@ -106,7 +106,7 @@
 
     &:hover,
     &:focus,
-    &.ant-input-affix-wrapper-focused {
+    &.archer-input-affix-wrapper-focused {
       border-color: color-mix(in srgb, var(--vd-color-accent) 42%, transparent);
       box-shadow: 0 0 0 2px color-mix(in srgb, var(--vd-color-accent) 18%, transparent);
     }

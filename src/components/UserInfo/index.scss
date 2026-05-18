@@ -1,5 +1,5 @@
 .user-info-modal {
-  .ant-modal-content {
+  .archer-modal-content {
     overflow: hidden;
     border: 1px solid var(--app-border-color);
     border-radius: 10px;
@@ -8,11 +8,11 @@
     backdrop-filter: blur(16px);
   }
 
-  .ant-modal-header {
+  .archer-modal-header {
     background: transparent;
   }
 
-  .ant-modal-title {
+  .archer-modal-title {
     color: var(--app-text-color, #20231e);
     font-weight: 650;
   }

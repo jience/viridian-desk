@@ -16,7 +16,7 @@
 
   width: 500px !important;
 
-  .ant-modal-content {
+  .archer-modal-content {
     overflow: hidden;
     border: 1px solid var(--login-modal-border);
     border-radius: 10px;
@@ -25,12 +25,12 @@
     backdrop-filter: blur(16px);
   }
 
-  .ant-modal-header,
-  .ant-modal-footer {
+  .archer-modal-header,
+  .archer-modal-footer {
     background: transparent;
   }
 
-  .ant-modal-title {
+  .archer-modal-title {
     color: var(--app-text-color, #20231e);
     font-weight: 650;
   }
@@ -48,7 +48,7 @@
     margin: 0 auto;
   }
 
-  .send-msg-form .ant-form-item {
+  .send-msg-form .archer-form-item {
     margin-bottom: 0;
   }
 
@@ -61,23 +61,23 @@
     flex: 1;
   }
 
-  .ant-input,
-  .ant-input-affix-wrapper {
+  .archer-input,
+  .archer-input-affix-wrapper {
     border-color: var(--login-modal-border);
     border-radius: 7px;
     color: var(--app-text-color, #20231e);
     background: var(--login-modal-surface-subtle);
   }
 
-  .ant-input:hover,
-  .ant-input:focus,
-  .ant-input-affix-wrapper:hover,
-  .ant-input-affix-wrapper-focused {
+  .archer-input:hover,
+  .archer-input:focus,
+  .archer-input-affix-wrapper:hover,
+  .archer-input-affix-wrapper-focused {
     border-color: var(--login-modal-accent-border);
     box-shadow: 0 0 0 2px var(--login-modal-accent-soft);
   }
 
-  .ant-btn {
+  .archer-btn {
     border-radius: 7px;
     transition:
       border-color 160ms ease,

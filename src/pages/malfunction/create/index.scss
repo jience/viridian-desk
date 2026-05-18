@@ -1,6 +1,6 @@
 .self_modal {
   width: 500px !important;
-  .ant-modal-body {
+  .archer-modal-body {
     padding-bottom: 16px;
   }
 }
@@ -35,7 +35,7 @@
   .addon-after {
     width: 20%;
 
-    > .antd-select-selector {
+    > .vd-select-selector {
       background: var(--config-formModel-addonAfter-back);
       border: 1px solid var(--app-border-color);
       border-end-end-radius: 7px;

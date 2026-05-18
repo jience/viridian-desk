@@ -367,11 +367,11 @@
   font-weight: 600;
 }
 
-.vd-auth-form :where(.ant-form-item) {
+.vd-auth-form :where(.archer-form-item) {
   margin-bottom: 14px;
 }
 
-.vd-auth-form :where(.ant-input, .ant-input-affix-wrapper, .ant-select-selector) {
+.vd-auth-form :where(.archer-input, .archer-input-affix-wrapper, .archer-select) {
   border-color: var(--vd-color-border);
   border-radius: 12px;
   background: var(--vd-color-panel);

@@ -69,7 +69,7 @@ $cardMarginRow: 16px;
             background-color: var(--config-card-background-default);
           }
 
-          .ant-tag {
+          .archer-tag {
             font-size: 12px;
             margin: 0 4px;
           }
@@ -121,7 +121,7 @@ $cardMarginRow: 16px;
                 color: var(--config-card-bullet-default);
               }
 
-              .ant-tag {
+              .archer-tag {
                 font-family: inherit;
                 font-size: 12px;
                 font-weight: 400;
@@ -143,7 +143,7 @@ $cardMarginRow: 16px;
         margin: $contentMarging;
         color: var(--config-card-title-default);
 
-        .ant-checkbox-wrapper {
+        .archer-checkbox-wrapper {
           font-size: 12px;
         }
       }
@@ -169,7 +169,7 @@ $cardMarginRow: 16px;
         font-size: 13px;
         font-weight: 400;
 
-        .ant-btn {
+        .archer-btn {
           border: 1px solid var(--app-border-color);
           border-radius: 8px;
           padding: 0px 6px;
@@ -282,7 +282,7 @@ $cardMarginRow: 16px;
       }
     }
 
-    .ant-checkbox-wrapper {
+    .archer-checkbox-wrapper {
       color: var(--config-card-title-default);
     }
   }
@@ -485,7 +485,7 @@ $cardMarginRow: 16px;
   }
 
   .integratedCard-title-right {
-    :where(.ant-btn, .special, .archer-btn) {
+    :where(.archer-btn, .special, .archer-btn) {
       border-radius: 8px;
     }
   }

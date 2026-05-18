@@ -26,14 +26,14 @@
   color: var(--desk-page-text);
   overflow: hidden;
 
-  .ant-spin-nested-loading,
-  .ant-spin-container {
+  .archer-spin-nested-loading,
+  .archer-spin-container {
     min-height: 0;
     height: 100%;
   }
 
-  .ant-spin-nested-loading,
-  .ant-spin-container {
+  .archer-spin-nested-loading,
+  .archer-spin-container {
     display: flex;
     flex-direction: column;
   }
@@ -96,7 +96,7 @@
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.035);
 
-  .ant-empty-description {
+  .archer-empty-description {
     color: var(--desk-page-muted);
   }
 }

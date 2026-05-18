@@ -11,7 +11,7 @@
 
   width: 400px !important;
 
-  .ant-modal-content {
+  .archer-modal-content {
     overflow: hidden;
     border: 1px solid var(--desk-pool-modal-border);
     border-radius: 10px;
@@ -20,7 +20,7 @@
     backdrop-filter: blur(16px);
   }
 
-  .ant-modal-header {
+  .archer-modal-header {
     height: auto;
     min-height: 72px;
     margin-bottom: 0;
@@ -33,7 +33,7 @@
       transparent;
   }
 
-  .ant-modal-title {
+  .archer-modal-title {
     align-items: center;
     padding: 12px 18px;
 
@@ -93,7 +93,7 @@
   .pool-name {
     margin: 0;
     overflow: hidden;
-    color: var(--my-ant-modal-title-color);
+    color: var(--vd-modal-title-color);
     font-size: 16px;
     font-weight: 700;
     line-height: 1.25;
@@ -116,7 +116,7 @@
     margin: 0;
     padding: 0 18px 18px;
 
-    .antd-tooltip {
+    .vd-tooltip {
       left: 6px !important;
     }
 

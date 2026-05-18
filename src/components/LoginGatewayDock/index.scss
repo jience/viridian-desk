@@ -102,20 +102,20 @@
   cursor: pointer;
   opacity: 0;
 
-  .ant-select-selector {
+  .archer-select {
     height: 34px !important;
     padding: 0 !important;
     background: transparent !important;
     cursor: pointer !important;
   }
 
-  .ant-select-selection-item,
-  .ant-select-selection-placeholder {
+  .archer-select-selection-item,
+  .archer-select-placeholder {
     display: none;
   }
 
-  .ant-select-arrow,
-  .ant-select-clear {
+  .archer-select-arrow,
+  .archer-select-clear {
     display: none;
   }
 }
