@@ -1,41 +1,97 @@
 import type {
   AddHistoryEntryParams,
   ILoginHistoryModule,
-  LoginAuthType,
   LoginHistoryData,
   LoginHistoryMetaData,
 } from '@/native/interfaces/login_history';
+import { LoginAuthType } from '@/native/interfaces/login_history';
 import type { NativeResponse } from '@/native/interfaces/types';
+import { success } from '@/native/utils';
+
+const WEB_LOGIN_HISTORY_STORAGE_KEY = 'viridian.web.login_history';
+
+const defaultLoginHistory: LoginHistoryData = {
+  history: [],
+  isAutoLogin: false,
+  isRememberMe: false,
+};
+
+function readLoginHistory(): LoginHistoryData {
+  try {
+    const stored = window.localStorage.getItem(WEB_LOGIN_HISTORY_STORAGE_KEY);
+    return stored ? { ...defaultLoginHistory, ...JSON.parse(stored) } : defaultLoginHistory;
+  } catch {
+    return defaultLoginHistory;
+  }
+}
+
+function writeLoginHistory(history: LoginHistoryData) {
+  window.localStorage.setItem(WEB_LOGIN_HISTORY_STORAGE_KEY, JSON.stringify(history));
+}
 
 export const login_history_module: ILoginHistoryModule = {
-  getLoginHistory: function (
-    _loginType?: LoginAuthType,
+  getLoginHistory: async function (
+    loginType?: LoginAuthType,
   ): Promise<NativeResponse<LoginHistoryData>> {
-    throw new Error('Function not implemented.');
+    const data = readLoginHistory();
+    return success(
+      loginType
+        ? {
+            ...data,
+            history: data.history.filter((entry) => entry.loginType === loginType),
+          }
+        : data,
+    );
   },
-  saveLoginHistory: function (_history: LoginHistoryData): Promise<NativeResponse> {
-    throw new Error('Function not implemented.');
+  saveLoginHistory: async function (history: LoginHistoryData): Promise<NativeResponse> {
+    writeLoginHistory(history);
+    return success();
   },
-  addLoginEntry: function (
-    _loginInfo: AddHistoryEntryParams,
-    _loginType: LoginAuthType,
+  addLoginEntry: async function (
+    loginInfo: AddHistoryEntryParams,
+    loginType: LoginAuthType,
   ): Promise<NativeResponse<LoginHistoryData>> {
-    throw new Error('Function not implemented.');
+    const data = readLoginHistory();
+    const nextHistory = [
+      { ...loginInfo, loginType, timestamp: Date.now() },
+      ...data.history.filter(
+        (entry) => !(entry.username === loginInfo.username && entry.loginType === loginType),
+      ),
+    ].slice(0, 5);
+    const nextData = { ...data, history: nextHistory };
+    writeLoginHistory(nextData);
+    return success(nextData);
   },
-  deleteLoginEntry: function (
-    _username: string,
-    _loginType: LoginAuthType,
+  deleteLoginEntry: async function (
+    username: string,
+    loginType: LoginAuthType,
   ): Promise<NativeResponse<LoginHistoryData>> {
-    throw new Error('Function not implemented.');
+    const data = readLoginHistory();
+    const nextData = {
+      ...data,
+      history: data.history.filter(
+        (entry) => !(entry.username === username && entry.loginType === loginType),
+      ),
+    };
+    writeLoginHistory(nextData);
+    return success(nextData);
   },
-  clearLoginHistory: function (
-    _loginType?: LoginAuthType,
+  clearLoginHistory: async function (
+    loginType?: LoginAuthType,
   ): Promise<NativeResponse<LoginHistoryData>> {
-    throw new Error('Function not implemented.');
+    const data = readLoginHistory();
+    const nextData = {
+      ...data,
+      history: loginType ? data.history.filter((entry) => entry.loginType !== loginType) : [],
+    };
+    writeLoginHistory(nextData);
+    return success(nextData);
   },
-  setLoginHistoryMeta: function (
-    _meta: Partial<LoginHistoryMetaData>,
+  setLoginHistoryMeta: async function (
+    meta: Partial<LoginHistoryMetaData>,
   ): Promise<NativeResponse<LoginHistoryData>> {
-    throw new Error('Function not implemented.');
+    const nextData = { ...readLoginHistory(), ...meta };
+    writeLoginHistory(nextData);
+    return success(nextData);
   },
 };

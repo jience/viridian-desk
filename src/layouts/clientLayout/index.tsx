@@ -102,25 +102,37 @@ const ClientLayout = () => {
 
   // 手动获取桌面上线状态
   const getConnectStatue = () => {
-    invoke('get_client_online_status').then((res) => {
-      logger.debug('getConnectStatue', res);
-      dispatch(setConnected(res as boolean));
-    });
+    invoke('get_client_online_status')
+      .then((res) => {
+        logger.debug('getConnectStatue', res);
+        dispatch(setConnected(res as boolean));
+      })
+      .catch((error) => {
+        logger.debug('getConnectStatue unavailable', error);
+      });
   };
 
   // 注册长监听: 终端上线状态
   const startListenClientOnline = async () => {
-    clientOnlineMonitorRef.current = await listen<any>('client-online', (e: any) => {
-      const { is_online } = e.payload;
-      // 网关连接状态
-      dispatch(setConnected(is_online));
-    });
+    try {
+      clientOnlineMonitorRef.current = await listen<any>('client-online', (e: any) => {
+        const { is_online } = e.payload;
+        // 网关连接状态
+        dispatch(setConnected(is_online));
+      });
+    } catch (error) {
+      logger.debug('client-online listener unavailable', error);
+    }
   };
 
   const startListenDesktopConnect = async () => {
-    desktopConnectMonitorRef.current = await listen<any>('desktop-connect', (e: any) => {
-      logger.debug('desktopConnectMonitor', e);
-    });
+    try {
+      desktopConnectMonitorRef.current = await listen<any>('desktop-connect', (e: any) => {
+        logger.debug('desktopConnectMonitor', e);
+      });
+    } catch (error) {
+      logger.debug('desktop-connect listener unavailable', error);
+    }
   };
 
   useEffect(() => {

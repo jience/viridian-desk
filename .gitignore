@@ -39,6 +39,8 @@ debbuild
 build/hdp-deps/
 
 .eslintcache
+test-results/
+playwright-report/
 
 .superpowers/
 .worktrees/

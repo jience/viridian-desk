@@ -629,6 +629,7 @@ export default {
   SecurityGroupNotFoundError: '桌面創建失敗，請聯繫管理員',
   ImageNotFound: '桌面創建失敗，鏡像未找到',
   REMOVE: '取消收藏',
+  MINIMIZE: '最小化',
   CLOSE: '關閉',
   ApplicaitionCreate: '創建應用',
   ApplicaitionPath: '應用路徑',

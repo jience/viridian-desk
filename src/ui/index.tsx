@@ -488,8 +488,14 @@ export const Form = Object.assign(
     initialValues,
     children,
     className,
+    layout = 'horizontal',
     onFinish,
     onSubmit,
+    onValuesChange: _onValuesChange,
+    colon: _colon,
+    labelCol: _labelCol,
+    wrapperCol: _wrapperCol,
+    requiredMark: _requiredMark,
     ...props
   }: FormProps) {
     const ownFormRef = useRef<FormInstance | null>(null);
@@ -504,7 +510,7 @@ export const Form = Object.assign(
     return (
       <FormContext.Provider value={formInstance}>
         <form
-          className={cn('vdui-form', className)}
+          className={cn('vdui-form', `vdui-form-layout-${layout}`, className)}
           onSubmit={(event) => {
             event.preventDefault();
             onSubmit?.(event);

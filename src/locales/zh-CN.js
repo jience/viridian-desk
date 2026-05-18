@@ -630,6 +630,7 @@ export default {
   SecurityGroupNotFoundError: '桌面创建失败，请联系管理员',
   ImageNotFound: '桌面创建失败，镜像未找到',
   REMOVE: '取消收藏',
+  MINIMIZE: '最小化',
   CLOSE: '关闭',
   ApplicaitionCreate: '创建应用',
   ApplicaitionPath: '应用路径',

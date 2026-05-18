@@ -24,6 +24,7 @@ import { selectIntegration } from '@/store/feature/config';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
 import { cn } from '@/ui/lib/cn';
 import { authActionShow } from '@/utils/actionAuth';
+import { logger } from '@/utils/logger';
 import { LEGACY_PASSWORD_PREFIX } from '@/utils/utils';
 import { listen } from '@tauri-apps/api/event';
 import { Menu, message, Modal, Popover, Tooltip } from '@/ui';
@@ -243,6 +244,8 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
   }, [location, menus]);
 
   useEffect(() => {
+    if (!currentUser) return;
+
     if (!currentUser?.passwordIsUpdated || currentUser?.passwordIsExpire) {
       modifyPwd();
     } else if (currentUser?.loginFromDifferentLocation) {
@@ -283,9 +286,13 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
     let unListenUserIdleLogout: (() => void) | null = null;
 
     const setupListeners = async () => {
-      unListenUserIdleLogout = await listen('user-idle-logout', () => {
-        logout();
-      });
+      try {
+        unListenUserIdleLogout = await listen('user-idle-logout', () => {
+          logout();
+        });
+      } catch (error) {
+        logger.debug('user-idle-logout listener unavailable', error);
+      }
     };
 
     setupListeners();
