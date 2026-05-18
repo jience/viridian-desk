@@ -1,5 +1,4 @@
 import logoBlue from '@/assets/images/logoBlue1.png';
-import ControlWindow from '@/components/ControlWindow';
 import Footer from '@/components/Footer';
 import { LoginAuthType } from '@/native/interfaces/login_history';
 import { useAppSelector } from '@/store';
@@ -126,10 +125,6 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       <section className="auth-page__window">
-        <div className="auth-page__window-controls">
-          <ControlWindow exist />
-        </div>
-
         <section className="auth-page__brand-zone" aria-label={t('appName')}>
           <header className="auth-page__brand-header">
             <img
@@ -184,8 +179,6 @@ export default function LoginPage() {
               </div>
             </div>
           </div>
-
-          <Footer hiddenActionKeys={['setting']} />
         </section>
 
         <section className="auth-page__auth-zone" aria-label={formatMessage({ id: 'LOGIN' })}>
@@ -326,6 +319,9 @@ export default function LoginPage() {
         <OneTimePwdModal ref={oneTimePwdModalRef} />
         <OrgScanLoginModal ref={orgScanLoginModalRef} />
       </section>
+      <div className="auth-page__footer-bar">
+        <Footer hiddenActionKeys={['setting']} />
+      </div>
     </div>
   );
 }
