@@ -41,26 +41,27 @@
   color: var(--settings-page-text);
 
   .vd-prelogin-settings-shell {
+    grid-template-columns: 196px minmax(0, 1fr);
     min-height: 0;
     background: transparent;
   }
 
   .vd-prelogin-settings-shell__sidebar {
     border-right-color: var(--settings-page-border);
-    padding: 16px;
+    padding: 14px 12px;
     background: var(--settings-page-rail);
   }
 
   .vd-prelogin-settings-shell__main {
     min-height: 0;
-    padding: 22px 24px 24px;
+    padding: 18px 20px 20px;
   }
 
   .vd-prelogin-settings-shell__header {
-    min-height: 58px;
-    margin-bottom: 16px;
+    min-height: 48px;
+    margin-bottom: 12px;
     border-bottom: 1px solid var(--settings-page-border);
-    padding-bottom: 16px;
+    padding-bottom: 12px;
   }
 
   .vd-prelogin-settings-shell__content {
@@ -89,8 +90,7 @@
   --settings-page-warning: #f0c46d;
   --settings-page-danger: #ef746b;
   --settings-page-info: #7db6e8;
-  --settings-page-shadow: 0 26px 70px
-    color-mix(in srgb, var(--settings-page-bg) 42%, transparent);
+  --settings-page-shadow: 0 26px 70px color-mix(in srgb, var(--settings-page-bg) 42%, transparent);
   --settings-page-focus: 0 0 0 3px rgba(126, 220, 166, 0.28);
 }
 
@@ -99,30 +99,30 @@
   height: 100%;
   min-height: 0;
   grid-template-rows: auto 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
 .settings-page__brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   color: var(--settings-page-text);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0;
 }
 
 .settings-page__brand-mark {
   display: inline-grid;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   flex: 0 0 auto;
   place-items: center;
   border: 1px solid var(--settings-page-border-strong);
   border-radius: 8px;
   background: var(--settings-page-surface);
   color: var(--settings-page-accent-strong);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: 0;
 }
@@ -130,7 +130,7 @@
 .settings-page__heading {
   display: grid;
   min-width: 0;
-  gap: 5px;
+  gap: 4px;
 }
 
 .settings-page__eyebrow {
@@ -144,7 +144,7 @@
 .settings-page__title {
   margin: 0;
   color: var(--settings-page-text);
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 750;
   line-height: 1.15;
   letter-spacing: 0;
@@ -154,8 +154,8 @@
   max-width: 720px;
   margin: 0;
   color: var(--settings-page-muted);
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: 12px;
+  line-height: 1.45;
   letter-spacing: 0;
 }
 
@@ -173,17 +173,19 @@
 }
 
 .settings-page__nav-button {
-  min-height: 38px;
-  gap: 10px;
+  min-height: 32px;
+  gap: 8px;
   border: 1px solid transparent;
   border-radius: 8px;
+  padding: 0 10px;
   color: var(--settings-page-muted);
+  font-size: 12px;
   font-weight: 650;
   letter-spacing: 0;
 }
 
 .settings-page .vd-settings-nav {
-  gap: 6px;
+  gap: 4px;
 }
 
 .settings-page__nav-button:hover {
@@ -200,9 +202,9 @@
 }
 
 .settings-page__nav-button .iconfont {
-  width: 18px;
+  width: 16px;
   flex: 0 0 auto;
-  font-size: 17px;
+  font-size: 15px;
   text-align: center;
 }
 
@@ -216,7 +218,7 @@
   justify-content: stretch;
   overflow: hidden;
   border: 1px solid var(--settings-page-border);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--settings-page-surface);
   box-shadow: var(--settings-page-shadow);
 }
@@ -248,9 +250,23 @@
   width: 100%;
   height: 100%;
   min-height: 0;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   background: var(--settings-page-surface);
   color: var(--settings-page-text);
+}
+
+.vd-settings-section--with-toolbar {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.vd-settings-section__sr-context {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 
 .vd-settings-section__header {
@@ -260,6 +276,13 @@
   gap: 18px;
   border-bottom: 1px solid var(--settings-page-border);
   padding: 22px 24px 18px;
+}
+
+.vd-settings-section__header--toolbar {
+  min-height: 50px;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px 18px;
 }
 
 .vd-settings-section__heading {
@@ -307,16 +330,16 @@
   display: grid;
   min-height: 0;
   align-content: start;
-  gap: 14px;
+  gap: 12px;
   overflow: auto;
-  padding: 18px 24px 24px;
+  padding: 18px;
 }
 
 .vd-settings-group {
   display: grid;
   min-width: 0;
   border: 1px solid var(--settings-page-border);
-  border-radius: 10px;
+  border-radius: 8px;
   background: var(--settings-page-surface-strong);
 }
 
@@ -326,20 +349,20 @@
   justify-content: space-between;
   gap: 16px;
   border-bottom: 1px solid var(--settings-page-border);
-  padding: 16px 18px 14px;
+  padding: 13px 16px 12px;
 }
 
 .vd-settings-group__header h3 {
   margin: 0;
   color: var(--settings-page-text);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 750;
   line-height: 1.3;
   letter-spacing: 0;
 }
 
 .vd-settings-group__header p {
-  margin: 5px 0 0;
+  margin: 4px 0 0;
   color: var(--settings-page-muted);
   font-size: 12px;
   line-height: 1.5;
@@ -366,8 +389,8 @@
   min-width: 0;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 14px;
-  padding: 16px 18px;
+  gap: 12px;
+  padding: 13px 16px;
 }
 
 .vd-settings-row + .vd-settings-row {
@@ -376,14 +399,14 @@
 
 .vd-settings-row__icon {
   display: inline-grid;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   place-items: center;
   border: 1px solid var(--settings-page-border);
   border-radius: 8px;
   background: var(--settings-page-surface-muted);
   color: var(--settings-page-accent-strong);
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .vd-settings-row__content {

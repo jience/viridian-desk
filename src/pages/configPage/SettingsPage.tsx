@@ -94,7 +94,7 @@ export default function SettingsPage() {
     );
   }, [location.pathname, tabButtons]);
 
-  const activeTabSubtitle = tabButtons.find((button) => button.path === activeTabPath)?.subtitle;
+  const activeTab = tabButtons.find((button) => button.path === activeTabPath);
 
   const goBack = useCallback(() => {
     navigate('/login');
@@ -123,9 +123,11 @@ export default function SettingsPage() {
                 {intl.formatMessage({ id: 'SettingsWorkbenchEyebrow' })}
               </span>
               <h1 className="settings-page__title">
-                {intl.formatMessage({ id: 'SettingsWorkbenchTitle' })}
+                {activeTab?.name || intl.formatMessage({ id: 'SettingsWorkbenchTitle' })}
               </h1>
-              {activeTabSubtitle && <p className="settings-page__subtitle">{activeTabSubtitle}</p>}
+              {activeTab?.subtitle && (
+                <p className="settings-page__subtitle">{activeTab.subtitle}</p>
+              )}
             </div>
             <Button
               className="settings-page__exit"

@@ -49,16 +49,28 @@ export function SettingsSection({
   title,
   ...rest
 }: SettingsSectionProps) {
+  const hasActions = hasContent(actions);
+
   return (
-    <section className={joinClassNames('vd-settings-section', className)} {...rest}>
-      <header className="vd-settings-section__header">
-        <div className="vd-settings-section__heading">
-          {hasContent(eyebrow) && <span className="vd-settings-section__eyebrow">{eyebrow}</span>}
-          <h2>{title}</h2>
-          {hasContent(description) && <p>{description}</p>}
-        </div>
-        {hasContent(actions) && <div className="vd-settings-section__actions">{actions}</div>}
-      </header>
+    <section
+      aria-label={typeof title === 'string' ? title : undefined}
+      className={joinClassNames(
+        'vd-settings-section',
+        hasActions && 'vd-settings-section--with-toolbar',
+        className,
+      )}
+      {...rest}
+    >
+      <div className="vd-settings-section__sr-context">
+        {hasContent(eyebrow) && <span>{eyebrow}</span>}
+        <h2>{title}</h2>
+        {hasContent(description) && <p>{description}</p>}
+      </div>
+      {hasActions && (
+        <header className="vd-settings-section__header vd-settings-section__header--toolbar">
+          <div className="vd-settings-section__actions">{actions}</div>
+        </header>
+      )}
       <div className="vd-settings-section__body">{children}</div>
     </section>
   );
