@@ -4,7 +4,6 @@ import { Outlet, useLocation } from 'react-router';
 import Sidebar from '@/components/Sidebar';
 import { LoginGatewayDock } from '@/components/LoginGatewayDock';
 import { AssistantPanel } from '@/ui/assistant/assistant-panel';
-import { Button } from '@/ui/components/button';
 import { AppShell, type AssistantState } from '@/ui/shell/app-shell';
 import '@/styles/design-system.css';
 import './index.scss';
@@ -19,7 +18,6 @@ const routeTitles = [
 ] as const;
 
 export function AppLayout() {
-  const { t: assistantT } = useTranslation('assistant');
   const { t: commonT } = useTranslation('common');
   const location = useLocation();
   const [assistantOpen, setAssistantOpen] = useState(false);
@@ -43,7 +41,7 @@ export function AppLayout() {
           )
         }
         assistantState={assistantState}
-        nav={<Sidebar />}
+        nav={<Sidebar assistantOpen={isAssistantOpen} onAssistantToggle={toggleAssistant} />}
         userMenu={null}
       >
         <section className="app-layout__workspace">
@@ -51,14 +49,6 @@ export function AppLayout() {
             <div>
               <h1 className="app-layout__title">{commonT(routeMeta.titleKey)}</h1>
             </div>
-            <Button
-              aria-pressed={isAssistantOpen}
-              onClick={toggleAssistant}
-              size="sm"
-              variant="secondary"
-            >
-              {isAssistantOpen ? commonT('actions.close') : assistantT('title')}
-            </Button>
           </header>
 
           <main className="app-layout__content">

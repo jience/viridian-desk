@@ -33,10 +33,16 @@ import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from 'react-router';
 import { initMenus as menus } from './initData';
 
-function Sidebar() {
+interface SidebarProps {
+  assistantOpen?: boolean;
+  onAssistantToggle?: () => void;
+}
+
+function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
   const intl = useIntl();
   const { t } = useTranslation();
   const { t: commonT } = useTranslation('common');
+  const { t: assistantT } = useTranslation('assistant');
   const appDispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -317,6 +323,21 @@ function Sidebar() {
         })}
       </ul>
       <ul className="sidebar__actions" aria-label={commonT('user.personalInformation')}>
+        {onAssistantToggle && (
+          <li className="sidebar__item">
+            <Tooltip title={assistantT('title')} placement="right">
+              <button
+                aria-label={assistantT('title')}
+                aria-pressed={assistantOpen}
+                className={cn('sidebar__button', assistantOpen && 'sidebar__button--active')}
+                type="button"
+                onClick={onAssistantToggle}
+              >
+                <i className="iconfont icon-c_question-s" />
+              </button>
+            </Tooltip>
+          </li>
+        )}
         {
           <>
             {/* <li onClick={showEasyLog}>
