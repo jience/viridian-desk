@@ -8,6 +8,7 @@ import useSmsCountdown from '@/hooks/useSmsCountdown';
 import { selectLastLoginEntry } from '@/store/feature/app';
 import { useTranslation } from 'react-i18next';
 import { bridge } from '@/native';
+import './index.scss';
 
 export interface PhoneFormItemProps {
   formIns: FormInstance<LoginFormType>;
@@ -63,7 +64,7 @@ export const PhoneFormItem = (props: PhoneFormItemProps) => {
           placeholder={t('login_page.phone_placeholder')}
         />
       </Form.Item>
-      <Space style={{ marginBottom: '0.12rem' }}>
+      <Space className="phone-form-sms-row">
         <Form.Item
           name="smsCaptcha"
           rules={[
@@ -76,10 +77,7 @@ export const PhoneFormItem = (props: PhoneFormItemProps) => {
               message: t('login_page.sms_captcha_pattern_error'),
             },
           ]}
-          style={{
-            flex: 1,
-            marginBottom: 0,
-          }}
+          className="phone-form-sms-item"
         >
           <Input placeholder={t('login_page.sms_captcha_placeholder')} />
         </Form.Item>
