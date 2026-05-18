@@ -4,7 +4,7 @@ use tracing::error;
 use std::path::PathBuf;
 use tauri::Manager;
 
-pub static APP_ID: &str = "com.desk.client";
+pub static APP_ID: &str = "com.viridian.desk";
 pub static APP_CONFIG: &str = "client.config.json";
 pub static APP_METADATA: &str = "metadata.yaml";
 
