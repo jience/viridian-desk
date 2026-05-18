@@ -1,21 +1,29 @@
 .control-window-content {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 3px;
+  border: 1px solid
+    color-mix(in srgb, var(--vd-color-border, rgba(255, 255, 255, 0.12)) 72%, transparent);
+  border-radius: 999px;
+  padding: 3px;
+  background: color-mix(in srgb, var(--vd-color-panel, #151b19) 52%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 26px color-mix(in srgb, var(--vd-color-rail, #0a0e0d) 20%, transparent);
+  backdrop-filter: blur(16px);
   line-height: normal;
 }
 
 .control-window-content__button {
   display: grid;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   padding: 0;
   place-items: center;
-  border: 1px solid
-    color-mix(in srgb, var(--vd-color-on-rail-strong, var(--vd-color-text)) 18%, transparent);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--vd-color-rail, var(--vd-color-panel)) 72%, transparent);
-  color: var(--vd-color-on-rail, var(--vd-color-muted));
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: color-mix(in srgb, var(--vd-color-on-rail, var(--vd-color-muted)) 82%, transparent);
   cursor: pointer;
   outline: none;
   transition:
@@ -36,9 +44,12 @@
   &:hover,
   &:focus-visible {
     transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--vd-color-accent) 30%, transparent);
-    background: color-mix(in srgb, var(--vd-color-accent) 12%, transparent);
+    background: color-mix(in srgb, var(--vd-color-accent) 14%, transparent);
     color: var(--vd-color-on-rail-strong, var(--vd-color-text));
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--vd-color-accent) 32%, transparent);
   }
 
   &:active {
@@ -48,7 +59,6 @@
 
 .control-window-content__button--close:hover,
 .control-window-content__button--close:focus-visible {
-  border-color: color-mix(in srgb, var(--vd-color-danger) 38%, transparent);
-  background: color-mix(in srgb, var(--vd-color-danger) 12%, transparent);
-  color: var(--vd-color-danger);
+  background: var(--vd-color-danger, #cf4f45);
+  color: #ffffff;
 }
