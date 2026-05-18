@@ -129,15 +129,6 @@ export default function SettingsPage() {
                 <p className="settings-page__subtitle">{activeTab.subtitle}</p>
               )}
             </div>
-            <Button
-              className="settings-page__exit"
-              type="button"
-              variant="secondary"
-              onClick={goBack}
-            >
-              <i className="iconfont icon-signout" />
-              {intl.formatMessage({ id: 'ExitSetting' })}
-            </Button>
           </>
         }
         sidebar={
@@ -166,6 +157,18 @@ export default function SettingsPage() {
                 );
               })}
             </nav>
+
+            <div className="settings-page__sidebar-footer">
+              <Button
+                className="settings-page__exit"
+                type="button"
+                variant="secondary"
+                onClick={goBack}
+              >
+                <i className="iconfont icon-signout" />
+                {intl.formatMessage({ id: 'ExitSetting' })}
+              </Button>
+            </div>
           </div>
         }
       >
