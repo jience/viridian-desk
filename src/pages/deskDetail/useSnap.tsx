@@ -57,13 +57,7 @@ const useSnap = ({ id, formatMessage, desk }: any) => {
       icon: null,
       title: (
         <span>
-          <i
-            className="iconfont icon-malfunction1"
-            style={{
-              color: 'var(--vd-color-warning, #d89f32)',
-              marginRight: '5px',
-            }}
-          />
+          <i className="iconfont icon-malfunction1 modal-confirm-icon" />
           {formatMessage({ id: 'ROLLBACK_SNAP' })}
         </span>
       ),
@@ -71,8 +65,8 @@ const useSnap = ({ id, formatMessage, desk }: any) => {
       okText: formatMessage({ id: 'SnapRollback' }),
       cancelText: formatMessage({ id: 'CANCEL' }),
       centered: true,
+      className: 'desk-detail-snap-confirm-modal',
       width: 500,
-      style: { marginLeft: '216px' },
       onOk: (close: any) => {
         applySnapshotRun({
           desktopId: id,
@@ -92,13 +86,7 @@ const useSnap = ({ id, formatMessage, desk }: any) => {
       icon: null,
       title: (
         <span>
-          <i
-            className="iconfont icon-malfunction1"
-            style={{
-              color: 'var(--vd-color-warning, #d89f32)',
-              marginRight: '5px',
-            }}
-          />
+          <i className="iconfont icon-malfunction1 modal-confirm-icon" />
           {formatMessage({ id: 'DELETE_SNAP' })}
         </span>
       ),
@@ -106,8 +94,8 @@ const useSnap = ({ id, formatMessage, desk }: any) => {
       okText: formatMessage({ id: 'DELETE' }),
       cancelText: formatMessage({ id: 'CANCEL' }),
       centered: true,
+      className: 'desk-detail-snap-confirm-modal',
       width: 500,
-      style: { marginLeft: '216px' },
       onOk: (close: any) => {
         deleteSnapshotRun({
           desktopId: id,

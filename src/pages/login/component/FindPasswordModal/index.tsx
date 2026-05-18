@@ -280,19 +280,6 @@ const FindPasswordModal = (props: any) => {
       footer={renderFooter()}
       keyboard={false}
       className="find-pwd-modal"
-      // alertSlots={[
-      //   errorTips && {
-      //     type: 'error',
-      //     message: errorTips,
-      //   },
-      //   curentStep == 1 && {
-      //     type: 'warning',
-      //     message: formatMessage(
-      //       { id: 'ValidPhoneTip' },
-      //       { phone: formatTel(formData?.phone) }
-      //     ),
-      //   },
-      // ]}
       centered
       destroyOnHidden={true}
       title={renderTitle()}
@@ -320,32 +307,6 @@ const FindPasswordModal = (props: any) => {
                 )}
               />
             </Form.Item>
-            {/* <Form.Item name='phone' label={formatMessage({ id: 'ResetPasswordForPhone' })}
-                rules={[
-                  {
-                    required: true, message: ''
-                  }
-                ]}
-              >
-                <Input.Group compact>
-                  <Select style={{ width: '30%' }} defaultValue="+86">
-                    <Option value="+86">+86</Option>
-                  </Select>
-                  <Form.Item
-                    style={{ width: '70%' }}
-                    name='phone'
-                    rules={[
-                      { required: true, message: formatMessage({ id: 'FORM_ERROR_MSG' }, { name: formatMessage({ id: 'UserPhone' }) }) },
-                      {
-                        pattern: Regex.isMobile,
-                        message: formatMessage({ id: 'ValidPhoneError' })
-                      }
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                </Input.Group>
-              </Form.Item> */}
           </div>
         )}
         {curentStep == 1 && (

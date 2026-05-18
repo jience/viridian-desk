@@ -226,6 +226,10 @@
   }
 }
 
+.desk-detail-snap-confirm-modal {
+  margin-left: 216px;
+}
+
 :root.dark .desk-detail-page,
 :root[data-ui-theme='dark'] .desk-detail-page {
   --detail-surface: rgba(18, 26, 38, 0.86);

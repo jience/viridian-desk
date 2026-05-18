@@ -130,6 +130,11 @@
   }
 }
 
+.modal-confirm-icon {
+  margin-right: 5px;
+  color: var(--vd-color-warning, #d89f32);
+}
+
 .client-css-var.ant-modal-css-var {
   --ant-modal-title-font-size: 16px;
   --ant-modal-content-padding: 20px 24px;

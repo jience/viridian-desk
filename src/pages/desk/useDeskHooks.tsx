@@ -259,13 +259,7 @@ const useDeskHooks = (props: any) => {
       icon: null,
       title: (
         <span>
-          <i
-            className="iconfont icon-malfunction1"
-            style={{
-              color: 'var(--vd-color-warning, #d89f32)',
-              marginRight: '5px',
-            }}
-          />
+          <i className="iconfont icon-malfunction1 modal-confirm-icon" />
           {intl.formatMessage({ id: `DESK_SHUT_DOWN` })}
         </span>
       ),
