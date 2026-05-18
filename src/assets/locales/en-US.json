@@ -269,6 +269,7 @@
   "login_page.local_network_not_connected": "Local network not connected, please check network settings",
   "login_page.server_connection_failed": "Server connection failed, please contact the administrator",
   "login_page.server_connection_normal": "Server connection is normal",
+  "login_page.tls_protected": "TLS protected",
   "login_page.setting": "Settings",
   "login_page.network": "Network",
   "login_page.message_announcement": "Message Announcement",

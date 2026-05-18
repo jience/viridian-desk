@@ -269,6 +269,7 @@
   "login_page.local_network_not_connected": "本地网络未连接，请检查网络设置",
   "login_page.server_connection_failed": "服务器连接失败，请联系管理员",
   "login_page.server_connection_normal": "服务器连接正常",
+  "login_page.tls_protected": "TLS 已保护",
   "login_page.setting": "设置",
   "login_page.network": "网络",
   "login_page.message_announcement": "消息公告",

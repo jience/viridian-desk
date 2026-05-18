@@ -142,10 +142,10 @@
   .login-gateway-dock {
     position: relative;
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) 24px;
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
-    gap: 8px;
-    width: clamp(236px, 24vw, 316px);
+    gap: 9px;
+    width: clamp(224px, 22vw, 292px);
     height: 34px;
     border: 1px solid color-mix(in srgb, var(--auth-border) 72%, transparent);
     border-radius: 999px;
@@ -165,6 +165,8 @@
   }
 
   .login-gateway-dock__signal {
+    position: relative;
+    z-index: 1;
     width: 8px;
     height: 8px;
     border-radius: 999px;
@@ -183,6 +185,8 @@
   }
 
   .login-gateway-dock__copy {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -196,14 +200,13 @@
     }
 
     span {
-      color: color-mix(in srgb, var(--auth-muted) 86%, transparent);
-      font-size: 11px;
-      font-weight: 680;
-
-      &::before {
-        margin-right: 5px;
-        content: '·';
-      }
+      border: 1px solid color-mix(in srgb, var(--auth-accent) 18%, transparent);
+      border-radius: 999px;
+      padding: 2px 7px;
+      color: color-mix(in srgb, var(--auth-accent-strong) 90%, var(--auth-muted));
+      background: color-mix(in srgb, var(--auth-accent) 8%, transparent);
+      font-size: 10px;
+      font-weight: 760;
     }
 
     strong {
@@ -214,11 +217,14 @@
   }
 
   .login-gateway-dock__select {
-    width: 24px;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
     min-width: 0;
 
     .ant-select-selector {
-      height: 24px !important;
+      height: 34px !important;
       padding: 0 !important;
       background: transparent !important;
     }
@@ -228,10 +234,9 @@
       display: none;
     }
 
-    .ant-select-arrow {
-      inset-inline-end: 5px;
-      color: color-mix(in srgb, var(--auth-muted) 86%, transparent);
-      font-size: 10px;
+    .ant-select-arrow,
+    .ant-select-clear {
+      display: none;
     }
   }
 }

@@ -1,5 +1,4 @@
-import { CaretDownOutlined } from '@ant-design/icons';
-import { Select, Tooltip } from 'antd';
+import { Select } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,13 +42,15 @@ export function LoginGatewayDock() {
   };
 
   return (
-    <div className={cn('login-gateway-dock', `login-gateway-dock--${tone}`)}>
-      <Tooltip placement="top" title={statusText} arrow={false}>
-        <span className="login-gateway-dock__signal" />
-      </Tooltip>
+    <div
+      className={cn('login-gateway-dock', `login-gateway-dock--${tone}`)}
+      title={statusText}
+      aria-label={`${gatewayName} ${t('login_page.tls_protected')}`}
+    >
+      <span className="login-gateway-dock__signal" />
       <div className="login-gateway-dock__copy">
         <strong title={gatewayName}>{gatewayName}</strong>
-        <span>{statusText}</span>
+        <span>{t('login_page.tls_protected')}</span>
       </div>
       <Select
         placement="topRight"
@@ -57,7 +58,7 @@ export function LoginGatewayDock() {
         value={autoGateway?.uuid}
         onChange={handleChangeGateway}
         placeholder={t('login_page.please_select_gateway')}
-        suffixIcon={<CaretDownOutlined />}
+        suffixIcon={null}
         size="small"
         classNames={{ root: 'login-gateway-dock__select' }}
         options={options}
