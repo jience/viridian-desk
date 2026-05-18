@@ -216,10 +216,6 @@ export function DeskPage() {
   return (
     <main className="desk-page">
       <header className="desk-page__toolbar">
-        <div>
-          <span className="desk-page__eyebrow">{formatMessage({ id: 'DESK' })}</span>
-          <h1>{formatMessage({ id: 'DESK' })}</h1>
-        </div>
         <Button
           className="desk-page__refresh"
           type="primary"
@@ -241,12 +237,6 @@ export function DeskPage() {
 
           {!!deskData?.length && (
             <section className="desk-page__section">
-              <div className="desk-page__section-header">
-                <div>
-                  <span>{formatMessage({ id: 'DESK' })}</span>
-                  <strong>{deskData.length}</strong>
-                </div>
-              </div>
               <div className="desk-page__grid">
                 {deskData.map((item: any, index: number) => {
                   const isStopped = ['stop', 'stopretain'].includes(item?.status?.toLowerCase());
@@ -366,12 +356,6 @@ export function DeskPage() {
 
           {!!deskPoolData?.length && (
             <section className="desk-page__section">
-              <div className="desk-page__section-header">
-                <div>
-                  <span>{formatMessage({ id: 'DESK_POOL' })}</span>
-                  <strong>{deskPoolData.length}</strong>
-                </div>
-              </div>
               <div className="desk-page__pool-grid">
                 {deskPoolData.map((item: any, index: number) => (
                   <article className="desk-pool" key={item?.id || `${item?.name}-${index}`}>

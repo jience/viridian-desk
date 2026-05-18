@@ -49,7 +49,6 @@ export function AppLayout() {
         <section className="app-layout__workspace">
           <header className="app-layout__header">
             <div>
-              <p className="app-layout__eyebrow">{commonT('appName')}</p>
               <h1 className="app-layout__title">{commonT(routeMeta.titleKey)}</h1>
             </div>
             <Button
