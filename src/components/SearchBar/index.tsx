@@ -149,7 +149,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       });
 
     return (
-      <Scrollbars autoHeight style={{ flex: 1 }}>
+      <Scrollbars autoHeight className="antd-search-bar-tags-scroll">
         <div className="antd-search-bar-tag-container">
           {tags}
           {!disabled && !isEmpty(tags) ? (
@@ -210,11 +210,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           placeholder={`${formatMessage({ id: 'PleaseInput' })}${searchOption.title}`}
           suffix={
             <SearchOutlined
-              style={{
-                fontSize: '12px',
-                cursor: 'pointer',
-                display: searchOption.disabled ? 'none' : 'flex',
-              }}
+              className={`antd-search-bar-search-icon${searchOption.disabled ? ' is-hidden' : ''}`}
               onClick={handleSearch}
             />
           }

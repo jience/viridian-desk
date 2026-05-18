@@ -27,6 +27,20 @@
     }
   }
 
+  .antd-search-bar-search-icon {
+    display: flex;
+    cursor: pointer;
+    font-size: 12px;
+
+    &.is-hidden {
+      display: none;
+    }
+  }
+
+  .antd-search-bar-tags-scroll {
+    flex: 1;
+  }
+
   .antd-search-bar-tag-container {
     display: flex;
     flex-direction: row;

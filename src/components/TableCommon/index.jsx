@@ -276,7 +276,7 @@ const TableCommon = ({
     const defValue = cols.filter((item) => !item.hide).map((item) => item.key);
 
     return (
-      <div style={{ width: '150px' }}>
+      <div className="table-common-column-setting">
         <Checkbox.Group defaultValue={defValue} onChange={handleColumnChange}>
           <Row gutter={[0, 8]}>
             {options.map((item, i) => (
