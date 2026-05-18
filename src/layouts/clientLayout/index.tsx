@@ -15,6 +15,7 @@ import ControlWindow from '@/components/ControlWindow';
 import { setConnected } from '@/store/feature/gateway';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { useTranslation } from 'react-i18next';
+import { logger } from '@/utils/logger';
 
 const ClientLayout = () => {
   const dispatch = useAppDispatch();
@@ -102,7 +103,7 @@ const ClientLayout = () => {
   // 手动获取桌面上线状态
   const getConnectStatue = () => {
     invoke('get_client_online_status').then((res) => {
-      console.log('getConnectStatue', res);
+      logger.debug('getConnectStatue', res);
       dispatch(setConnected(res as boolean));
     });
   };
@@ -118,7 +119,7 @@ const ClientLayout = () => {
 
   const startListenDesktopConnect = async () => {
     desktopConnectMonitorRef.current = await listen<any>('desktop-connect', (e: any) => {
-      console.log('desktopConnectMonitor', e);
+      logger.debug('desktopConnectMonitor', e);
     });
   };
 

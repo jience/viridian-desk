@@ -1,5 +1,6 @@
 import { invoke as tauriInvoke, type InvokeArgs, type InvokeOptions } from '@tauri-apps/api/core';
 import { message } from '@/ui';
+import { logger } from '@/utils/logger';
 
 export type InvokeOpt = Partial<
   InvokeOptions & {
@@ -11,13 +12,7 @@ export type InvokeOpt = Partial<
  * 打印Invoke请求日志
  */
 const logInvokeRequest = (prefix: string, content: unknown) => {
-  if (import.meta.env.MODE !== 'development') return; // 仅在开发环境打印日志
-  console.debug(
-    `%c[INVOKE][${prefix}]%c`,
-    'color: #189143; font-weight: bold; background: #f0f8ff; padding: 2px 4px; border-radius: 3px;',
-    'color: #666;',
-    content,
-  );
+  logger.debug(`[INVOKE][${prefix}]`, content);
 };
 
 export const invoke = async <T>(
@@ -32,7 +27,7 @@ export const invoke = async <T>(
     logInvokeRequest(`${cmd} response`, response);
     return response;
   } catch (error) {
-    console.error('Error invoking Tauri command:', error);
+    logger.error('Error invoking Tauri command:', error);
     if (typeof error === 'string' && !hideErrMessage) message.error(error);
     throw error;
   }

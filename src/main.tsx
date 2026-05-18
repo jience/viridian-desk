@@ -9,12 +9,13 @@ import zhCN from '@/locales/zh-CN';
 import zhTW from '@/locales/zh-TW';
 import en from '@/locales/en-US';
 import { setupServices } from './services';
+import { logger } from '@/utils/logger';
 
 function setupEnvLog() {
   const canvas = document.createElement('canvas');
   const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
   const isHardwareAccelerated = !!gl;
-  console.log('硬件加速是否启用:', isHardwareAccelerated);
+  logger.debug('硬件加速是否启用:', isHardwareAccelerated);
 }
 
 function setupOldLang() {

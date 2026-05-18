@@ -1,7 +1,6 @@
 import zhCN from '../locales/zh-CN';
 import zhTW from '../locales/zh-TW';
 import en from '../locales/en-US';
-console.log('1212121');
 
 const LanguageData = {
   'en-US': { ...en },

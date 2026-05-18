@@ -3,6 +3,7 @@ import { fetch, type ClientOptions } from '@tauri-apps/plugin-http';
 import { isEmpty } from 'lodash-es';
 import { globalEmitter } from '../mitt';
 import { isApiErrResponse, type ApiResponse } from './types';
+import { logger } from '@/utils/logger';
 
 type FetchOpt = RequestInit & ClientOptions;
 export interface RequestOptions<B = any> extends Omit<FetchOpt, 'body'> {
@@ -76,13 +77,7 @@ const beforeRequest = (config?: RequestOptions): FetchOpt => {
  * @param status HTTP状态码（可选）
  */
 const logHttpRequest = (prefix: string, content: unknown) => {
-  if (import.meta.env.MODE !== 'development') return; // 仅在开发环境打印日志
-  console.debug(
-    `%c[HTTP][${prefix}]%c`,
-    'color: #1890ff; font-weight: bold; background: #f0f8ff; padding: 2px 4px; border-radius: 3px;',
-    'color: #666;',
-    content,
-  );
+  logger.debug(`[HTTP][${prefix}]`, content);
 };
 
 const formateApi = (api: string) => {

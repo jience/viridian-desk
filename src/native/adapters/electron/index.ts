@@ -7,6 +7,7 @@ import type { NativeResponse, AppEventMap, UnlistenFn } from '@/native/interface
 import { cmd_module } from './cmd';
 import { login_history_module } from './login_history';
 import { api_module } from './api';
+import { logger } from '@/utils/logger';
 
 export class ElectronAdapter implements INativeBridge {
   platform = 'electron' as const;
@@ -25,7 +26,7 @@ export class ElectronAdapter implements INativeBridge {
 
   async minimizeWindow(): Promise<NativeResponse> {
     // 待实现
-    console.warn('minimizeWindow not implemented yet for Electron');
+    logger.warn('minimizeWindow not implemented yet for Electron');
     return { data: null };
   }
 
@@ -34,7 +35,7 @@ export class ElectronAdapter implements INativeBridge {
     callback: (payload: AppEventMap[K]) => void,
   ): Promise<UnlistenFn> {
     if (!window.ipcRenderer) {
-      console.warn('Electron API not found');
+      logger.warn('Electron API not found');
       return () => {};
     }
 

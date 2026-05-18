@@ -9,6 +9,7 @@ import '@/styles/design-system.css';
 import './index.scss';
 
 const routeTitles = [
+  { match: '/app/empty', titleKey: 'navigation.empty' },
   { match: '/app/deskDetail', titleKey: 'navigation.detail' },
   { match: '/app/desk', titleKey: 'navigation.desktop' },
   { match: '/app/application', titleKey: 'navigation.application' },

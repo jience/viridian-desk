@@ -1,4 +1,5 @@
 import { formatI18NKey } from '@/utils/utils';
+import { logger } from '@/utils/logger';
 
 function getLoginErrorTimesExceedErrorMessage(
   errorMessage,
@@ -39,7 +40,7 @@ function handleError(res) {
     }
     if (!isEmpty(errorDetail)) {
       message = formatI18NKey(errorCode, { ...errorDetail });
-      console.log('message', message);
+      logger.debug('message', message);
     }
 
     // 登录密码错误次数特殊翻译

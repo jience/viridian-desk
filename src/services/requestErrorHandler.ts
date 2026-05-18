@@ -1,5 +1,6 @@
 import type { NativeResponse } from '@/native/interfaces/types';
 import { message as uiMessage } from '@/ui';
+import { logger } from '@/utils/logger';
 import { t, type Resources } from 'i18next';
 import { isEmpty } from 'lodash-es';
 
@@ -50,7 +51,7 @@ function handleError(res: NativeResponse<any>) {
     }
     if (!isEmpty(data)) {
       message = t(errorCode, { ...(data as any) });
-      console.log('message', message);
+      logger.debug('message', message);
     }
 
     // 登录密码错误次数特殊翻译

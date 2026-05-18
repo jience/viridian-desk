@@ -1,24 +1,46 @@
 import { LoginAuthType } from '@/native/interfaces/login_history';
 import { AppLayout } from '@/layouts/AppLayout';
-import { Application } from '@/pages/application';
-import SettingsPage from '@/pages/configPage/SettingsPage';
-import About from '@/pages/configPage/subPages/about';
-import AdvancedSetting from '@/pages/configPage/subPages/advancedSetting';
-import CurrencySetting from '@/pages/configPage/subPages/commonSetting';
-import ServerSetting from '@/pages/configPage/subPages/serverSetting';
-import { DeskPage } from '@/pages/desk/DeskPage';
-import { DeskDetailPage } from '@/pages/deskDetail/DeskDetailPage';
 import { appStore } from '@/store';
 import { getLoginHistory, setCurrentLoginType } from '@/store/feature/app';
 import { fetchConfigInfo } from '@/store/feature/config';
 import { setNetwork } from '@/store/feature/gateway';
 import { fetchTerminalInfo } from '@/store/feature/terminal';
+import { RouteFallback } from '@/ui/shell/route-fallback';
+import { lazy, Suspense, type ReactNode } from 'react';
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
 import ClientLayout from '../layouts/clientLayout';
-import { Component as Approval } from '../pages/approval';
-import LoginPage from '../pages/login/LoginPage';
-import { Component as Malfunction } from '../pages/malfunction';
-import { Component as PeripheralSetting } from '../pages/peripheralSetting';
+
+const LoginPage = lazy(() => import('@/pages/login/LoginPage'));
+const SettingsPage = lazy(() => import('@/pages/configPage/SettingsPage'));
+const ServerSetting = lazy(() => import('@/pages/configPage/subPages/serverSetting'));
+const CurrencySetting = lazy(() => import('@/pages/configPage/subPages/commonSetting'));
+const AdvancedSetting = lazy(() => import('@/pages/configPage/subPages/advancedSetting'));
+const About = lazy(() => import('@/pages/configPage/subPages/about'));
+const DeskPage = lazy(() =>
+  import('@/pages/desk/DeskPage').then((module) => ({ default: module.DeskPage })),
+);
+const DeskDetailPage = lazy(() =>
+  import('@/pages/deskDetail/DeskDetailPage').then((module) => ({
+    default: module.DeskDetailPage,
+  })),
+);
+const Application = lazy(() =>
+  import('@/pages/application').then((module) => ({ default: module.Application })),
+);
+const PeripheralSetting = lazy(() =>
+  import('@/pages/peripheralSetting').then((module) => ({ default: module.Component })),
+);
+const Malfunction = lazy(() =>
+  import('@/pages/malfunction').then((module) => ({ default: module.Component })),
+);
+const Approval = lazy(() =>
+  import('@/pages/approval').then((module) => ({ default: module.Component })),
+);
+const EmptyPage = lazy(() =>
+  import('@/pages/empty/EmptyPage').then((module) => ({ default: module.EmptyPage })),
+);
+
+const routeElement = (node: ReactNode) => <Suspense fallback={<RouteFallback />}>{node}</Suspense>;
 
 const createSettingsRoutes = (): RouteObject[] => [
   {
@@ -27,19 +49,23 @@ const createSettingsRoutes = (): RouteObject[] => [
   },
   {
     path: 'serverSetting',
-    element: <ServerSetting />,
+    element: routeElement(<ServerSetting />),
   },
   {
     path: 'commonSetting',
-    element: <CurrencySetting />,
+    element: routeElement(<CurrencySetting />),
   },
   {
     path: 'advancedSetting',
-    element: <AdvancedSetting />,
+    element: routeElement(<AdvancedSetting />),
   },
   {
     path: 'about',
-    element: <About />,
+    element: routeElement(<About />),
+  },
+  {
+    path: '*',
+    element: <Navigate to="serverSetting" replace />,
   },
 ];
 
@@ -51,11 +77,13 @@ const createAppRoutes = ({
   deskDetail: RouteObject['element'];
 }): RouteObject[] => [
   { path: 'desk', element: desk },
-  { path: 'application', element: <Application /> },
+  { path: 'application', element: routeElement(<Application />) },
   { path: 'deskDetail', element: deskDetail },
-  { path: 'peripheral', element: <PeripheralSetting /> },
-  { path: 'malfunction', element: <Malfunction /> },
-  { path: 'approval', element: <Approval /> },
+  { path: 'peripheral', element: routeElement(<PeripheralSetting />) },
+  { path: 'malfunction', element: routeElement(<Malfunction />) },
+  { path: 'approval', element: routeElement(<Approval />) },
+  { path: 'empty', element: routeElement(<EmptyPage />) },
+  { path: '*', element: routeElement(<EmptyPage />) },
 ];
 
 const rootRoutes: RouteObject[] = [
@@ -88,20 +116,24 @@ const rootRoutes: RouteObject[] = [
       },
       {
         path: 'login',
-        element: <LoginPage />,
+        element: routeElement(<LoginPage />),
       },
       {
         path: 'configPage',
-        element: <SettingsPage />,
+        element: routeElement(<SettingsPage />),
         children: createSettingsRoutes(),
       },
       {
         path: 'app',
         element: <AppLayout />,
         children: createAppRoutes({
-          desk: <DeskPage />,
-          deskDetail: <DeskDetailPage />,
+          desk: routeElement(<DeskPage />),
+          deskDetail: routeElement(<DeskDetailPage />),
         }),
+      },
+      {
+        path: '*',
+        element: <Navigate to="/login" replace />,
       },
     ],
   },

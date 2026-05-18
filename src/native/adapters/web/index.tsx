@@ -6,6 +6,7 @@ import type { AppEventMap, NativeResponse, UnlistenFn } from '@/native/interface
 import { cmd_module } from './cmd';
 import { login_history_module } from './login_history';
 import { api_module } from './api';
+import { logger } from '@/utils/logger';
 
 export class WebAdapter implements INativeBridge {
   platform = 'web' as const;
@@ -23,7 +24,7 @@ export class WebAdapter implements INativeBridge {
   api = api_module;
 
   async minimizeWindow(): Promise<NativeResponse> {
-    console.log('[Web Mock] minimizeWindow called');
+    logger.debug('[Web Mock] minimizeWindow called');
     return { data: null };
   }
 
@@ -31,7 +32,7 @@ export class WebAdapter implements INativeBridge {
     event: K,
     _callback: (payload: AppEventMap[K]) => void,
   ): Promise<UnlistenFn> {
-    console.log(`[Web Mock] Listening for event: ${event}`);
-    return () => console.log(`[Web Mock] UnListening event: ${event}`);
+    logger.debug(`[Web Mock] Listening for event: ${event}`);
+    return () => logger.debug(`[Web Mock] UnListening event: ${event}`);
   }
 }

@@ -36,6 +36,30 @@ export default defineConfig({
     sourcemap: !!process.env.TAURI_DEBUG,
     // 启用/禁用 CSS 代码拆分。当启用时，在异步 chunk 中导入的 CSS 将内联到异步 chunk 本身，并在其被加载时插入。如果禁用，整个项目中的所有 CSS 将被提取到一个 CSS 文件中。
     cssCodeSplit: false,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return;
+          if (id.includes('/react') || id.includes('/react-dom') || id.includes('/react-router')) {
+            return 'vendor-react';
+          }
+          if (id.includes('/@tauri-apps/')) {
+            return 'vendor-tauri';
+          }
+          if (
+            id.includes('/i18next') ||
+            id.includes('/react-i18next') ||
+            id.includes('/react-intl')
+          ) {
+            return 'vendor-i18n';
+          }
+          if (id.includes('/@radix-ui/')) {
+            return 'vendor-radix';
+          }
+          return 'vendor';
+        },
+      },
+    },
   },
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //

@@ -7,6 +7,7 @@ import { useAppSelector } from './store';
 import { selectLanguage } from './store/feature/config';
 import { UiThemeProvider } from '@/ui/theme/theme-provider';
 import { LanguageType } from './native/interfaces/config';
+import { logger } from '@/utils/logger';
 
 const IS_THIN_CLIENT = import.meta.env.TAURI_IS_THIN_CLIENT === 'true';
 
@@ -14,7 +15,7 @@ function App() {
   const language = useAppSelector(selectLanguage);
 
   useEffect(() => {
-    console.log('Client is thin: ?', IS_THIN_CLIENT);
+    logger.debug('Client is thin: ?', IS_THIN_CLIENT);
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'F5' || e.key === 'F12') {
         e.preventDefault();
