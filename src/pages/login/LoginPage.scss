@@ -228,11 +228,14 @@
     z-index: 2;
     width: 100%;
     min-width: 0;
+    opacity: 0;
+    cursor: pointer;
 
     .ant-select-selector {
       height: 34px !important;
       padding: 0 !important;
       background: transparent !important;
+      cursor: pointer !important;
     }
 
     .ant-select-selection-item,

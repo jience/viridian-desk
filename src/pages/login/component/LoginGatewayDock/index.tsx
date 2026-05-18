@@ -60,6 +60,7 @@ export function LoginGatewayDock() {
         placeholder={t('login_page.please_select_gateway')}
         suffixIcon={null}
         size="small"
+        className="login-gateway-dock__select"
         classNames={{ root: 'login-gateway-dock__select' }}
         options={options}
       />
