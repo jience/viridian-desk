@@ -13,7 +13,7 @@
 }
 
 .login-footer__actions,
-.login-footer__gateway {
+.login-footer__side {
   display: flex;
   align-items: center;
   min-width: 0;
@@ -101,6 +101,6 @@
   }
 }
 
-.login-footer__gateway {
-  padding-bottom: 3px;
+.login-footer__side {
+  justify-content: flex-end;
 }

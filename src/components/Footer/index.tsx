@@ -1,8 +1,6 @@
-import { useMemo, type FC, type ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { useNavigate } from 'react-router';
-import { Tooltip, Modal, Select } from 'antd';
-import type { DefaultOptionType } from 'antd/es/select';
-import { CaretDownOutlined } from '@ant-design/icons';
+import { Tooltip, Modal } from 'antd';
 import { invoke } from '@tauri-apps/api/core';
 import './index.scss';
 import { useAppDispatch, useAppSelector } from '@/store';
@@ -12,13 +10,6 @@ import { selectMsgDot, setMsgDot, setMsgModalShow } from '@/store/feature/app';
 import { useTranslation } from 'react-i18next';
 import { bridge } from '@/native';
 import { cn } from '@/ui/lib/cn';
-import {
-  selectAutoGateway,
-  selectConnected,
-  selectGatewayList,
-  selectNetwork,
-  switchGateway,
-} from '@/store/feature/gateway';
 
 interface FooterAction {
   key: string;
@@ -31,9 +22,10 @@ interface FooterAction {
 
 interface FooterProps {
   hiddenActionKeys?: string[];
+  rightSlot?: ReactNode;
 }
 
-const Footer: FC<FooterProps> = ({ hiddenActionKeys = [] }) => {
+const Footer: FC<FooterProps> = ({ hiddenActionKeys = [], rightSlot }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
@@ -46,33 +38,6 @@ const Footer: FC<FooterProps> = ({ hiddenActionKeys = [] }) => {
 
   const isIntegratedMode = useAppSelector(selectIntegration);
   const msgDot = useAppSelector(selectMsgDot);
-  const autoGateway = useAppSelector(selectAutoGateway);
-  const gatewayList = useAppSelector(selectGatewayList);
-  const connected = useAppSelector(selectConnected);
-  const network = useAppSelector(selectNetwork);
-
-  const gatewayTone = !autoGateway ? 'info' : connected && network ? 'success' : 'danger';
-
-  const gatewayTip = !autoGateway
-    ? t('login_page.please_select_gateway')
-    : !network
-      ? t('login_page.local_network_not_connected')
-      : !connected
-        ? t('login_page.server_connection_failed')
-        : t('login_page.server_connection_normal');
-
-  const gatewayOptions = useMemo(() => {
-    return gatewayList.map<DefaultOptionType>((gateway) => ({
-      label: gateway?.address
-        ? `${gateway?.name || gateway.address} (${gateway.address})`
-        : gateway?.name,
-      value: gateway?.uuid,
-    }));
-  }, [gatewayList]);
-
-  const handleChangeGateway = async (uuid: string) => {
-    await dispatch(switchGateway(uuid));
-  };
 
   const shutdown = async () => {
     const confirmed = await modal.confirm({
@@ -167,33 +132,7 @@ const Footer: FC<FooterProps> = ({ hiddenActionKeys = [] }) => {
             </div>
           )}
         </div>
-        <div className="login-footer__gateway">
-          <div
-            className={cn(
-              'login-footer__gateway-dock',
-              `login-footer__gateway-dock--${gatewayTone}`,
-            )}
-          >
-            <Tooltip placement="top" title={gatewayTip} arrow={false}>
-              <span className="login-footer__gateway-status" />
-            </Tooltip>
-            <div className="login-footer__gateway-copy">
-              <span>{t('login_page.current_server')}</span>
-              <strong>{gatewayTip}</strong>
-            </div>
-            <Select
-              placement="topRight"
-              variant="borderless"
-              value={autoGateway?.uuid}
-              onChange={handleChangeGateway}
-              placeholder={t('login_page.please_select_gateway')}
-              suffixIcon={<CaretDownOutlined />}
-              size="small"
-              classNames={{ root: 'login-footer__gateway-select' }}
-              options={gatewayOptions}
-            />
-          </div>
-        </div>
+        {rightSlot && <div className="login-footer__side">{rightSlot}</div>}
       </div>
       {contextHolder}
     </footer>

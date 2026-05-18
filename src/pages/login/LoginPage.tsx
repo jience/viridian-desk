@@ -17,6 +17,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';
 import FindPasswordModal from './component/FindPasswordModal';
+import { LoginGatewayDock } from './component/LoginGatewayDock';
 import LoginWayChange from './component/LoginWayChange';
 import { useLoginHandler } from './hooks/useLoginHandler';
 import { useLoginWayData } from './initData';
@@ -310,7 +311,7 @@ export default function LoginPage() {
         <OrgScanLoginModal ref={orgScanLoginModalRef} />
       </section>
       <div className="auth-page__footer-bar">
-        <Footer />
+        <Footer rightSlot={<LoginGatewayDock />} />
       </div>
     </div>
   );

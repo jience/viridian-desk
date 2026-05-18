@@ -139,62 +139,54 @@
     padding: 0 12px;
   }
 
-  .login-footer__gateway {
-    width: clamp(320px, 34vw, 390px);
-    min-width: 0;
-    padding: 0;
-    justify-content: flex-end;
-  }
-
-  .login-footer__gateway-dock {
+  .login-gateway-dock {
     position: relative;
     display: grid;
-    grid-template-columns: auto minmax(92px, 0.62fr) minmax(136px, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) 24px;
     align-items: center;
-    gap: 10px;
-    width: 100%;
-    min-height: 42px;
-    border: 1px solid color-mix(in srgb, var(--auth-border) 86%, transparent);
+    gap: 8px;
+    width: clamp(236px, 24vw, 316px);
+    height: 34px;
+    border: 1px solid color-mix(in srgb, var(--auth-border) 72%, transparent);
     border-radius: 999px;
-    padding: 6px 7px 6px 14px;
+    padding: 0 5px 0 12px;
     overflow: hidden;
     background:
       linear-gradient(
         90deg,
-        color-mix(in srgb, var(--auth-accent) 12%, transparent),
-        transparent 42%
+        color-mix(in srgb, var(--auth-accent) 8%, transparent),
+        transparent 38%
       ),
-      color-mix(in srgb, var(--auth-panel) 70%, transparent);
+      color-mix(in srgb, var(--auth-panel) 58%, transparent);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.12),
-      0 18px 44px rgba(55, 48, 38, 0.12);
-    backdrop-filter: blur(20px);
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 12px 28px rgba(55, 48, 38, 0.09);
+    backdrop-filter: blur(16px);
   }
 
-  .login-footer__gateway-status {
-    width: 10px;
-    height: 10px;
+  .login-gateway-dock__signal {
+    width: 8px;
+    height: 8px;
     border-radius: 999px;
     background: var(--auth-muted);
-    box-shadow: 0 0 0 6px color-mix(in srgb, var(--auth-muted) 12%, transparent);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--auth-muted) 11%, transparent);
   }
 
-  .login-footer__gateway-dock--success .login-footer__gateway-status {
+  .login-gateway-dock--success .login-gateway-dock__signal {
     background: var(--auth-success);
-    box-shadow: 0 0 0 6px color-mix(in srgb, var(--auth-success) 14%, transparent);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--auth-success) 14%, transparent);
   }
 
-  .login-footer__gateway-dock--danger .login-footer__gateway-status {
+  .login-gateway-dock--danger .login-gateway-dock__signal {
     background: var(--auth-danger);
-    box-shadow: 0 0 0 6px color-mix(in srgb, var(--auth-danger) 14%, transparent);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--auth-danger) 14%, transparent);
   }
 
-  .login-footer__gateway-copy {
-    display: grid;
-    gap: 2px;
+  .login-gateway-dock__copy {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     min-width: 0;
-    padding-right: 10px;
-    border-right: 1px solid color-mix(in srgb, var(--auth-border) 78%, transparent);
 
     span,
     strong {
@@ -205,40 +197,40 @@
 
     span {
       color: color-mix(in srgb, var(--auth-muted) 86%, transparent);
-      font-size: 9px;
-      font-weight: 760;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 680;
+
+      &::before {
+        margin-right: 5px;
+        content: '·';
+      }
     }
 
     strong {
       color: var(--auth-text);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 760;
     }
   }
 
-  .login-footer__gateway-select {
-    width: 100%;
+  .login-gateway-dock__select {
+    width: 24px;
     min-width: 0;
 
     .ant-select-selector {
-      height: 28px !important;
-      border-radius: 999px !important;
-      padding-inline: 10px 7px !important;
-      background: color-mix(in srgb, var(--auth-panel-strong) 62%, transparent) !important;
+      height: 24px !important;
+      padding: 0 !important;
+      background: transparent !important;
     }
 
     .ant-select-selection-item,
     .ant-select-selection-placeholder {
-      color: var(--auth-text);
-      font-size: 11px;
-      font-weight: 720;
-      line-height: 28px !important;
+      display: none;
     }
 
     .ant-select-arrow {
-      color: color-mix(in srgb, var(--auth-muted) 78%, transparent);
+      inset-inline-end: 5px;
+      color: color-mix(in srgb, var(--auth-muted) 86%, transparent);
       font-size: 10px;
     }
   }
@@ -673,17 +665,8 @@
     flex-direction: column;
   }
 
-  .auth-page .login-footer__gateway {
+  .auth-page .login-footer__side,
+  .auth-page .login-gateway-dock {
     width: 100%;
-    justify-content: flex-start;
-  }
-
-  .auth-page .login-footer__gateway-dock {
-    grid-template-columns: auto minmax(0, 1fr);
-    width: 100%;
-  }
-
-  .auth-page .login-footer__gateway-select {
-    grid-column: 1 / -1;
   }
 }
