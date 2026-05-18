@@ -69,7 +69,7 @@ $cardMarginRow: 16px;
             background-color: var(--config-card-background-default);
           }
 
-          .archer-tag {
+          .vdui-tag {
             font-size: 12px;
             margin: 0 4px;
           }
@@ -121,7 +121,7 @@ $cardMarginRow: 16px;
                 color: var(--config-card-bullet-default);
               }
 
-              .archer-tag {
+              .vdui-tag {
                 font-family: inherit;
                 font-size: 12px;
                 font-weight: 400;
@@ -143,7 +143,7 @@ $cardMarginRow: 16px;
         margin: $contentMarging;
         color: var(--config-card-title-default);
 
-        .archer-checkbox-wrapper {
+        .vdui-checkbox-wrapper {
           font-size: 12px;
         }
       }
@@ -169,7 +169,7 @@ $cardMarginRow: 16px;
         font-size: 13px;
         font-weight: 400;
 
-        .archer-btn {
+        .vdui-btn {
           border: 1px solid var(--app-border-color);
           border-radius: 8px;
           padding: 0px 6px;
@@ -282,7 +282,7 @@ $cardMarginRow: 16px;
       }
     }
 
-    .archer-checkbox-wrapper {
+    .vdui-checkbox-wrapper {
       color: var(--config-card-title-default);
     }
   }
@@ -349,7 +349,7 @@ $cardMarginRow: 16px;
       }
     }
 
-    .archer-checkbox-wrapper {
+    .vdui-checkbox-wrapper {
       color: var(--config-card-title-default);
     }
   }
@@ -413,7 +413,7 @@ $cardMarginRow: 16px;
       align-items: center;
     }
 
-    .archer-btn {
+    .vdui-btn {
       font-family: inherit;
       font-size: 12px;
       letter-spacing: 0;
@@ -437,7 +437,7 @@ $cardMarginRow: 16px;
       color: var(--config-card-content-color);
     }
 
-    .archer-checkbox-wrapper {
+    .vdui-checkbox-wrapper {
       color: var(--config-card-title-default);
     }
   }
@@ -471,7 +471,11 @@ $cardMarginRow: 16px;
 
   &:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--config-card-bullet-default, var(--vd-color-accent)) 34%, transparent);
+    border-color: color-mix(
+      in srgb,
+      var(--config-card-bullet-default, var(--vd-color-accent)) 34%,
+      transparent
+    );
     border-radius: 12px;
     background: color-mix(
       in srgb,
@@ -485,7 +489,7 @@ $cardMarginRow: 16px;
   }
 
   .integratedCard-title-right {
-    :where(.archer-btn, .special, .archer-btn) {
+    :where(.vdui-btn, .special, .vdui-btn) {
       border-radius: 8px;
     }
   }

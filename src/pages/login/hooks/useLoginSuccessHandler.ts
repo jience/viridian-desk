@@ -11,7 +11,7 @@ import {
 } from '@/store/feature/app';
 import { selectIsThin } from '@/store/feature/terminal';
 import Actions from '@/utils/actions';
-import { encryption } from '@/utils/utils';
+import { encryption, LEGACY_PASSWORD_PREFIX } from '@/utils/utils';
 import { message } from '@/ui';
 import { useNavigate } from 'react-router';
 
@@ -77,7 +77,7 @@ export const useLoginSuccessHandler = (opt: {
     // TODO 后面需要去除password字段
     if ((req as LoginUserReq).password) {
       const password = encryption(
-        'archeroscmp-' + (req as LoginUserReq).password + '_' + new Date().getTime(),
+        LEGACY_PASSWORD_PREFIX + '-' + (req as LoginUserReq).password + '_' + new Date().getTime(),
       );
       await appDispatch(
         setCurrentUser({

@@ -107,7 +107,7 @@ export default function LoginPage() {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target instanceof HTMLElement ? event.target : null;
-      const isDialogInput = target?.closest('.archer-modal-root, .archer-drawer, [role="dialog"]');
+      const isDialogInput = target?.closest('.vdui-modal-root, .vdui-drawer, [role="dialog"]');
 
       if (event.key === 'Enter') {
         if (event.defaultPrevented || event.isComposing || isDialogInput) return;

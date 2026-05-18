@@ -1,3 +1,42 @@
 .network-info-wrapper {
   display: contents;
+
+  .info-table {
+    margin-top: 4px;
+    padding: 0;
+    color: var(--settings-page-text);
+  }
+
+  .info-table .row-item {
+    min-height: 34px;
+    height: auto;
+    border-bottom-color: var(--settings-page-border);
+    padding: 7px 0;
+  }
+
+  .info-table .key {
+    flex: 0 0 132px;
+    max-width: 132px;
+    color: var(--settings-page-muted);
+    font-size: 12px;
+    font-weight: 650;
+  }
+
+  .info-table .key-tip-icon {
+    color: var(--settings-page-subtle);
+  }
+
+  .info-table .value {
+    min-width: 0;
+    color: var(--settings-page-text);
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: normal;
+    word-break: break-all;
+  }
+
+  .info-table .operates-area {
+    color: var(--settings-page-accent-strong);
+  }
 }

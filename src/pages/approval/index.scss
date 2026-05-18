@@ -9,7 +9,7 @@
     margin-bottom: 12px;
     justify-content: space-between;
 
-    .archer-btn-variant-outlined {
+    .vdui-btn-variant-outlined {
       border: 1px solid var(--app-border-color, rgba(61, 91, 78, 0.18));
       background: color-mix(in srgb, var(--app-surface-color, #fffdf8) 82%, transparent);
       color: var(--app-text-color, #20231e);
@@ -44,11 +44,11 @@
       background-color 160ms ease,
       box-shadow 160ms ease;
 
-    .archer-table {
+    .vdui-table {
       color: var(--list-content-color);
     }
 
-    .archer-table .archer-table-thead > tr > th {
+    .vdui-table .vdui-table-thead > tr > th {
       border-top: none;
       border-left: none;
       font-size: 14px;
@@ -56,25 +56,25 @@
       background: var(--list-container-bg);
       font-weight: 600;
     }
-    .archer-table .archer-table-thead > tr > th:last-child {
+    .vdui-table .vdui-table-thead > tr > th:last-child {
       border-right: none;
     }
-    .archer-table .archer-table-tbody > tr > td:last-child {
+    .vdui-table .vdui-table-tbody > tr > td:last-child {
       border-right: none;
     }
-    .archer-table .archer-table-placeholder td {
+    .vdui-table .vdui-table-placeholder td {
       border-left: none !important;
     }
-    .archer-table .archer-table-tbody > tr > td {
+    .vdui-table .vdui-table-tbody > tr > td {
       font-size: 13px;
       background: var(--list-container-bg);
     }
 
-    .archer-table .archer-table-tbody > tr:hover > td {
+    .vdui-table .vdui-table-tbody > tr:hover > td {
       background: var(--list-container-bg-hover) !important;
     }
 
-    .archer-table .archer-table-tbody > tr > td:first-child {
+    .vdui-table .vdui-table-tbody > tr > td:first-child {
       border-left: none;
     }
 
@@ -86,13 +86,13 @@
       font-weight: 650;
     }
 
-    .archer-empty .archer-empty-description {
+    .vdui-empty .vdui-empty-description {
       span {
         color: var(--list-content-color) !important;
       }
     }
 
-    .archer-empty .archer-empty-image {
+    .vdui-empty .vdui-empty-image {
       span {
         color: var(--list-content-color) !important;
       }
@@ -125,7 +125,7 @@
     }
   }
 
-  .archer-popover-title {
+  .vdui-popover-title {
     min-width: 1.77rem;
     min-height: 0.32rem;
     margin: 0;
@@ -135,7 +135,7 @@
     letter-spacing: 0;
     line-height: 22px;
   }
-  .archer-popover-inner-content {
+  .vdui-popover-inner-content {
     font-size: 12px;
     color: var(--app-text-color);
   }
@@ -148,14 +148,14 @@
   color: var(--app-text-color, #20231e);
 }
 .vd-layout-content {
-  .archer-popover {
+  .vdui-popover {
     background: transparent;
     border: 0;
     box-shadow: none;
-    .archer-popover-arrow {
+    .vdui-popover-arrow {
       display: block;
     }
-    .archer-popover-inner-content {
+    .vdui-popover-inner-content {
       max-width: 300px;
     }
   }

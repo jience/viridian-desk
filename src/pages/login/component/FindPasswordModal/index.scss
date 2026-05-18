@@ -10,8 +10,8 @@
 
   width: 500px !important;
 
-  .archer-modal-content,
-  .archer-modal-content {
+  .vdui-modal-content,
+  .vdui-modal-content {
     overflow: hidden;
     border: 1px solid var(--login-modal-border);
     border-radius: 10px;
@@ -20,7 +20,7 @@
     backdrop-filter: blur(16px);
   }
 
-  .archer-modal-header {
+  .vdui-modal-header {
     height: 68px !important;
     padding: 24px !important;
     background: transparent;
@@ -110,9 +110,9 @@
     }
   }
 
-  .archer-input,
-  .archer-input-affix-wrapper,
-  .archer-select {
+  .vdui-input,
+  .vdui-input-affix-wrapper,
+  .vdui-select {
     border-color: var(--login-modal-border) !important;
     border-radius: 7px !important;
     color: var(--app-text-color, #20231e);
@@ -128,7 +128,7 @@
     flex: 1;
   }
 
-  .archer-btn {
+  .vdui-btn {
     border-radius: 7px;
     transition:
       border-color 160ms ease,

@@ -24,6 +24,7 @@ import { selectIntegration } from '@/store/feature/config';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
 import { cn } from '@/ui/lib/cn';
 import { authActionShow } from '@/utils/actionAuth';
+import { LEGACY_PASSWORD_PREFIX } from '@/utils/utils';
 import { listen } from '@tauri-apps/api/event';
 import { Menu, message, Modal, Popover, Tooltip } from '@/ui';
 import { Buffer } from 'buffer';
@@ -204,7 +205,7 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
   // 修改密码时，密码加密传参方式
   const decodePwd = (str: any) => {
     const localDate = new Date().getTime();
-    return Buffer.from('archeroscmp' + str + '_' + localDate).toString('base64');
+    return Buffer.from(LEGACY_PASSWORD_PREFIX + str + '_' + localDate).toString('base64');
   };
 
   const submitForm = () => {
@@ -371,15 +372,15 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
             </li>
           </>
         }
-        <Popover
-          content={userMenus}
-          placement="rightBottom"
-          trigger="click"
-          open={userBtnOpen}
-          onOpenChange={(e) => onPersonalVisibleChange(e)}
-          classNames={{ root: 'slider-user-menus' }}
-        >
-          <li className="sidebar__item">
+        <li className="sidebar__item">
+          <Popover
+            content={userMenus}
+            placement="rightBottom"
+            trigger="click"
+            open={userBtnOpen}
+            onOpenChange={(e) => onPersonalVisibleChange(e)}
+            classNames={{ root: 'slider-user-menus' }}
+          >
             <Tooltip title={commonT('user.personalInformation')} placement="right">
               <button
                 aria-expanded={userBtnOpen}
@@ -391,8 +392,8 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
                 <i className="iconfont icon-user" />
               </button>
             </Tooltip>
-          </li>
-        </Popover>
+          </Popover>
+        </li>
         {/* )} */}
         {(isIntegratedMode || isThin) && (
           <li className="sidebar__item">

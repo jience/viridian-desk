@@ -1,5 +1,5 @@
-$prefix: archer;
-$formtable-prefix-cls: archer-formtable;
+$prefix: vdui;
+$formtable-prefix-cls: vdui-formtable;
 
 .#{$formtable-prefix-cls} {
   position: relative;
@@ -38,7 +38,7 @@ $formtable-prefix-cls: archer-formtable;
   }
 }
 
-.archer-form-item-has-error .#{$formtable-prefix-cls} {
+.vdui-form-item-has-error .#{$formtable-prefix-cls} {
   border-color: var(--vd-color-danger, #cf4f45);
 
   &.#{$formtable-prefix-cls}-focus {

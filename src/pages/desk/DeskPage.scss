@@ -26,14 +26,14 @@
   color: var(--desk-page-text);
   overflow: hidden;
 
-  .archer-spin-nested-loading,
-  .archer-spin-container {
+  .vdui-spin-nested-loading,
+  .vdui-spin-container {
     min-height: 0;
     height: 100%;
   }
 
-  .archer-spin-nested-loading,
-  .archer-spin-container {
+  .vdui-spin-nested-loading,
+  .vdui-spin-container {
     display: flex;
     flex-direction: column;
   }
@@ -96,7 +96,7 @@
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.035);
 
-  .archer-empty-description {
+  .vdui-empty-description {
     color: var(--desk-page-muted);
   }
 }
@@ -349,8 +349,8 @@
 }
 
 .desk-page__more-menu {
-  .archer-dropdown-menu-title-content {
-    .archer-btn {
+  .vdui-dropdown-menu-title-content {
+    .vdui-btn {
       width: 100%;
       height: auto;
       padding: 0;

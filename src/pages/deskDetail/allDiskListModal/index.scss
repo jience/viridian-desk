@@ -9,7 +9,7 @@
   --disk-modal-accent-soft: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, transparent);
   --disk-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
 
-  .archer-modal-content {
+  .vdui-modal-content {
     overflow: hidden;
     border: 1px solid var(--disk-modal-border);
     border-radius: 10px;
@@ -18,12 +18,12 @@
     backdrop-filter: blur(16px);
   }
 
-  .archer-modal-header,
-  .archer-modal-footer {
+  .vdui-modal-header,
+  .vdui-modal-footer {
     background: transparent;
   }
 
-  .archer-modal-title {
+  .vdui-modal-title {
     color: var(--app-text-color, #20231e);
     font-weight: 650;
   }
@@ -47,18 +47,18 @@
     }
   }
 
-  .archer-table {
+  .vdui-table {
     color: var(--app-text-color, #20231e);
     background: transparent;
   }
 
-  .archer-table {
+  .vdui-table {
     border: 1px solid var(--disk-modal-border);
     border-radius: 8px;
     overflow: hidden;
   }
 
-  .archer-table-thead > tr > th {
+  .vdui-table-thead > tr > th {
     border-bottom: 1px solid var(--disk-modal-border);
     color: var(--app-muted-color, #6f7f90);
     background: var(--disk-modal-surface-subtle);
@@ -66,18 +66,18 @@
     font-weight: 650;
   }
 
-  .archer-table-tbody > tr > td {
+  .vdui-table-tbody > tr > td {
     border-bottom: 1px solid var(--disk-modal-border);
     color: var(--app-text-color, #20231e);
     background: transparent;
   }
 
-  .archer-table-tbody > tr.archer-table-row:hover > td,
-  .archer-table-tbody > tr > td.archer-table-cell-row-hover {
+  .vdui-table-tbody > tr.vdui-table-row:hover > td,
+  .vdui-table-tbody > tr > td.vdui-table-cell-row-hover {
     background: var(--disk-modal-accent-soft);
   }
 
-  .archer-pagination {
+  .vdui-pagination {
     color: var(--app-muted-color, #6f7f90);
   }
 
@@ -96,7 +96,7 @@
     }
   }
 
-  .archer-btn {
+  .vdui-btn {
     border-radius: 7px;
     transition:
       border-color 160ms ease,

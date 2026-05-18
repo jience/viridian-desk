@@ -11,8 +11,12 @@ const DeskPoolDetail = (props: any) => {
   const getDiskNum = (data: any = [], isSystem: boolean) => {
     const disks = data
       .filter((val: any) => (isSystem ? val.isSystem : !val.isSystem) && val.size != undefined)
-      .map((val: any) => {
-        return <div>{val.size} GB</div>;
+      .map((val: any, index: number) => {
+        return (
+          <span className="deskPoolInDesk-disk" key={`${isSystem ? 'system' : 'data'}-${index}`}>
+            {val.size} GB
+          </span>
+        );
       });
     return disks.length ? disks : false;
   };
@@ -122,8 +126,13 @@ const DeskPoolDetail = (props: any) => {
                 placement={'topLeft'}
               >
                 <div className="content" id={`deskpool-detailList-${val.icon}`}>
-                  <i className={`iconfont ${val.icon}`}></i>
-                  {val.render()}
+                  <span className="detail-icon">
+                    <i className={`iconfont ${val.icon}`}></i>
+                  </span>
+                  <div className="detail-main">
+                    <span className="detail-label">{val.title}</span>
+                    <div className="detail-value">{val.render()}</div>
+                  </div>
                 </div>
               </Tooltip>
             </li>

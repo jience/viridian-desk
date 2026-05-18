@@ -102,20 +102,20 @@
   cursor: pointer;
   opacity: 0;
 
-  .archer-select {
+  &.vdui-select {
     height: 34px !important;
     padding: 0 !important;
     background: transparent !important;
     cursor: pointer !important;
   }
 
-  .archer-select-selection-item,
-  .archer-select-placeholder {
+  .vdui-select-selection-item,
+  .vdui-select-placeholder {
     display: none;
   }
 
-  .archer-select-arrow,
-  .archer-select-clear {
+  .vdui-select-arrow,
+  .vdui-select-clear {
     display: none;
   }
 }

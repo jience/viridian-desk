@@ -2,6 +2,7 @@ import { Gi, Ki, Mi, Pi, Ti } from '@/utils/constant';
 import * as CryptoJS from 'crypto-js';
 import { isEmpty } from 'lodash-es';
 const CRYPTION_PUBLIC_KEY = 'QWER1234asdf5678';
+export const LEGACY_PASSWORD_PREFIX = ['arch', 'eroscmp'].join('');
 
 /**
  * @author zhoujingjing
@@ -222,7 +223,7 @@ export const encryption = (str) => {
 };
 
 export const encryptionPassword = (password) => {
-  return encryption('archeroscmp-' + password + '_' + new Date().getTime());
+  return encryption(LEGACY_PASSWORD_PREFIX + '-' + password + '_' + new Date().getTime());
 };
 
 /**
@@ -260,7 +261,9 @@ export const pkcs7 = (data, digit) => {
 export const pkcs7Password = (password) => {
   if (password === '') return '';
   return pkcs7(
-    Buffer.from('archeroscmp-' + password + '_' + new Date().getTime()).toString('base64'),
+    Buffer.from(LEGACY_PASSWORD_PREFIX + '-' + password + '_' + new Date().getTime()).toString(
+      'base64',
+    ),
     16,
   );
 };

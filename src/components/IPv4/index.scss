@@ -1,5 +1,5 @@
-$prefix: archer;
-$ipv4-prefix-cls: archer-ipv4;
+$prefix: vdui;
+$ipv4-prefix-cls: vdui-ipv4;
 
 .#{$ipv4-prefix-cls} {
   position: relative;
@@ -54,7 +54,7 @@ $ipv4-prefix-cls: archer-ipv4;
   }
 }
 
-.archer-form-item-has-error .#{$ipv4-prefix-cls} {
+.vdui-form-item-has-error .#{$ipv4-prefix-cls} {
   border-color: var(--vd-color-danger, #cf4f45);
 
   &.#{$ipv4-prefix-cls}-focus {

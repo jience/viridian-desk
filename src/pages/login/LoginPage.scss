@@ -32,17 +32,17 @@
   }
 
   .vd-auth-form {
-    :where(.archer-form-item) {
+    :where(.vdui-form-item) {
       margin-bottom: 14px;
     }
 
-    :where(.archer-form-item-label > label) {
+    :where(.vdui-form-item-label > label) {
       color: var(--auth-muted);
       font-size: 12px;
       font-weight: 680;
     }
 
-    :where(.archer-input, .archer-input-affix-wrapper, .archer-select) {
+    :where(.vdui-input, .vdui-input-affix-wrapper, .vdui-select) {
       min-height: 46px;
       border-color: var(--auth-border) !important;
       border-radius: 12px !important;
@@ -56,26 +56,30 @@
     }
 
     :where(
-      .archer-input-affix-wrapper-focused,
-      .archer-input:focus,
-      .archer-select-focused .archer-select
+      .vdui-input-affix-wrapper:focus-within,
+      .vdui-input:focus,
+      .vdui-select-focused,
+      .vdui-select:focus-within
     ) {
       border-color: color-mix(in srgb, var(--auth-accent) 42%, transparent) !important;
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--auth-accent) 13%, transparent) !important;
     }
 
-    :where(.archer-input::placeholder) {
+    :where(.vdui-input::placeholder) {
       color: color-mix(in srgb, var(--auth-muted) 76%, transparent);
     }
 
-    :where(.archer-input-affix-wrapper .archer-input) {
+    :where(.vdui-input-affix-wrapper .vdui-input) {
+      height: 100%;
       min-height: auto;
+      border: 0 !important;
       background: transparent !important;
+      box-shadow: none !important;
     }
   }
 
   .vd-auth-checkboxes {
-    .archer-checkbox-wrapper {
+    .vdui-checkbox-wrapper {
       color: var(--auth-muted);
       font-size: 12px;
     }

@@ -14,8 +14,8 @@
   border-radius: var(--silent-update-radius);
   overflow: hidden;
 
-  .archer-modal-root,
-  .archer-modal-content {
+  .vdui-modal-root,
+  .vdui-modal-content {
     overflow: hidden;
     border: 1px solid var(--silent-update-border);
     border-radius: var(--silent-update-radius);
@@ -24,7 +24,7 @@
     backdrop-filter: blur(16px);
   }
 
-  .archer-modal-body {
+  .vdui-modal-body {
     width: 480px;
     height: 280px;
     background: var(--silent-update-body-bg);
@@ -117,7 +117,7 @@
     }
   }
 
-  .archer-progress-bg {
+  .vdui-progress-bg {
     box-shadow: 0 0 18px var(--silent-update-progress-glow);
   }
 }
@@ -144,12 +144,12 @@
       transparent
     );
 
-    .archer-modal-root,
-    .archer-modal-content {
+    .vdui-modal-root,
+    .vdui-modal-content {
       background: var(--silent-update-panel-bg);
     }
 
-    .archer-modal-body {
+    .vdui-modal-body {
       min-height: 180px;
       background: transparent;
       padding: 24px;

@@ -1,6 +1,18 @@
 .dropdown-wrapper {
-  .archer-btn.archer-btn-icon-only {
-    width: 22px;
-    height: 16px;
+  .vdui-btn.vdui-btn-icon-only {
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+    min-height: 30px;
+    border-radius: 8px;
+    color: var(--settings-page-muted, var(--vd-color-muted));
+    background: transparent;
+
+    &:hover,
+    &:focus-visible {
+      border-color: color-mix(in srgb, var(--settings-page-accent) 34%, transparent);
+      color: var(--settings-page-accent-strong, var(--vd-color-accent));
+      background: color-mix(in srgb, var(--settings-page-accent) 9%, transparent);
+    }
   }
 }

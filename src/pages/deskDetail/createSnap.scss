@@ -18,7 +18,7 @@
   );
   --desk-detail-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
 
-  .archer-modal-content {
+  .vdui-modal-content {
     overflow: hidden;
     border: 1px solid var(--desk-detail-modal-border);
     border-radius: 10px;
@@ -27,12 +27,12 @@
     backdrop-filter: blur(16px);
   }
 
-  .archer-modal-header,
-  .archer-modal-footer {
+  .vdui-modal-header,
+  .vdui-modal-footer {
     background: transparent;
   }
 
-  .archer-modal-title {
+  .vdui-modal-title {
     color: var(--app-text-color, #20231e);
     font-weight: 650;
   }
@@ -41,34 +41,34 @@
     margin-bottom: 18px;
   }
 
-  .archer-form-item-label > label {
+  .vdui-form-item-label > label {
     color: var(--app-muted-color, #6f7f90);
     font-size: 13px;
     font-weight: 550;
   }
 
-  .archer-input,
-  .archer-input-affix-wrapper {
+  .vdui-input,
+  .vdui-input-affix-wrapper {
     border-color: var(--desk-detail-modal-border);
     border-radius: 7px;
     color: var(--app-text-color, #20231e);
     background: var(--desk-detail-modal-surface-subtle);
   }
 
-  .archer-input:hover,
-  .archer-input:focus,
-  .archer-input-affix-wrapper:hover,
-  .archer-input-affix-wrapper-focused {
+  .vdui-input:hover,
+  .vdui-input:focus,
+  .vdui-input-affix-wrapper:hover,
+  .vdui-input-affix-wrapper-focused {
     border-color: var(--desk-detail-modal-accent-border);
     box-shadow: 0 0 0 2px var(--desk-detail-modal-accent-soft);
   }
 
-  .archer-radio-wrapper {
+  .vdui-radio-wrapper {
     color: var(--app-text-color, #20231e);
   }
 
-  .archer-radio-button-wrapper,
-  .archer-btn {
+  .vdui-radio-button-wrapper,
+  .vdui-btn {
     border-radius: 7px;
     transition:
       border-color 160ms ease,

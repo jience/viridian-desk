@@ -53,13 +53,13 @@
   color: var(--application-page-text);
   container-type: inline-size;
 
-  .archer-spin-nested-loading,
-  .archer-spin-container {
+  .vdui-spin-nested-loading,
+  .vdui-spin-container {
     height: 100%;
     min-height: 0;
   }
 
-  .archer-spin-container {
+  .vdui-spin-container {
     display: flex;
     flex-direction: column;
   }
@@ -161,7 +161,7 @@
   gap: 8px;
   justify-content: flex-end;
 
-  .archer-btn {
+  .vdui-btn {
     max-width: 100%;
     min-height: 34px;
     border-color: var(--application-page-button-border);
@@ -192,7 +192,7 @@
     }
   }
 
-  .archer-btn-primary {
+  .vdui-btn-primary {
     border-color: var(--application-page-primary-bg);
     color: var(--application-page-primary-text);
     background: var(--application-page-primary-bg);
@@ -379,7 +379,7 @@
 .application-card__footer {
   justify-content: space-between;
 
-  .archer-btn {
+  .vdui-btn {
     min-height: 32px;
     border-color: var(--application-page-button-border);
     border-radius: 6px;
@@ -408,7 +408,7 @@
     }
   }
 
-  .archer-btn-primary {
+  .vdui-btn-primary {
     border-color: var(--application-page-primary-bg);
     color: var(--application-page-primary-text);
     background: var(--application-page-primary-bg);
@@ -438,7 +438,7 @@
     font-size: 13px;
   }
 
-  .archer-empty-description {
+  .vdui-empty-description {
     color: var(--application-page-muted);
   }
 }
@@ -474,7 +474,7 @@
   .application-card__footer {
     align-items: stretch;
 
-    .archer-btn-primary {
+    .vdui-btn-primary {
       flex: 1 1 auto;
     }
   }

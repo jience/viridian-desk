@@ -20,7 +20,7 @@
   border-radius: var(--download-modal-radius);
   overflow: hidden;
 
-  .archer-modal-root {
+  .vdui-modal-root {
     width: 480px;
     overflow: hidden;
     border: 1px solid var(--download-modal-border);
@@ -32,7 +32,7 @@
     backdrop-filter: blur(16px);
   }
 
-  .archer-modal-body {
+  .vdui-modal-body {
     width: 100%;
     display: flex;
     align-items: center;
@@ -41,13 +41,13 @@
     padding: var(--download-modal-body-padding);
   }
 
-  .archer-modal-content {
+  .vdui-modal-content {
     border-radius: var(--download-modal-radius);
     background: transparent;
     box-shadow: none;
   }
 
-  .archer-modal-footer {
+  .vdui-modal-footer {
     background-color: transparent;
     padding: var(--download-modal-footer-padding);
   }
@@ -219,11 +219,7 @@
       --vd-shadow-window,
       0 30px 90px color-mix(in srgb, var(--vd-color-rail, #050705) 42%, transparent)
     );
-    --download-modal-arrow-bg: color-mix(
-      in srgb,
-      var(--vd-color-accent, #8ef2bd) 10%,
-      transparent
-    );
+    --download-modal-arrow-bg: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
     --download-modal-arrow-border: color-mix(
       in srgb,
       var(--vd-color-accent, #8ef2bd) 28%,
@@ -236,12 +232,12 @@
       transparent
     );
 
-    .archer-modal-root {
+    .vdui-modal-root {
       background-size: auto;
     }
 
-    .archer-modal-body,
-    .archer-modal-footer {
+    .vdui-modal-body,
+    .vdui-modal-footer {
       background: transparent !important;
     }
 
@@ -285,7 +281,7 @@
       color: var(--vd-color-text, #e9eee8);
     }
 
-    .archer-progress-bg {
+    .vdui-progress-bg {
       box-shadow: 0 0 18px var(--download-modal-progress-glow);
     }
   }

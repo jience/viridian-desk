@@ -8,10 +8,18 @@
   );
   --desk-pool-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
   --desk-pool-modal-icon-bg: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, transparent);
+  --desk-pool-modal-text: var(--vd-color-text, var(--app-text-color, #20231e));
+  --desk-pool-modal-muted: var(--vd-color-muted, var(--app-muted-color, #6f7f90));
+  --desk-pool-modal-row-bg: color-mix(
+    in srgb,
+    var(--vd-color-panel-subtle, #f5f8f6) 42%,
+    transparent
+  );
+  --desk-pool-modal-row-hover: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 8%, transparent);
 
-  width: 400px !important;
+  width: 440px !important;
 
-  .archer-modal-content {
+  .vdui-modal-content {
     overflow: hidden;
     border: 1px solid var(--desk-pool-modal-border);
     border-radius: 10px;
@@ -20,10 +28,11 @@
     backdrop-filter: blur(16px);
   }
 
-  .archer-modal-header {
+  .vdui-modal-header {
     height: auto;
-    min-height: 72px;
+    min-height: 78px;
     margin-bottom: 0;
+    padding: 0;
     background:
       linear-gradient(
         135deg,
@@ -33,9 +42,9 @@
       transparent;
   }
 
-  .archer-modal-title {
-    align-items: center;
-    padding: 12px 18px;
+  .vdui-modal-title {
+    padding: 16px 18px 14px;
+    padding-right: 46px;
 
     &::before {
       display: none;
@@ -44,7 +53,7 @@
 
   .deskPoolInDesk-title {
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-columns: 48px minmax(0, 1fr);
     gap: 12px;
     align-items: center;
     min-width: 0;
@@ -53,18 +62,18 @@
   .os {
     position: relative;
     display: grid;
-    width: 42px;
-    height: 42px;
+    width: 46px;
+    height: 46px;
     border: 1px solid var(--desk-pool-modal-border);
-    border-radius: 12px;
+    border-radius: 14px;
     background: var(--desk-pool-modal-icon-bg);
     place-items: center;
     overflow: hidden;
 
     .stop-bg,
     .stop-bg > svg {
-      width: 42px;
-      height: 42px;
+      width: 46px;
+      height: 46px;
     }
 
     .stop-bg svg * {
@@ -80,7 +89,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      color: var(--vd-color-text, #e9eee8);
+      color: var(--desk-pool-modal-text);
       font-size: 18px;
       transform: translate(-50%, -52%);
     }
@@ -93,7 +102,7 @@
   .pool-name {
     margin: 0;
     overflow: hidden;
-    color: var(--vd-modal-title-color);
+    color: var(--desk-pool-modal-text);
     font-size: 16px;
     font-weight: 700;
     line-height: 1.25;
@@ -105,7 +114,7 @@
     display: block;
     margin-top: 4px;
     overflow: hidden;
-    color: var(--vd-color-muted, #8d978e);
+    color: var(--desk-pool-modal-muted);
     font-size: 12px;
     font-weight: 500;
     text-overflow: ellipsis;
@@ -114,47 +123,93 @@
 
   .detailList {
     margin: 0;
-    padding: 0 18px 18px;
+    padding: 4px 18px 18px;
+    list-style: none;
+    display: grid;
+    gap: 8px;
 
     .vd-tooltip {
       left: 6px !important;
     }
 
     li {
-      border-bottom: 1px solid var(--app-detail-modal-detail-item-border-color);
-      border-radius: 8px;
-      padding: 14px 12px;
-      transition: background-color 160ms ease;
+      border: 1px solid var(--desk-pool-modal-border);
+      border-radius: 10px;
+      background: var(--desk-pool-modal-row-bg);
+      transition:
+        border-color 160ms ease,
+        background-color 160ms ease;
 
       &:hover {
-        background: var(--desk-pool-modal-surface-subtle);
+        border-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 28%, transparent);
+        background: var(--desk-pool-modal-row-hover);
       }
 
       .content {
-        display: flex;
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr);
+        gap: 10px;
         align-items: center;
+        min-width: 0;
+        padding: 11px 12px;
+      }
+
+      .detail-icon {
+        display: grid;
+        width: 32px;
+        height: 32px;
+        place-items: center;
+        border-radius: 9px;
+        color: var(--vd-color-accent, #4d7c3f);
+        background: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, transparent);
+      }
+
+      .detail-icon i {
+        font-size: 15px;
+        line-height: 1;
+      }
+
+      .detail-main,
+      .detail-value {
         min-width: 0;
       }
 
-      p {
-        flex: 1 1 auto;
-        min-width: 0;
-        margin: 0 0 0 20px;
-        overflow: hidden;
+      .detail-label {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--desk-pool-modal-muted);
         font-size: 12px;
-        color: var(--app-detail-modal-detail-item-color);
+        font-weight: 650;
+        line-height: 1.5;
+      }
+
+      .detail-value {
+        color: var(--desk-pool-modal-text);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      p {
+        min-width: 0;
+        margin: 0;
+        overflow: hidden;
+        color: inherit;
+        font: inherit;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
 
-      i {
-        flex: 0 0 auto;
-        font-size: 14px;
-        color: var(--app-detail-modal-detail-item-icon-color);
+      .deskPoolInDesk-disk {
+        display: inline-block;
+      }
+
+      .deskPoolInDesk-disk + .deskPoolInDesk-disk {
+        margin-left: 8px;
       }
     }
+
     li:last-child {
-      border: 0;
+      border-bottom: 1px solid var(--desk-pool-modal-border);
     }
   }
 }

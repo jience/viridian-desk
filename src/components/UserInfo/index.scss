@@ -1,5 +1,5 @@
 .user-info-modal {
-  .archer-modal-content {
+  .vdui-modal-content {
     overflow: hidden;
     border: 1px solid var(--app-border-color);
     border-radius: 10px;
@@ -8,11 +8,11 @@
     backdrop-filter: blur(16px);
   }
 
-  .archer-modal-header {
+  .vdui-modal-header {
     background: transparent;
   }
 
-  .archer-modal-title {
+  .vdui-modal-title {
     color: var(--app-text-color, #20231e);
     font-weight: 650;
   }

@@ -75,6 +75,14 @@
 .server-setting-gateway-row {
   grid-template-columns: minmax(0, 1fr) auto;
 
+  .vd-settings-row__action {
+    align-self: center;
+  }
+
+  .dropdown-wrapper {
+    display: inline-flex;
+  }
+
   .vd-settings-row__content {
     min-width: 0;
   }

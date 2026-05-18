@@ -114,17 +114,24 @@
 
 .settings-page__brand-mark {
   display: inline-grid;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   flex: 0 0 auto;
   place-items: center;
   border: 1px solid var(--settings-page-border-strong);
-  border-radius: 8px;
-  background: var(--settings-page-surface);
-  color: var(--settings-page-accent-strong);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--settings-page-surface) 82%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--settings-page-surface-strong) 64%, transparent);
+  overflow: hidden;
+
+  img {
+    width: 22px;
+    height: 22px;
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+  }
 }
 
 .settings-page__heading {
@@ -526,24 +533,24 @@
 }
 
 .settings-page {
-  :where(.archer-btn, .archer-select, .archer-input, .archer-input-affix-wrapper) {
+  :where(.vdui-btn, .vdui-select, .vdui-input, .vdui-input-affix-wrapper) {
     border-radius: 8px;
     box-shadow: none;
   }
 
   :where(
-    .archer-btn:focus-visible,
-    .archer-select-focused .archer-select,
-    .archer-input:focus,
-    .archer-input-focused,
-    .archer-input-affix-wrapper:focus,
-    .archer-input-affix-wrapper-focused
+    .vdui-btn:focus-visible,
+    .vdui-select-focused .vdui-select,
+    .vdui-input:focus,
+    .vdui-input-focused,
+    .vdui-input-affix-wrapper:focus,
+    .vdui-input-affix-wrapper-focused
   ) {
     border-color: var(--settings-page-accent);
     box-shadow: var(--settings-page-focus);
   }
 
-  :where(.archer-select, .archer-input, .archer-input-affix-wrapper) {
+  :where(.vdui-select, .vdui-input, .vdui-input-affix-wrapper) {
     border-color: var(--settings-page-border);
     background: var(--settings-page-surface-strong);
     color: var(--settings-page-text);

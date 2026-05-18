@@ -7,16 +7,12 @@
     transparent
   );
   --app-modal-accent-soft: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, transparent);
-  --app-modal-accent-border: color-mix(
-    in srgb,
-    var(--vd-color-accent, #4d7c3f) 34%,
-    transparent
-  );
+  --app-modal-accent-border: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 34%, transparent);
   --app-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
 
   width: 800px !important;
 
-  .archer-modal-content {
+  .vdui-modal-content {
     overflow: hidden;
     border: 1px solid var(--app-modal-border);
     border-radius: 10px;
@@ -25,12 +21,12 @@
     backdrop-filter: blur(16px);
   }
 
-  .archer-modal-header,
-  .archer-modal-footer {
+  .vdui-modal-header,
+  .vdui-modal-footer {
     background: transparent;
   }
 
-  .archer-modal-title {
+  .vdui-modal-title {
     color: var(--app-text-color, #20231e);
     font-weight: 650;
   }
@@ -56,37 +52,37 @@
     margin-bottom: 8px;
 
     .search-input {
-      .archer-btn.archer-btn-icon-only {
+      .vdui-btn.vdui-btn-icon-only {
         height: 28px;
       }
     }
 
-    .archer-input-search .archer-input-affix-wrapper {
+    .vdui-input-search .vdui-input-affix-wrapper {
       border-color: var(--app-modal-border);
       height: 28px;
       background: var(--app-modal-surface-subtle);
 
       &:hover,
       &:focus,
-      &.archer-input-affix-wrapper-focused {
+      &.vdui-input-affix-wrapper-focused {
         border-color: var(--app-modal-accent-border);
         box-shadow: 0 0 0 2px var(--app-modal-accent-soft);
       }
     }
   }
 
-  .archer-table {
+  .vdui-table {
     color: var(--app-text-color, #20231e);
     background: transparent;
   }
 
-  .archer-table {
+  .vdui-table {
     border: 1px solid var(--app-modal-border);
     border-radius: 8px;
     overflow: hidden;
   }
 
-  .archer-table-thead > tr > th {
+  .vdui-table-thead > tr > th {
     border-bottom: 1px solid var(--app-modal-border);
     color: var(--app-muted-color, #6f7f90);
     background: var(--app-modal-surface-subtle);
@@ -94,22 +90,22 @@
     font-weight: 650;
   }
 
-  .archer-table-tbody > tr > td {
+  .vdui-table-tbody > tr > td {
     border-bottom: 1px solid var(--app-modal-border);
     color: var(--app-text-color, #20231e);
     background: transparent;
   }
 
-  .archer-table-tbody > tr.archer-table-row:hover > td,
-  .archer-table-tbody > tr > td.archer-table-cell-row-hover {
+  .vdui-table-tbody > tr.vdui-table-row:hover > td,
+  .vdui-table-tbody > tr > td.vdui-table-cell-row-hover {
     background: var(--app-modal-accent-soft);
   }
 
-  .archer-pagination {
+  .vdui-pagination {
     color: var(--app-muted-color, #6f7f90);
   }
 
-  .archer-btn {
+  .vdui-btn {
     border-radius: 7px;
     transition:
       border-color 160ms ease,

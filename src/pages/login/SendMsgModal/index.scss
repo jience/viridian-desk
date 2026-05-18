@@ -7,16 +7,12 @@
     transparent
   );
   --login-modal-accent-soft: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, transparent);
-  --login-modal-accent-border: color-mix(
-    in srgb,
-    var(--vd-color-accent, #4d7c3f) 34%,
-    transparent
-  );
+  --login-modal-accent-border: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 34%, transparent);
   --login-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
 
   width: 500px !important;
 
-  .archer-modal-content {
+  .vdui-modal-content {
     overflow: hidden;
     border: 1px solid var(--login-modal-border);
     border-radius: 10px;
@@ -25,12 +21,12 @@
     backdrop-filter: blur(16px);
   }
 
-  .archer-modal-header,
-  .archer-modal-footer {
+  .vdui-modal-header,
+  .vdui-modal-footer {
     background: transparent;
   }
 
-  .archer-modal-title {
+  .vdui-modal-title {
     color: var(--app-text-color, #20231e);
     font-weight: 650;
   }
@@ -48,7 +44,7 @@
     margin: 0 auto;
   }
 
-  .send-msg-form .archer-form-item {
+  .send-msg-form .vdui-form-item {
     margin-bottom: 0;
   }
 
@@ -61,23 +57,23 @@
     flex: 1;
   }
 
-  .archer-input,
-  .archer-input-affix-wrapper {
+  .vdui-input,
+  .vdui-input-affix-wrapper {
     border-color: var(--login-modal-border);
     border-radius: 7px;
     color: var(--app-text-color, #20231e);
     background: var(--login-modal-surface-subtle);
   }
 
-  .archer-input:hover,
-  .archer-input:focus,
-  .archer-input-affix-wrapper:hover,
-  .archer-input-affix-wrapper-focused {
+  .vdui-input:hover,
+  .vdui-input:focus,
+  .vdui-input-affix-wrapper:hover,
+  .vdui-input-affix-wrapper-focused {
     border-color: var(--login-modal-accent-border);
     box-shadow: 0 0 0 2px var(--login-modal-accent-soft);
   }
 
-  .archer-btn {
+  .vdui-btn {
     border-radius: 7px;
     transition:
       border-color 160ms ease,
