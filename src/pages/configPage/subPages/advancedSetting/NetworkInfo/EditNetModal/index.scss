@@ -1,3 +1,32 @@
 .edit-net-modal-wrapper {
   width: 450px !important;
+
+  .ipv4-input-wrapper,
+  .ipv4-input-segments,
+  .ipv4-input-segment {
+    display: flex;
+    align-items: center;
+  }
+
+  .ipv4-input-affix-prefix {
+    margin-right: 8px;
+  }
+
+  .ipv4-input-affix-suffix {
+    margin-left: 8px;
+  }
+
+  .ipv4-segment-input {
+    width: 60px;
+    text-align: center;
+
+    &.is-invalid {
+      border-color: var(--vd-color-danger);
+    }
+  }
+
+  .ipv4-input-separator {
+    margin: 0 4px;
+    color: var(--vd-color-muted);
+  }
 }

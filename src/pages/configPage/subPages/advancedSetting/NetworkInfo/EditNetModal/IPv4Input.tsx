@@ -97,33 +97,27 @@ export const IPv4Input: FC<IPv4InputProps> = ({
   };
 
   return (
-    <div className="ipv4-input-wrapper" style={{ display: 'flex', alignItems: 'center' }}>
-      {prefix && <span style={{ marginRight: 8 }}>{prefix}</span>}
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div className="ipv4-input-wrapper">
+      {prefix && <span className="ipv4-input-affix ipv4-input-affix-prefix">{prefix}</span>}
+      <div className="ipv4-input-segments">
         {inputValues.map((val, index) => (
-          <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+          <div key={index} className="ipv4-input-segment">
             <Input
               data-ipv4-index={index}
+              className={`ipv4-segment-input ${val && !isValidNumber(val) ? 'is-invalid' : ''}`}
               value={val}
               onChange={(e) => handleInputChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={index === 0 ? handlePaste : undefined}
               placeholder={placeholder.split('.')[index] || '0-255'}
               disabled={disabled}
-              style={{
-                width: 60,
-                textAlign: 'center',
-                borderColor: val && !isValidNumber(val) ? 'var(--vd-color-danger)' : undefined,
-              }}
               maxLength={3}
             />
-            {index < 3 && (
-              <span style={{ margin: '0 4px', color: 'var(--vd-color-muted)' }}>.</span>
-            )}
+            {index < 3 && <span className="ipv4-input-separator">.</span>}
           </div>
         ))}
       </div>
-      {suffix && <span style={{ marginLeft: 8 }}>{suffix}</span>}
+      {suffix && <span className="ipv4-input-affix ipv4-input-affix-suffix">{suffix}</span>}
     </div>
   );
 };
