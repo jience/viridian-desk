@@ -11,8 +11,13 @@ import {
   switchGateway,
 } from '@/store/feature/gateway';
 import { cn } from '@/ui/lib/cn';
+import './index.scss';
 
-export function LoginGatewayDock() {
+interface LoginGatewayDockProps {
+  readonly?: boolean;
+}
+
+export function LoginGatewayDock({ readonly = false }: LoginGatewayDockProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const autoGateway = useAppSelector(selectAutoGateway);
@@ -43,7 +48,11 @@ export function LoginGatewayDock() {
 
   return (
     <div
-      className={cn('login-gateway-dock', `login-gateway-dock--${tone}`)}
+      className={cn(
+        'login-gateway-dock',
+        `login-gateway-dock--${tone}`,
+        readonly && 'login-gateway-dock--readonly',
+      )}
       title={statusText}
       aria-label={`${gatewayName} ${t('login_page.tls_protected')}`}
     >
@@ -52,18 +61,20 @@ export function LoginGatewayDock() {
         <strong title={gatewayName}>{gatewayName}</strong>
         <span>{t('login_page.tls_protected')}</span>
       </div>
-      <Select
-        placement="topRight"
-        variant="borderless"
-        value={autoGateway?.uuid}
-        onChange={handleChangeGateway}
-        placeholder={t('login_page.please_select_gateway')}
-        suffixIcon={null}
-        size="small"
-        className="login-gateway-dock__select"
-        classNames={{ root: 'login-gateway-dock__select' }}
-        options={options}
-      />
+      {!readonly && (
+        <Select
+          placement="topRight"
+          variant="borderless"
+          value={autoGateway?.uuid}
+          onChange={handleChangeGateway}
+          placeholder={t('login_page.please_select_gateway')}
+          suffixIcon={null}
+          size="small"
+          className="login-gateway-dock__select"
+          classNames={{ root: 'login-gateway-dock__select' }}
+          options={options}
+        />
+      )}
     </div>
   );
 }

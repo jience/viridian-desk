@@ -138,116 +138,6 @@
     width: auto;
     padding: 0 12px;
   }
-
-  .login-gateway-dock {
-    position: relative;
-    display: grid;
-    grid-template-columns: auto minmax(0, max-content);
-    align-items: center;
-    gap: 9px;
-    width: fit-content;
-    max-width: min(292px, 30vw);
-    height: 34px;
-    border: 1px solid color-mix(in srgb, var(--auth-border) 72%, transparent);
-    border-radius: 999px;
-    padding: 0 5px 0 12px;
-    overflow: hidden;
-    background:
-      linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--auth-accent) 8%, transparent),
-        transparent 38%
-      ),
-      color-mix(in srgb, var(--auth-panel) 58%, transparent);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      0 12px 28px rgba(55, 48, 38, 0.09);
-    backdrop-filter: blur(16px);
-  }
-
-  .login-gateway-dock__signal {
-    position: relative;
-    z-index: 1;
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
-    background: var(--auth-muted);
-    box-shadow: 0 0 0 5px color-mix(in srgb, var(--auth-muted) 11%, transparent);
-  }
-
-  .login-gateway-dock--success .login-gateway-dock__signal {
-    background: var(--auth-success);
-    box-shadow: 0 0 0 5px color-mix(in srgb, var(--auth-success) 14%, transparent);
-  }
-
-  .login-gateway-dock--danger .login-gateway-dock__signal {
-    background: var(--auth-danger);
-    box-shadow: 0 0 0 5px color-mix(in srgb, var(--auth-danger) 14%, transparent);
-  }
-
-  .login-gateway-dock__copy {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    min-width: 0;
-    max-width: min(252px, 26vw);
-
-    span,
-    strong {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    span {
-      flex: 0 0 auto;
-      border: 1px solid color-mix(in srgb, var(--auth-accent) 18%, transparent);
-      border-radius: 999px;
-      padding: 2px 7px;
-      color: color-mix(in srgb, var(--auth-accent-strong) 90%, var(--auth-muted));
-      background: color-mix(in srgb, var(--auth-accent) 8%, transparent);
-      font-size: 10px;
-      font-weight: 760;
-    }
-
-    strong {
-      flex: 1 1 auto;
-      min-width: 0;
-      max-width: clamp(88px, 13vw, 166px);
-      color: var(--auth-text);
-      font-size: 12px;
-      font-weight: 760;
-    }
-  }
-
-  .login-gateway-dock__select {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    width: 100%;
-    min-width: 0;
-    opacity: 0;
-    cursor: pointer;
-
-    .ant-select-selector {
-      height: 34px !important;
-      padding: 0 !important;
-      background: transparent !important;
-      cursor: pointer !important;
-    }
-
-    .ant-select-selection-item,
-    .ant-select-selection-placeholder {
-      display: none;
-    }
-
-    .ant-select-arrow,
-    .ant-select-clear {
-      display: none;
-    }
-  }
 }
 
 :root.dark .auth-page,
@@ -679,8 +569,7 @@
     flex-direction: column;
   }
 
-  .auth-page .login-footer__side,
-  .auth-page .login-gateway-dock {
+  .auth-page .login-footer__side {
     width: 100%;
     max-width: 100%;
   }

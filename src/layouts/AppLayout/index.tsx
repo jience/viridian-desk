@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router';
 import Sidebar from '@/components/Sidebar';
-import { GatewaySelect } from '@/components/GatewaySelect';
+import { LoginGatewayDock } from '@/components/LoginGatewayDock';
 import { AssistantPanel } from '@/ui/assistant/assistant-panel';
 import { Button } from '@/ui/components/button';
 import { AppShell, type AssistantState } from '@/ui/shell/app-shell';
@@ -93,7 +93,7 @@ export function AppLayout() {
           </main>
 
           <footer className="app-layout__footer">
-            <GatewaySelect readonly />
+            <LoginGatewayDock readonly />
           </footer>
         </section>
       </AppShell>
