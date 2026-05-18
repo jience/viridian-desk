@@ -5,6 +5,7 @@ import ComModal from '@/components/ComModal';
 import DiffLoginTip from '@/components/DiffLoginTip';
 import PwdForm from '@/components/PwdForm';
 import UserInfo from '@/components/UserInfo';
+import logoBlue from '@/assets/images/logoBlue1.png';
 import useRequest from '@/hooks/useRequest';
 import { bridge } from '@/native';
 import { LoginUserType } from '@/native/interfaces/api';
@@ -295,34 +296,46 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
 
   return (
     <nav className="sidebar nav-drag" aria-label={commonT('appName')}>
-      <ul className="sidebar__menus" aria-label={commonT('appName')}>
-        {menus.map((item) => {
-          const visible = isEmpty(item.actions) || authActionShow(item.actions);
-          if (!visible) return null;
+      <div className="sidebar__top">
+        <Tooltip title={commonT('appName')} placement="right">
+          <button
+            aria-label={commonT('appName')}
+            className="sidebar__brand"
+            type="button"
+            onClick={() => navigate('/app/desk')}
+          >
+            <img src={logoBlue} alt="" draggable={false} />
+          </button>
+        </Tooltip>
+        <ul className="sidebar__menus" aria-label={commonT('appName')}>
+          {menus.map((item) => {
+            const visible = isEmpty(item.actions) || authActionShow(item.actions);
+            if (!visible) return null;
 
-          const label = commonT(item.labelKey);
-          const active = activeMenu === item.path;
+            const label = commonT(item.labelKey);
+            const active = activeMenu === item.path;
 
-          return (
-            <li className="sidebar__item" key={item.name}>
-              <Tooltip title={label} placement="right">
-                <button
-                  aria-current={active ? 'page' : undefined}
-                  aria-label={label}
-                  className={cn('sidebar__button', active && 'sidebar__button--active')}
-                  type="button"
-                  onClick={() => {
-                    navigate(item.path);
-                  }}
-                >
-                  <i className={`iconfont ${item.icon}`} />
-                  <span className="sidebar__label">{label}</span>
-                </button>
-              </Tooltip>
-            </li>
-          );
-        })}
-      </ul>
+            return (
+              <li className="sidebar__item" key={item.name}>
+                <Tooltip title={label} placement="right">
+                  <button
+                    aria-current={active ? 'page' : undefined}
+                    aria-label={label}
+                    className={cn('sidebar__button', active && 'sidebar__button--active')}
+                    type="button"
+                    onClick={() => {
+                      navigate(item.path);
+                    }}
+                  >
+                    <i className={`iconfont ${item.icon}`} />
+                    <span className="sidebar__label">{label}</span>
+                  </button>
+                </Tooltip>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
       <ul className="sidebar__actions" aria-label={commonT('user.personalInformation')}>
         {onAssistantToggle && (
           <li className="sidebar__item">

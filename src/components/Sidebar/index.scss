@@ -17,8 +17,50 @@
   list-style: none;
 }
 
+.sidebar__top {
+  display: grid;
+  width: 100%;
+  justify-items: center;
+}
+
+.sidebar__brand {
+  display: grid;
+  width: 42px;
+  height: 36px;
+  margin: 4px auto 8px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--vd-color-on-rail-strong) 12%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--vd-color-on-rail-strong) 7%, transparent);
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+
+  img {
+    width: 31px;
+    max-width: 31px;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--vd-color-accent) 34%, transparent);
+    background: color-mix(in srgb, var(--vd-color-accent) 12%, transparent);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+  }
+}
+
 .sidebar__menus {
-  padding-top: 4px;
+  padding-top: 2px;
 }
 
 .sidebar__actions {
