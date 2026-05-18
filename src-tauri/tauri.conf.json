@@ -25,12 +25,14 @@
         "center": true,
         "decorations": false,
         "fullscreen": false,
-        "height": 640,
+        "height": 820,
+        "minHeight": 720,
+        "minWidth": 1100,
         "resizable": true,
         "shadow": false,
         "transparent": true,
         "visible": true,
-        "width": 1000
+        "width": 1280
       }
     ]
   },
