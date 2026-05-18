@@ -7,10 +7,10 @@
   --approval-page-border: rgba(61, 91, 78, 0.18);
   --approval-page-surface: rgba(255, 255, 255, 0.92);
   --approval-page-surface-subtle: rgba(245, 249, 247, 0.86);
-  --approval-page-shadow: 0 16px 38px rgba(27, 55, 44, 0.1);
+  --approval-page-shadow: none;
   --approval-page-focus: rgba(18, 116, 84, 0.46);
   --approval-page-button-bg: rgba(255, 255, 255, 0.82);
-  --approval-page-header-bg: rgba(255, 255, 255, 0.9);
+  --approval-page-header-bg: transparent;
   --approval-page-primary-text: #ffffff;
   --approval-page-pagination-bg: rgba(255, 255, 255, 0.72);
   --approval-page-pagination-active-bg: rgba(18, 116, 84, 0.12);
@@ -47,10 +47,10 @@
   --approval-page-border: rgba(185, 245, 225, 0.14);
   --approval-page-surface: rgba(12, 19, 18, 0.72);
   --approval-page-surface-subtle: rgba(255, 255, 255, 0.045);
-  --approval-page-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+  --approval-page-shadow: none;
   --approval-page-focus: rgba(112, 227, 194, 0.68);
   --approval-page-button-bg: rgba(255, 255, 255, 0.045);
-  --approval-page-header-bg: rgba(12, 19, 18, 0.68);
+  --approval-page-header-bg: transparent;
   --approval-page-primary-text: #06120e;
   --approval-page-pagination-bg: rgba(255, 255, 255, 0.045);
   --approval-page-pagination-active-bg: rgba(112, 227, 194, 0.14);
@@ -69,12 +69,12 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px;
-  border: 1px solid var(--approval-page-border);
-  border-radius: 10px;
+  padding: 2px 2px 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
   background: var(--approval-page-header-bg);
   box-shadow: var(--approval-page-shadow);
-  backdrop-filter: blur(16px);
+  backdrop-filter: none;
 }
 
 .approval-page__heading {
@@ -91,7 +91,7 @@
   h1 {
     margin: 4px 0;
     color: var(--approval-page-text);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 650;
     line-height: 1.2;
     letter-spacing: 0;
@@ -170,7 +170,7 @@
   align-items: center;
   gap: 10px;
   overflow-x: auto;
-  padding: 2px;
+  padding: 0 2px;
   scrollbar-gutter: stable;
 }
 
@@ -181,7 +181,7 @@
   gap: 4px;
   padding: 4px;
   border: 1px solid var(--approval-page-border);
-  border-radius: 10px;
+  border-radius: 8px;
   background: var(--approval-page-surface-subtle);
 
   button {
@@ -258,12 +258,12 @@
   display: flex;
   flex-direction: column;
   border: 1px solid var(--approval-page-border);
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
   color: var(--approval-page-text);
   background: var(--approval-page-surface);
   box-shadow: var(--approval-page-shadow);
-  backdrop-filter: blur(16px);
+  backdrop-filter: none;
 
   .ant-spin-nested-loading,
   .ant-spin-container {
@@ -300,7 +300,7 @@
   .ant-table-thead > tr > th {
     border-bottom: 1px solid var(--approval-page-border);
     color: var(--approval-page-muted);
-    background: var(--approval-page-table-head);
+    background: color-mix(in srgb, var(--approval-page-table-head) 72%, transparent);
     font-size: 12px;
     font-weight: 650;
   }
@@ -309,6 +309,8 @@
     border-bottom: 1px solid var(--approval-page-border);
     color: var(--approval-page-text);
     background: transparent;
+    padding-top: 13px;
+    padding-bottom: 13px;
   }
 
   .ant-table-tbody > tr.ant-table-row:hover > td,

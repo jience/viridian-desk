@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router';
 import Sidebar from '@/components/Sidebar';
@@ -22,42 +22,16 @@ export function AppLayout() {
   const { t: assistantT } = useTranslation('assistant');
   const { t: commonT } = useTranslation('common');
   const location = useLocation();
-  const [assistantCollapsed, setAssistantCollapsed] = useState(false);
-  const [compactAssistantOpen, setCompactAssistantOpen] = useState(false);
-  const [isCompactAssistant, setIsCompactAssistant] = useState(
-    () => window.matchMedia('(max-width: 1080px)').matches,
-  );
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 1080px)');
-    const updateCompactAssistant = () => setIsCompactAssistant(mediaQuery.matches);
-
-    updateCompactAssistant();
-    mediaQuery.addEventListener('change', updateCompactAssistant);
-
-    return () => mediaQuery.removeEventListener('change', updateCompactAssistant);
-  }, []);
+  const [assistantOpen, setAssistantOpen] = useState(false);
 
   const routeMeta = useMemo(() => {
     return routeTitles.find((item) => location.pathname.startsWith(item.match)) ?? routeTitles[1];
   }, [location.pathname]);
 
-  const assistantState: AssistantState = isCompactAssistant
-    ? compactAssistantOpen
-      ? 'expanded'
-      : 'hidden'
-    : assistantCollapsed
-      ? 'collapsed'
-      : 'expanded';
-  const assistantPanelCollapsed = isCompactAssistant ? false : assistantCollapsed;
+  const assistantState: AssistantState = assistantOpen ? 'expanded' : 'hidden';
   const isAssistantOpen = assistantState === 'expanded';
   const toggleAssistant = () => {
-    if (isCompactAssistant) {
-      setCompactAssistantOpen((current) => !current);
-      return;
-    }
-
-    setAssistantCollapsed((current) => !current);
+    setAssistantOpen((current) => !current);
   };
 
   return (
@@ -65,7 +39,7 @@ export function AppLayout() {
       <AppShell
         assistant={
           assistantState === 'hidden' ? undefined : (
-            <AssistantPanel collapsed={assistantPanelCollapsed} onToggle={toggleAssistant} />
+            <AssistantPanel collapsed={false} onToggle={toggleAssistant} />
           )
         }
         assistantState={assistantState}
