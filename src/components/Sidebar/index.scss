@@ -56,6 +56,12 @@
     line-height: 1;
   }
 
+  svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+  }
+
   &:hover,
   &:focus-visible {
     transform: translateY(-1px);

@@ -27,6 +27,7 @@ import { listen } from '@tauri-apps/api/event';
 import { Menu, message, Modal, Popover, Tooltip } from 'antd';
 import { Buffer } from 'buffer';
 import { isEmpty } from 'lodash-es';
+import { Sparkles } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';
@@ -333,7 +334,7 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
                 type="button"
                 onClick={onAssistantToggle}
               >
-                <i className="iconfont icon-c_question-s" />
+                <Sparkles aria-hidden="true" />
               </button>
             </Tooltip>
           </li>
