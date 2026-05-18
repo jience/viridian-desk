@@ -21,7 +21,11 @@ interface FooterAction {
   tone?: 'danger';
 }
 
-const Footer: FC = () => {
+interface FooterProps {
+  hiddenActionKeys?: string[];
+}
+
+const Footer: FC<FooterProps> = ({ hiddenActionKeys = [] }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
@@ -97,7 +101,7 @@ const Footer: FC = () => {
         tone: 'danger',
       },
     ] satisfies FooterAction[]
-  ).filter((item) => !item.hidden);
+  ).filter((item) => !item.hidden && !hiddenActionKeys.includes(item.key));
 
   return (
     <footer className="login-footer" aria-label={t('login_page.footer_controls')}>

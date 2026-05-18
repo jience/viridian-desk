@@ -1,4 +1,5 @@
 import logoBlue from '@/assets/images/logoBlue1.png';
+import ControlWindow from '@/components/ControlWindow';
 import Footer from '@/components/Footer';
 import { LoginAuthType } from '@/native/interfaces/login_history';
 import { useAppSelector } from '@/store';
@@ -8,10 +9,9 @@ import {
   selectSmsResetPasswordSwitch,
   selectTerminalRememberPasswordSwitch,
 } from '@/store/feature/client';
-import { selectConnected, selectNetwork } from '@/store/feature/gateway';
+import { selectAutoGateway, selectConnected, selectNetwork } from '@/store/feature/gateway';
 import '@/styles/design-system.css';
 import { Button } from '@/ui/components/button';
-import { LoginShell } from '@/ui/shell/login-shell';
 import { QrcodeOutlined } from '@ant-design/icons';
 import { Checkbox, Form } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -38,6 +38,7 @@ export default function LoginPage() {
 
   const connected = useAppSelector(selectConnected);
   const network = useAppSelector(selectNetwork);
+  const autoGateway = useAppSelector(selectAutoGateway);
   const terminalRememberPasswordSwitch = useAppSelector(selectTerminalRememberPasswordSwitch);
   const loginTypes = useAppSelector(selectLoginTypes);
   const smsResetPasswordSwitch = useAppSelector(selectSmsResetPasswordSwitch);
@@ -66,6 +67,17 @@ export default function LoginPage() {
   const [findPwdVisible, setFindPwdVisible] = useState(false);
 
   const canSubmit = connected && network;
+  const gatewayStatusLabel = !autoGateway
+    ? `${formatMessage({ id: 'PleaseSelect', defaultMessage: '请选择' })}${formatMessage({
+        id: 'GATEWAY',
+        defaultMessage: '服务器',
+      })}`
+    : !network
+      ? formatMessage({ id: 'NetworkError', defaultMessage: '网络异常' })
+      : connected
+        ? formatMessage({ id: 'Connected', defaultMessage: '已连接' })
+        : formatMessage({ id: 'Disconnected', defaultMessage: '未连接' });
+  const gatewayStatusTone = connected && network ? 'success' : autoGateway ? 'danger' : 'info';
   const showLocalLinks = currentLoginWay === LoginAuthType.LOCAL;
   const showRememberControls =
     (!isLocalPhoneLogin || currentLoginWay !== LoginAuthType.LOCAL) &&
@@ -113,146 +125,207 @@ export default function LoginPage() {
 
   return (
     <div className="auth-page">
-      <LoginShell
-        header={
-          <div className="auth-page__header">
+      <section className="auth-page__window">
+        <div className="auth-page__window-controls">
+          <ControlWindow exist />
+        </div>
+
+        <section className="auth-page__brand-zone" aria-label={t('appName')}>
+          <header className="auth-page__brand-header">
             <img
               src={logoBlue}
               className="auth-page__logo"
               alt={t('appName')}
               onDragStart={(event) => event.preventDefault()}
             />
-            <button
-              className="auth-page__settings vd-auth-link"
-              type="button"
-              onClick={() => navigate('/configPage/serverSetting')}
-            >
-              <i className="iconfont icon-setting" />
-              {formatMessage({ id: 'COMMONSETUP' })}
-            </button>
+          </header>
+
+          <div className="auth-page__hero">
+            <div className="auth-page__eyebrow">
+              <span className={`auth-page__pulse auth-page__pulse--${gatewayStatusTone}`} />
+              {formatMessage({ id: 'Ready', defaultMessage: '安全桌面接入已就绪' })}
+            </div>
+            <h1>{formatMessage({ id: 'LoginHeroTitle', defaultMessage: '进入你的云端工作台' })}</h1>
+            <p>
+              {formatMessage({
+                id: 'LoginSubTitle',
+                defaultMessage:
+                  '统一访问桌面、应用与审批资源。登录前即可确认网关、网络与终端状态，减少等待和错误感知。',
+              })}
+            </p>
+
+            <div className="auth-page__status-grid">
+              <div className="auth-page__status-card">
+                <span>{formatMessage({ id: 'GATEWAY', defaultMessage: '服务器' })}</span>
+                <strong>{gatewayStatusLabel}</strong>
+                <small>
+                  {autoGateway?.name ||
+                    autoGateway?.address ||
+                    formatMessage({ id: 'NoData', defaultMessage: '暂无数据' })}
+                </small>
+              </div>
+              <div className="auth-page__status-card">
+                <span>{formatMessage({ id: 'Network', defaultMessage: '网络' })}</span>
+                <strong>
+                  {network
+                    ? formatMessage({ id: 'Normal', defaultMessage: '正常' })
+                    : formatMessage({ id: 'Abnormal', defaultMessage: '异常' })}
+                </strong>
+                <small>
+                  {connected
+                    ? formatMessage({ id: 'TlsProtected', defaultMessage: 'TLS 已保护' })
+                    : formatMessage({ id: 'Disconnected', defaultMessage: '未连接' })}
+                </small>
+              </div>
+              <div className="auth-page__status-card">
+                <span>{formatMessage({ id: 'LoginWay', defaultMessage: '登录方式' })}</span>
+                <strong>{loginTypes?.length || 1}</strong>
+                <small>{loginWayKv[currentLoginWay]}</small>
+              </div>
+            </div>
           </div>
-        }
-        footer={<Footer />}
-      >
-        <div className="vd-auth-card auth-page__card">
-          <div className="vd-auth-stack">
-            {changeLoginWayVisible ? (
-              <LoginWayChange onChange={() => setChangeLoginWayVisible(false)} />
-            ) : (
-              <>
-                <div className="vd-auth-row auth-page__login-way-row">
-                  <button
-                    className="vd-auth-login-way"
-                    type="button"
-                    onClick={() => {
-                      if (loginTypes && loginTypes.length > 1) {
-                        setChangeLoginWayVisible(true);
-                      }
-                    }}
-                  >
-                    {loginTypes && loginTypes.length > 1 && (
-                      <span className="auth-page__login-way-icons">
-                        <i className="iconfont icon-left" />
-                        <i className="iconfont icon-minus" />
-                      </span>
-                    )}
-                    {loginWayKv[currentLoginWay]}
-                  </button>
 
-                  {currentLoginWay === LoginAuthType.CORP && (
+          <Footer hiddenActionKeys={['setting']} />
+        </section>
+
+        <section className="auth-page__auth-zone" aria-label={formatMessage({ id: 'LOGIN' })}>
+          <div className="auth-page__card">
+            <div className="auth-page__card-heading">
+              <div>
+                <h2>{formatMessage({ id: 'LOGIN' })}</h2>
+                <p>{loginWayKv[currentLoginWay]}</p>
+              </div>
+              <button
+                className="auth-page__panel-settings"
+                type="button"
+                aria-label={formatMessage({ id: 'COMMONSETUP' })}
+                onClick={() => navigate('/configPage/serverSetting')}
+              >
+                <i className="iconfont icon-setting" />
+              </button>
+            </div>
+
+            <div className="vd-auth-stack">
+              {changeLoginWayVisible ? (
+                <LoginWayChange onChange={() => setChangeLoginWayVisible(false)} />
+              ) : (
+                <>
+                  <div className="vd-auth-row auth-page__login-way-row">
                     <button
-                      aria-label={loginWayKv[currentLoginWay]}
-                      className="auth-page__qr"
-                      disabled={!canScan}
+                      className="vd-auth-login-way"
                       type="button"
-                      onClick={handleOrgScanLogin}
+                      onClick={() => {
+                        if (loginTypes && loginTypes.length > 1) {
+                          setChangeLoginWayVisible(true);
+                        }
+                      }}
                     >
-                      <QrcodeOutlined />
+                      {loginTypes && loginTypes.length > 1 && (
+                        <span className="auth-page__login-way-icons">
+                          <i className="iconfont icon-left" />
+                          <i className="iconfont icon-minus" />
+                        </span>
+                      )}
+                      {loginWayKv[currentLoginWay]}
                     </button>
-                  )}
-                </div>
 
-                <Form form={form} layout="vertical" className="vd-auth-form" requiredMark={false}>
-                  <LoginFormItems
-                    formIns={form}
-                    isLocalPhoneLogin={isLocalPhoneLogin}
-                    setThreeChannel={setThreeChannel}
-                  />
-                </Form>
-
-                {showLocalLinks ? (
-                  <div className="vd-auth-row auth-page__links">
-                    <button
-                      className="vd-auth-link"
-                      type="button"
-                      onClick={() => setIsLocalPhoneLogin(!isLocalPhoneLogin)}
-                    >
-                      <i className="iconfont icon-icon_phone" />
-                      {formatMessage({ id: !isLocalPhoneLogin ? 'loginByphone' : 'loginByUser' })}
-                    </button>
-                    {smsResetPasswordSwitch === 'Enabled' && (
+                    {currentLoginWay === LoginAuthType.CORP && (
                       <button
-                        className="vd-auth-link"
-                        disabled={!canSubmit}
+                        aria-label={loginWayKv[currentLoginWay]}
+                        className="auth-page__qr"
+                        disabled={!canScan}
                         type="button"
-                        onClick={() => {
-                          if (canSubmit) {
-                            setFindPwdVisible(true);
-                          }
-                        }}
+                        onClick={handleOrgScanLogin}
                       >
-                        {formatMessage({ id: 'ForgetPassword' })}
+                        <QrcodeOutlined />
                       </button>
                     )}
                   </div>
-                ) : (
-                  <div className="auth-page__links-placeholder" />
-                )}
 
-                <Button
-                  aria-busy={loginLoading}
-                  className="auth-page__submit"
-                  disabled={!canSubmit || loginLoading}
-                  onClick={handleSubmit}
-                  size="lg"
-                >
-                  {loginLoading && <span className="auth-page__submit-spinner" />}
-                  {formatMessage({ id: loginLoading ? 'LOGING' : 'LOGIN' })}
-                </Button>
+                  <Form form={form} layout="vertical" className="vd-auth-form" requiredMark={false}>
+                    <LoginFormItems
+                      formIns={form}
+                      isLocalPhoneLogin={isLocalPhoneLogin}
+                      setThreeChannel={setThreeChannel}
+                    />
+                  </Form>
 
-                <div className="vd-auth-checkboxes">
-                  {showRememberControls ? (
-                    <Checkbox
-                      checked={rememberMeChecked}
-                      onChange={(event) => setRememberMeChecked(!!event.target.checked)}
-                    >
-                      {formatMessage({ id: 'REMEMBER_PASSWORD' })}
-                    </Checkbox>
+                  {showLocalLinks ? (
+                    <div className="vd-auth-row auth-page__links">
+                      <button
+                        className="vd-auth-link"
+                        type="button"
+                        onClick={() => setIsLocalPhoneLogin(!isLocalPhoneLogin)}
+                      >
+                        <i className="iconfont icon-icon_phone" />
+                        {formatMessage({
+                          id: !isLocalPhoneLogin ? 'loginByphone' : 'loginByUser',
+                        })}
+                      </button>
+                      {smsResetPasswordSwitch === 'Enabled' && (
+                        <button
+                          className="vd-auth-link"
+                          disabled={!canSubmit}
+                          type="button"
+                          onClick={() => {
+                            if (canSubmit) {
+                              setFindPwdVisible(true);
+                            }
+                          }}
+                        >
+                          {formatMessage({ id: 'ForgetPassword' })}
+                        </button>
+                      )}
+                    </div>
                   ) : (
-                    <span />
+                    <div className="auth-page__links-placeholder" />
                   )}
-                  {showAutoLogin ? (
-                    <Checkbox
-                      checked={autoLoginChecked}
-                      onChange={(event) => setAutoLoginChecked(!!event.target.checked)}
-                    >
-                      {formatMessage({ id: 'AUTOLOGIN' })}
-                    </Checkbox>
-                  ) : (
-                    <span />
-                  )}
-                </div>
-              </>
-            )}
+
+                  <Button
+                    aria-busy={loginLoading}
+                    className="auth-page__submit"
+                    disabled={!canSubmit || loginLoading}
+                    onClick={handleSubmit}
+                    size="lg"
+                  >
+                    {loginLoading && <span className="auth-page__submit-spinner" />}
+                    {formatMessage({ id: loginLoading ? 'LOGING' : 'LOGIN' })}
+                  </Button>
+
+                  <div className="vd-auth-checkboxes">
+                    {showRememberControls ? (
+                      <Checkbox
+                        checked={rememberMeChecked}
+                        onChange={(event) => setRememberMeChecked(!!event.target.checked)}
+                      >
+                        {formatMessage({ id: 'REMEMBER_PASSWORD' })}
+                      </Checkbox>
+                    ) : (
+                      <span />
+                    )}
+                    {showAutoLogin ? (
+                      <Checkbox
+                        checked={autoLoginChecked}
+                        onChange={(event) => setAutoLoginChecked(!!event.target.checked)}
+                      >
+                        {formatMessage({ id: 'AUTOLOGIN' })}
+                      </Checkbox>
+                    ) : (
+                      <span />
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
+        </section>
 
         <FindPasswordModal visible={findPwdVisible} setVisible={setFindPwdVisible} />
         <SliderVerifyModal ref={sliderVerifyModalRef} />
         <SendMsgModal ref={sendMsgModalRef} />
         <OneTimePwdModal ref={oneTimePwdModalRef} />
         <OrgScanLoginModal ref={orgScanLoginModalRef} />
-      </LoginShell>
+      </section>
     </div>
   );
 }
