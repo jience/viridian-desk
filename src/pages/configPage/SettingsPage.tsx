@@ -119,9 +119,6 @@ export default function SettingsPage() {
         header={
           <>
             <div className="settings-page__heading">
-              <span className="settings-page__eyebrow">
-                {intl.formatMessage({ id: 'SettingsWorkbenchEyebrow' })}
-              </span>
               <h1 className="settings-page__title">
                 {activeTab?.name || intl.formatMessage({ id: 'SettingsWorkbenchTitle' })}
               </h1>
