@@ -5,6 +5,7 @@ import ComModal from '@/components/ComModal';
 import DiffLoginTip from '@/components/DiffLoginTip';
 import PwdForm from '@/components/PwdForm';
 import UserInfo from '@/components/UserInfo';
+import sidebarLogo from '@/assets/images/logo.svg';
 import useRequest from '@/hooks/useRequest';
 import { bridge } from '@/native';
 import { LoginUserType } from '@/native/interfaces/api';
@@ -33,8 +34,6 @@ import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';
 import { useLocation, useNavigate } from 'react-router';
 import { initMenus as menus } from './initData';
-
-const sidebarLogo = new URL('../../../docs/images/logo.svg', import.meta.url).href;
 
 interface SidebarProps {
   assistantOpen?: boolean;
