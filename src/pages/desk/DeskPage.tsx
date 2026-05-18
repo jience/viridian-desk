@@ -1,19 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router';
-import { Button, Dropdown, Empty, message, Modal, Popover, Spin, Tooltip } from 'antd';
+import { Button, Dropdown, Empty, message, Modal, Spin, Tooltip } from 'antd';
 import { listen } from '@tauri-apps/api/event';
 import { get } from 'lodash-es';
-import Close from '@/components/Closesvg';
 import DeskLoading from '@/components/DeskLoading';
 import Deskpool from '@/components/Deskpoolsvg';
-import Open from '@/components/Opensvg';
 import useRequest from '@/hooks/useRequest';
 import { detachVolume } from '@/services/resource';
 import { killAllHdpViewers } from '@/services/invoke/shell';
 import { useAppSelector } from '@/store';
 import { selectFullScreen } from '@/store/feature/config';
-import ActionAuth from '@/utils/actionAuth';
+import { authActionShow } from '@/utils/actionAuth';
 import Actions from '@/utils/actions';
 import { DESK_STATUS, EmptyText, getStatus } from '@/utils/constant';
 import { transIcon, transRam } from '@/utils/utils';
@@ -21,9 +19,6 @@ import DeskPoolModal from './components/deskPoolDetail';
 import InUseLoading from './components/loading';
 import useDeskHooks from './useDeskHooks';
 import './DeskPage.scss';
-
-const AuthButton = ActionAuth(Button);
-const AuthDropDown = ActionAuth(Dropdown);
 
 export function DeskPage() {
   const { formatMessage } = useIntl();
@@ -39,7 +34,6 @@ export function DeskPage() {
   const [poolDetailVisible, setPoolDetailVisible] = useState(false);
 
   const {
-    transStatus,
     deskData,
     deskPoolData,
     generateMenus,
@@ -56,7 +50,6 @@ export function DeskPage() {
     getDeskPoolList,
     deskLoading,
     deskPoolLoading,
-    transType,
     listResourceUserRefresh,
     listDesktopPoolRefresh,
     loadingDeskText,
@@ -99,6 +92,74 @@ export function DeskPage() {
   };
 
   const getOsLabel = (item: any) => item?.image?.name || item?.image?.os || item?.os || EmptyText;
+
+  const getDesktopMetaLine = (item: any) =>
+    [getOsLabel(item), getDesktopSpec(item), getPrimaryIp(item?.interfaces)]
+      .filter(Boolean)
+      .join('  ·  ');
+
+  const getPoolMetaLine = (item: any) =>
+    [
+      item?.image?.name || item?.os || EmptyText,
+      getDesktopSpec(item),
+      item?.network?.subnets?.[0]?.cidr || EmptyText,
+    ]
+      .filter(Boolean)
+      .join('  ·  ');
+
+  const getDesktopMenu = (item: any) => {
+    const originalMenu = generateMenus(item, getPersonalDiskMenuActions());
+    const menuItems = [
+      {
+        key: 'detail',
+        label: <p>{detailLabel}</p>,
+        disabled: item.status === DESK_STATUS.DELETING,
+      },
+    ];
+
+    if (authActionShow([Actions.TerminalRWDesktopForceReboot])) {
+      menuItems.push({
+        key: 'restart',
+        label: <p>{restartLabel}</p>,
+        disabled: item.status !== DESK_STATUS.START || item.isLock,
+      });
+    }
+
+    if (authActionShow([Actions.TerminalRWDesktopShutdown])) {
+      menuItems.push({
+        key: 'shutdown',
+        label: <p>{shutdownLabel}</p>,
+        disabled: item.status !== DESK_STATUS.START || item.isLock,
+      });
+    }
+
+    return {
+      ...originalMenu,
+      items: [...menuItems, ...(originalMenu.items || [])],
+      onClick: (info: any) => {
+        info.domEvent.stopPropagation();
+
+        if (info.key === 'detail') {
+          navigate('/app/deskDetail', {
+            state: { id: item.id },
+          });
+          return;
+        }
+
+        if (info.key === 'restart') {
+          restartDesk(item, false);
+          return;
+        }
+
+        if (info.key === 'shutdown') {
+          shutDownDesktop(item);
+          return;
+        }
+
+        originalMenu.onClick?.(info);
+      },
+    };
+  };
 
   useEffect(() => {
     let disposed = false;
@@ -268,7 +329,6 @@ export function DeskPage() {
                 {deskData.map((item: any, index: number) => {
                   const isStopped = ['stop', 'stopretain'].includes(item?.status?.toLowerCase());
                   const statusInfo = getDesktopStatusInfo(item);
-                  const desktopType = item?.desktopPool?.type || 'EXCLUSIVE';
                   return (
                     <article
                       className={`desk-card desk-card--${item?.desktopPool?.type} desk-card-item-${index} ${
@@ -276,44 +336,32 @@ export function DeskPage() {
                       }`}
                       key={item?.id || `${item?.name}-${index}`}
                     >
+                      <Dropdown
+                        menu={getDesktopMenu(item)}
+                        placement="bottomRight"
+                        trigger={['click']}
+                        classNames={{ root: 'desk-more-menu desk-page__more-menu' }}
+                        getPopupContainer={(triggerNode: HTMLElement) =>
+                          triggerNode.ownerDocument.body
+                        }
+                      >
+                        <Button
+                          className="desk-card__menu"
+                          type="text"
+                          icon={<i className="iconfont icon-more" />}
+                          aria-label={moreLabel}
+                          title={moreLabel}
+                          onClick={(event) => event.stopPropagation()}
+                        />
+                      </Dropdown>
+
                       <button
                         className="desk-card__preview"
                         type="button"
                         onClick={() => enterDesk(item)}
                       >
-                        <div className="desk-card__topline">
-                          <div
-                            className={`desk-card__status desk-card__status--${statusInfo.type}`}
-                          >
-                            {transStatus(item.status, item.isLock)}
-                            {item?.sessionStatus == '1' && <InUseLoading />}
-                            <span>{statusInfo.title}</span>
-                          </div>
-                          <span className="desk-card__type">
-                            {transType(item.desktopPool)}
-                            {formatMessage({ id: desktopType })}
-                          </span>
-                        </div>
-
-                        <div className="desk-card__stage">
-                          <div className="desk-card__screen">
-                            <div className="desk-card__screen-chrome">
-                              <span />
-                              <span />
-                              <span />
-                            </div>
-                            <div className="desk-card__os">
-                              {item.status.toLowerCase() === 'stop' ? (
-                                <span className="desk-card__os-shell">
-                                  <Close />
-                                </span>
-                              ) : (
-                                <Open />
-                              )}
-                              {transIcon(item.image?.os || item.os)}
-                            </div>
-                            <span className="desk-card__screen-tag">{statusInfo.title}</span>
-                          </div>
+                        <div className="desk-card__icon">
+                          {transIcon(item.image?.os || item.os)}
                           {item.isDefault && (
                             <span className="desk-card__default">
                               {formatMessage({ id: 'DEFAULT' })}
@@ -327,93 +375,26 @@ export function DeskPage() {
                               <span>{item.name}</span>
                             </h3>
                           </Tooltip>
-                          <p className="desk-card__os-name">{getOsLabel(item)}</p>
+                          <p className="desk-card__meta-line">{getDesktopMetaLine(item)}</p>
+                        </div>
+
+                        <div className={`desk-card__status desk-card__status--${statusInfo.type}`}>
+                          <span className="desk-card__status-dot" />
+                          <span>{statusInfo.title}</span>
+                          {item?.sessionStatus == '1' && <InUseLoading />}
                         </div>
                       </button>
 
-                      <div className="desk-card__facts" aria-label={item.name}>
-                        <div className="desk-card__fact">
-                          <span>{formatMessage({ id: 'DESK_STANDARD' })}</span>
-                          <strong>{getDesktopSpec(item)}</strong>
-                        </div>
-                        <div className="desk-card__fact">
-                          <span>{formatMessage({ id: 'DESK_NETWORK' })}</span>
-                          <strong>{getPrimaryIp(item?.interfaces)}</strong>
-                        </div>
-                      </div>
-
-                      <div className="desk-card__actions">
-                        <Popover content={connectLabel}>
-                          <Button
-                            className="desk-card__connect"
-                            type="primary"
-                            icon={<i className="iconfont icon-boot" />}
-                            aria-label={connectLabel}
-                            title={connectLabel}
-                            onClick={() => enterDesk(item)}
-                          >
-                            {connectLabel}
-                          </Button>
-                        </Popover>
-                        <div className="desk-card__quick-actions">
-                          <Popover content={restartLabel}>
-                            <AuthButton
-                              actions={[Actions.TerminalRWDesktopForceReboot]}
-                              disabled={item.status !== DESK_STATUS.START || item.isLock}
-                              type="text"
-                              icon={<i className="iconfont icon-reboot" />}
-                              aria-label={restartLabel}
-                              title={restartLabel}
-                              onClick={() => restartDesk(item, false)}
-                            />
-                          </Popover>
-                          <Popover content={shutdownLabel}>
-                            <AuthButton
-                              actions={[Actions.TerminalRWDesktopShutdown]}
-                              disabled={item.status !== DESK_STATUS.START || item.isLock}
-                              type="text"
-                              icon={<i className="iconfont icon-shutdown" />}
-                              aria-label={shutdownLabel}
-                              title={shutdownLabel}
-                              onClick={() => shutDownDesktop(item)}
-                            />
-                          </Popover>
-                          <Popover content={detailLabel}>
-                            <Button
-                              type="text"
-                              icon={<i className="iconfont icon-info-o" />}
-                              disabled={item.status === DESK_STATUS.DELETING}
-                              aria-label={detailLabel}
-                              title={detailLabel}
-                              onClick={() => {
-                                navigate('/app/deskDetail', {
-                                  state: { id: item.id },
-                                });
-                              }}
-                            />
-                          </Popover>
-                          <AuthDropDown
-                            actions={[
-                              Actions.TerminalRWDesktopSetOrUnsetDefault,
-                              Actions.TerminalRWDesktopAttachOrDetachPrivateDisk,
-                            ]}
-                            menu={generateMenus(item, getPersonalDiskMenuActions())}
-                            placement="bottomRight"
-                            trigger={['click']}
-                            classNames={{ root: 'desk-more-menu desk-page__more-menu' }}
-                            getPopupContainer={(triggerNode: HTMLElement) =>
-                              triggerNode.ownerDocument.body
-                            }
-                          >
-                            <Button
-                              type="text"
-                              icon={<i className="iconfont icon-more" />}
-                              aria-label={moreLabel}
-                              title={moreLabel}
-                            />
-                          </AuthDropDown>
-                        </div>
-                      </div>
+                      <Button
+                        className="desk-card__connect"
+                        type="primary"
+                        aria-label={connectLabel}
+                        title={connectLabel}
+                        onClick={() => enterDesk(item)}
+                      >
+                        <span>{connectLabel}</span>
+                        <i className="iconfont icon-arrow" />
+                      </Button>
                     </article>
                   );
                 })}
@@ -426,6 +407,18 @@ export function DeskPage() {
               <div className="desk-page__pool-grid">
                 {deskPoolData.map((item: any, index: number) => (
                   <article className="desk-pool" key={item?.id || `${item?.name}-${index}`}>
+                    <Button
+                      className="desk-card__menu"
+                      type="text"
+                      icon={<i className="iconfont icon-info-o" />}
+                      aria-label={`${detailLabel}: ${item.name}`}
+                      title={detailLabel}
+                      onClick={() => {
+                        getDeskPoolDetail(item.id);
+                        setPoolDetailVisible(true);
+                      }}
+                    />
+
                     <button
                       type="button"
                       className="desk-pool__preview"
@@ -435,33 +428,9 @@ export function DeskPage() {
                         setPoolDetailVisible(true);
                       }}
                     >
-                      <div className="desk-pool__topline">
-                        <span className="desk-card__type">
-                          {transType(item)}
-                          {formatMessage({ id: item?.type || 'DESK_POOL' })}
-                        </span>
-                        <span className="desk-pool__label">
-                          {formatMessage({ id: 'DESK_POOL' })}
-                        </span>
-                      </div>
-
-                      <div className="desk-card__stage desk-pool__stage">
-                        <div className="desk-card__screen desk-pool__screen">
-                          <div className="desk-card__screen-chrome">
-                            <span />
-                            <span />
-                            <span />
-                          </div>
-                          <div className="desk-pool__os">
-                            <span className="desk-pool__os-shell">
-                              <Deskpool />
-                            </span>
-                            {transIcon(item?.os)}
-                          </div>
-                          <span className="desk-card__screen-tag">
-                            {formatMessage({ id: 'DESK_POOL' })}
-                          </span>
-                        </div>
+                      <div className="desk-card__icon desk-card__icon--pool">
+                        <Deskpool />
+                        {transIcon(item?.os)}
                       </div>
 
                       <div className="desk-card__identity">
@@ -470,31 +439,24 @@ export function DeskPage() {
                             <span>{item.name}</span>
                           </h3>
                         </Tooltip>
-                        <p className="desk-card__os-name">
-                          {item?.image?.name || item?.os || EmptyText}
-                        </p>
+                        <p className="desk-card__meta-line">{getPoolMetaLine(item)}</p>
+                      </div>
+
+                      <div className="desk-card__status desk-card__status--success">
+                        <span className="desk-card__status-dot" />
+                        <span>{formatMessage({ id: 'DESK_POOL' })}</span>
                       </div>
                     </button>
-
-                    <div className="desk-card__facts">
-                      <div className="desk-card__fact">
-                        <span>{formatMessage({ id: 'DESK_STANDARD' })}</span>
-                        <strong>{getDesktopSpec(item)}</strong>
-                      </div>
-                      <div className="desk-card__fact">
-                        <span>{formatMessage({ id: 'DESK_NETWORK' })}</span>
-                        <strong>{item?.network?.subnets?.[0]?.cidr || EmptyText}</strong>
-                      </div>
-                    </div>
 
                     <Button
                       onClick={(event) => {
                         event.stopPropagation();
                         createDeskFromDeskPool(item);
                       }}
-                      className="desk-pool__create"
+                      className="desk-card__connect desk-pool__create"
                     >
-                      {formatMessage({ id: 'CreateDeskFromDeskPool' })}
+                      <span>{formatMessage({ id: 'CreateDeskFromDeskPool' })}</span>
+                      <i className="iconfont icon-arrow" />
                     </Button>
                   </article>
                 ))}
