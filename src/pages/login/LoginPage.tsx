@@ -16,7 +16,6 @@ import { Checkbox, Form } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';
-import { useNavigate } from 'react-router';
 import FindPasswordModal from './component/FindPasswordModal';
 import LoginWayChange from './component/LoginWayChange';
 import { useLoginHandler } from './hooks/useLoginHandler';
@@ -32,7 +31,6 @@ import './LoginPage.scss';
 export default function LoginPage() {
   const { formatMessage } = useIntl();
   const { t } = useTranslation('common');
-  const navigate = useNavigate();
   const [form] = Form.useForm<LoginFormType>();
 
   const connected = useAppSelector(selectConnected);
@@ -188,14 +186,6 @@ export default function LoginPage() {
                 <h2>{formatMessage({ id: 'LOGIN' })}</h2>
                 <p>{loginWayKv[currentLoginWay]}</p>
               </div>
-              <button
-                className="auth-page__panel-settings"
-                type="button"
-                aria-label={formatMessage({ id: 'COMMONSETUP' })}
-                onClick={() => navigate('/configPage/serverSetting')}
-              >
-                <i className="iconfont icon-setting" />
-              </button>
             </div>
 
             <div className="vd-auth-stack">
@@ -320,7 +310,7 @@ export default function LoginPage() {
         <OrgScanLoginModal ref={orgScanLoginModalRef} />
       </section>
       <div className="auth-page__footer-bar">
-        <Footer hiddenActionKeys={['setting']} />
+        <Footer />
       </div>
     </div>
   );

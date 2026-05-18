@@ -52,14 +52,6 @@ const Footer: FC<FooterProps> = ({ hiddenActionKeys = [] }) => {
   const actions = (
     [
       {
-        key: 'setting',
-        label: t('login_page.setting'),
-        icon: <i className="iconfont icon-setting" />,
-        onClick: () => {
-          void navigate('/configPage/serverSetting');
-        },
-      },
-      {
         key: 'network',
         label: t('login_page.network'),
         icon: <i className="iconfont icon-net" />,
@@ -67,6 +59,14 @@ const Footer: FC<FooterProps> = ({ hiddenActionKeys = [] }) => {
           void invoke('open_network_settings');
         },
         hidden: !isIntegratedMode,
+      },
+      {
+        key: 'setting',
+        label: t('login_page.setting'),
+        icon: <i className="iconfont icon-setting" />,
+        onClick: () => {
+          void navigate('/configPage/serverSetting');
+        },
       },
       {
         key: 'msg',
