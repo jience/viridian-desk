@@ -1,7 +1,6 @@
 import '@/styles/design-system.css';
 import { Button } from '@/ui/components/button';
 import { PreLoginSettingsShell } from '@/ui/shell/pre-login-settings-shell';
-import settingsLogo from '@/assets/images/logo.svg';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
@@ -133,7 +132,7 @@ export default function SettingsPage() {
           <div className="settings-page__sidebar">
             <div className="settings-page__brand">
               <span className="settings-page__brand-mark" aria-hidden="true">
-                <img src={settingsLogo} alt="" draggable={false} />
+                <i className="iconfont icon-setting2" />
               </span>
               <span>{intl.formatMessage({ id: 'SettingsWorkbenchTitle' })}</span>
             </div>
