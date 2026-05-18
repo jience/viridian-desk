@@ -1,4 +1,5 @@
 import { Tooltip } from 'antd';
+import './index.scss';
 
 interface IconWithTooltipProps {
   icon: string;
@@ -14,7 +15,7 @@ const IconWithTooltip: React.FC<IconWithTooltipProps> = ({
   return (
     <Tooltip
       getPopupContainer={getPopupContainer}
-      title={<div style={{ padding: '0 12px' }}>{tips}</div>}
+      title={<div className="approval-icon-tooltip-content">{tips}</div>}
       color="var(--vd-color-panel, #1c211f)"
     >
       {/* <Icon type={`icon-${icon}`} /> */}

@@ -53,7 +53,6 @@ export const AppIcon = (props: any) => {
               <use fill="#FFFFFF" fillRule="evenodd" xlinkHref={`#path-${appId}`}></use>
             </g>
             <image
-              style={{ width: '58px', height: '58px' }}
               className="svg-image"
               mask={`url(#mask-${appId})`}
               x="-3"
