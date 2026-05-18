@@ -257,70 +257,12 @@
   background: rgba(17, 22, 21, 0.86);
 }
 
-.vd-login-shell,
 .vd-prelogin-settings-shell {
   display: grid;
   height: 100%;
   min-height: 560px;
   background: var(--vd-color-bg);
   color: var(--vd-color-text);
-}
-
-.vd-login-shell {
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-.vd-login-shell--with-aside {
-  grid-template-columns: minmax(420px, 0.92fr) minmax(360px, 1fr);
-}
-
-.vd-login-shell__content {
-  display: grid;
-  min-width: 0;
-  grid-template-rows: auto 1fr auto;
-  gap: 20px;
-  padding: 28px;
-}
-
-.vd-login-shell__main {
-  display: flex;
-  min-height: 0;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.vd-login-shell__aside {
-  min-width: 0;
-  border-left: 1px solid var(--vd-color-border);
-  background:
-    linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--vd-color-accent) 18%, transparent),
-      transparent 42%
-    ),
-    var(--vd-color-panel);
-}
-
-@media (max-width: 860px) {
-  .vd-login-shell--with-aside {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .vd-login-shell__aside {
-    display: none;
-  }
-}
-
-.vd-auth-card {
-  width: min(100%, 420px);
-  border: 1px solid var(--vd-color-border);
-  border-radius: 18px;
-  padding: 20px;
-  background: var(--vd-color-panel);
-  box-shadow: var(--vd-shadow-window);
 }
 
 .vd-auth-stack {
@@ -383,27 +325,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-}
-
-.vd-auth-side-panel {
-  display: grid;
-  height: 100%;
-  align-content: space-between;
-  padding: 32px;
-}
-
-.vd-auth-side-panel__title {
-  margin: 0;
-  color: var(--vd-color-text);
-  font-size: 28px;
-  line-height: 1.15;
-}
-
-.vd-auth-side-panel__text {
-  max-width: 420px;
-  color: var(--vd-color-muted);
-  font-size: 14px;
-  line-height: 1.7;
 }
 
 .vd-prelogin-settings-shell {
