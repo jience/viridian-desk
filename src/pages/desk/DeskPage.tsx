@@ -15,8 +15,8 @@ import { useAppSelector } from '@/store';
 import { selectFullScreen } from '@/store/feature/config';
 import ActionAuth from '@/utils/actionAuth';
 import Actions from '@/utils/actions';
-import { DESK_STATUS } from '@/utils/constant';
-import { transIcon } from '@/utils/utils';
+import { DESK_STATUS, EmptyText, getStatus } from '@/utils/constant';
+import { transIcon, transRam } from '@/utils/utils';
 import DeskPoolModal from './components/deskPoolDetail';
 import InUseLoading from './components/loading';
 import useDeskHooks from './useDeskHooks';
@@ -72,6 +72,33 @@ export function DeskPage() {
   const shutdownLabel = formatMessage({ id: 'SHUT_DOWN' });
   const detailLabel = formatMessage({ id: 'DETAIL' });
   const moreLabel = formatMessage({ id: 'ACTION' });
+
+  const getDesktopStatusInfo = (item: any) => {
+    if (item?.isLock) {
+      return {
+        title: formatMessage({ id: 'Lock' }),
+        type: 'warning',
+      };
+    }
+    return getStatus(item?.status || DESK_STATUS.UNKNOWN);
+  };
+
+  const getPrimaryIp = (interfaces: any[] = []) => {
+    const current = interfaces.find((interfaceItem) => interfaceItem?.ip || interfaceItem?.ip2);
+    return current?.ip || current?.ip2 || EmptyText;
+  };
+
+  const getDesktopSpec = (item: any) => {
+    const cpu = Number.parseInt(item?.flavor?.cpu);
+    const cpuText = Number.isNaN(cpu)
+      ? item?.flavor?.cpu || EmptyText
+      : `${cpu}${formatMessage({ id: 'DESK_CPU_UNIT' })}`;
+    const { num, unit } = transRam(item?.flavor?.memory);
+    const memoryText = num ? `${num}${unit}` : EmptyText;
+    return `${cpuText} / ${memoryText}`;
+  };
+
+  const getOsLabel = (item: any) => item?.image?.name || item?.image?.os || item?.os || EmptyText;
 
   useEffect(() => {
     let disposed = false;
@@ -240,6 +267,8 @@ export function DeskPage() {
               <div className="desk-page__grid">
                 {deskData.map((item: any, index: number) => {
                   const isStopped = ['stop', 'stopretain'].includes(item?.status?.toLowerCase());
+                  const statusInfo = getDesktopStatusInfo(item);
+                  const desktopType = item?.desktopPool?.type || 'EXCLUSIVE';
                   return (
                     <article
                       className={`desk-card desk-card--${item?.desktopPool?.type} desk-card-item-${index} ${
@@ -252,10 +281,29 @@ export function DeskPage() {
                         type="button"
                         onClick={() => enterDesk(item)}
                       >
-                        <div className="desk-card__status">
-                          <div className="desk-card__status-left">
+                        <div className="desk-card__topline">
+                          <div
+                            className={`desk-card__status desk-card__status--${statusInfo.type}`}
+                          >
                             {transStatus(item.status, item.isLock)}
                             {item?.sessionStatus == '1' && <InUseLoading />}
+                            <span>{statusInfo.title}</span>
+                          </div>
+                          <span className="desk-card__type">
+                            {transType(item.desktopPool)}
+                            {formatMessage({ id: desktopType })}
+                          </span>
+                        </div>
+                        <div className="desk-card__visual">
+                          <div className="desk-card__os">
+                            {item.status.toLowerCase() === 'stop' ? (
+                              <span className="desk-card__os-shell">
+                                <Close />
+                              </span>
+                            ) : (
+                              <Open />
+                            )}
+                            {transIcon(item.image?.os || item.os)}
                           </div>
                           {item.isDefault && (
                             <span className="desk-card__default">
@@ -263,22 +311,16 @@ export function DeskPage() {
                             </span>
                           )}
                         </div>
-                        <div className="desk-card__os">
-                          {item.status.toLowerCase() === 'stop' ? (
-                            <span className="desk-card__os-shell">
-                              <Close />
-                            </span>
-                          ) : (
-                            <Open />
-                          )}
-                          {transIcon(item.image?.os || item.os)}
-                        </div>
                         <Tooltip title={item.name}>
                           <p className="desk-card__name">
                             <span>{item.name}</span>
-                            {transType(item.desktopPool)}
                           </p>
                         </Tooltip>
+                        <div className="desk-card__meta" aria-hidden="true">
+                          <span>{getDesktopSpec(item)}</span>
+                          <span>{getPrimaryIp(item?.interfaces)}</span>
+                        </div>
+                        <p className="desk-card__os-name">{getOsLabel(item)}</p>
                       </button>
                       <div className="desk-card__actions">
                         <Popover content={connectLabel}>
@@ -368,18 +410,35 @@ export function DeskPage() {
                         setPoolDetailVisible(true);
                       }}
                     >
-                      <div className="desk-pool__os">
-                        <span className="desk-pool__os-shell">
-                          <Deskpool />
+                      <div className="desk-pool__topline">
+                        <span className="desk-card__type">
+                          {transType(item)}
+                          {formatMessage({ id: item?.type || 'DESK_POOL' })}
                         </span>
-                        {transIcon(item?.os)}
+                        <span className="desk-pool__label">
+                          {formatMessage({ id: 'DESK_POOL' })}
+                        </span>
+                      </div>
+                      <div className="desk-card__visual desk-pool__visual">
+                        <div className="desk-pool__os">
+                          <span className="desk-pool__os-shell">
+                            <Deskpool />
+                          </span>
+                          {transIcon(item?.os)}
+                        </div>
                       </div>
                       <Tooltip title={item.name}>
                         <p className="desk-pool__name">
                           <span>{item.name}</span>
-                          {transType(item)}
                         </p>
                       </Tooltip>
+                      <div className="desk-card__meta" aria-hidden="true">
+                        <span>{getDesktopSpec(item)}</span>
+                        <span>{item?.network?.subnets?.[0]?.cidr || EmptyText}</span>
+                      </div>
+                      <p className="desk-card__os-name">
+                        {item?.image?.name || item?.os || EmptyText}
+                      </p>
                     </button>
                     <Button
                       onClick={(event) => {
