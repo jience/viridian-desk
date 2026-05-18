@@ -142,10 +142,11 @@
   .login-gateway-dock {
     position: relative;
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, max-content);
     align-items: center;
     gap: 9px;
-    width: clamp(224px, 22vw, 292px);
+    width: fit-content;
+    max-width: min(292px, 30vw);
     height: 34px;
     border: 1px solid color-mix(in srgb, var(--auth-border) 72%, transparent);
     border-radius: 999px;
@@ -191,6 +192,7 @@
     align-items: center;
     gap: 5px;
     min-width: 0;
+    max-width: min(252px, 26vw);
 
     span,
     strong {
@@ -200,6 +202,7 @@
     }
 
     span {
+      flex: 0 0 auto;
       border: 1px solid color-mix(in srgb, var(--auth-accent) 18%, transparent);
       border-radius: 999px;
       padding: 2px 7px;
@@ -210,6 +213,9 @@
     }
 
     strong {
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: clamp(88px, 13vw, 166px);
       color: var(--auth-text);
       font-size: 12px;
       font-weight: 760;
@@ -673,5 +679,6 @@
   .auth-page .login-footer__side,
   .auth-page .login-gateway-dock {
     width: 100%;
+    max-width: 100%;
   }
 }
