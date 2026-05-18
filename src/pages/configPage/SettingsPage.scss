@@ -379,10 +379,10 @@
   display: grid;
   min-width: 0;
   gap: 0;
-  border: 1px solid var(--settings-page-border);
-  border-radius: 8px;
+  border: 0;
+  border-radius: 0;
   overflow: hidden;
-  background: var(--settings-page-surface-strong);
+  background: transparent;
 }
 
 .vd-settings-row {
@@ -550,9 +550,9 @@
   }
 
   :where(.setting-item-wrapper) {
-    border: 1px solid var(--settings-page-border);
-    border-radius: 10px;
-    background: var(--settings-page-surface-strong);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
     box-shadow: none;
   }
 
@@ -564,13 +564,13 @@
 
   :where(.setting-item-wrapper .title-wrapper.has-children) {
     border-bottom: 1px solid var(--settings-page-border);
-    border-radius: 10px 10px 0 0;
+    border-radius: 0;
   }
 
   :where(.setting-item-wrapper .content-wrapper) {
     border: 0;
-    border-radius: 0 0 10px 10px;
-    background: var(--settings-page-surface);
+    border-radius: 0;
+    background: transparent;
     box-shadow: none;
   }
 
