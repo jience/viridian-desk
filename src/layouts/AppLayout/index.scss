@@ -13,6 +13,9 @@
   --vd-shadow-rail: 18px 0 40px rgba(55, 48, 38, 0.12);
   --vd-shadow-assistant: -18px 0 42px rgba(55, 48, 38, 0.12);
   --vd-shadow-assistant-floating: -18px 0 42px rgba(55, 48, 38, 0.16);
+  --vd-app-layout-background:
+    radial-gradient(circle at 18% 12%, rgba(142, 242, 189, 0.1), transparent 28%),
+    linear-gradient(135deg, rgba(142, 242, 189, 0.04), transparent 38%), var(--vd-color-bg);
   --vd-workspace-highlight: linear-gradient(
     180deg,
     color-mix(in srgb, var(--vd-color-panel) 44%, transparent),
@@ -34,13 +37,15 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 18% 12%, rgba(142, 242, 189, 0.1), transparent 28%),
-    linear-gradient(135deg, rgba(142, 242, 189, 0.04), transparent 38%), var(--vd-color-bg);
+  background: var(--vd-app-layout-background);
   color: var(--vd-color-text);
 
   .vd-app-shell {
     background: transparent;
+  }
+
+  .vd-app-shell__main {
+    background: var(--vd-app-layout-background);
   }
 
   .vd-app-shell--assistant-expanded {
