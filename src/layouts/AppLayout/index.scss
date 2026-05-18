@@ -149,12 +149,12 @@
 
 .app-layout__footer {
   display: flex;
-  min-height: 50px;
+  min-height: 42px;
   align-items: center;
   justify-content: flex-end;
   border-top: 1px solid var(--vd-color-border);
-  padding: 8px 16px;
-  background: color-mix(in srgb, var(--vd-color-panel-subtle) 42%, transparent);
+  padding: 4px 16px;
+  background: transparent;
 }
 
 @media (max-width: 1080px) {
