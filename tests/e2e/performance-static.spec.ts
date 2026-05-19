@@ -46,3 +46,7 @@ test('loads slider verification images on demand', () => {
   expect(sliderSource).not.toContain("import img0 from '@/assets/images/verify/0.jpg'");
   expect(sliderSource).not.toContain("import img9 from '@/assets/images/verify/9.jpg'");
 });
+
+test('keeps the app shell background CSS-only', () => {
+  expect(source('src/styles/theme.scss')).not.toContain('app_layout_bg.png');
+});

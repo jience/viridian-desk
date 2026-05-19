@@ -1,5 +1,9 @@
 :root {
-  --app-layout-bg-image: url('@/assets/images/app_layout_bg.png');
+  --app-layout-bg-image:
+    radial-gradient(ellipse 72% 58% at 12% 0%, rgba(193, 206, 248, 0.72), transparent 64%),
+    radial-gradient(ellipse 94% 66% at 46% 82%, rgba(225, 226, 252, 0.82), transparent 68%),
+    linear-gradient(118deg, transparent 0 35%, rgba(239, 240, 255, 0.88) 35% 47%, transparent 47%),
+    linear-gradient(150deg, #eef5ff 0%, #f8fbff 56%, #e5effb 100%);
 
   // 小按钮控制
   --vd-sm-btn-bac-color: #eaf0f6; // 本地UI小按钮背景色
