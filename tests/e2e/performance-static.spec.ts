@@ -172,3 +172,14 @@ test('keeps Tauri core out of startup utility imports', () => {
 
   expect(startupUtilitySources.join('\n')).toContain("import('@tauri-apps/api/core')");
 });
+
+test('loads only the active native adapter at runtime', () => {
+  const nativeIndexSource = source('src/native/index.ts');
+
+  expect(nativeIndexSource).not.toContain("import { TauriAdapter }");
+  expect(nativeIndexSource).not.toContain("import { ElectronAdapter }");
+  expect(nativeIndexSource).not.toContain("import { WebAdapter }");
+  expect(nativeIndexSource).toContain("import('./adapters/tauri')");
+  expect(nativeIndexSource).toContain("import('./adapters/electron')");
+  expect(nativeIndexSource).toContain("import('./adapters/web')");
+});
