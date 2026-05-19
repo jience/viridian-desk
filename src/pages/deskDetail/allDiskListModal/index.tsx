@@ -1,3 +1,4 @@
+import '@/assets/iconfontColor/iconfont-color.css';
 import { useEffect } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import './index.scss';

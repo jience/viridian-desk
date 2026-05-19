@@ -1,3 +1,4 @@
+import '@/assets/iconfontColor/iconfont-color.css';
 import { useState } from 'react';
 import type { MenuProps } from '@/ui';
 import { Modal } from '@/ui';

@@ -1,3 +1,4 @@
+import '@/assets/iconfontColor/iconfont-color.css';
 import useRequest from '@/hooks/useRequest';
 import { useAppSelector } from '@/store';
 import { selectCurrentUser } from '@/store/feature/app';

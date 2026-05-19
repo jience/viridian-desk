@@ -58,6 +58,16 @@ test('keeps component library styles out of the global stylesheet', () => {
   expect(source('src/styles/index.scss')).not.toContain("@use '@/ui/styles.scss'");
 });
 
+test('keeps route-only color icon fonts out of the global stylesheet', () => {
+  expect(source('src/styles/index.scss')).not.toContain('iconfontColor');
+  expect(source('src/pages/desk/useDeskHooks.tsx')).toContain(
+    "import '@/assets/iconfontColor/iconfont-color.css'",
+  );
+  expect(source('src/pages/deskDetail/useSnap.tsx')).toContain(
+    "import '@/assets/iconfontColor/iconfont-color.css'",
+  );
+});
+
 test('lazy-loads the authenticated app layout with its route styles', () => {
   const routerSource = source('src/router/index.tsx');
 
