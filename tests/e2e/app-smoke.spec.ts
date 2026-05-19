@@ -49,6 +49,7 @@ test.beforeEach(async ({ page }) => {
 test('renders login page shell', async ({ page }) => {
   await page.goto('/login');
 
+  await expect(page).toHaveTitle('登录 - Viridian Desk');
   await expect(page.locator('.auth-page')).toBeVisible();
   await expect(page.locator('.auth-page__brand-name')).toHaveText(/viridian desk/i);
   await expect(page.locator('.auth-page__card')).toBeVisible();
@@ -59,6 +60,7 @@ test('renders login page shell', async ({ page }) => {
 test('renders pre-login settings route', async ({ page }) => {
   await page.goto('/configPage/serverSetting');
 
+  await expect(page).toHaveTitle('服务器 - Viridian Desk');
   await expect(page.locator('.settings-page')).toBeVisible();
   await expect(page.locator('.settings-page__brand-mark .icon-setting2')).toBeVisible();
   await expect(page.locator('.settings-page__nav-button[aria-current="page"]')).toBeVisible();
@@ -69,6 +71,7 @@ test('renders pre-login settings route', async ({ page }) => {
 test('renders app empty state for no-permission route', async ({ page }) => {
   await page.goto('/app/empty');
 
+  await expect(page).toHaveTitle('无可用资源 - Viridian Desk');
   await expect(page.locator('.app-layout')).toBeVisible();
   await expect(page.locator('.empty-page')).toBeVisible();
   await expect(page.locator('#empty-page-title')).toBeVisible();

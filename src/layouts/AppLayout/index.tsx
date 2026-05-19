@@ -5,6 +5,7 @@ import Sidebar from '@/components/Sidebar';
 import { LoginGatewayDock } from '@/components/LoginGatewayDock';
 import { AssistantPanel } from '@/ui/assistant/assistant-panel';
 import { AppShell, type AssistantState } from '@/ui/shell/app-shell';
+import { DocumentTitle } from '@/ui/shell/document-title';
 import '@/styles/design-system.css';
 import './index.scss';
 
@@ -35,6 +36,7 @@ export function AppLayout() {
 
   return (
     <div className="app-layout">
+      <DocumentTitle title={commonT(routeMeta.titleKey)} />
       <AppShell
         assistant={
           assistantState === 'hidden' ? undefined : (

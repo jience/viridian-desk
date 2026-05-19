@@ -13,6 +13,7 @@ import '@/styles/design-system.css';
 import { Button } from '@/ui/components/button';
 import { QrcodeOutlined } from '@/ui/icons';
 import { Checkbox, Form } from '@/ui';
+import { DocumentTitle } from '@/ui/shell/document-title';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useIntl } from 'react-intl';
@@ -123,6 +124,7 @@ export default function LoginPage() {
 
   return (
     <div className="auth-page">
+      <DocumentTitle title={formatMessage({ id: 'LOGIN' })} />
       <section className="auth-page__window">
         <section className="auth-page__brand-zone" aria-label={t('appName')}>
           <header className="auth-page__brand-header">

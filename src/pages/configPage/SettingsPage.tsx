@@ -1,5 +1,6 @@
 import '@/styles/design-system.css';
 import { Button } from '@/ui/components/button';
+import { DocumentTitle } from '@/ui/shell/document-title';
 import { PreLoginSettingsShell } from '@/ui/shell/pre-login-settings-shell';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -115,6 +116,9 @@ export default function SettingsPage() {
 
   return (
     <div className="settings-page">
+      <DocumentTitle
+        title={activeTab?.name || intl.formatMessage({ id: 'SettingsWorkbenchTitle' })}
+      />
       <PreLoginSettingsShell
         header={
           <>
