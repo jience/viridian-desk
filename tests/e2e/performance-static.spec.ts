@@ -50,3 +50,10 @@ test('loads slider verification images on demand', () => {
 test('keeps the app shell background CSS-only', () => {
   expect(source('src/styles/theme.scss')).not.toContain('app_layout_bg.png');
 });
+
+test('keeps the update modal background CSS-only', () => {
+  const themeSource = source('src/styles/theme.scss');
+
+  expect(themeSource).not.toContain('upgrade-bgc.png');
+  expect(themeSource).not.toContain('upgrade-bgc-dark.png');
+});
