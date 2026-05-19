@@ -240,6 +240,20 @@ const runConfirm = async (props: ModalProps) => {
   return confirmed;
 };
 
+const focusableSelector = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
+
+const getFocusableElements = (container: HTMLElement) =>
+  Array.from(container.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+    (element) => !element.hasAttribute('disabled') && element.offsetParent !== null,
+  );
+
 export const Modal = Object.assign(
   function ModalComponent(props: ModalProps) {
     const open = props.open ?? props.visible;
@@ -256,6 +270,26 @@ export const Modal = Object.assign(
         if (event.key === 'Escape' && props.keyboard !== false) {
           event.stopPropagation();
           props.onCancel?.();
+        }
+
+        if (event.key !== 'Tab' || !dialogRef.current) return;
+
+        const focusableElements = getFocusableElements(dialogRef.current);
+        if (!focusableElements.length) {
+          event.preventDefault();
+          dialogRef.current.focus();
+          return;
+        }
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (event.shiftKey && document.activeElement === firstElement) {
+          event.preventDefault();
+          lastElement.focus();
+        } else if (!event.shiftKey && document.activeElement === lastElement) {
+          event.preventDefault();
+          firstElement.focus();
         }
       };
 

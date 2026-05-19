@@ -94,6 +94,18 @@ test('validates and creates a gateway from settings modal', async ({ page }) => 
   await expect(dialog).toBeVisible();
   await expect(dialog).toBeFocused();
 
+  for (let index = 0; index < 8; index += 1) {
+    await page.keyboard.press('Tab');
+    await expect
+      .poll(() => dialog.evaluate((element) => element.contains(document.activeElement)))
+      .toBe(true);
+  }
+
+  await page.keyboard.press('Shift+Tab');
+  await expect
+    .poll(() => dialog.evaluate((element) => element.contains(document.activeElement)))
+    .toBe(true);
+
   await dialog.getByRole('button', { name: /保存/ }).click();
   await expect(dialog).toBeVisible();
   await expect(dialog.getByText('请输入服务器名称')).toBeVisible();
