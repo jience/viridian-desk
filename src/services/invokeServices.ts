@@ -1,4 +1,7 @@
-import { invoke } from '@tauri-apps/api/core';
+const invoke = async (command: string, payload?: any) => {
+  const { invoke: tauriInvoke } = await import('@tauri-apps/api/core');
+  return tauriInvoke(command, payload);
+};
 
 /**
  * @author QL

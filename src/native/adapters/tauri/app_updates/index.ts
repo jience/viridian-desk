@@ -3,7 +3,6 @@ import type {
   FetchUpdateResp,
   IAppUpdatesModule,
 } from '@/native/interfaces/app_updates';
-import { Channel, invoke } from '@tauri-apps/api/core';
 import { wrapInvoke } from '../utils';
 
 export const AppUpdatesInvoke = {
@@ -18,7 +17,8 @@ export const app_updates_module: IAppUpdatesModule = {
     return wrapInvoke<FetchUpdateResp | null>(AppUpdatesInvoke.FETCH_UPDATE);
   },
 
-  installUpdate: (onEvent?: (event: DownloadEvent) => void) => {
+  installUpdate: async (onEvent?: (event: DownloadEvent) => void) => {
+    const { Channel, invoke } = await import('@tauri-apps/api/core');
     const channel = new Channel<DownloadEvent>();
 
     if (onEvent) {

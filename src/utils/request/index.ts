@@ -1,4 +1,4 @@
-import { fetch, type ClientOptions } from '@tauri-apps/plugin-http';
+import type { ClientOptions } from '@tauri-apps/plugin-http';
 import { isEmpty } from 'lodash-es';
 import { globalEmitter } from '../mitt';
 import { isApiErrResponse, type ApiResponse } from './types';
@@ -82,6 +82,11 @@ const logHttpRequest = (prefix: string, content: unknown) => {
   logger.debug(`[HTTP][${prefix}]`, content);
 };
 
+const fetchHttp = async (url: string, opts: FetchOpt) => {
+  const { fetch } = await import('@tauri-apps/plugin-http');
+  return fetch(url, opts);
+};
+
 const formateApi = (api: string) => {
   const autoGateway = getStoreState()?.gateway.autoGateway;
   if (autoGateway) {
@@ -108,7 +113,7 @@ export const request = async <RESP = ApiResponse, REQ = any>(
       return webPreviewResponse;
     }
 
-    const fetchRes = await fetch(fullApi, opts);
+    const fetchRes = await fetchHttp(fullApi, opts);
     const resp = await fetchRes.json();
     logHttpRequest(`${opts.method || 'GET'} ${fetchRes.status} ${api}`, resp);
     if (fetchRes.status == 200) {

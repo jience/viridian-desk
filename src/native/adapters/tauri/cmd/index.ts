@@ -7,7 +7,6 @@ import type {
   NetProbeItemRender,
   SetLogReq,
 } from '@/native/interfaces/cmd';
-import { Channel } from '@tauri-apps/api/core';
 import { wrapInvoke } from '../utils';
 
 export const CmdInvoke = {
@@ -38,6 +37,7 @@ export const cmd_module: ICmdModule = {
   },
 
   diagnoseGatewayNetwork: async (onEvent?: (event: DiagnoseEvent) => void) => {
+    const { Channel } = await import('@tauri-apps/api/core');
     const channel = new Channel<DiagnoseEvent>();
 
     if (onEvent) {

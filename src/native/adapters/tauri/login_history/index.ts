@@ -9,9 +9,9 @@ import {
   type LoginHistoryMetaData,
 } from '@/native/interfaces/login_history';
 import { failure, success } from '@/native/utils';
-import { BaseDirectory, exists, readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 
 async function readHistoryFile(): Promise<LoginHistoryData> {
+  const { BaseDirectory, exists, readTextFile } = await import('@tauri-apps/plugin-fs');
   if (!(await exists(HISTORY_FILE_NAME, { baseDir: BaseDirectory.AppData }))) {
     return { isAutoLogin: false, isRememberMe: false, history: [] };
   }
@@ -30,6 +30,7 @@ async function readHistoryFile(): Promise<LoginHistoryData> {
 }
 
 async function writeHistoryFile(history: LoginHistoryData): Promise<void> {
+  const { BaseDirectory, writeTextFile } = await import('@tauri-apps/plugin-fs');
   await writeTextFile(HISTORY_FILE_NAME, JSON.stringify(history, null, 2), {
     baseDir: BaseDirectory.AppData,
   });

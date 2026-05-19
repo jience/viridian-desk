@@ -1,6 +1,5 @@
 import type { NativeResponse } from '@/native/interfaces/types';
 import { failure, success } from '@/native/utils';
-import { invoke } from '@tauri-apps/api/core';
 
 export async function wrapInvoke<T>(
   command: string,
@@ -10,6 +9,7 @@ export async function wrapInvoke<T>(
   },
 ): Promise<NativeResponse<T>> {
   try {
+    const { invoke } = await import('@tauri-apps/api/core');
     const resp = await invoke<T>(command, opt?.args);
     return success(resp);
   } catch (error) {

@@ -1,6 +1,3 @@
-import { getCurrentWindow } from '@tauri-apps/api/window';
-import { listen } from '@tauri-apps/api/event';
-import { open } from '@tauri-apps/plugin-dialog';
 import type { INativeBridge } from '@/native/interfaces';
 import { success } from '@/native/utils';
 import { app_updates_module } from './app_updates';
@@ -32,16 +29,19 @@ export class TauriAdapter implements INativeBridge {
   api = api_module;
 
   async minimizeWindow(): Promise<NativeResponse> {
+    const { getCurrentWindow } = await import('@tauri-apps/api/window');
     await getCurrentWindow().minimize();
     return success();
   }
 
   async maximizeWindow(): Promise<NativeResponse> {
+    const { getCurrentWindow } = await import('@tauri-apps/api/window');
     await getCurrentWindow().maximize();
     return success();
   }
 
   async closeWindow(): Promise<NativeResponse> {
+    const { getCurrentWindow } = await import('@tauri-apps/api/window');
     await getCurrentWindow().close();
     return success();
   }
@@ -49,6 +49,7 @@ export class TauriAdapter implements INativeBridge {
   async openDialog(
     options: NativeOpenDialogOptions,
   ): Promise<NativeResponse<string | string[] | null>> {
+    const { open } = await import('@tauri-apps/plugin-dialog');
     const selected = await open(options);
     return success(selected);
   }
@@ -57,6 +58,7 @@ export class TauriAdapter implements INativeBridge {
     event: K,
     callback: (payload: AppEventMap[K]) => void,
   ): Promise<UnlistenFn> {
+    const { listen } = await import('@tauri-apps/api/event');
     const unlisten = await listen<AppEventMap[K]>(event, (eventObj) => {
       callback(eventObj.payload);
     });

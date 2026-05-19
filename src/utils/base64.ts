@@ -1,6 +1,3 @@
-import { readFile } from '@tauri-apps/plugin-fs';
-import { fetch } from '@tauri-apps/plugin-http';
-
 enum Base64DataPrefix {
   IMAGE_PNG = 'data:image/png;base64,',
   IMAGE_JPEG = 'data:image/jpeg;base64,',
@@ -19,6 +16,7 @@ const base64DataPrefixKv: Record<string, Base64DataPrefix> = {
 };
 
 export const fetchImageUrlToBase64 = async (url: string) => {
+  const { fetch } = await import('@tauri-apps/plugin-http');
   const response = await fetch(url, {
     method: 'GET',
     connectTimeout: 60000,
@@ -53,6 +51,7 @@ export const readLocalFile = async (filePath: string, opt?: { prefix?: Base64Dat
     prefix = suffixToBase64Prefix(filePath);
   }
   // 读取文件为二进制数据
+  const { readFile } = await import('@tauri-apps/plugin-fs');
   const fileData = await readFile(filePath);
   // 转换为 base64
   const base64 = btoa(

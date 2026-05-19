@@ -1,8 +1,7 @@
-import { convertFileSrc } from '@tauri-apps/api/core';
-
 export function convertNativeFileSrc(path: string) {
-  if ((window as any).__TAURI_INTERNALS__) {
-    return convertFileSrc(path);
+  const tauriInternals = (window as any).__TAURI_INTERNALS__;
+  if (tauriInternals?.convertFileSrc) {
+    return tauriInternals.convertFileSrc(path);
   }
 
   return path;

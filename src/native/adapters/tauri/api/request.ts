@@ -1,6 +1,6 @@
 import type { ApiResponse } from '@/native/interfaces/api';
 import { getStoreState, handleStoreUnauthorized } from '@/store/runtime-access';
-import { fetch, type ClientOptions } from '@tauri-apps/plugin-http';
+import type { ClientOptions } from '@tauri-apps/plugin-http';
 import { isEmpty } from 'lodash-es';
 
 type FetchOpt = RequestInit & ClientOptions;
@@ -58,6 +58,11 @@ const formateApi = async (api: string) => {
   return `${import.meta.env.VITE_BASE_DEFAULT_URL}${import.meta.env.VITE_API_PREFIX}${api}`;
 };
 
+const fetchHttp = async (url: string, opts: FetchOpt) => {
+  const { fetch } = await import('@tauri-apps/plugin-http');
+  return fetch(url, opts);
+};
+
 export const request = async <RESP = ApiResponse, REQ = any>(
   api: string,
   opt?: RequestOptions<REQ>,
@@ -66,7 +71,7 @@ export const request = async <RESP = ApiResponse, REQ = any>(
 
   const fullApi = await formateApi(api);
 
-  const fetchRes = await fetch(fullApi, opts);
+  const fetchRes = await fetchHttp(fullApi, opts);
   const resp = await fetchRes.json();
   if (fetchRes.status == 200) {
     return resp as RESP;

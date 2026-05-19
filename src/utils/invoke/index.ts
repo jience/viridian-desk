@@ -1,4 +1,4 @@
-import { invoke as tauriInvoke, type InvokeArgs, type InvokeOptions } from '@tauri-apps/api/core';
+import type { InvokeArgs, InvokeOptions } from '@tauri-apps/api/core';
 import { message } from '@/ui';
 import { logger } from '@/utils/logger';
 
@@ -23,6 +23,7 @@ export const invoke = async <T>(
   const { hideErrMessage, ...invokeOptions } = options || ({} as InvokeOpt);
   try {
     logInvokeRequest(cmd, args);
+    const { invoke: tauriInvoke } = await import('@tauri-apps/api/core');
     const response = await tauriInvoke<T>(cmd, args, invokeOptions as Required<InvokeOptions>);
     logInvokeRequest(`${cmd} response`, response);
     return response;

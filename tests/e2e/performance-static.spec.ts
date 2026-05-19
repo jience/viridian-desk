@@ -113,3 +113,62 @@ test('fails the production budget when legacy font formats are emitted', () => {
   expect(budgetSource).toContain("'.ttf'");
   expect(budgetSource).toContain('Use woff2 instead');
 });
+
+test('loads the Tauri HTTP plugin only when a request is executed', () => {
+  const requestSources = [
+    source('src/utils/request/index.ts'),
+    source('src/native/adapters/tauri/api/request.ts'),
+    source('src/utils/base64.ts'),
+  ];
+
+  for (const requestSource of requestSources) {
+    expect(requestSource).not.toContain("import { fetch");
+    expect(requestSource).toContain("import('@tauri-apps/plugin-http')");
+  }
+});
+
+test('loads low-frequency Tauri shell APIs only when their methods are used', () => {
+  const tauriAdapterSource = source('src/native/adapters/tauri/index.ts');
+
+  expect(tauriAdapterSource).not.toContain("from '@tauri-apps/api/window'");
+  expect(tauriAdapterSource).not.toContain("from '@tauri-apps/api/event'");
+  expect(tauriAdapterSource).not.toContain("from '@tauri-apps/plugin-dialog'");
+  expect(tauriAdapterSource).toContain("import('@tauri-apps/api/window')");
+  expect(tauriAdapterSource).toContain("import('@tauri-apps/api/event')");
+  expect(tauriAdapterSource).toContain("import('@tauri-apps/plugin-dialog')");
+});
+
+test('keeps Tauri core and filesystem modules out of adapter top-level imports', () => {
+  const deferredSources = [
+    source('src/native/adapters/tauri/utils.ts'),
+    source('src/native/adapters/tauri/cmd/index.ts'),
+    source('src/native/adapters/tauri/app_updates/index.ts'),
+    source('src/native/adapters/tauri/login_history/index.ts'),
+    source('src/utils/base64.ts'),
+  ];
+
+  for (const deferredSource of deferredSources) {
+    expect(deferredSource).not.toContain("import { Channel");
+    expect(deferredSource).not.toContain("import { invoke");
+    expect(deferredSource).not.toContain("import { readFile");
+    expect(deferredSource).not.toContain("import { BaseDirectory");
+  }
+
+  expect(deferredSources.join('\n')).toContain("import('@tauri-apps/api/core')");
+  expect(deferredSources.join('\n')).toContain("import('@tauri-apps/plugin-fs')");
+});
+
+test('keeps Tauri core out of startup utility imports', () => {
+  const startupUtilitySources = [
+    source('src/native/file-src.ts'),
+    source('src/utils/invoke/index.ts'),
+    source('src/services/invokeServices.ts'),
+  ];
+
+  for (const startupUtilitySource of startupUtilitySources) {
+    expect(startupUtilitySource).not.toContain("import { invoke");
+    expect(startupUtilitySource).not.toContain("import { convertFileSrc");
+  }
+
+  expect(startupUtilitySources.join('\n')).toContain("import('@tauri-apps/api/core')");
+});
