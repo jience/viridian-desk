@@ -1,7 +1,8 @@
 .desk-loading-background-mask,
 .is_thin_no_drag .desk-loading-background-mask {
-  background-image: url('@/assets/images/app_layout_bg.png');
+  background-image: var(--app-layout-bg-image);
   background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
   background-clip: padding-box;
   position: absolute;

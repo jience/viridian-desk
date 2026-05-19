@@ -180,8 +180,13 @@
   --menu-item-icon-color: #6c7268;
 }
 
-:root.dark {
-  --app-layout-bg-image: url('@/assets/images/app_layout_bg_dark.png');
+:root.dark,
+:root[data-ui-theme='dark'] {
+  --app-layout-bg-image:
+    radial-gradient(circle at 18% 12%, rgba(142, 242, 189, 0.15), transparent 30%),
+    radial-gradient(circle at 82% 18%, rgba(80, 110, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 68% 86%, rgba(62, 116, 86, 0.16), transparent 36%),
+    linear-gradient(135deg, #101713 0%, #17231f 44%, #0b0f0d 100%);
 
   // 小按钮控制
   --vd-sm-btn-bac-color: #242b27; // 本地UI小按钮背景色
