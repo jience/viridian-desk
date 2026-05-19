@@ -5,12 +5,11 @@ import { selectCurrentUser } from '@/store/feature/app';
 import Actions from '@/utils/actions';
 import { hasPermission } from '@/utils/permission';
 import type { TablePaginationConfig } from '@/ui';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import { ApprovalDetailModal, type ApprovalDetailModalRef } from './ApprovalDetailModal';
 import { ApprovalPage } from './ApprovalPage';
 import CancelWorkflow from './component/cancel';
-import Create from './component/create';
 import './index.scss';
 import {
   getWorkflowTypeLabel,
@@ -22,6 +21,7 @@ import {
 } from './approvalUtils';
 
 const APPROVAL_PAGE_SIZE = 7;
+const Create = lazy(() => import('./component/create'));
 
 export function Component() {
   const intl = useMessageFormatter();
@@ -237,16 +237,20 @@ export function Component() {
         }}
         formatMessage={formatMessage}
       />
-      <Create
-        visible={createModalVisible}
-        setVisible={() => setCreateModalVisible(false)}
-        refresh={() => {
-          setCurWorkflowStatus('all');
-          clearSelection();
-          fetchWorkflow(1, 'all');
-        }}
-        formatMessage={formatMessage}
-      />
+      {createModalVisible && (
+        <Suspense fallback={null}>
+          <Create
+            visible={createModalVisible}
+            setVisible={() => setCreateModalVisible(false)}
+            refresh={() => {
+              setCurWorkflowStatus('all');
+              clearSelection();
+              fetchWorkflow(1, 'all');
+            }}
+            formatMessage={formatMessage}
+          />
+        </Suspense>
+      )}
       <CancelWorkflow
         visible={cancelModalVisible}
         setVisible={() => setCancelModalVisible(false)}

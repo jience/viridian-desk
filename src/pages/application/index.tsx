@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { message } from '@/ui';
 import { useInitData } from './initData';
 import { useTranslation } from 'react-i18next';
@@ -9,12 +9,17 @@ import type {
   RemoveVappReq,
   VappCategory,
 } from '@/services/api/vapp/types';
-import { AddFromSysModal } from './component/AddFromSysModal';
-import { AddFromSelfModal } from './component/AddFromSelfModal';
 import { useLoading } from '@/hooks/useLoading';
 import { connectVapp } from '@/services/invoke/vapp';
 import type { ConnectVappReq } from '@/services/invoke/vapp/types';
 import { ApplicationPage } from './ApplicationPage';
+
+const AddFromSysModal = lazy(() =>
+  import('./component/AddFromSysModal').then((module) => ({ default: module.AddFromSysModal })),
+);
+const AddFromSelfModal = lazy(() =>
+  import('./component/AddFromSelfModal').then((module) => ({ default: module.AddFromSelfModal })),
+);
 
 export const Application = () => {
   const { t } = useTranslation();
@@ -95,16 +100,24 @@ export const Application = () => {
         onRemoveApp={handleRemoveApp}
         onVappItemClick={handleVappItemClick}
       />
-      <AddFromSysModal
-        visible={addFormSysVisible}
-        setVisible={setAddFromSysVisible}
-        OnRefresh={getListVapp}
-      />
-      <AddFromSelfModal
-        visible={addFormSelfVisible}
-        setVisible={setAddFromSelfVisible}
-        OnRefresh={getListVapp}
-      />
+      {addFormSysVisible && (
+        <Suspense fallback={null}>
+          <AddFromSysModal
+            visible={addFormSysVisible}
+            setVisible={setAddFromSysVisible}
+            OnRefresh={getListVapp}
+          />
+        </Suspense>
+      )}
+      {addFormSelfVisible && (
+        <Suspense fallback={null}>
+          <AddFromSelfModal
+            visible={addFormSelfVisible}
+            setVisible={setAddFromSelfVisible}
+            OnRefresh={getListVapp}
+          />
+        </Suspense>
+      )}
     </>
   );
 };

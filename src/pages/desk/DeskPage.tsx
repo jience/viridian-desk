@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import { useNavigate } from 'react-router';
 import { Button, Dropdown, Empty, message, Modal, Spin, Tooltip } from '@/ui';
@@ -16,10 +16,11 @@ import Actions from '@/utils/actions';
 import { DESK_STATUS, EmptyText, getStatus } from '@/utils/constant';
 import { logger } from '@/utils/logger';
 import { transIcon, transRam } from '@/utils/utils';
-import DeskPoolModal from './components/deskPoolDetail';
 import InUseLoading from './components/loading';
 import useDeskHooks from './useDeskHooks';
 import './DeskPage.scss';
+
+const DeskPoolModal = lazy(() => import('./components/deskPoolDetail'));
 
 export function DeskPage() {
   const { formatMessage } = useMessageFormatter();
@@ -469,14 +470,16 @@ export function DeskPage() {
       </Spin>
 
       {poolDetailVisible && checkDeskPoolItem && (
-        <DeskPoolModal
-          item={checkDeskPoolItem}
-          transIcon={transIcon}
-          setCheckDeskPoolItem={setCheckDeskPoolItem}
-          formatMessage={formatMessage}
-          visible={poolDetailVisible}
-          setVisible={setPoolDetailVisible}
-        />
+        <Suspense fallback={null}>
+          <DeskPoolModal
+            item={checkDeskPoolItem}
+            transIcon={transIcon}
+            setCheckDeskPoolItem={setCheckDeskPoolItem}
+            formatMessage={formatMessage}
+            visible={poolDetailVisible}
+            setVisible={setPoolDetailVisible}
+          />
+        </Suspense>
       )}
       {isLoadingDesk ? <DeskLoading text={loadingDeskText} /> : null}
     </main>

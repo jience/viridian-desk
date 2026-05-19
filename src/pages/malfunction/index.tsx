@@ -8,13 +8,14 @@ import { hasPermission } from '@/utils/permission';
 import type { TablePaginationConfig } from '@/ui';
 import { Modal } from '@/ui';
 import { isEmpty } from 'lodash-es';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
-import CreatedModal from './create';
 import './index.scss';
 import { initQueryParams, useFaultStatus, useFaultType } from './initData';
 import { MalfunctionPage } from './MalfunctionPage';
 import type { ViewFaultStatus, ViewFaultType } from './types';
+
+const CreatedModal = lazy(() => import('./create'));
 
 export function Component() {
   const [modal, contextHolder] = Modal.useModal();
@@ -348,18 +349,22 @@ export function Component() {
         }}
         formatMessage={formatMessage}
       />
-      <CreatedModal
-        title={formatMessage({ id: 'FaultCreate' })}
-        visiable={createModalVisible}
-        setVisiable={setCreateModalVisible}
-        formFeatures={formFeatures}
-        defaultFormValues={defaultFormValues}
-        setDefaultFormValues={setDefaultFormValues}
-        initialValues={initialValues}
-        onOkRun={submitDistributor}
-        createFaultLoading={createFaultLoading}
-        formatMessage={formatMessage}
-      />
+      {createModalVisible && (
+        <Suspense fallback={null}>
+          <CreatedModal
+            title={formatMessage({ id: 'FaultCreate' })}
+            visiable={createModalVisible}
+            setVisiable={setCreateModalVisible}
+            formFeatures={formFeatures}
+            defaultFormValues={defaultFormValues}
+            setDefaultFormValues={setDefaultFormValues}
+            initialValues={initialValues}
+            onOkRun={submitDistributor}
+            createFaultLoading={createFaultLoading}
+            formatMessage={formatMessage}
+          />
+        </Suspense>
+      )}
       {contextHolder}
     </div>
   );
