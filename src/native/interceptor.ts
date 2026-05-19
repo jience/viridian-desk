@@ -1,4 +1,5 @@
 import type { NativeResponse } from './interfaces/types';
+import { logger } from '@/utils/logger';
 
 export interface InterceptorContext {
   module?: string;
@@ -85,7 +86,7 @@ export function createBridgeProxy<T extends object>(target: T, moduleName?: stri
                   try {
                     interceptor.onEventTrigger(eventName, payload);
                   } catch (e) {
-                    console.error('[Interceptor] onEventTrigger error:', e);
+                    logger.error('[Interceptor] onEventTrigger error:', e);
                   }
                 }
               });

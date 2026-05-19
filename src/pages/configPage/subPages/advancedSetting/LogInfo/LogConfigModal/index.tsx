@@ -6,6 +6,7 @@ import { sizeTypeOptions } from './initData';
 import { useTranslation } from 'react-i18next';
 import { open } from '@tauri-apps/plugin-dialog';
 import type { GetLogInfoRes } from '@/native/interfaces/cmd';
+import { logger } from '@/utils/logger';
 
 export type LogConfigModalResData = Pick<
   GetLogInfoRes,
@@ -70,7 +71,7 @@ export const LogConfigModal: FC<LogConfigModalProps> = ({ ref }) => {
         form.setFieldValue('dirPath', res);
       }
     } catch (error) {
-      console.error('选择目录失败:', error);
+      logger.debug('log directory selection failed', error);
     }
   };
 
@@ -92,7 +93,7 @@ export const LogConfigModal: FC<LogConfigModalProps> = ({ ref }) => {
       setVisible(false);
       form.resetFields();
     } catch (error) {
-      console.error('表单验证失败:', error);
+      logger.debug('log config form validation failed', error);
     }
   };
 

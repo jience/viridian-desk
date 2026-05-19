@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { listVappIcon } from '@/services/api/vapp';
 import { open } from '@tauri-apps/plugin-dialog';
 import { readLocalFile } from '@/utils/base64';
+import { logger } from '@/utils/logger';
 import './IconChoose.scss';
 
 interface IconChooseProps {
@@ -42,7 +43,7 @@ const IconChoose: React.FC<IconChooseProps> = ({ value, onChange }) => {
         }
       }
     } catch (error) {
-      console.error('Error opening file dialog:', error);
+      logger.debug('Error opening file dialog:', error);
       message.error(t('application_page.select_upload_image_error'));
     }
   };
@@ -60,7 +61,7 @@ const IconChoose: React.FC<IconChooseProps> = ({ value, onChange }) => {
         handleIconSelect(defaultIcon);
       }
     } catch (error) {
-      console.error('Error fetching icon list:', error);
+      logger.debug('Error fetching icon list:', error);
     }
   };
 

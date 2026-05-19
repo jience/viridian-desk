@@ -1,6 +1,7 @@
 import { Form, Input, Modal, Switch } from '@/ui';
 import { useImperativeHandle, useMemo, useRef, useState, type FC, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
+import { logger } from '@/utils/logger';
 import { validateAddress, validateName } from '@/utils/validate';
 import styles from './index.module.scss';
 
@@ -68,7 +69,7 @@ export const ServerEditModal: FC<ServerEditModalProps> = ({ ref }) => {
       setVisible(false);
       resolveRef.current?.(values);
     } catch (error) {
-      console.error('表单验证失败:', error);
+      logger.debug('server edit form validation failed', error);
     }
   };
 

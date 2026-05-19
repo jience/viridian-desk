@@ -7,6 +7,7 @@ import { authActionShow } from '@/utils/actionAuth';
 import Actions from '@/utils/actions';
 import { DESK_STATUS, getStatus } from '@/utils/constant';
 import { formatI18NKey } from '@/utils/utils';
+import { logger } from '@/utils/logger';
 import { invoke } from '@tauri-apps/api/core';
 import type { MenuProps } from '@/ui';
 import { message, Modal, Tag, Tooltip } from '@/ui';
@@ -454,7 +455,7 @@ const useDeskHooks = (props: any) => {
         }
         await invoke('connect_desktop', req);
       } catch (error) {
-        console.error('Error connecting to desktop:', error);
+        logger.error('Error connecting to desktop:', error);
         message.error(intl.formatMessage({ id: 'DESK_CONNECT_ERROR' }));
       }
     } else {
