@@ -3,11 +3,21 @@ import type { NativeResponse } from '../types';
 import type { DiagnoseEvent, GetLogInfoRes, NetProbeItemRender, SetLogReq } from './types';
 export * from './types';
 
+export interface ConnectDesktopReq {
+  desktopId: string;
+  desktopIp: string;
+  macAddress: string;
+}
+
 export interface ICmdModule {
   /**
    * 获取本地网络信息
    */
   getLocalNetInfo(): Promise<NativeResponse<NetProbeItemRender[]>>;
+  /**
+   * 获取客户端在线状态
+   */
+  getClientOnlineStatus(): Promise<NativeResponse<boolean>>;
   /**
    * 诊断网关网络
    * @param onEvent 事件回调
@@ -29,6 +39,18 @@ export interface ICmdModule {
    * 打开日志目录
    */
   openLogDirectory(): Promise<NativeResponse>;
+  /**
+   * 打开系统网络设置
+   */
+  openNetworkSettings(): Promise<NativeResponse>;
+  /**
+   * 打开帮助文档
+   */
+  openDocs(): Promise<NativeResponse>;
+  /**
+   * 连接桌面
+   */
+  connectDesktop(data: ConnectDesktopReq): Promise<NativeResponse>;
   /**
    * 设置日志配置
    */

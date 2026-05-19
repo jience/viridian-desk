@@ -4,7 +4,7 @@ import { Modal, Form, InputNumber, Input, Select } from '@/ui';
 import { getBSize, SizeType, transformSize } from '@/utils/common';
 import { sizeTypeOptions } from './initData';
 import { useTranslation } from 'react-i18next';
-import { open } from '@tauri-apps/plugin-dialog';
+import { bridge } from '@/native';
 import type { GetLogInfoRes } from '@/native/interfaces/cmd';
 import { logger } from '@/utils/logger';
 
@@ -62,12 +62,12 @@ export const LogConfigModal: FC<LogConfigModalProps> = ({ ref }) => {
   // 选择目录的处理函数
   const handleSelectDirectory = async () => {
     try {
-      const res = await open({
+      const { data: res } = await bridge.openDialog({
         directory: true,
         multiple: false,
         title: t('config_page.advanced_setting.select_dir_tip'),
       });
-      if (res) {
+      if (res && !Array.isArray(res)) {
         form.setFieldValue('dirPath', res);
       }
     } catch (error) {

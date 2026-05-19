@@ -3,7 +3,12 @@ import { onIpcEvent } from './utils';
 import { app_updates_module } from './app_updates';
 import { terminal_module } from './terminal';
 import { config_module } from './config';
-import type { NativeResponse, AppEventMap, UnlistenFn } from '@/native/interfaces/types';
+import type {
+  NativeResponse,
+  AppEventMap,
+  NativeOpenDialogOptions,
+  UnlistenFn,
+} from '@/native/interfaces/types';
 import { cmd_module } from './cmd';
 import { login_history_module } from './login_history';
 import { api_module } from './api';
@@ -27,6 +32,23 @@ export class ElectronAdapter implements INativeBridge {
   async minimizeWindow(): Promise<NativeResponse> {
     // 待实现
     logger.warn('minimizeWindow not implemented yet for Electron');
+    return { data: null };
+  }
+
+  async maximizeWindow(): Promise<NativeResponse> {
+    logger.warn('maximizeWindow not implemented yet for Electron');
+    return { data: null };
+  }
+
+  async closeWindow(): Promise<NativeResponse> {
+    logger.warn('closeWindow not implemented yet for Electron');
+    return { data: null };
+  }
+
+  async openDialog(
+    options: NativeOpenDialogOptions,
+  ): Promise<NativeResponse<string | string[] | null>> {
+    logger.warn('openDialog not implemented yet for Electron', options);
     return { data: null };
   }
 

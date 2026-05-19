@@ -1,5 +1,6 @@
 import type { LoginUserInfo } from '@/native/interfaces/api';
 import type {
+  ConnectDesktopReq,
   DiagnoseEvent,
   GetLogInfoRes,
   ICmdModule,
@@ -7,10 +8,14 @@ import type {
   SetLogReq,
 } from '@/native/interfaces/cmd';
 import type { NativeResponse } from '@/native/interfaces/types';
+import { success } from '@/native/utils';
 
 export const cmd_module: ICmdModule = {
   getLocalNetInfo: function (): Promise<NativeResponse<NetProbeItemRender[]>> {
     throw new Error('Function not implemented.');
+  },
+  getClientOnlineStatus: async function (): Promise<NativeResponse<boolean>> {
+    return success(false);
   },
   diagnoseGatewayNetwork: function (
     _onEvent?: (event: DiagnoseEvent) => void,
@@ -28,6 +33,15 @@ export const cmd_module: ICmdModule = {
   },
   openLogDirectory: function (): Promise<NativeResponse> {
     throw new Error('Function not implemented.');
+  },
+  openNetworkSettings: async function (): Promise<NativeResponse> {
+    return success();
+  },
+  openDocs: async function (): Promise<NativeResponse> {
+    return success();
+  },
+  connectDesktop: async function (_data: ConnectDesktopReq): Promise<NativeResponse> {
+    return success();
   },
   setLog: function (_data: SetLogReq): Promise<NativeResponse> {
     throw new Error('Function not implemented.');

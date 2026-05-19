@@ -17,7 +17,7 @@ import { selectClientType, selectVersionName } from '@/store/feature/terminal';
 import dayjs from 'dayjs';
 import { selectAutoGateway, selectConnected, selectNetwork } from '@/store/feature/gateway';
 import { getNetworkType } from '@/utils/common';
-import type { UnlistenFn } from '@tauri-apps/api/event';
+import type { UnlistenFn } from '@/native/interfaces/types';
 import { useTranslation } from 'react-i18next';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { CheckCircleFilled, CopyOutlined } from '@/ui/icons';

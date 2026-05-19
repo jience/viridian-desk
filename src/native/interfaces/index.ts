@@ -4,7 +4,7 @@ import type { ICmdModule } from './cmd';
 import type { IConfigModule } from './config';
 import type { ILoginHistoryModule } from './login_history';
 import type { ITerminalModule } from './terminal';
-import type { AppEventMap, NativeResponse, UnlistenFn } from './types';
+import type { AppEventMap, NativeOpenDialogOptions, NativeResponse, UnlistenFn } from './types';
 
 export interface INativeBridge {
   /**
@@ -16,6 +16,21 @@ export interface INativeBridge {
    * 最小化窗口
    */
   minimizeWindow(): Promise<NativeResponse>;
+
+  /**
+   * 最大化窗口
+   */
+  maximizeWindow(): Promise<NativeResponse>;
+
+  /**
+   * 关闭窗口
+   */
+  closeWindow(): Promise<NativeResponse>;
+
+  /**
+   * 打开本地文件/目录选择器
+   */
+  openDialog(options: NativeOpenDialogOptions): Promise<NativeResponse<string | string[] | null>>;
 
   /**
    * 应用更新模块

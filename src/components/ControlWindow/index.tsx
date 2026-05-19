@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@/store';
 import { logoutCurrentUser, selectIsLogin } from '@/store/feature/app';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
-import { getCurrentWindow } from '@tauri-apps/api/window';
+import { bridge } from '@/native';
 import { type FC } from 'react';
 import { useIntl } from 'react-intl';
 import './index.scss';
@@ -21,14 +21,14 @@ const ControlWindow: FC<ControlWindowProps> = (props) => {
   const isLogin = useAppSelector(selectIsLogin);
 
   function miniWindow() {
-    getCurrentWindow().minimize();
+    void bridge.minimizeWindow();
   }
 
   async function closeWindow() {
     if (isLogin) {
       await appDispatch(logoutCurrentUser(false));
     }
-    getCurrentWindow().close();
+    await bridge.closeWindow();
   }
 
   return !isThin || exist ? (

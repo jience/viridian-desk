@@ -26,7 +26,6 @@ import { cn } from '@/ui/lib/cn';
 import { authActionShow } from '@/utils/actionAuth';
 import { logger } from '@/utils/logger';
 import { LEGACY_PASSWORD_PREFIX } from '@/utils/utils';
-import { listen } from '@tauri-apps/api/event';
 import { Menu, message, Modal, Popover, Tooltip } from '@/ui';
 import { Buffer } from 'buffer';
 import { isEmpty } from 'lodash-es';
@@ -287,7 +286,7 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
 
     const setupListeners = async () => {
       try {
-        unListenUserIdleLogout = await listen('user-idle-logout', () => {
+        unListenUserIdleLogout = await bridge.onEvent('user-idle-logout', () => {
           logout();
         });
       } catch (error) {

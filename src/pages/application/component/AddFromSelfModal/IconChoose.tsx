@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { message } from '@/ui';
 import { useTranslation } from 'react-i18next';
 import { listVappIcon } from '@/services/api/vapp';
-import { open } from '@tauri-apps/plugin-dialog';
+import { bridge } from '@/native';
 import { readLocalFile } from '@/utils/base64';
 import { logger } from '@/utils/logger';
 import './IconChoose.scss';
@@ -22,7 +22,7 @@ const IconChoose: React.FC<IconChooseProps> = ({ value, onChange }) => {
 
   const handleAddBySelf = async () => {
     try {
-      const selected = await open({
+      const { data: selected } = await bridge.openDialog({
         multiple: false,
         filters: [
           {
@@ -31,7 +31,7 @@ const IconChoose: React.FC<IconChooseProps> = ({ value, onChange }) => {
           },
         ],
       });
-      if (selected) {
+      if (selected && !Array.isArray(selected)) {
         const dataUrl = await readLocalFile(selected);
         // 检查是否已存在
         if (iconList.indexOf(dataUrl) === -1) {

@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import { initState } from './initState';
 import type { AppState } from '@/store';
-import { getCurrentWindow } from '@tauri-apps/api/window';
 import { bridge } from '@/native';
 
 export const fetchTerminalInfo = createAsyncThunk('terminal/fetchTerminalInfo', async () => {
   const { data } = await bridge.terminal.getTerminalInfo();
   if (data.isThin) {
-    getCurrentWindow().maximize();
+    await bridge.maximizeWindow();
   }
   return data;
 });

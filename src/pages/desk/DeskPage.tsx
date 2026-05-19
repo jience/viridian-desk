@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router';
 import { Button, Dropdown, Empty, message, Modal, Spin, Tooltip } from '@/ui';
-import { listen } from '@tauri-apps/api/event';
 import { get } from 'lodash-es';
 import DeskLoading from '@/components/DeskLoading';
 import Deskpool from '@/components/Deskpoolsvg';
 import useRequest from '@/hooks/useRequest';
 import { detachVolume } from '@/services/resource';
 import { killAllHdpViewers } from '@/services/invoke/shell';
+import { bridge } from '@/native';
 import { useAppSelector } from '@/store';
 import { selectFullScreen } from '@/store/feature/config';
 import { authActionShow } from '@/utils/actionAuth';
@@ -181,27 +181,27 @@ export function DeskPage() {
     };
 
     registerListener(
-      listen('desktop-connect', () => {
+      bridge.onEvent('desktop-connect', () => {
         setIsLoadingDesk(false);
       }),
     );
 
     registerListener(
-      listen('desktop-list', () => {
+      bridge.onEvent('desktop-list', () => {
         listResourceUserRefresh();
         listDesktopPoolRefresh();
       }),
     );
 
     registerListener(
-      listen('desktop-idle-disconnect', async () => {
+      bridge.onEvent('desktop-idle-disconnect', async () => {
         await killAllHdpViewers();
         message.warning('用户闲置策略生效，断开桌面连接');
       }),
     );
 
     registerListener(
-      listen('desktop-idle-close', async () => {
+      bridge.onEvent('desktop-idle-close', async () => {
         // TODO 用户闲置策略生效，关闭桌面 待实现
       }),
     );

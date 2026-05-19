@@ -1,7 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import { Tooltip, Modal } from '@/ui';
-import { invoke } from '@tauri-apps/api/core';
 import './index.scss';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
@@ -56,7 +55,7 @@ const Footer: FC<FooterProps> = ({ hiddenActionKeys = [], rightSlot }) => {
         label: t('login_page.network'),
         icon: <i className="iconfont icon-net" />,
         onClick: () => {
-          void invoke('open_network_settings');
+          void bridge.cmd.openNetworkSettings();
         },
         hidden: !isIntegratedMode,
       },
@@ -87,7 +86,7 @@ const Footer: FC<FooterProps> = ({ hiddenActionKeys = [], rightSlot }) => {
         label: t('login_page.help_document'),
         icon: <i className="iconfont icon-c_question-s" />,
         onClick: () => {
-          void invoke('open_docs');
+          void bridge.cmd.openDocs();
         },
       },
       {

@@ -1,7 +1,8 @@
 import './index.scss';
 import { useMemo, useEffect, useRef, type CSSProperties } from 'react';
 import useSharedState from './useSharedState';
-import { convertFileSrc, invoke } from '@tauri-apps/api/core';
+import { bridge } from '@/native';
+import { convertNativeFileSrc } from '@/native/file-src';
 import { Outlet } from 'react-router';
 import MessageListModal from '@/components/MessageCenter';
 import { globalEmitter } from '@/utils/mitt';
@@ -13,7 +14,7 @@ import { selectMsgId, selectMsgModalShow, setMsgModalShow } from '@/store/featur
 import { selectIsThin } from '@/store/feature/terminal';
 import ControlWindow from '@/components/ControlWindow';
 import { setConnected } from '@/store/feature/gateway';
-import { listen, type UnlistenFn } from '@tauri-apps/api/event';
+import type { UnlistenFn } from '@/native/interfaces/types';
 import { useTranslation } from 'react-i18next';
 import { logger } from '@/utils/logger';
 
@@ -102,10 +103,11 @@ const ClientLayout = () => {
 
   // 手动获取桌面上线状态
   const getConnectStatue = () => {
-    invoke('get_client_online_status')
-      .then((res) => {
-        logger.debug('getConnectStatue', res);
-        dispatch(setConnected(res as boolean));
+    bridge.cmd
+      .getClientOnlineStatus()
+      .then(({ data }) => {
+        logger.debug('getConnectStatue', data);
+        dispatch(setConnected(data));
       })
       .catch((error) => {
         logger.debug('getConnectStatue unavailable', error);
@@ -115,8 +117,8 @@ const ClientLayout = () => {
   // 注册长监听: 终端上线状态
   const startListenClientOnline = async () => {
     try {
-      clientOnlineMonitorRef.current = await listen<any>('client-online', (e: any) => {
-        const { is_online } = e.payload;
+      clientOnlineMonitorRef.current = await bridge.onEvent('client-online', (payload) => {
+        const { is_online } = payload;
         // 网关连接状态
         dispatch(setConnected(is_online));
       });
@@ -127,8 +129,8 @@ const ClientLayout = () => {
 
   const startListenDesktopConnect = async () => {
     try {
-      desktopConnectMonitorRef.current = await listen<any>('desktop-connect', (e: any) => {
-        logger.debug('desktopConnectMonitor', e);
+      desktopConnectMonitorRef.current = await bridge.onEvent('desktop-connect', (payload) => {
+        logger.debug('desktopConnectMonitor', payload);
       });
     } catch (error) {
       logger.debug('desktop-connect listener unavailable', error);
@@ -157,7 +159,7 @@ const ClientLayout = () => {
   const bgStyle = useMemo<CSSProperties | undefined>(() => {
     if (backgroundImage) {
       return {
-        backgroundImage: `url(${convertFileSrc(backgroundImage)})`,
+        backgroundImage: `url(${convertNativeFileSrc(backgroundImage)})`,
       };
     }
   }, [backgroundImage]);

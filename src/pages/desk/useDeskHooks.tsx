@@ -8,7 +8,7 @@ import Actions from '@/utils/actions';
 import { DESK_STATUS, getStatus } from '@/utils/constant';
 import { formatI18NKey } from '@/utils/utils';
 import { logger } from '@/utils/logger';
-import { invoke } from '@tauri-apps/api/core';
+import { bridge } from '@/native';
 import type { MenuProps } from '@/ui';
 import { message, Modal, Tag, Tooltip } from '@/ui';
 import { useEffect, useState } from 'react';
@@ -453,7 +453,7 @@ const useDeskHooks = (props: any) => {
           req.desktopIp = data.interfaces[0].ip;
           req.macAddress = data.interfaces[0].macAddress;
         }
-        await invoke('connect_desktop', req);
+        await bridge.cmd.connectDesktop(req);
       } catch (error) {
         logger.error('Error connecting to desktop:', error);
         message.error(intl.formatMessage({ id: 'DESK_CONNECT_ERROR' }));

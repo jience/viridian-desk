@@ -2,7 +2,12 @@ import type { INativeBridge } from '@/native/interfaces';
 import { app_updates_module } from './app_updates';
 import { terminal_module } from './terminal';
 import { config_module } from './config';
-import type { AppEventMap, NativeResponse, UnlistenFn } from '@/native/interfaces/types';
+import type {
+  AppEventMap,
+  NativeOpenDialogOptions,
+  NativeResponse,
+  UnlistenFn,
+} from '@/native/interfaces/types';
 import { cmd_module } from './cmd';
 import { login_history_module } from './login_history';
 import { api_module } from './api';
@@ -25,6 +30,23 @@ export class WebAdapter implements INativeBridge {
 
   async minimizeWindow(): Promise<NativeResponse> {
     logger.debug('[Web Mock] minimizeWindow called');
+    return { data: null };
+  }
+
+  async maximizeWindow(): Promise<NativeResponse> {
+    logger.debug('[Web Mock] maximizeWindow called');
+    return { data: null };
+  }
+
+  async closeWindow(): Promise<NativeResponse> {
+    logger.debug('[Web Mock] closeWindow called');
+    return { data: null };
+  }
+
+  async openDialog(
+    options: NativeOpenDialogOptions,
+  ): Promise<NativeResponse<string | string[] | null>> {
+    logger.debug('[Web Mock] openDialog called', options);
     return { data: null };
   }
 
