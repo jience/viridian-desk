@@ -305,6 +305,74 @@
   font-weight: 800;
 }
 
+:root:not(.dark):not([data-ui-theme='dark']) {
+  .vdui-select-dropdown {
+    border-color: color-mix(in srgb, var(--vd-color-border, rgba(61, 91, 78, 0.18)) 88%, #ffffff);
+    color: var(--vd-color-text, #20231e);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 247, 0.96)),
+      var(--vd-color-panel, #fffdf8);
+    box-shadow:
+      0 18px 42px rgba(55, 48, 38, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(18px);
+  }
+
+  .vdui-select-option {
+    color: var(--vd-color-text, #20231e);
+
+    &:not(:disabled):hover,
+    &:not(:disabled):focus-visible {
+      color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 74%, #10261a);
+      background:
+        linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 12%, #ffffff),
+          rgba(255, 255, 255, 0.62)
+        );
+    }
+  }
+
+  .vdui-select-option.is-selected {
+    color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 78%, #10261a);
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 16%, #ffffff),
+        color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 7%, #ffffff)
+      );
+  }
+
+  .vdui-dropdown,
+  .vdui-popover-inner-content {
+    border-color: color-mix(in srgb, var(--vd-color-border, rgba(61, 91, 78, 0.18)) 90%, #ffffff);
+    color: var(--vd-color-text, #20231e);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 247, 0.96)),
+      var(--vd-color-panel, #fffdf8);
+    box-shadow:
+      0 18px 44px rgba(55, 48, 38, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(18px);
+  }
+
+  .vdui-dropdown-menu-item,
+  .vdui-menu-item,
+  .vdui-menu > button {
+    color: var(--vd-color-text, #20231e);
+
+    &:not(:disabled):hover {
+      color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 76%, #10261a);
+      background:
+        linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 12%, #ffffff),
+          rgba(255, 255, 255, 0.62)
+        );
+    }
+  }
+}
+
 @keyframes vdSelectMenuIn {
   from {
     opacity: 0;

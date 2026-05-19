@@ -108,9 +108,9 @@
   --application-page-button-bg: rgba(255, 255, 255, 0.04);
   --application-page-button-border: rgba(209, 255, 229, 0.14);
   --application-page-button-hover-bg: rgba(142, 242, 189, 0.1);
-  --application-page-primary-bg: #2f9f68;
-  --application-page-primary-hover-bg: #39b879;
-  --application-page-primary-text: #08100c;
+  --application-page-primary-bg: rgba(142, 242, 189, 0.16);
+  --application-page-primary-hover-bg: rgba(142, 242, 189, 0.23);
+  --application-page-primary-text: #c7f8dd;
 }
 
 .application-page__toolbar {
@@ -193,13 +193,13 @@
   }
 
   .vdui-btn-primary {
-    border-color: var(--application-page-primary-bg);
+    border-color: color-mix(in srgb, var(--application-page-accent) 42%, transparent);
     color: var(--application-page-primary-text);
     background: var(--application-page-primary-bg);
 
     &:hover,
     &:focus-visible {
-      border-color: var(--application-page-primary-hover-bg);
+      border-color: color-mix(in srgb, var(--application-page-accent-strong) 56%, transparent);
       color: var(--application-page-primary-text);
       background: var(--application-page-primary-hover-bg);
     }

@@ -11,6 +11,8 @@
   --malfunction-page-focus: rgba(18, 116, 84, 0.46);
   --malfunction-page-button-bg: rgba(255, 255, 255, 0.82);
   --malfunction-page-header-bg: transparent;
+  --malfunction-page-primary-bg: var(--malfunction-page-accent);
+  --malfunction-page-primary-hover-bg: var(--malfunction-page-accent-strong);
   --malfunction-page-primary-text: #ffffff;
   --malfunction-page-pagination-bg: rgba(255, 255, 255, 0.72);
   --malfunction-page-pagination-active-bg: rgba(18, 116, 84, 0.12);
@@ -45,7 +47,9 @@
   --malfunction-page-focus: rgba(112, 227, 194, 0.68);
   --malfunction-page-button-bg: rgba(255, 255, 255, 0.045);
   --malfunction-page-header-bg: transparent;
-  --malfunction-page-primary-text: #06120e;
+  --malfunction-page-primary-bg: rgba(112, 227, 194, 0.16);
+  --malfunction-page-primary-hover-bg: rgba(112, 227, 194, 0.23);
+  --malfunction-page-primary-text: #c5f7e6;
   --malfunction-page-pagination-bg: rgba(255, 255, 255, 0.045);
   --malfunction-page-pagination-active-bg: rgba(112, 227, 194, 0.14);
   --malfunction-page-table-head: var(--malfunction-page-surface-subtle);
@@ -139,15 +143,15 @@
   }
 
   .vdui-btn-primary {
-    border-color: var(--malfunction-page-accent);
+    border-color: color-mix(in srgb, var(--malfunction-page-accent) 42%, transparent);
     color: var(--malfunction-page-primary-text);
-    background: var(--malfunction-page-accent);
+    background: var(--malfunction-page-primary-bg);
 
     &:hover,
     &:focus-visible {
-      border-color: var(--malfunction-page-accent-strong);
+      border-color: color-mix(in srgb, var(--malfunction-page-accent-strong) 56%, transparent);
       color: var(--malfunction-page-primary-text);
-      background: var(--malfunction-page-accent-strong);
+      background: var(--malfunction-page-primary-hover-bg);
     }
   }
 }
