@@ -6,8 +6,9 @@ import { gatewayReducer, gatewaySliceName } from './feature/gateway';
 import { terminalReducer, terminalSliceName } from './feature/terminal';
 import { configReducer, configSliceName } from './feature/config';
 import { clientReducer, clientSliceName } from './feature/client';
-import { appReducer, appSliceName } from './feature/app';
+import { appReducer, appSliceName, logoutCurrentUser } from './feature/app';
 import { loadingReducer, loadingSliceName, startLoading, stopLoading } from './feature/loading';
+import { setStoreRuntimeAccess } from './runtime-access';
 
 export const appStore = configureStore({
   reducer: {
@@ -26,6 +27,14 @@ globalEmitter.on('api/stopLoading', (url) => appStore.dispatch(stopLoading(url))
 
 export type AppState = ReturnType<typeof appStore.getState>;
 export type AppDispatch = typeof appStore.dispatch;
+
+setStoreRuntimeAccess({
+  dispatch: appStore.dispatch,
+  getState: appStore.getState,
+  handleUnauthorized: async () => {
+    await appStore.dispatch(logoutCurrentUser(false));
+  },
+});
 
 export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
 export const useAppDispatch = useDispatch<AppDispatch>;
