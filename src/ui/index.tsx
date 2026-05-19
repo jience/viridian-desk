@@ -6,6 +6,7 @@ import {
   isValidElement,
   useContext,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -13,6 +14,7 @@ import {
   type ChangeEvent,
   type HTMLAttributes,
   type InputHTMLAttributes,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ReactElement,
   type ReactNode,
 } from 'react';
@@ -241,6 +243,31 @@ const runConfirm = async (props: ModalProps) => {
 export const Modal = Object.assign(
   function ModalComponent(props: ModalProps) {
     const open = props.open ?? props.visible;
+    const titleId = useId();
+    const dialogRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+      if (!open) return;
+
+      const activeElement =
+        document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      const focusTimer = window.setTimeout(() => dialogRef.current?.focus(), 0);
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Escape' && props.keyboard !== false) {
+          event.stopPropagation();
+          props.onCancel?.();
+        }
+      };
+
+      document.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        window.clearTimeout(focusTimer);
+        document.removeEventListener('keydown', handleKeyDown);
+        activeElement?.focus?.();
+      };
+    }, [open, props.keyboard, props.onCancel]);
+
     if (!open && (props.destroyOnHidden || props.destroyOnClose)) return null;
     if (!open) return null;
     const footer =
@@ -264,13 +291,27 @@ export const Modal = Object.assign(
           onClick={props.maskClosable ? props.onCancel : undefined}
         />
         <div className={cn('vdui-modal-panel', props.className)} style={{ width: props.width }}>
-          <section className="vdui-modal-content" role="dialog" aria-modal="true">
+          <section
+            ref={dialogRef}
+            className="vdui-modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={props.title ? titleId : undefined}
+            tabIndex={-1}
+          >
             {props.title && (
               <header className="vdui-modal-header">
-                <div className="vdui-modal-title">{props.title}</div>
+                <div className="vdui-modal-title" id={titleId}>
+                  {props.title}
+                </div>
               </header>
             )}
-            <button className="vdui-modal-close" type="button" onClick={props.onCancel}>
+            <button
+              aria-label="Close"
+              className="vdui-modal-close"
+              type="button"
+              onClick={props.onCancel}
+            >
               ×
             </button>
             <div className="vdui-modal-body">{props.children}</div>
@@ -750,10 +791,28 @@ export function Dropdown({ menu, children, classNames }: any) {
   const [open, setOpen] = useState(false);
   const child = isValidElement(children)
     ? cloneElement(children as ReactElement<any>, {
+        'aria-expanded': open,
+        'aria-haspopup': 'menu',
         onClick: (event: any) => {
           event.stopPropagation();
           setOpen((value) => !value);
           (children as ReactElement<any>).props.onClick?.(event);
+        },
+        onKeyDown: (event: ReactKeyboardEvent) => {
+          (children as ReactElement<any>).props.onKeyDown?.(event);
+          if (event.defaultPrevented) return;
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            setOpen((value) => !value);
+          }
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            setOpen(true);
+          }
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            setOpen(false);
+          }
         },
       })
     : children;
@@ -765,18 +824,25 @@ export function Dropdown({ menu, children, classNames }: any) {
     >
       {child}
       {open && (
-        <div className={cn('vdui-dropdown', classNames?.root, menu?.className)}>
+        <div className={cn('vdui-dropdown', classNames?.root, menu?.className)} role="menu">
           {(menu?.items || []).map((item: ItemType) => (
             <button
               key={String(item.key)}
               className={cn('vdui-dropdown-menu-item', item.danger && 'is-danger')}
               type="button"
+              role="menuitem"
               disabled={item.disabled}
               onClick={(event) => {
                 const info = { key: item.key, domEvent: event };
                 item.onClick?.(info);
                 menu?.onClick?.(info);
                 setOpen(false);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Escape') {
+                  event.preventDefault();
+                  setOpen(false);
+                }
               }}
             >
               {item.icon}
@@ -892,6 +958,7 @@ export function Table<T extends AnyRecord = AnyRecord>(props: TableProps<T>) {
                   <th
                     key={String(column.key ?? column.dataIndex ?? index)}
                     className={cn('vdui-table-cell', column.ellipsis && 'vdui-table-cell-ellipsis')}
+                    scope="col"
                     style={{ width: column.width, textAlign: column.align }}
                   >
                     {column.title}
@@ -914,6 +981,7 @@ export function Table<T extends AnyRecord = AnyRecord>(props: TableProps<T>) {
                         <td className="vdui-table-cell vdui-table-selection-column">
                           <input
                             type={props.rowSelection.type === 'radio' ? 'radio' : 'checkbox'}
+                            aria-label={`Select row ${rowIndex + 1}`}
                             checked={selectedKeys.includes(rowKey)}
                             onChange={(event) =>
                               setSelected(record, rowIndex, event.target.checked)
@@ -968,6 +1036,7 @@ export function Table<T extends AnyRecord = AnyRecord>(props: TableProps<T>) {
         <div className="vdui-pagination">
           <Button
             className="vdui-pagination-prev vdui-pagination-item-link"
+            aria-label="Previous page"
             disabled={(props.pagination.current || 1) <= 1}
             onClick={() => {
               const nextPage = (props.pagination as any).current - 1;
@@ -990,6 +1059,16 @@ export function Table<T extends AnyRecord = AnyRecord>(props: TableProps<T>) {
           </span>
           <Button
             className="vdui-pagination-next vdui-pagination-item-link"
+            aria-label="Next page"
+            disabled={
+              (props.pagination.current || 1) >=
+              Math.max(
+                1,
+                Math.ceil(
+                  (props.pagination.total || rows.length) / (props.pagination.pageSize || 10),
+                ),
+              )
+            }
             onClick={() => {
               const nextPage = (props.pagination as any).current + 1;
               if (props.pagination) {
@@ -1081,6 +1160,8 @@ export function Switch({ checked, onChange, className, disabled }: any) {
     <button
       type="button"
       disabled={disabled}
+      role="switch"
+      aria-checked={!!checked}
       className={cn('vdui-switch', checked && 'vdui-switch-checked', className)}
       onClick={() => onChange?.(!checked)}
     >

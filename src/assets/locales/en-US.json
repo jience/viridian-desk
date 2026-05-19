@@ -129,6 +129,7 @@
   "config_page.close": "Close",
   "config_page.delete": "Delete",
   "config_page.add": "Add",
+  "config_page.more_actions": "More actions",
   "config_page.enable": "Enable",
   "config_page.current": "Current",
   "config_page.server_setting.delete_access_gateway": "Delete Access Gateway",

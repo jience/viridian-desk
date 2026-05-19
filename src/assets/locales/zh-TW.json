@@ -129,6 +129,7 @@
   "config_page.close": "關閉",
   "config_page.delete": "刪除",
   "config_page.add": "添加",
+  "config_page.more_actions": "更多操作",
   "config_page.enable": "啟用",
   "config_page.current": "當前",
   "config_page.server_setting.delete_access_gateway": "刪除接入服務器",

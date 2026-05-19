@@ -68,6 +68,91 @@ test('renders pre-login settings route', async ({ page }) => {
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });
 
+test('switches theme from settings', async ({ page }) => {
+  await page.goto('/configPage/commonSetting');
+
+  await expect(page).toHaveTitle('通用 - Viridian Desk');
+  await expect(page.locator('html')).toHaveAttribute('data-ui-theme', 'dark');
+
+  await page.getByRole('button', { name: /浅色/ }).click();
+
+  await expect(page.locator('html')).toHaveAttribute('data-ui-theme', 'light');
+  await expect
+    .poll(() =>
+      page.evaluate(() => JSON.parse(localStorage.getItem('viridian.web.config') || '{}').theme),
+    )
+    .toBe('light');
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
+test('validates and creates a gateway from settings modal', async ({ page }) => {
+  await page.goto('/configPage/serverSetting');
+
+  await page.getByRole('button', { name: /添加服务器/ }).click();
+  const dialog = page.getByRole('dialog', { name: /添加接入服务器/ });
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeFocused();
+
+  await dialog.getByRole('button', { name: /保存/ }).click();
+  await expect(dialog).toBeVisible();
+
+  await dialog.getByPlaceholder('请输入服务器名称').fill('ProdGW');
+  await dialog.getByPlaceholder('请输入服务器地址').fill('prod.example.com');
+  await dialog.getByRole('switch').click();
+  await dialog.getByRole('button', { name: /保存/ }).click();
+
+  await expect(page.locator('.server-setting-gateway-name', { hasText: 'ProdGW' })).toBeVisible();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        JSON.parse(localStorage.getItem('viridian.web.config') || '{}').gateway?.some(
+          (gateway: { name?: string; address?: string; isPublic?: boolean }) =>
+            gateway.name === 'ProdGW' &&
+            gateway.address === 'prod.example.com' &&
+            gateway.isPublic === true,
+        ),
+      ),
+    )
+    .toBe(true);
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
+test('opens gateway action menu with keyboard', async ({ page }) => {
+  await page.goto('/configPage/serverSetting');
+
+  const moreButton = page.getByRole('button', { name: /更多/ }).first();
+  await moreButton.focus();
+  await moreButton.press('Enter');
+
+  const menu = page.getByRole('menu');
+  await expect(menu).toBeVisible();
+  await expect(menu.getByRole('menuitem', { name: /编辑/ })).toBeVisible();
+
+  await moreButton.press('Escape');
+  await expect(menu).toBeHidden();
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
+test('keeps login submit disabled when gateway is disconnected', async ({ page }) => {
+  await page.goto('/login');
+
+  await page.getByPlaceholder('请输入用户名').fill('demo');
+  await page.getByPlaceholder('请输入密码').fill('demo-password');
+
+  await expect(page.getByRole('button', { name: /^登录$/ })).toBeDisabled();
+  await expect(
+    page
+      .locator('.auth-page__status-card')
+      .filter({ hasText: 'Smoke Gateway' })
+      .filter({ hasText: '未连接' }),
+  ).toBeVisible();
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
 test('renders app empty state for no-permission route', async ({ page }) => {
   await page.goto('/app/empty');
 
