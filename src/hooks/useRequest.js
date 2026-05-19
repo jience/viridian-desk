@@ -1,5 +1,4 @@
-import { appStore } from '@/store';
-import { logoutCurrentUser } from '@/store/feature/app';
+import { handleStoreUnauthorized } from '@/store/runtime-access';
 import handleError from '@/utils/requestErrorHandler';
 import { useRequest } from 'ahooks';
 import { isEmpty, isFunction } from 'lodash-es';
@@ -28,7 +27,7 @@ const combinedOptions = (options) => ({
       const { httpStatus } = err;
       if (httpStatus === 401 && location.pathname !== '/login') {
         // 接口无权访问强制退出
-        appStore.dispatch(logoutCurrentUser(false));
+        void handleStoreUnauthorized();
         window.location.href = '/login';
       }
       if (!options?.onError) {

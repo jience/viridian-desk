@@ -1,9 +1,9 @@
-import { appStore } from '@/store';
 import { fetch, type ClientOptions } from '@tauri-apps/plugin-http';
 import { isEmpty } from 'lodash-es';
 import { globalEmitter } from '../mitt';
 import { isApiErrResponse, type ApiResponse } from './types';
 import { logger } from '@/utils/logger';
+import { getStoreState } from '@/store/runtime-access';
 import { getWebPreviewResponse } from './web-preview';
 
 type FetchOpt = RequestInit & ClientOptions;
@@ -41,9 +41,10 @@ const beforeRequest = (config?: RequestOptions): FetchOpt => {
     ...headers,
   };
   const h = newHeaders as Record<string, string>;
-  const deviceId = appStore.getState().terminal?.id;
+  const state = getStoreState();
+  const deviceId = state?.terminal?.id;
   if (deviceId) h['X-Device-Id'] = deviceId;
-  const userId = appStore.getState().app.currentUser?.userId;
+  const userId = state?.app.currentUser?.userId;
   if (userId) h['VisitorId'] = userId;
 
   // 如果body是FormData类型
@@ -82,7 +83,7 @@ const logHttpRequest = (prefix: string, content: unknown) => {
 };
 
 const formateApi = (api: string) => {
-  const autoGateway = appStore.getState().gateway.autoGateway;
+  const autoGateway = getStoreState()?.gateway.autoGateway;
   if (autoGateway) {
     return `https://${autoGateway.address}:${autoGateway.port}${import.meta.env.VITE_API_PREFIX}${api}`;
   }
