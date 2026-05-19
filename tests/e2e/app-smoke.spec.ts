@@ -79,6 +79,26 @@ test('renders app empty state for no-permission route', async ({ page }) => {
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });
 
+const appRouteSmokeCases = [
+  { path: '/app/desk', title: '桌面 - Viridian Desk', selector: '.desk-page' },
+  { path: '/app/application', title: '应用 - Viridian Desk', selector: '.application-page' },
+  { path: '/app/peripheral', title: '外设 - Viridian Desk', selector: '.peripheralSetting' },
+  { path: '/app/approval', title: '流程 - Viridian Desk', selector: '.approval-page' },
+  { path: '/app/malfunction', title: '桌面问题 - Viridian Desk', selector: '.malfunction-page' },
+];
+
+for (const appRoute of appRouteSmokeCases) {
+  test(`renders main route ${appRoute.path}`, async ({ page }) => {
+    await page.goto(appRoute.path);
+
+    await expect(page).toHaveTitle(appRoute.title);
+    await expect(page.locator('.app-layout')).toBeVisible();
+    await expect(page.locator(appRoute.selector)).toBeVisible();
+
+    await page.evaluate(() => window.__assertNoConsoleErrors());
+  });
+}
+
 declare global {
   interface Window {
     __assertNoConsoleErrors: () => void;

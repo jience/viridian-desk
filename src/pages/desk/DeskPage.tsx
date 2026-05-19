@@ -14,6 +14,7 @@ import { selectFullScreen } from '@/store/feature/config';
 import { authActionShow } from '@/utils/actionAuth';
 import Actions from '@/utils/actions';
 import { DESK_STATUS, EmptyText, getStatus } from '@/utils/constant';
+import { logger } from '@/utils/logger';
 import { transIcon, transRam } from '@/utils/utils';
 import DeskPoolModal from './components/deskPoolDetail';
 import InUseLoading from './components/loading';
@@ -175,7 +176,7 @@ export function DeskPage() {
           unsubscribers.push(unlisten);
         })
         .catch((error) => {
-          console.error('Failed to register desktop event listener', error);
+          logger.debug('desktop event listener unavailable', error);
         });
     };
 

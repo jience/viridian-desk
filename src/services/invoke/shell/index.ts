@@ -12,5 +12,8 @@ export const killAllHdpViewers = async () => {
 };
 
 export const listUsbDevices = async () => {
+  if (!(window as any).__TAURI_INTERNALS__) {
+    return [];
+  }
   return await invoke<ListUsbDevicesResp>(ShellInvoke.LIST_USB_DEVICES);
 };

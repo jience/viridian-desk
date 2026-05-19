@@ -88,6 +88,32 @@ const formateApi = (api: string) => {
   return `${import.meta.env.VITE_BASE_DEFAULT_URL}${import.meta.env.VITE_API_PREFIX}${api}`;
 };
 
+const webPreviewListApis = new Set([
+  '/listResourceUser',
+  '/listDesktopPool',
+  '/listVapp',
+  '/listFault',
+  '/listWorkflow',
+  '/listAppLib',
+]);
+
+const getWebPreviewResponse = <RESP>(api: string): RESP | null => {
+  if (typeof window === 'undefined' || (window as any).__TAURI_INTERNALS__) {
+    return null;
+  }
+
+  if (webPreviewListApis.has(api)) {
+    return {
+      data: {
+        results: [],
+        totalCount: 0,
+      },
+    } as RESP;
+  }
+
+  return null;
+};
+
 export const request = async <RESP = ApiResponse, REQ = any>(
   api: string,
   opt?: RequestOptions<REQ>,
@@ -100,17 +126,23 @@ export const request = async <RESP = ApiResponse, REQ = any>(
   logHttpRequest(`${opts.method || 'GET'} ${api}`, opts);
 
   try {
+    const webPreviewResponse = getWebPreviewResponse<RESP>(api);
+    if (webPreviewResponse) {
+      logHttpRequest(`${opts.method || 'GET'} web-preview ${api}`, webPreviewResponse);
+      return webPreviewResponse;
+    }
+
     const fetchRes = await fetch(fullApi, opts);
     const resp = await fetchRes.json();
     logHttpRequest(`${opts.method || 'GET'} ${fetchRes.status} ${api}`, resp);
     if (fetchRes.status == 200) {
       return resp as RESP;
     } else {
-      throw interceptorErr(resp);
+      throw await interceptorErr(resp);
     }
   } catch (e) {
     logHttpRequest(`${opts.method || 'GET'} ${api}`, e);
-    throw interceptorErr(e);
+    throw await interceptorErr(e);
   } finally {
     globalEmitter.emit('api/stopLoading', api);
   }
