@@ -3,7 +3,7 @@ import { Button } from '@/ui/components/button';
 import { DocumentTitle } from '@/ui/shell/document-title';
 import { PreLoginSettingsShell } from '@/ui/shell/pre-login-settings-shell';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 import FormModal from './modalComp/FormModal';
 import './SettingsPage.scss';
@@ -11,7 +11,7 @@ import './SettingsPage.scss';
 const SETTINGS_ROOT = '/configPage';
 
 export default function SettingsPage() {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -171,6 +171,7 @@ export default function SettingsPage() {
                 onClick={goBack}
               >
                 <i className="iconfont icon-left" aria-hidden="true" />
+                <span>{intl.formatMessage({ id: 'ExitSetting' })}</span>
               </Button>
             </div>
           </div>

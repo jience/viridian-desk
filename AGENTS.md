@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-Viridian Desk is a Tauri 2 desktop app with a React/Vite frontend. Frontend code lives in `src/`: UI in `src/components`, screens in `src/pages`, routing in `src/router`, Redux state in `src/store`, API and Tauri wrappers in `src/services`, helpers in `src/utils`, styles in `src/styles`, and assets/locales in `src/assets` and `src/locales`. Native Rust code is under `src-tauri/src`, grouped by domain (`app`, `config`, `core`, `events`, `plugins`). Tauri configuration, permissions, icons, sidecars, resources, and packaging files stay in `src-tauri/`. Build helpers are in `scripts/`; docs are in `docs/`.
+Viridian Desk is a Tauri 2 desktop app with a React/Vite frontend. Frontend code lives in `src/`: UI in `src/components`, screens in `src/pages`, routing in `src/router`, Redux state in `src/store`, API and Tauri wrappers in `src/services`, helpers in `src/utils`, styles in `src/styles`, and assets/locales in `src/assets` plus shared UI locales in `src/ui/i18n`. Native Rust code is under `src-tauri/src`, grouped by domain (`app`, `config`, `core`, `events`, `plugins`). Tauri configuration, permissions, icons, sidecars, resources, and packaging files stay in `src-tauri/`. Build helpers are in `scripts/`; docs are in `docs/`.
 
 ## Build, Test, and Development Commands
 

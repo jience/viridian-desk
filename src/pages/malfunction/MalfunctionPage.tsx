@@ -3,7 +3,7 @@ import type { SelectProps, TablePaginationConfig } from '@/ui';
 import { Button, Empty, Popover, Select, Space, Table, Tag, Tooltip } from '@/ui';
 import type { ColumnsType } from '@/ui';
 import type { Key, ReactNode } from 'react';
-import type { IntlShape } from 'react-intl';
+import type { MessageFormatterShape } from '@/utils/message-format';
 import type { ViewFaultStatus, ViewFaultType } from './types';
 import './MalfunctionPage.scss';
 
@@ -31,7 +31,7 @@ export interface MalfunctionPageProps {
   onCancel: (row?: FaultItem) => void;
   onCreate: () => void;
   onSelectionChange: (keys: string[], rows: FaultItem[]) => void;
-  formatMessage: IntlShape['formatMessage'];
+  formatMessage: MessageFormatterShape['formatMessage'];
 }
 
 const blockedStatuses = [FaultStatus.SOLVED, FaultStatus.REJECT, FaultStatus.REVOKE];

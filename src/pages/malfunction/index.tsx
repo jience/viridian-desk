@@ -9,7 +9,7 @@ import type { TablePaginationConfig } from '@/ui';
 import { Modal } from '@/ui';
 import { isEmpty } from 'lodash-es';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import CreatedModal from './create';
 import './index.scss';
 import { initQueryParams, useFaultStatus, useFaultType } from './initData';
@@ -18,7 +18,7 @@ import type { ViewFaultStatus, ViewFaultType } from './types';
 
 export function Component() {
   const [modal, contextHolder] = Modal.useModal();
-  const { formatMessage } = useIntl();
+  const { formatMessage } = useMessageFormatter();
   const listFaultLoading = useLoading(FaultApi.LIST_FAULT);
 
   const [queryParams, setQueryParams] = useState(initQueryParams);

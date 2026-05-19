@@ -108,6 +108,7 @@ export const LogInfo: FC<LogInfoProps> = () => {
   return (
     <div className="log-info-wrapper">
       <SettingsRow
+        className="vd-settings-row--detail"
         icon={<i className="iconfont icon-log" />}
         title={
           <div className="log-title">

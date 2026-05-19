@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import Regex from '@/utils/regex';
 import { Form, Input, Button, Modal } from '@/ui';
 import { formatTel } from '@/utils/utils';
 import './index.scss';
 
 const FindPasswordModal = (props: any) => {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const { formatMessage } = intl;
   const { visible, setVisible } = props;
 

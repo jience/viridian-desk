@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import { Button, Form, Input, Modal, message } from '@/ui';
 import Regex from '@/utils/regex';
 import { formatTel } from '@/utils/utils';
@@ -14,7 +14,7 @@ const ChangePhone = (props: any) => {
   const connected = useAppSelector(selectConnected);
   const network = useAppSelector(selectNetwork);
 
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const { formatMessage } = intl;
   const { visible = false, setVisible } = props;
 

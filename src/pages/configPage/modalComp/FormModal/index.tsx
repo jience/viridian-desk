@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import './index.scss';
 import ConfigurationForm from '@/components/ConfigurationForm';
 import { Modal } from '@/ui';
@@ -41,7 +41,7 @@ const FormModal = (props: any) => {
     closable,
     onKeyupEnter = false,
   } = props;
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const [isSubmit, setIsSubmit] = useState(false);
 
   const titleSlot = (

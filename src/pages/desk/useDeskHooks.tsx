@@ -12,7 +12,7 @@ import { bridge } from '@/native';
 import type { MenuProps } from '@/ui';
 import { message, Modal, Tag, Tooltip } from '@/ui';
 import { useEffect, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import {
   createDesktopFromPool,
   listDesktopPool,
@@ -81,7 +81,7 @@ export const transStatus = (status: string = '', locked: boolean = false) => {
 };
 
 const useDeskHooks = (props: any) => {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const { isFullScreen } = props;
   const isThin = useAppSelector(selectIsThin);
 

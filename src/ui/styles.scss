@@ -154,26 +154,35 @@
   display: inline-flex;
   align-items: center;
   padding-right: 28px;
+  cursor: pointer;
+  user-select: none;
 
   &:focus,
-  &:focus-within {
+  &:focus-visible,
+  &:focus-within,
+  &.vdui-select-open {
     border-color: var(--vd-color-accent, #69d99a);
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--vd-color-accent, #69d99a) 18%, transparent);
   }
 }
 
-.vdui-select-native {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
+.vdui-select-small {
+  height: 32px;
+  min-height: 32px;
+  padding-right: 26px;
+  font-size: 13px;
+}
+
+.vdui-select-large {
+  height: 40px;
+  min-height: 40px;
+  padding-right: 30px;
 }
 
 .vdui-select-selection-item,
 .vdui-select-placeholder {
   min-width: 0;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -188,6 +197,124 @@
   right: 10px;
   color: var(--vd-color-muted, rgba(148, 163, 184, 0.78));
   pointer-events: none;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.vdui-select-open .vdui-select-arrow {
+  color: var(--vd-color-accent, #69d99a);
+  transform: rotate(180deg);
+}
+
+.vdui-select-disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.vdui-select-dropdown {
+  position: absolute;
+  z-index: 940;
+  top: calc(100% + 8px);
+  left: 0;
+  display: grid;
+  width: max-content;
+  min-width: 100%;
+  max-width: min(320px, 80vw);
+  max-height: 260px;
+  gap: 3px;
+  overflow: auto;
+  padding: 6px;
+  border: 1px solid color-mix(in srgb, var(--vd-color-border, rgba(148, 163, 184, 0.18)) 86%, transparent);
+  border-radius: 12px;
+  color: var(--vd-color-text, inherit);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--vd-color-surface, #162019) 88%, transparent),
+      color-mix(in srgb, var(--vd-color-panel, #121a16) 96%, transparent)
+    );
+  box-shadow:
+    0 18px 44px color-mix(in srgb, var(--vd-color-rail, #050705) 24%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #ffffff 8%, transparent);
+  backdrop-filter: blur(18px);
+  animation: vdSelectMenuIn 140ms ease-out;
+}
+
+.vdui-select-dropdown--topRight {
+  top: auto;
+  right: 0;
+  bottom: calc(100% + 8px);
+  left: auto;
+}
+
+.vdui-select-option {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 34px;
+  border: 0;
+  border-radius: 9px;
+  padding: 0 9px 0 11px;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.25;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+
+  &:not(:disabled):hover,
+  &:not(:disabled):focus-visible {
+    outline: 0;
+    color: var(--vd-color-accent, #69d99a);
+    background: color-mix(in srgb, var(--vd-color-accent, #69d99a) 12%, transparent);
+  }
+
+  &:not(:disabled):active {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.52;
+  }
+}
+
+.vdui-select-option.is-selected {
+  color: var(--vd-color-accent, #69d99a);
+  background: color-mix(in srgb, var(--vd-color-accent, #69d99a) 14%, transparent);
+}
+
+.vdui-select-option-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vdui-select-option-check {
+  color: var(--vd-color-accent, #69d99a);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+@keyframes vdSelectMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .vdui-input-textarea {
@@ -303,15 +430,54 @@
 
 .vdui-modal-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 30px;
-  height: 30px;
+  top: 14px;
+  right: 14px;
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
   border: 0;
-  border-radius: 8px;
-  color: inherit;
+  border-radius: 10px;
+  padding: 0;
+  color: var(--vd-color-muted, rgba(148, 163, 184, 0.78));
   background: transparent;
   cursor: pointer;
+  line-height: 1;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+
+  &::before,
+  &::after {
+    grid-area: 1 / 1;
+    width: 13px;
+    height: 1.6px;
+    border-radius: 999px;
+    background: currentColor;
+    content: '';
+  }
+
+  &::before {
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--vd-color-accent, #69d99a);
+    background: color-mix(in srgb, var(--vd-color-accent, #69d99a) 10%, transparent);
+    outline: 0;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.96);
+  }
 }
 
 .vdui-modal-body {

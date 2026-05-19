@@ -164,18 +164,29 @@
 }
 
 .settings-page__exit {
-  display: inline-grid;
-  width: 34px;
-  min-width: 34px;
+  display: inline-flex;
+  width: auto;
+  min-width: 0;
   height: 34px;
-  place-items: center;
-  border: 1px solid var(--settings-page-border);
-  border-radius: 10px;
-  padding: 0;
-  background: color-mix(in srgb, var(--settings-page-surface) 88%, transparent);
-  color: var(--settings-page-muted);
-  font-size: 14px;
+  align-items: center;
   justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--settings-page-border);
+  border-radius: 999px;
+  padding: 0 12px 0 10px;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--settings-page-accent) 8%, transparent),
+      transparent 72%
+    ),
+    color-mix(in srgb, var(--settings-page-surface) 88%, transparent);
+  color: var(--settings-page-muted);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
   transition:
     border-color 180ms ease,
     background-color 180ms ease,
@@ -196,7 +207,13 @@
 }
 
 .settings-page__exit .iconfont {
-  font-size: 14px;
+  display: inline-grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--settings-page-accent) 10%, transparent);
+  font-size: 12px;
   line-height: 1;
 }
 
@@ -245,7 +262,7 @@
 .settings-page__sidebar-footer {
   display: flex;
   align-self: end;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .settings-page__content {
@@ -501,6 +518,19 @@
   gap: 8px;
 }
 
+.vd-settings-row--detail {
+  align-items: start;
+
+  .vd-settings-row__icon {
+    margin-top: 2px;
+  }
+
+  .vd-settings-row__action {
+    align-self: start;
+    padding-top: 0;
+  }
+}
+
 .vd-settings-status {
   display: inline-flex;
   min-height: 24px;
@@ -574,7 +604,8 @@
 
   :where(
     .vdui-btn:focus-visible,
-    .vdui-select-focused .vdui-select,
+    .vdui-select:focus-visible,
+    .vdui-select-open,
     .vdui-input:focus,
     .vdui-input-focused,
     .vdui-input-affix-wrapper:focus,

@@ -6,7 +6,7 @@ import Actions from '@/utils/actions';
 import { hasPermission } from '@/utils/permission';
 import type { TablePaginationConfig } from '@/ui';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import { ApprovalDetailModal, type ApprovalDetailModalRef } from './ApprovalDetailModal';
 import { ApprovalPage } from './ApprovalPage';
 import CancelWorkflow from './component/cancel';
@@ -24,7 +24,7 @@ import {
 const APPROVAL_PAGE_SIZE = 7;
 
 export function Component() {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const { formatMessage } = intl;
   const cancelWorkflowRef = useRef<any>(null);
   const approvalDetailModalRef = useRef<ApprovalDetailModalRef>(null);

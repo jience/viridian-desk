@@ -1,6 +1,6 @@
 import { FaultStatus, FaultType, type FaultListRequest } from '@/services/api/fault/types';
 import type { SelectProps } from '@/ui';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 
 export const initQueryParams: FaultListRequest = {
   sortKey: 'createTime',
@@ -10,7 +10,7 @@ export const initQueryParams: FaultListRequest = {
 };
 
 export const useFaultStatus = () => {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
 
   const options: SelectProps['options'] = [
     {
@@ -53,7 +53,7 @@ export const useFaultStatus = () => {
 };
 
 export const useFaultType = () => {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
 
   const options: SelectProps['options'] = [
     {

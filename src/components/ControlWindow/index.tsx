@@ -3,7 +3,7 @@ import { logoutCurrentUser, selectIsLogin } from '@/store/feature/app';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
 import { bridge } from '@/native';
 import { type FC } from 'react';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import './index.scss';
 
 export interface ControlWindowProps {
@@ -16,7 +16,7 @@ const ControlWindow: FC<ControlWindowProps> = (props) => {
   const { exist, hiddenMini } = props;
 
   const appDispatch = useAppDispatch();
-  const { formatMessage } = useIntl();
+  const { formatMessage } = useMessageFormatter();
   const isThin = useAppSelector(selectIsThin);
   const isLogin = useAppSelector(selectIsLogin);
 

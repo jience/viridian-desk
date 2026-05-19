@@ -9,21 +9,6 @@
     margin-bottom: 12px;
     justify-content: space-between;
 
-    .vdui-btn-variant-outlined {
-      border: 1px solid var(--app-border-color, rgba(61, 91, 78, 0.18));
-      background: color-mix(in srgb, var(--app-surface-color, #fffdf8) 82%, transparent);
-      color: var(--app-text-color, #20231e);
-      transition:
-        border-color 160ms ease,
-        background-color 160ms ease,
-        color 160ms ease;
-
-      &:hover {
-        border-color: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 36%, transparent);
-        background: color-mix(in srgb, var(--vd-color-accent, #8ef2bd) 10%, transparent);
-        color: var(--app-text-color, #20231e);
-      }
-    }
   }
 
   .approveUser-name {

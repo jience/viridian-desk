@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/store';
 import { selectCurrentUser } from '@/store/feature/app';
 import { Modal } from '@/ui';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import './index.scss';
 
 interface UserInfoProps {
@@ -10,7 +10,7 @@ interface UserInfoProps {
 }
 
 const UserInfo = ({ visible, setVisible }: UserInfoProps) => {
-  const { formatMessage } = useIntl();
+  const { formatMessage } = useMessageFormatter();
   const currentUser = useAppSelector(selectCurrentUser);
 
   const fields = [

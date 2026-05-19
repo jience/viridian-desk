@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { IntlShape } from 'react-intl';
+import type { MessageFormatterShape } from '@/utils/message-format';
 
 export type WorkflowStatus = 'pending' | 'processing' | 'success' | 'reject' | 'error' | 'revoke';
 export type ViewWorkflowStatus = WorkflowStatus | 'all';
@@ -41,7 +41,7 @@ export const isWorkflowStatus = (status?: string): status is WorkflowStatus =>
   workflowStatusOrder.includes(status as WorkflowStatus);
 
 export const getWorkflowTypeLabel = (
-  formatMessage: IntlShape['formatMessage'],
+  formatMessage: MessageFormatterShape['formatMessage'],
   workflowType?: string,
 ) => {
   if (!workflowType) {

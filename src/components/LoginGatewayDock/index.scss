@@ -22,7 +22,7 @@
   border: 1px solid color-mix(in srgb, var(--login-gateway-border) 72%, transparent);
   border-radius: 999px;
   padding: 0 5px 0 12px;
-  overflow: hidden;
+  overflow: visible;
   background:
     linear-gradient(
       90deg,
@@ -100,7 +100,8 @@
   width: 100%;
   min-width: 0;
   cursor: pointer;
-  opacity: 0;
+  border: 0 !important;
+  box-shadow: none !important;
 
   &.vdui-select {
     height: 34px !important;
@@ -117,6 +118,14 @@
   .vdui-select-arrow,
   .vdui-select-clear {
     display: none;
+  }
+
+  .vdui-select-dropdown {
+    right: 0;
+    left: auto;
+    width: min(248px, 72vw);
+    min-width: 190px;
+    max-width: 248px;
   }
 }
 

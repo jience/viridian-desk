@@ -3,7 +3,7 @@ import type { TablePaginationConfig } from '@/ui';
 import type { ColumnsType } from '@/ui';
 import type { ItemType } from '@/ui';
 import type { Key, ReactNode } from 'react';
-import type { IntlShape } from 'react-intl';
+import type { MessageFormatterShape } from '@/utils/message-format';
 import {
   getWorkflowTypeLabel,
   isWorkflowStatus,
@@ -48,7 +48,7 @@ export interface ApprovalPageProps {
   onCancel: (row?: ApprovalWorkflowItem) => void;
   onDetail: (row: ApprovalWorkflowItem) => void;
   onSelectionChange: (keys: string[], rows: ApprovalWorkflowItem[]) => void;
-  formatMessage: IntlShape['formatMessage'];
+  formatMessage: MessageFormatterShape['formatMessage'];
 }
 
 export function ApprovalPage(props: ApprovalPageProps) {

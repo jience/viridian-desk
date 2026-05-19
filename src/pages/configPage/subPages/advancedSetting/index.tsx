@@ -6,7 +6,7 @@ import { DeveloperMode } from './DeveloperMode';
 import { NetworkInfo } from './NetworkInfo';
 import { Diagnosis } from './Diagnosis';
 import { useTranslation } from 'react-i18next';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import { SettingsGroup, SettingsSection } from '../../components';
 
 type PendingAdvancedSettingKey =
@@ -22,7 +22,7 @@ const advancedSettingKey = <T extends PendingAdvancedSettingKey>(key: T) =>
 
 export default function AdvancedSetting() {
   const { t } = useTranslation();
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const tPending = (key: PendingAdvancedSettingKey) => t(advancedSettingKey(key));
   const developerMode = useAppSelector(selectDeveloperMode);
 

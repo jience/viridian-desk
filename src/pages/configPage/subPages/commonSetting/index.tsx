@@ -9,7 +9,7 @@ import { AutoUpdate } from './AutoUpdate';
 import { LanguageSelect } from './LanguageSelect';
 import { ThemeSelect } from './ThemeSelect';
 import { useTranslation } from 'react-i18next';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import { SettingsGroup, SettingsSection } from '../../components';
 
 type PendingCommonSettingKey =
@@ -25,7 +25,7 @@ const commonSettingKey = <T extends PendingCommonSettingKey>(key: T) =>
 
 export default function CommonSetting(_props: any) {
   const { t } = useTranslation();
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const tPending = (key: PendingCommonSettingKey) => t(commonSettingKey(key));
   const isIntegrated = useAppSelector(selectIntegration);
   const isThin = useAppSelector(selectIsThin);

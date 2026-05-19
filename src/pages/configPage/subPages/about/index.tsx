@@ -7,7 +7,7 @@ import { LicenseContent } from './LicenseContent';
 import { bridge } from '@/native';
 import type { GetClientAboutResp } from '@/native/interfaces/terminal';
 import { useTranslation } from 'react-i18next';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import { SettingsSection } from '../../components';
 
 type PendingAboutKey = 'product' | 'product_description';
@@ -16,7 +16,7 @@ const aboutKey = <T extends PendingAboutKey>(key: T) => `config_page.about.${key
 
 export default function About(_props: any) {
   const { t } = useTranslation();
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const tPending = (key: PendingAboutKey) => t(aboutKey(key));
   const [aboutInfo, setAboutInfo] = useState<GetClientAboutResp>();
   const [getClientAboutLoading, setGetClientAboutLoading] = useState(false);

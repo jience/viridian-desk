@@ -5,9 +5,6 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { Provider } from 'react-redux';
 import { appStore } from './store';
-import zhCN from '@/locales/zh-CN';
-import zhTW from '@/locales/zh-TW';
-import en from '@/locales/en-US';
 import { setupServices } from './services';
 import { logger } from '@/utils/logger';
 
@@ -16,16 +13,6 @@ function setupEnvLog() {
   const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
   const isHardwareAccelerated = !!gl;
   logger.debug('硬件加速是否启用:', isHardwareAccelerated);
-}
-
-function setupOldLang() {
-  const LanguageData: any = {
-    'en-US': { ...en },
-    'zh-CN': { ...zhCN },
-    'zh-TW': { ...zhTW },
-  };
-
-  window.LanguageData = LanguageData;
 }
 
 function setupView() {
@@ -38,7 +25,6 @@ function setupView() {
 
 function main() {
   setupEnvLog();
-  setupOldLang();
 
   setupServices();
 

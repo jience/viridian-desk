@@ -340,14 +340,16 @@ export const Modal = Object.assign(
                 </div>
               </header>
             )}
-            <button
-              aria-label="Close"
-              className="vdui-modal-close"
-              type="button"
-              onClick={props.onCancel}
-            >
-              ×
-            </button>
+            {props.closable !== false && (
+              <button
+                aria-label="Close"
+                className="vdui-modal-close"
+                type="button"
+                onClick={props.onCancel}
+              >
+                <span aria-hidden="true" />
+              </button>
+            )}
             <div className="vdui-modal-body">{props.children}</div>
             {footer}
           </section>
@@ -790,59 +792,158 @@ export const Select = Object.assign(
   function SelectComponent<ValueType = any>(props: SelectProps<ValueType>) {
     const options = readOptions(props.options, props.children);
     const multiple = props.mode === 'multiple' || props.mode === 'tags';
-    const value = props.value ?? props.defaultValue ?? (multiple ? [] : '');
+    const isControlled = props.value !== undefined;
+    const [internalValue, setInternalValue] = useState<any>(props.defaultValue ?? (multiple ? [] : ''));
+    const [open, setOpen] = useState(false);
+    const rootRef = useRef<HTMLSpanElement>(null);
+    const value = isControlled ? props.value : internalValue;
+    const currentValues = multiple ? (Array.isArray(value) ? value : []) : [];
+    const selectedValues = multiple
+      ? currentValues.map(String)
+      : value === undefined || value === null || value === ''
+        ? []
+        : [String(value)];
+    const selectedOptions = options.filter((option) =>
+      selectedValues.includes(String(option.value)),
+    );
+    const selectedLabel = multiple
+      ? selectedOptions.map((option) => option.label).join(', ')
+      : selectedOptions[0]?.label;
+    const disabled = props.disabled || props.loading;
+
+    useEffect(() => {
+      if (!open) return;
+
+      const handlePointerDown = (event: PointerEvent) => {
+        if (!rootRef.current?.contains(event.target as Node)) {
+          setOpen(false);
+        }
+      };
+
+      document.addEventListener('pointerdown', handlePointerDown);
+      return () => document.removeEventListener('pointerdown', handlePointerDown);
+    }, [open]);
+
+    const commitValue = (nextValue: any, option?: DefaultOptionType) => {
+      if (!isControlled) setInternalValue(nextValue);
+      props.onChange?.(nextValue as ValueType, option);
+      props.onSelect?.(nextValue as ValueType, option);
+    };
+
+    const handleOptionClick = (option: DefaultOptionType) => {
+      if (option.disabled) return;
+      if (multiple) {
+        const optionValue = String(option.value);
+        const nextValues = selectedValues.includes(optionValue)
+          ? currentValues.filter((item) => String(item) !== optionValue)
+          : [...currentValues, option.value];
+        commitValue(nextValues, option);
+        return;
+      }
+
+      commitValue(option.value, option);
+      setOpen(false);
+    };
+
     return (
       <span
+        ref={rootRef}
         className={cn(
           'vdui-select',
+          `vdui-select-${props.size ?? 'middle'}`,
+          open && 'vdui-select-open',
           props.disabled && 'vdui-select-disabled',
           props.className,
           props.classNames?.root,
         )}
+        role="combobox"
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        aria-disabled={disabled}
+        tabIndex={disabled ? -1 : 0}
         style={props.style}
+        onBlur={(event) => {
+          if (event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget)) {
+            return;
+          }
+          setOpen(false);
+        }}
+        onClick={(event) => {
+          event.stopPropagation();
+          if (!disabled) setOpen((value) => !value);
+        }}
+        onKeyDown={(event) => {
+          if (disabled) return;
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            setOpen((value) => !value);
+          }
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            setOpen(true);
+            window.setTimeout(() => {
+              rootRef.current
+                ?.querySelector<HTMLButtonElement>('.vdui-select-option:not(:disabled)')
+                ?.focus();
+            }, 0);
+          }
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            setOpen(false);
+          }
+        }}
       >
-        <select
-          className="vdui-select-native"
-          disabled={props.disabled || props.loading}
-          multiple={multiple}
-          value={value as any}
-          onFocus={(event) =>
-            event.currentTarget.parentElement?.classList.add('vdui-select-focused')
-          }
-          onBlur={(event) =>
-            event.currentTarget.parentElement?.classList.remove('vdui-select-focused')
-          }
-          onChange={(event) => {
-            const selected = multiple
-              ? Array.from(event.currentTarget.selectedOptions).map((option) => option.value)
-              : event.currentTarget.value;
-            const option = options.find((item) => String(item.value) === String(selected));
-            props.onChange?.(selected as any, option);
-            props.onSelect?.(selected as any, option);
-          }}
-        >
-          {props.placeholder && !multiple && <option value="">{props.placeholder}</option>}
-          {options.map((option) => (
-            <option
-              key={String(option.key ?? option.value)}
-              value={option.value}
-              disabled={option.disabled}
-            >
-              {option.label}
-            </option>
-          ))}
-        </select>
         <span className="vdui-select-selection-item">
-          {options.find((option) => String(option.value) === String(value))?.label ??
-            props.placeholder}
+          {selectedLabel ?? props.placeholder}
         </span>
-        {props.placeholder && !value ? (
+        {props.placeholder && selectedValues.length === 0 ? (
           <span className="vdui-select-placeholder">{props.placeholder}</span>
         ) : null}
         {props.suffixIcon === null ? null : (
           <span className="vdui-select-arrow" aria-hidden="true">
             {props.suffixIcon ?? '▾'}
           </span>
+        )}
+        {open && (
+          <div
+            className={cn(
+              'vdui-select-dropdown',
+              props.placement && `vdui-select-dropdown--${props.placement}`,
+              props.popupClassName,
+              props.classNames?.popup,
+            )}
+            role="listbox"
+            aria-multiselectable={multiple || undefined}
+          >
+            {options.map((option) => {
+              const selected = selectedValues.includes(String(option.value));
+
+              return (
+                <button
+                  key={String(option.key ?? option.value)}
+                  className={cn('vdui-select-option', selected && 'is-selected')}
+                  type="button"
+                  role="option"
+                  aria-selected={selected}
+                  disabled={option.disabled}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleOptionClick(option);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Escape') {
+                      event.preventDefault();
+                      setOpen(false);
+                      rootRef.current?.focus();
+                    }
+                  }}
+                >
+                  <span className="vdui-select-option-label">{option.label}</span>
+                  {selected && <span className="vdui-select-option-check">✓</span>}
+                </button>
+              );
+            })}
+          </div>
         )}
       </span>
     );

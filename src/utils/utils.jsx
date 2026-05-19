@@ -1,6 +1,7 @@
 import { Gi, Ki, Mi, Pi, Ti } from '@/utils/constant';
 import * as CryptoJS from 'crypto-js';
 import { isEmpty } from 'lodash-es';
+import i18next from 'i18next';
 const CRYPTION_PUBLIC_KEY = 'QWER1234asdf5678';
 export const LEGACY_PASSWORD_PREFIX = ['arch', 'eroscmp'].join('');
 
@@ -291,11 +292,10 @@ export const formatKey = (string, data) => {
  * 如：formatI18NKey('MISC_ExternalCreatedSucc', {name: '测试外网名称'})
  */
 export const formatI18NKey = (string, data) => {
-  let value = null;
-  if (window.LanguageData && window.LanguageData['zh-CN']) {
-    value = window.LanguageData['zh-CN'][string];
-    // 新增，现翻译value值允许为空
-    value || (value = value === '' ? '' : string);
-  }
-  return formatKey(value, data || {});
+  const value = i18next.t(string, {
+    defaultValue: string,
+    ...(data || {}),
+  });
+
+  return value;
 };

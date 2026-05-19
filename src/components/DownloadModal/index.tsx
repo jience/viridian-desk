@@ -1,5 +1,5 @@
 import { Modal, Progress } from '@/ui';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import './index.scss';
 import upgradeCon from '@/assets/images/upgrade-con.svg';
 import { useEffect, useMemo, useState, type FC } from 'react';
@@ -15,7 +15,7 @@ export interface DownloadModalProps {
 }
 
 const DownloadModal: FC<DownloadModalProps> = (props) => {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const { data, downloadVisible, setDownloadVisible } = props;
   const noRequireUpdate = data.currentVersion === data.version;
   const [isDownLoading, setIsDownLoading] = useState(false);

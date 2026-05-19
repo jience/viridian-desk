@@ -3,11 +3,11 @@ import { useAppSelector } from '@/store';
 import { selectCurrentUser } from '@/store/feature/app';
 import { Modal } from '@/ui';
 import dayjs from 'dayjs';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import './index.scss';
 
 const DiffLoginTip = (props: any) => {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const { formatMessage } = intl;
   const { visible = false, setVisible } = props;
 

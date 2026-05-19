@@ -32,7 +32,7 @@ import { isEmpty } from 'lodash-es';
 import { Sparkles } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import { useLocation, useNavigate } from 'react-router';
 import { initMenus as menus } from './initData';
 
@@ -42,7 +42,7 @@ interface SidebarProps {
 }
 
 function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const { t } = useTranslation();
   const { t: commonT } = useTranslation('common');
   const { t: assistantT } = useTranslation('assistant');

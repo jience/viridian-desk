@@ -1,13 +1,13 @@
 import React, { useEffect, useImperativeHandle, forwardRef, useState } from 'react';
 import { Form, Input } from '@/ui';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import Regex from '../../utils/regex';
 import { getTerminalLoginConfig } from '@/services/public';
 import useRequest from '@/hooks/useRequest';
 import './index.scss';
 
 function PwdForm(props, ref) {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const [strongPasswordSwitch, setStrongPasswordSwitch] = useState();
   const [formIns] = Form.useForm();
 

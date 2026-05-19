@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Button, Dropdown, Empty, Spin, Tag, Tooltip } from '@/ui';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import { useLocation, useNavigate } from 'react-router';
 import Close from '@/components/Closesvg';
 import Open from '@/components/Opensvg';
@@ -24,7 +24,7 @@ const MAXSNAP = 10;
 const snapshotBusyStatuses = ['CREATING', 'ROLLBACK', 'DELETING', ...sanSpecialStatus];
 
 export function DeskDetailPage() {
-  const { formatMessage } = useIntl();
+  const { formatMessage } = useMessageFormatter();
   const location = useLocation();
   const navigate = useNavigate();
   const id = (location.state as { id?: string } | null)?.id;

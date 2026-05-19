@@ -20,35 +20,29 @@
   border-radius: var(--download-modal-radius);
   overflow: hidden;
 
-  .vdui-modal-root {
-    width: 480px;
-    overflow: hidden;
-    border: 1px solid var(--download-modal-border);
-    border-radius: var(--download-modal-radius);
-    background: var(--download-modal-panel-bg);
-    background-size: 100% 100%;
-    box-shadow: var(--download-modal-shadow);
-    padding: 0;
-    backdrop-filter: blur(16px);
-  }
-
   .vdui-modal-body {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: transparent;
+    background: transparent;
     padding: var(--download-modal-body-padding);
   }
 
   .vdui-modal-content {
+    overflow: hidden;
+    border: 1px solid var(--download-modal-border);
     border-radius: var(--download-modal-radius);
-    background: transparent;
-    box-shadow: none;
+    background:
+      var(--download-modal-panel-bg),
+      color-mix(in srgb, var(--vd-color-panel, #fffdf8) 98%, transparent);
+    background-size: 100% 100%;
+    box-shadow: var(--download-modal-shadow);
+    backdrop-filter: blur(16px);
   }
 
   .vdui-modal-footer {
-    background-color: transparent;
+    background: transparent;
     padding: var(--download-modal-footer-padding);
   }
 
@@ -232,7 +226,7 @@
       transparent
     );
 
-    .vdui-modal-root {
+    .vdui-modal-content {
       background-size: auto;
     }
 

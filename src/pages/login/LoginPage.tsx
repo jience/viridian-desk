@@ -16,7 +16,7 @@ import { Checkbox, Form } from '@/ui';
 import { DocumentTitle } from '@/ui/shell/document-title';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import { LoginGatewayDock } from '@/components/LoginGatewayDock';
 import FindPasswordModal from './component/FindPasswordModal';
 import LoginWayChange from './component/LoginWayChange';
@@ -31,7 +31,7 @@ import type { LoginFormType } from './types';
 import './LoginPage.scss';
 
 export default function LoginPage() {
-  const { formatMessage } = useIntl();
+  const { formatMessage } = useMessageFormatter();
   const { t } = useTranslation('common');
   const [form] = Form.useForm<LoginFormType>();
 

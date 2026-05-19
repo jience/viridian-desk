@@ -102,6 +102,7 @@ export const NetworkInfo: FC = () => {
   return (
     <div className="network-info-wrapper">
       <SettingsRow
+        className="vd-settings-row--detail"
         icon={<i className="iconfont icon-net" />}
         title={t('config_page.advanced_setting.network_info')}
         description={networkInfo?.name || tPending('network_info_description')}

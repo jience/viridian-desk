@@ -1,6 +1,6 @@
 import { Form, Input, message, Modal, Radio } from '@/ui';
 import { useEffect, useMemo, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import Regex from '@/utils/regex';
 import { createSnapshot } from '@/services/resource';
 import useRequest from '@/hooks/useRequest';
@@ -9,7 +9,7 @@ import { isEmpty } from 'lodash-es';
 
 const useCreateSnap = (props: any) => {
   const { visible = false, setVisible, desktopId, desktopDiskList, refreshList } = props;
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const { formatMessage } = intl;
   const [formIns] = Form.useForm();
   const [_systemDiskId, setSystemDiskId] = useState();

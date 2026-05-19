@@ -4,7 +4,7 @@ import { Table, Button, Checkbox, Row, Col, Menu, Dropdown as Dropdown } from '@
 import SearchBar from '../SearchBar';
 import { clearEmpty } from '@/utils/utils';
 import { Divider } from '@/ui';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import ActionAuth from '@/utils/actionAuth';
 import { map, isEmpty, get, cloneDeep, isFunction, slice } from 'lodash-es';
 const AuthDropdown = ActionAuth(Dropdown);
@@ -115,7 +115,7 @@ const TableCommon = ({
   containerStyle = {},
   ...other
 }) => {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   // 不显示的查询参数
   // 不显示的查询参数
   const untreatedParamKeys = [

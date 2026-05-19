@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import { useNavigate } from 'react-router';
 import { Button, Dropdown, Empty, message, Modal, Spin, Tooltip } from '@/ui';
 import { get } from 'lodash-es';
@@ -22,7 +22,7 @@ import useDeskHooks from './useDeskHooks';
 import './DeskPage.scss';
 
 export function DeskPage() {
-  const { formatMessage } = useIntl();
+  const { formatMessage } = useMessageFormatter();
   const navigate = useNavigate();
   const isFullScreen = useAppSelector(selectFullScreen);
   const [_attachIds, setAttachIds] = useState({

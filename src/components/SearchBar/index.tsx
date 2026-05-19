@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Button, Input } from '@/ui';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import { SearchOutlined, DeleteOutlined } from '@/ui/icons';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Tag } from '@/ui';
@@ -77,7 +77,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const [searchValue, setSearchValue] = useState('');
   const isInputing = useRef(false);
-  const { formatMessage } = useIntl();
+  const { formatMessage } = useMessageFormatter();
 
   const handleDelete = () => {
     const target = cloneDeep(params);

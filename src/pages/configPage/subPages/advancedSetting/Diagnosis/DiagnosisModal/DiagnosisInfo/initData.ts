@@ -1,8 +1,8 @@
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import type { InfoRenderItem } from './types';
 
 export const useInitData = () => {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   // 网络诊断信息
   const renderNetworkInfo: InfoRenderItem[] = [
     {

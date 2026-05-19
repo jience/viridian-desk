@@ -37,41 +37,6 @@ export const DESK_STATUS = {
   ROLLINGBACK: 'RollingBack',
   DELETING: 'Deleting',
 };
-const DESK_STATUS_Zh = {
-  start: {
-    zh_CN: '运行中',
-  },
-  error: {
-    zh_CN: '异常',
-  },
-  stop: {
-    zh_CN: '关机',
-  },
-  stopretain: {
-    zh_CN: '关机并释放资源',
-  },
-  paused: {
-    zh_CN: '暂停',
-  },
-  unknown: {
-    zh_CN: '已删除',
-  },
-  creating: {
-    zh_CN: '创建中',
-  },
-  snapshotcreating: {
-    zh_CN: '快照创建中',
-  },
-  snapshotdeleting: {
-    zh_CN: '快照删除中',
-  },
-  rollingback: {
-    zh_CN: '快照回滚中',
-  },
-  deleting: {
-    zh_CN: '删除中',
-  },
-};
 // 获取桌面状态值
 export const getStatus = (status) => {
   let type = 'success';
@@ -98,7 +63,7 @@ export const getStatus = (status) => {
     }
     return {
       type,
-      title: window.LangCode == 'zh-CN' ? DESK_STATUS_Zh[stat]['zh_CN'] : stat,
+      title: formatI18NKey(`desktop_status.${stat}`),
     };
   } else {
     type = 'warning';

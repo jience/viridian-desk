@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 import './index.scss';
 import { Modal, Empty } from '@/ui';
 import TableCommon from '@/components/TableCommon';
 import useDeskDetail from '../useDeskDetail';
 
 const AllDiskListModal = (props: any) => {
-  const { formatMessage } = useIntl();
+  const { formatMessage } = useMessageFormatter();
 
   const { title, visiable, setVisiable, transitionName = 'vd-modal-fade', desktopId } = props;
 

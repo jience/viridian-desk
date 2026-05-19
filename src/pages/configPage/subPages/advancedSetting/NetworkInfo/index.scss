@@ -37,6 +37,9 @@
   }
 
   .info-table .operates-area {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 0 0;
     color: var(--settings-page-accent-strong);
   }
 }

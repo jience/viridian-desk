@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 // UI
 import { Button } from '@/ui';
 
-import { useIntl } from 'react-intl';
+import { useMessageFormatter } from '@/utils/message-format';
 
 const useFormDemoConfig = (_props: any) => {
-  const intl = useIntl();
+  const intl = useMessageFormatter();
   const { formatMessage } = intl;
   // 更改日志存储路径按钮
   const dirPathButtonAfter = useMemo(

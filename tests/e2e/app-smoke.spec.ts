@@ -86,6 +86,22 @@ test('switches theme from settings', async ({ page }) => {
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });
 
+test('navigates away from common settings without update loop', async ({ page }) => {
+  await page.goto('/configPage/commonSetting');
+
+  await expect(page).toHaveTitle('通用 - Viridian Desk');
+
+  await page.getByRole('button', { name: /关于/ }).click();
+  await expect(page).toHaveURL(/\/configPage\/about$/);
+  await expect(page).toHaveTitle('关于 - Viridian Desk');
+
+  await page.getByRole('button', { name: /服务器/ }).click();
+  await expect(page).toHaveURL(/\/configPage\/serverSetting$/);
+  await expect(page).toHaveTitle('服务器 - Viridian Desk');
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
 test('validates and creates a gateway from settings modal', async ({ page }) => {
   await page.goto('/configPage/serverSetting');
 
