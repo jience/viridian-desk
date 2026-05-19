@@ -1,8 +1,9 @@
 import { expect, test } from '@playwright/test';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const source = (path: string) => readFileSync(join(process.cwd(), path), 'utf8');
+const fileSize = (path: string) => statSync(join(process.cwd(), path)).size;
 
 test('keeps low-frequency modal components lazy-loaded', () => {
   expect(source('src/pages/approval/index.tsx')).not.toContain(
@@ -56,4 +57,13 @@ test('keeps the update modal background CSS-only', () => {
 
   expect(themeSource).not.toContain('upgrade-bgc.png');
   expect(themeSource).not.toContain('upgrade-bgc-dark.png');
+});
+
+test('keeps slider verification image assets small', () => {
+  const verifyDir = join(process.cwd(), 'src/assets/images/verify');
+  const totalBytes = readdirSync(verifyDir)
+    .filter((fileName) => fileName.endsWith('.jpg'))
+    .reduce((total, fileName) => total + fileSize(`src/assets/images/verify/${fileName}`), 0);
+
+  expect(totalBytes).toBeLessThanOrEqual(150_000);
 });
