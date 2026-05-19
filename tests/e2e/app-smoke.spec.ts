@@ -134,18 +134,57 @@ test('validates and creates a gateway from settings modal', async ({ page }) => 
 });
 
 test('opens gateway action menu with keyboard', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'viridian.web.config',
+      JSON.stringify({
+        gateway: [
+          {
+            uuid: 'keyboard-gateway-a',
+            name: 'Keyboard Gateway A',
+            address: 'gateway-a.local',
+            port: 443,
+            isPublic: true,
+            auto: true,
+          },
+          {
+            uuid: 'keyboard-gateway-b',
+            name: 'Keyboard Gateway B',
+            address: 'gateway-b.local',
+            port: 443,
+            isPublic: true,
+            auto: false,
+          },
+        ],
+        language: 'zh-CN',
+        theme: 'dark',
+      }),
+    );
+  });
   await page.goto('/configPage/serverSetting');
 
-  const moreButton = page.getByRole('button', { name: /更多/ }).first();
+  const moreButton = page
+    .locator('.server-setting-gateway-row', { hasText: 'Keyboard Gateway B' })
+    .getByRole('button', { name: /更多/ });
   await moreButton.focus();
   await moreButton.press('Enter');
 
   const menu = page.getByRole('menu');
   await expect(menu).toBeVisible();
-  await expect(menu.getByRole('menuitem', { name: /编辑/ })).toBeVisible();
+  await expect(menu.getByRole('menuitem', { name: /编辑/ })).toBeFocused();
 
-  await moreButton.press('Escape');
+  await page.keyboard.press('ArrowDown');
+  await expect(menu.getByRole('menuitem', { name: /启用/ })).toBeFocused();
+
+  await page.keyboard.press('End');
+  await expect(menu.getByRole('menuitem', { name: /删除/ })).toBeFocused();
+
+  await page.keyboard.press('Home');
+  await expect(menu.getByRole('menuitem', { name: /编辑/ })).toBeFocused();
+
+  await page.keyboard.press('Escape');
   await expect(menu).toBeHidden();
+  await expect(moreButton).toBeFocused();
 
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });

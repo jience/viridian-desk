@@ -877,6 +877,51 @@ export function AutoComplete({ children, options, onSelect, showSearch }: Select
 
 export function Dropdown({ menu, children, classNames }: any) {
   const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLSpanElement>(null);
+  const shouldFocusMenuRef = useRef(false);
+
+  useEffect(() => {
+    if (!open || !shouldFocusMenuRef.current) return;
+    shouldFocusMenuRef.current = false;
+    window.setTimeout(() => {
+      const firstItem = rootRef.current?.querySelector<HTMLButtonElement>(
+        '[role="menuitem"]:not(:disabled)',
+      );
+      firstItem?.focus();
+    }, 0);
+  }, [open]);
+
+  const focusTrigger = () => {
+    rootRef.current?.querySelector<HTMLElement>('[aria-haspopup="menu"]')?.focus();
+  };
+
+  const focusMenuItem = (current: HTMLElement, direction: 'next' | 'prev' | 'first' | 'last') => {
+    const menuRoot = current.closest('[role="menu"]');
+    if (!menuRoot) return;
+
+    const items = Array.from(
+      menuRoot.querySelectorAll<HTMLButtonElement>('[role="menuitem"]:not(:disabled)'),
+    );
+    if (!items.length) return;
+
+    const currentIndex = items.indexOf(current as HTMLButtonElement);
+    const lastIndex = items.length - 1;
+    const nextIndex =
+      direction === 'first'
+        ? 0
+        : direction === 'last'
+          ? lastIndex
+          : direction === 'next'
+            ? currentIndex >= lastIndex
+              ? 0
+              : currentIndex + 1
+            : currentIndex <= 0
+              ? lastIndex
+              : currentIndex - 1;
+
+    items[nextIndex]?.focus();
+  };
+
   const child = isValidElement(children)
     ? cloneElement(children as ReactElement<any>, {
         'aria-expanded': open,
@@ -891,10 +936,12 @@ export function Dropdown({ menu, children, classNames }: any) {
           if (event.defaultPrevented) return;
           if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
+            shouldFocusMenuRef.current = !open;
             setOpen((value) => !value);
           }
           if (event.key === 'ArrowDown') {
             event.preventDefault();
+            shouldFocusMenuRef.current = true;
             setOpen(true);
           }
           if (event.key === 'Escape') {
@@ -906,8 +953,17 @@ export function Dropdown({ menu, children, classNames }: any) {
     : children;
   return (
     <span
+      ref={rootRef}
       className="vd-dropdown"
-      onBlur={() => window.setTimeout(() => setOpen(false), 120)}
+      onBlur={(event) => {
+        const nextTarget = event.relatedTarget;
+        if (nextTarget instanceof Node && event.currentTarget.contains(nextTarget)) return;
+        window.setTimeout(() => {
+          if (!rootRef.current?.contains(document.activeElement)) {
+            setOpen(false);
+          }
+        }, 120);
+      }}
       tabIndex={-1}
     >
       {child}
@@ -929,6 +985,26 @@ export function Dropdown({ menu, children, classNames }: any) {
               onKeyDown={(event) => {
                 if (event.key === 'Escape') {
                   event.preventDefault();
+                  setOpen(false);
+                  focusTrigger();
+                }
+                if (event.key === 'ArrowDown') {
+                  event.preventDefault();
+                  focusMenuItem(event.currentTarget, 'next');
+                }
+                if (event.key === 'ArrowUp') {
+                  event.preventDefault();
+                  focusMenuItem(event.currentTarget, 'prev');
+                }
+                if (event.key === 'Home') {
+                  event.preventDefault();
+                  focusMenuItem(event.currentTarget, 'first');
+                }
+                if (event.key === 'End') {
+                  event.preventDefault();
+                  focusMenuItem(event.currentTarget, 'last');
+                }
+                if (event.key === 'Tab') {
                   setOpen(false);
                 }
               }}
