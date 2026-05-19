@@ -12,6 +12,7 @@
     "dev": "pnpm run prepare-resources && vite",
     "build": "pnpm run lint && vite build && pnpm run check:bundle",
     "check:bundle": "node scripts/check-build-budget.js",
+    "check:frontend": "pnpm run test:e2e && pnpm run build",
     "lint": "pnpm run prepare-resources && eslint . && tsc -b",
     "test:e2e": "playwright test",
     "preview": "vite preview",
