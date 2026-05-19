@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const source = (path: string) => readFileSync(join(process.cwd(), path), 'utf8');
@@ -76,5 +76,21 @@ test('uses only woff2 icon font sources in the bundled CSS', () => {
     expect(cssSource).toContain("format('woff2')");
     expect(cssSource).not.toContain("format('woff')");
     expect(cssSource).not.toContain("format('truetype')");
+  }
+});
+
+test('keeps removed legacy static assets out of the source tree', () => {
+  const removedAssets = [
+    'src/assets/images/app_layout_bg.png',
+    'src/assets/images/upgrade-bgc.png',
+    'src/assets/images/upgrade-bgc-dark.png',
+    'src/assets/iconfont/iconfont.woff',
+    'src/assets/iconfont/iconfont.ttf',
+    'src/assets/iconfontColor/iconfont.woff',
+    'src/assets/iconfontColor/iconfont.ttf',
+  ];
+
+  for (const assetPath of removedAssets) {
+    expect(existsSync(join(process.cwd(), assetPath)), assetPath).toBe(false);
   }
 });
