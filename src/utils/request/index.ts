@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash-es';
 import { globalEmitter } from '../mitt';
 import { isApiErrResponse, type ApiResponse } from './types';
 import { logger } from '@/utils/logger';
+import { getWebPreviewResponse } from './web-preview';
 
 type FetchOpt = RequestInit & ClientOptions;
 export interface RequestOptions<B = any> extends Omit<FetchOpt, 'body'> {
@@ -86,32 +87,6 @@ const formateApi = (api: string) => {
     return `https://${autoGateway.address}:${autoGateway.port}${import.meta.env.VITE_API_PREFIX}${api}`;
   }
   return `${import.meta.env.VITE_BASE_DEFAULT_URL}${import.meta.env.VITE_API_PREFIX}${api}`;
-};
-
-const webPreviewListApis = new Set([
-  '/listResourceUser',
-  '/listDesktopPool',
-  '/listVapp',
-  '/listFault',
-  '/listWorkflow',
-  '/listAppLib',
-]);
-
-const getWebPreviewResponse = <RESP>(api: string): RESP | null => {
-  if (typeof window === 'undefined' || (window as any).__TAURI_INTERNALS__) {
-    return null;
-  }
-
-  if (webPreviewListApis.has(api)) {
-    return {
-      data: {
-        results: [],
-        totalCount: 0,
-      },
-    } as RESP;
-  }
-
-  return null;
 };
 
 export const request = async <RESP = ApiResponse, REQ = any>(
