@@ -109,6 +109,20 @@ test('keeps the app shell background CSS-only', () => {
   expect(source('src/styles/theme.scss')).not.toContain('app_layout_bg.png');
 });
 
+test('does not load cached native background images in the renderer', () => {
+  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
+  const deskLoadingSource = source('src/components/DeskLoading/index.tsx');
+
+  expect(clientLayoutSource).not.toContain('selectBackgroundImage');
+  expect(clientLayoutSource).not.toContain('backgroundImage:');
+  expect(deskLoadingSource).not.toContain('selectBackgroundImage');
+  expect(deskLoadingSource).not.toContain('backgroundImage:');
+});
+
+test('keeps desk detail fact values free of nested paragraph markup', () => {
+  expect(source('src/pages/deskDetail/useDeskDetail.tsx')).not.toContain('<p');
+});
+
 test('keeps the update modal background CSS-only', () => {
   const themeSource = source('src/styles/theme.scss');
 

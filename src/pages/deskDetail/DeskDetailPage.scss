@@ -296,12 +296,25 @@
     font-size: 13px;
     line-height: 1.4;
 
-    p {
+    > span {
+      display: block;
       margin: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+  }
+
+  &__lines {
+    display: grid;
+    gap: 2px;
+  }
+
+  &__line {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__more {

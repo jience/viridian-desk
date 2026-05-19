@@ -76,10 +76,18 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
     const ipList = interfaces.map((item: any) => {
       const ips: any = [];
       if (item.ip) {
-        ips.push(<p key={item.id}>{item.ip}</p>);
+        ips.push(
+          <span className="desk-detail-fact__line" key={item.id}>
+            {item.ip}
+          </span>,
+        );
       }
       if (item.ip2) {
-        ips.push(<p key={item.id + item.ip2}>{item.ip2}</p>);
+        ips.push(
+          <span className="desk-detail-fact__line" key={item.id + item.ip2}>
+            {item.ip2}
+          </span>,
+        );
       }
       return ips;
     });
@@ -103,7 +111,7 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
             type: 'system',
             title: formatMessage({ id: 'DESK_VOLUME_SYSTEM' }),
             render: () => {
-              return <p>{disk.name}</p>;
+              return <span>{disk.name}</span>;
             },
           });
           break;
@@ -114,7 +122,7 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
             type: 'personal',
             title: formatMessage({ id: 'DESK_VOLUME_PERSONAL' }),
             render: () => {
-              return <p>{disk.name}</p>;
+              return <span>{disk.name}</span>;
             },
           });
           break;
@@ -125,7 +133,7 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
             type: 'common',
             title: formatMessage({ id: `DESK_VOLUME_COMMON` }),
             render: () => {
-              return <p>{disk.name}</p>;
+              return <span>{disk.name}</span>;
             },
           });
           break;
@@ -158,11 +166,11 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
             showMoreAction: () => setShowAllDiskList(true),
             render: () => {
               return (
-                <p>
+                <span>
                   {formatMessage({ id: 'DESK_VOLUME_SYSTEM' })}：{systemDisk.length} 个 |{' '}
                   {formatMessage({ id: `DESK_VOLUME_COMMON` })}：
                   {totalDiskCount > 0 ? totalDiskCount - 1 : totalDiskCount} 个
-                </p>
+                </span>
               );
             },
           },
@@ -177,11 +185,11 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
       title: formatMessage({ id: 'DESK_STANDARD' }),
       render: () => {
         return (
-          <p>
+          <span>
             {'CPU'}：{transCpu(desk?.flavor?.cpu)} | {formatMessage({ id: 'STORE' })}：{num}
             {unit}
             {transGpu(desk)}
-          </p>
+          </span>
         );
       },
     },
@@ -191,7 +199,7 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
       icon: 'icon-mirror',
       title: formatMessage({ id: 'DESK_IMAGE' }),
       render: () => {
-        return <p>{desk?.image?.name || EmptyText}</p>;
+        return <span>{desk?.image?.name || EmptyText}</span>;
       },
     },
     {
@@ -199,7 +207,7 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
       icon: 'icon-net',
       title: formatMessage({ id: 'DESK_NETWORK' }),
       render: () => {
-        return <p>{getDeskNetwork(desk?.interfaces) || EmptyText}</p>;
+        return <span className="desk-detail-fact__lines">{getDeskNetwork(desk?.interfaces)}</span>;
       },
     },
     {
@@ -207,7 +215,7 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
       icon: 'icon-Willdo',
       title: formatMessage({ id: 'DESK_CON_DISCON_TIME' }),
       render: () => {
-        return <p> {desk?.lastTime || EmptyText}</p>;
+        return <span>{desk?.lastTime || EmptyText}</span>;
       },
     },
     {
@@ -215,7 +223,7 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
       icon: 'icon-time',
       title: formatMessage({ id: 'DESK_CREAT_TIME' }),
       render: () => {
-        return <p>{desk?.createTime || EmptyText}</p>;
+        return <span>{desk?.createTime || EmptyText}</span>;
       },
     },
   ];

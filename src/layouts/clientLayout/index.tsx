@@ -1,14 +1,12 @@
 import './index.scss';
-import { lazy, Suspense, useMemo, useEffect, useRef, type CSSProperties } from 'react';
+import { lazy, Suspense, useMemo, useEffect, useRef } from 'react';
 import useSharedState from './useSharedState';
 import { bridge } from '@/native';
-import { convertNativeFileSrc } from '@/native/file-src';
 import { Outlet } from 'react-router';
 import { globalEmitter } from '@/utils/mitt';
 import { message } from '@/ui/message';
 import { useInitState } from './useInitState';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { selectBackgroundImage } from '@/store/feature/client';
 import { selectMsgId, selectMsgModalShow, setMsgModalShow } from '@/store/feature/app/appSlice';
 import { selectIsThin } from '@/store/feature/terminal';
 import ControlWindow from '@/components/ControlWindow';
@@ -24,7 +22,6 @@ const ClientLayout = () => {
   const { t } = useTranslation();
   useInitState();
 
-  const backgroundImage = useAppSelector(selectBackgroundImage);
   const isThin = useAppSelector(selectIsThin);
 
   const clientOnlineMonitorRef = useRef<UnlistenFn>(null);
@@ -157,20 +154,12 @@ const ClientLayout = () => {
     getClientConfig();
   }, [reconnectGateWay]);
 
-  const bgStyle = useMemo<CSSProperties | undefined>(() => {
-    if (backgroundImage) {
-      return {
-        backgroundImage: `url(${convertNativeFileSrc(backgroundImage)})`,
-      };
-    }
-  }, [backgroundImage]);
-
   const dragAttr = useMemo(() => {
     return !isThin ? { 'data-tauri-drag-region': 'true' } : { 'none-drag-region': 'true' };
   }, [isThin]);
 
   return (
-    <div id="appLayout" className="client-layout-shell" style={bgStyle}>
+    <div id="appLayout" className="client-layout-shell">
       <div {...dragAttr} className="client-layout-shell__drag-region" />
       <div className="client-layout-shell__controls">
         <ControlWindow />
