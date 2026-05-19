@@ -1,19 +1,22 @@
 import refreshIconPng from '@/assets/images/refreshIcon.png';
-import img0 from '@/assets/images/verify/0.jpg';
-import img1 from '@/assets/images/verify/1.jpg';
-import img2 from '@/assets/images/verify/2.jpg';
-import img3 from '@/assets/images/verify/3.jpg';
-import img4 from '@/assets/images/verify/4.jpg';
-import img5 from '@/assets/images/verify/5.jpg';
-import img6 from '@/assets/images/verify/6.jpg';
-import img7 from '@/assets/images/verify/7.jpg';
-import img8 from '@/assets/images/verify/8.jpg';
-import img9 from '@/assets/images/verify/9.jpg';
 import { getRandomNumberByRange, square, sum } from '@/utils/utils';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import './index.css';
 
-const imgList = [img0, img1, img2, img3, img4, img5, img6, img7, img8, img9];
+type VerifyImageModule = Promise<{ default: string }>;
+
+const verifyImageLoaders: Array<() => VerifyImageModule> = [
+  () => import('@/assets/images/verify/0.jpg'),
+  () => import('@/assets/images/verify/1.jpg'),
+  () => import('@/assets/images/verify/2.jpg'),
+  () => import('@/assets/images/verify/3.jpg'),
+  () => import('@/assets/images/verify/4.jpg'),
+  () => import('@/assets/images/verify/5.jpg'),
+  () => import('@/assets/images/verify/6.jpg'),
+  () => import('@/assets/images/verify/7.jpg'),
+  () => import('@/assets/images/verify/8.jpg'),
+  () => import('@/assets/images/verify/9.jpg'),
+];
 
 export interface SliderVerifyProps {
   width?: number;
@@ -83,11 +86,43 @@ const SliderVerify = memo<SliderVerifyProps>(function ({
     [PI, l, r],
   );
 
-  const getRandomImgSrc = useCallback(() => {
-    // const imgSrc = 'verify-image-'.concat(getRandomNumberByRange(0, 9) + '').concat('.jpg');
-    const index = getRandomNumberByRange(0, imgList.length - 1);
-    return imgList[index];
+  const getRandomImgSrc = useCallback(async () => {
+    const index = getRandomNumberByRange(0, verifyImageLoaders.length - 1);
+    const module = await verifyImageLoaders[index]();
+    return module.default;
   }, []);
+
+  const loadRandomImage = useCallback(
+    async (img: HTMLImageElement) => {
+      try {
+        img.src = await getRandomImgSrc();
+      } catch {
+        setLoading(false);
+      }
+    },
+    [getRandomImgSrc],
+  );
+
+  const retryRandomImage = useCallback(
+    (img: HTMLImageElement) => {
+      void loadRandomImage(img);
+    },
+    [loadRandomImage],
+  );
+
+  const resetImage = useCallback(
+    (img: HTMLImageElement) => {
+      setLoading(true);
+      void loadRandomImage(img);
+    },
+    [loadRandomImage],
+  );
+
+  const reloadImage = useCallback(() => {
+    if (imgRef.current) {
+      resetImage(imgRef.current);
+    }
+  }, [resetImage]);
 
   const createImg = useCallback(
     (onload: (this: GlobalEventHandlers, ev: Event) => any) => {
@@ -96,12 +131,12 @@ const SliderVerify = memo<SliderVerifyProps>(function ({
       img.onload = onload;
 
       img.onerror = function () {
-        img.src = getRandomImgSrc(); // 图片加载失败的时候重新加载其他图片
+        retryRandomImage(img); // 图片加载失败的时候重新加载其他图片
       };
-      img.src = getRandomImgSrc();
+      resetImage(img);
       return img;
     },
-    [getRandomImgSrc],
+    [resetImage, retryRandomImage],
   );
 
   const draw = useCallback(
@@ -149,8 +184,8 @@ const SliderVerify = memo<SliderVerifyProps>(function ({
     blockCtx.clearRect(0, 0, width, height); // 重新加载图片
 
     setLoading(true);
-    if (imgRef.current) imgRef.current.src = getRandomImgSrc();
-  }, [width, height, getRandomImgSrc]);
+    reloadImage();
+  }, [width, height, reloadImage]);
 
   function handleRefresh() {
     reset();

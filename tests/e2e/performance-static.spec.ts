@@ -39,3 +39,10 @@ test('does not statically bundle every locale at startup', () => {
 test('keeps async route styles split from the startup stylesheet', () => {
   expect(source('vite.config.ts')).not.toContain('cssCodeSplit: false');
 });
+
+test('loads slider verification images on demand', () => {
+  const sliderSource = source('src/components/SliderVerify/index.tsx');
+
+  expect(sliderSource).not.toContain("import img0 from '@/assets/images/verify/0.jpg'");
+  expect(sliderSource).not.toContain("import img9 from '@/assets/images/verify/9.jpg'");
+});
