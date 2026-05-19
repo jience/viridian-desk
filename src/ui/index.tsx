@@ -363,6 +363,7 @@ type RuleInput = FormRule | ((form: FormInstance) => FormRule);
 export type FormInstance<T = AnyRecord> = {
   getFieldValue: (name: keyof T | string) => any;
   getFieldsValue: () => T;
+  getFieldError: (name: keyof T | string) => ReactNode[];
   setFieldsValue: (values: Partial<T>) => void;
   setFieldValue: (name: keyof T | string, value: any) => void;
   resetFields: (names?: Array<keyof T | string>) => void;
@@ -371,66 +372,103 @@ export type FormInstance<T = AnyRecord> = {
   _subscribe?: (listener: () => void) => () => void;
 };
 
+const normalizeRuleError = (error: any, fallback?: ReactNode): ReactNode => {
+  if (error?.message) return error.message;
+  if (error) return String(error);
+  return fallback ?? '';
+};
+
+const validateRule = async (rule: FormRule, value: any): Promise<ReactNode | null> => {
+  if (rule.required && (value === undefined || value === null || value === '')) {
+    return rule.message ?? '';
+  }
+  if (rule.min && String(value ?? '').length < rule.min) {
+    return rule.message ?? '';
+  }
+  if (rule.pattern && value && !rule.pattern.test(String(value))) {
+    return rule.message ?? '';
+  }
+  if (!rule.validator) return null;
+
+  try {
+    const validator = rule.validator;
+    await new Promise<void>((resolve, reject) => {
+      const result = validator(rule, value, (error?: any) => (error ? reject(error) : resolve()));
+      if (result && typeof (result as Promise<any>).then === 'function') {
+        (result as Promise<any>).then(() => resolve()).catch(reject);
+      } else if (validator.length < 3) {
+        resolve();
+      }
+    });
+    return null;
+  } catch (error) {
+    return normalizeRuleError(error, rule.message);
+  }
+};
+
 const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
   const values: AnyRecord = {};
   const initial: AnyRecord = {};
   const rules = new Map<string, RuleInput[]>();
+  const errors = new Map<string, ReactNode[]>();
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach((listener) => listener());
   const api: FormInstance<T> = {
     getFieldValue: (name) => values[String(name)],
     getFieldsValue: () => ({ ...values }) as T,
+    getFieldError: (name) => errors.get(String(name)) ?? [],
     setFieldsValue: (next) => {
       Object.assign(values, next);
+      Object.keys(next).forEach((key) => errors.delete(key));
       notify();
     },
     setFieldValue: (name, value) => {
-      values[String(name)] = value;
+      const key = String(name);
+      values[key] = value;
+      errors.delete(key);
       notify();
     },
     resetFields: (names) => {
       if (!names) {
         Object.keys(values).forEach((key) => delete values[key]);
         Object.assign(values, initial);
+        errors.clear();
       } else {
         names.forEach((name) => {
           const key = String(name);
           if (key in initial) values[key] = initial[key];
           else delete values[key];
+          errors.delete(key);
         });
       }
       notify();
     },
     validateFields: async (names) => {
       const keys = names?.map(String) ?? Array.from(rules.keys());
+      const errorFields: Array<{ name: string; errors: ReactNode[] }> = [];
+
+      keys.forEach((key) => errors.delete(key));
+
       for (const key of keys) {
         const value = values[key];
         for (const ruleInput of rules.get(key) || []) {
           const rule = typeof ruleInput === 'function' ? ruleInput(api as any) : ruleInput;
-          if (rule.required && (value === undefined || value === null || value === '')) {
-            throw { errorFields: [{ name: key, errors: [rule.message] }] };
-          }
-          if (rule.min && String(value ?? '').length < rule.min) {
-            throw { errorFields: [{ name: key, errors: [rule.message] }] };
-          }
-          if (rule.pattern && value && !rule.pattern.test(String(value))) {
-            throw { errorFields: [{ name: key, errors: [rule.message] }] };
-          }
-          if (rule.validator) {
-            const validator = rule.validator;
-            await new Promise<void>((resolve, reject) => {
-              const result = validator(rule, value, (error?: any) =>
-                error ? reject(error) : resolve(),
-              );
-              if (result && typeof (result as Promise<any>).then === 'function') {
-                (result as Promise<any>).then(() => resolve()).catch(reject);
-              } else if (validator.length < 3) {
-                resolve();
-              }
-            });
+          const error = await validateRule(rule, value);
+          if (error) {
+            const fieldErrors = [error];
+            errors.set(key, fieldErrors);
+            errorFields.push({ name: key, errors: fieldErrors });
+            break;
           }
         }
       }
+
+      notify();
+
+      if (errorFields.length) {
+        throw { errorFields, values: { ...values } };
+      }
+
       return { ...values } as T;
     },
     _register: (name, nextRules = []) => {
@@ -479,7 +517,11 @@ function FormItem({
 }: FormItemProps) {
   const form = useContext(FormContext);
   const [, force] = useState(0);
+  const fieldId = useId();
+  const errorId = `${fieldId}-error`;
   const key = Array.isArray(name) ? name.join('.') : name !== undefined ? String(name) : undefined;
+  const fieldErrors = key && form ? form.getFieldError(key) : [];
+  const hasError = fieldErrors.length > 0;
   useEffect(() => {
     if (!form || !key) return;
     const unreg = form._register?.(key, rules);
@@ -493,6 +535,9 @@ function FormItem({
   const child =
     key && form && isValidElement(children)
       ? cloneElement(children as ReactElement<any>, {
+          id: (children as ReactElement<any>).props.id ?? fieldId,
+          'aria-invalid': hasError || undefined,
+          'aria-describedby': hasError ? errorId : undefined,
           [valuePropName]: form.getFieldValue(key) ?? (valuePropName === 'checked' ? false : ''),
           onChange: (...args: any[]) => {
             const event = args[0];
@@ -509,9 +554,18 @@ function FormItem({
       : children;
 
   return (
-    <div className={cn('vdui-form-item', className)}>
-      {label && <label className="vdui-form-item-label">{label}</label>}
+    <div className={cn('vdui-form-item', hasError && 'vdui-form-item-has-error', className)}>
+      {label && (
+        <label className="vdui-form-item-label" htmlFor={key ? fieldId : undefined}>
+          {label}
+        </label>
+      )}
       <div className="vdui-form-item-control">{child}</div>
+      {hasError && (
+        <div className="vdui-form-item-error" id={errorId} role="alert">
+          {fieldErrors[0]}
+        </div>
+      )}
     </div>
   );
 }

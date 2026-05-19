@@ -96,6 +96,8 @@ test('validates and creates a gateway from settings modal', async ({ page }) => 
 
   await dialog.getByRole('button', { name: /保存/ }).click();
   await expect(dialog).toBeVisible();
+  await expect(dialog.getByText('请输入服务器名称')).toBeVisible();
+  await expect(dialog.getByText('请输入服务器地址')).toBeVisible();
 
   await dialog.getByPlaceholder('请输入服务器名称').fill('ProdGW');
   await dialog.getByPlaceholder('请输入服务器地址').fill('prod.example.com');

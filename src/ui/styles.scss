@@ -222,11 +222,34 @@
   margin-bottom: 16px;
 }
 
+.vdui-form-item-has-error {
+  .vdui-input-affix-wrapper,
+  .vdui-input,
+  .vdui-select {
+    border-color: var(--vd-color-danger, #cf4f45);
+  }
+
+  .vdui-input-affix-wrapper:focus-within,
+  .vdui-input:focus,
+  .vdui-select:focus,
+  .vdui-select:focus-within {
+    border-color: var(--vd-color-danger, #cf4f45);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--vd-color-danger, #cf4f45) 18%, transparent);
+  }
+}
+
 .vdui-form-item-label {
   display: block;
   margin-bottom: 7px;
   color: var(--vd-color-muted, rgba(148, 163, 184, 0.86));
   font-size: 13px;
+}
+
+.vdui-form-item-error {
+  margin-top: 6px;
+  color: var(--vd-color-danger, #cf4f45);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .vdui-modal-root {
