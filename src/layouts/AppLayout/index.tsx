@@ -1,13 +1,18 @@
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router';
 import Sidebar from '@/components/Sidebar';
 import { LoginGatewayDock } from '@/components/LoginGatewayDock';
-import { AssistantPanel } from '@/ui/assistant/assistant-panel';
 import { AppShell, type AssistantState } from '@/ui/shell/app-shell';
 import { DocumentTitle } from '@/ui/shell/document-title';
 import '@/styles/design-system.css';
 import './index.scss';
+
+const AssistantPanel = lazy(() =>
+  import('@/ui/assistant/assistant-panel').then((module) => ({
+    default: module.AssistantPanel,
+  })),
+);
 
 const routeTitles = [
   { match: '/app/empty', titleKey: 'navigation.empty' },
@@ -40,7 +45,9 @@ export function AppLayout() {
       <AppShell
         assistant={
           assistantState === 'hidden' ? undefined : (
-            <AssistantPanel collapsed={false} onToggle={toggleAssistant} />
+            <Suspense fallback={null}>
+              <AssistantPanel collapsed={false} onToggle={toggleAssistant} />
+            </Suspense>
           )
         }
         assistantState={assistantState}

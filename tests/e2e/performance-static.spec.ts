@@ -19,3 +19,19 @@ test('keeps low-frequency modal components lazy-loaded', () => {
     "import DeskPoolModal from './components/deskPoolDetail'",
   );
 });
+
+test('loads the assistant panel only when the user opens it', () => {
+  expect(source('src/layouts/AppLayout/index.tsx')).not.toContain(
+    "import { AssistantPanel } from '@/ui/assistant/assistant-panel'",
+  );
+});
+
+test('does not statically bundle every locale at startup', () => {
+  const i18nSource = source('src/utils/i18n.ts');
+
+  expect(i18nSource).not.toContain("from '@/assets/locales/zh-CN.json'");
+  expect(i18nSource).not.toContain("from '@/assets/locales/zh-TW.json'");
+  expect(i18nSource).not.toContain("from '@/assets/locales/en-US.json'");
+  expect(i18nSource).not.toContain("from '@/ui/i18n/locales/zh-CN/common.json'");
+  expect(i18nSource).not.toContain("from '@/ui/i18n/locales/zh-CN/assistant.json'");
+});
