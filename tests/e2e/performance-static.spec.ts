@@ -104,3 +104,12 @@ test('defers non-critical hardware acceleration probing until after first render
   expect(setupEnvLogIndex).toBeGreaterThan(setupViewIndex);
   expect(mainSource).not.toContain('  setupEnvLog();\n\n  setupServices();');
 });
+
+test('fails the production budget when legacy font formats are emitted', () => {
+  const budgetSource = source('scripts/check-build-budget.js');
+
+  expect(budgetSource).toContain('legacyFontExtensions');
+  expect(budgetSource).toContain("'.woff'");
+  expect(budgetSource).toContain("'.ttf'");
+  expect(budgetSource).toContain('Use woff2 instead');
+});

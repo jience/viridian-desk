@@ -31,6 +31,8 @@ const extensionGroups = new Map([
   ['.otf', 'font'],
 ]);
 
+const legacyFontExtensions = new Set(['.woff', '.ttf']);
+
 function formatBytes(bytes) {
   if (bytes >= MB) return `${(bytes / MB).toFixed(2)} MB`;
   return `${(bytes / KB).toFixed(1)} KB`;
@@ -62,6 +64,10 @@ async function checkBuildBudget() {
     const ext = path.extname(file).toLowerCase();
     const group = extensionGroups.get(ext) || 'other';
     const limit = budgets[group];
+
+    if (legacyFontExtensions.has(ext)) {
+      violations.push(`${path.relative(process.cwd(), file)} uses ${ext}; Use woff2 instead`);
+    }
 
     if (size > limit) {
       violations.push(
