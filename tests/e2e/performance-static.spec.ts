@@ -94,3 +94,13 @@ test('keeps removed legacy static assets out of the source tree', () => {
     expect(existsSync(join(process.cwd(), assetPath)), assetPath).toBe(false);
   }
 });
+
+test('defers non-critical hardware acceleration probing until after first render', () => {
+  const mainSource = source('src/main.tsx');
+  const setupViewIndex = mainSource.indexOf('setupView();');
+  const setupEnvLogIndex = mainSource.indexOf('scheduleHardwareAccelerationLog();');
+
+  expect(setupViewIndex).toBeGreaterThan(-1);
+  expect(setupEnvLogIndex).toBeGreaterThan(setupViewIndex);
+  expect(mainSource).not.toContain('  setupEnvLog();\n\n  setupServices();');
+});

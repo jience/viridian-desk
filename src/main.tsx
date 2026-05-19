@@ -23,12 +23,22 @@ function setupView() {
   );
 }
 
-function main() {
-  setupEnvLog();
+function scheduleHardwareAccelerationLog() {
+  const schedule =
+    window.requestIdleCallback ??
+    ((callback: IdleRequestCallback) => window.setTimeout(() => callback({} as IdleDeadline), 0));
 
+  schedule(() => {
+    setupEnvLog();
+  });
+}
+
+function main() {
   setupServices();
 
   setupView();
+
+  scheduleHardwareAccelerationLog();
 }
 
 main();
