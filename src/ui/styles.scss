@@ -496,7 +496,15 @@
 
   &:not(:disabled):hover,
   &:not(:disabled):focus-visible {
+    border-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 72%, #10261a);
     color: #ffffff;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 68%, #183623),
+        color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 48%, #10261a)
+      ),
+      var(--vd-color-accent, #4d7c3f);
   }
 }
 
