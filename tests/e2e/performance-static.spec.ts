@@ -67,3 +67,14 @@ test('keeps slider verification image assets small', () => {
 
   expect(totalBytes).toBeLessThanOrEqual(150_000);
 });
+
+test('uses only woff2 icon font sources in the bundled CSS', () => {
+  const iconfontSource = source('src/assets/iconfont/iconfont.css');
+  const colorIconfontSource = source('src/assets/iconfontColor/iconfont-color.css');
+
+  for (const cssSource of [iconfontSource, colorIconfontSource]) {
+    expect(cssSource).toContain("format('woff2')");
+    expect(cssSource).not.toContain("format('woff')");
+    expect(cssSource).not.toContain("format('truetype')");
+  }
+});
