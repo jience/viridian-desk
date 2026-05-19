@@ -1,4 +1,4 @@
-import { appStore } from '@/store';
+import { getStoreState } from '@/store/runtime-access';
 import type { ReactNode } from 'react';
 
 interface HasPermissionFun {
@@ -7,8 +7,7 @@ interface HasPermissionFun {
 }
 
 export const hasPermission = ((permissionCode, node) => {
-  const store = appStore.getState();
-  const permissions = store.app.currentUser?.permissions || [];
+  const permissions = getStoreState()?.app.currentUser?.permissions || [];
   let visible = false;
   if (!permissions) return node ? null : false;
 

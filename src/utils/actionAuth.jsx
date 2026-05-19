@@ -1,8 +1,7 @@
-import { appStore } from '@/store';
+import { getStoreState } from '@/store/runtime-access';
 
 export const authActionShow = (actions) => {
-  const store = appStore.getState();
-  const permissions = store.app.currentUser?.permissions || [];
+  const permissions = getStoreState()?.app.currentUser?.permissions || [];
   for (var index in actions) {
     let validateAction = actions[index];
     if (permissions?.indexOf(validateAction) >= 0) {
@@ -14,8 +13,7 @@ export const authActionShow = (actions) => {
 const ActionAuth = (ComposedComponent, props) => {
   const Wrapper = (props) => {
     const { show, scope, options, actions, projectId, emptyContent, ...others } = props;
-    const store = appStore.getState();
-    const permissions = store.app.currentUser?.permissions || [];
+    const permissions = getStoreState()?.app.currentUser?.permissions || [];
     let valid = false;
     if (options) {
       let allowOptions = options.filter((item) => {

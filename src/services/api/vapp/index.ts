@@ -9,8 +9,8 @@ import type {
   ListVappResp,
   RemoveVappReq,
 } from './types';
-import { appStore } from '@/store';
 import { fetchImageUrlToBase64 } from '@/utils/base64';
+import { getStoreState } from '@/store/runtime-access';
 
 export enum VappApi {
   LIST_VAPP = '/listVapp',
@@ -26,7 +26,7 @@ export enum VappApi {
 }
 
 export const listVapp = async (data: ListVappReq) => {
-  const ip = appStore.getState().gateway.autoGateway?.address;
+  const ip = getStoreState()?.gateway.autoGateway?.address;
   const res = await request<ListVappResp>(VappApi.LIST_VAPP, {
     method: 'POST',
     body: data,
@@ -68,7 +68,7 @@ export const listVappIcon = async (data: ListVappIconReq) => {
     method: 'POST',
     body: data,
   });
-  const ip = appStore.getState().gateway.autoGateway?.address;
+  const ip = getStoreState()?.gateway.autoGateway?.address;
   res.data = await Promise.all(
     res.data.map(async (i) => {
       i.iconUrl = await fetchImageUrlToBase64(`https://${ip}${i.iconUrl}`);
