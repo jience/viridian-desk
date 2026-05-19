@@ -1,8 +1,10 @@
 .diagnosis-modal-wrapper {
   width: 500px !important;
+
   .vdui-modal-body {
     padding: 0px;
     position: relative;
+
     .vdui-progress {
       position: absolute;
       top: -2px;
@@ -10,4 +12,11 @@
       line-height: 0;
     }
   }
+}
+
+.diagnosis-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 22px 18px;
 }

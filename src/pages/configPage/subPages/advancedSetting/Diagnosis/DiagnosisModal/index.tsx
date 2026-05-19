@@ -10,7 +10,7 @@ import {
   type FC,
 } from 'react';
 import { DiagnosisInfo } from './DiagnosisInfo';
-import { Button, Modal, Progress, Space } from '@/ui';
+import { Button, Modal, Progress } from '@/ui';
 import type { DiagnosisData } from './DiagnosisInfo/types';
 import { useAppSelector } from '@/store';
 import { selectClientType, selectVersionName } from '@/store/feature/terminal';
@@ -162,7 +162,7 @@ const DiagnosisModal: FC<DiagnosisModalProps> = ({ ref }) => {
         resetData();
       }}
       footer={
-        <Space>
+        <div className="diagnosis-modal-footer">
           <Button
             key="cancel"
             onClick={() => {
@@ -198,7 +198,7 @@ const DiagnosisModal: FC<DiagnosisModalProps> = ({ ref }) => {
               ? t('config_page.advanced_setting.diagnosing')
               : t('config_page.advanced_setting.re_diagnosis')}
           </Button>
-        </Space>
+        </div>
       }
     >
       <Progress

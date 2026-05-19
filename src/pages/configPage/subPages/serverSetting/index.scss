@@ -13,12 +13,14 @@
 .server-setting-add-btn {
   min-width: 126px;
   border-color: var(--settings-page-accent);
+  color: #ffffff;
   background: var(--settings-page-accent);
   font-weight: 700;
 
   &:hover,
   &:focus-visible {
     border-color: var(--settings-page-accent-strong) !important;
+    color: #ffffff !important;
     background: var(--settings-page-accent-strong) !important;
   }
 

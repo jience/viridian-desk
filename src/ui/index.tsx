@@ -259,6 +259,13 @@ export const Modal = Object.assign(
     const open = props.open ?? props.visible;
     const titleId = useId();
     const dialogRef = useRef<HTMLElement>(null);
+    const onCancelRef = useRef(props.onCancel);
+    const keyboardRef = useRef(props.keyboard);
+
+    useEffect(() => {
+      onCancelRef.current = props.onCancel;
+      keyboardRef.current = props.keyboard;
+    });
 
     useEffect(() => {
       if (!open) return;
@@ -267,9 +274,9 @@ export const Modal = Object.assign(
         document.activeElement instanceof HTMLElement ? document.activeElement : null;
       const focusTimer = window.setTimeout(() => dialogRef.current?.focus(), 0);
       const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Escape' && props.keyboard !== false) {
+        if (event.key === 'Escape' && keyboardRef.current !== false) {
           event.stopPropagation();
-          props.onCancel?.();
+          onCancelRef.current?.();
         }
 
         if (event.key !== 'Tab' || !dialogRef.current) return;
@@ -300,7 +307,7 @@ export const Modal = Object.assign(
         document.removeEventListener('keydown', handleKeyDown);
         activeElement?.focus?.();
       };
-    }, [open, props.keyboard, props.onCancel]);
+    }, [open]);
 
     if (!open && (props.destroyOnHidden || props.destroyOnClose)) return null;
     if (!open) return null;
@@ -310,7 +317,12 @@ export const Modal = Object.assign(
           <Button onClick={props.onCancel} {...props.cancelButtonProps}>
             {props.cancelText ?? 'Cancel'}
           </Button>
-          <Button type="primary" loading={props.confirmLoading} onClick={() => props.onOk?.()}>
+          <Button
+            type="primary"
+            loading={props.confirmLoading}
+            onClick={() => props.onOk?.()}
+            {...props.okButtonProps}
+          >
             {props.okText ?? 'OK'}
           </Button>
         </div>
@@ -666,8 +678,20 @@ export const Form = Object.assign(
     },
     useWatch: (name: string | number, form?: FormInstance) => {
       const [, force] = useState(0);
-      useEffect(() => form?._subscribe?.(() => force((value) => value + 1)), [form]);
-      return form?.getFieldValue(String(name));
+      const watchedValueRef = useRef<any>(undefined);
+      const key = String(name);
+
+      useEffect(() => {
+        watchedValueRef.current = form?.getFieldValue(key);
+        return form?._subscribe?.(() => {
+          const nextValue = form.getFieldValue(key);
+          if (Object.is(watchedValueRef.current, nextValue)) return;
+          watchedValueRef.current = nextValue;
+          force((value) => value + 1);
+        });
+      }, [form, key]);
+
+      return form?.getFieldValue(key);
     },
   },
 );

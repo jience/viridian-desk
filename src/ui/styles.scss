@@ -491,6 +491,15 @@
   gap: 10px;
 }
 
+.vdui-modal-content .vdui-btn-primary {
+  color: #ffffff;
+
+  &:not(:disabled):hover,
+  &:not(:disabled):focus-visible {
+    color: #ffffff;
+  }
+}
+
 .vd-toast {
   position: fixed;
   top: 22px;

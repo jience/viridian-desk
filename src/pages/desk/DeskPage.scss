@@ -241,12 +241,15 @@
 }
 
 .desk-card__icon--pool {
+  color: color-mix(in srgb, var(--desk-page-accent) 32%, var(--desk-page-text));
+
   > svg {
     opacity: 0.78;
   }
 
   > i {
     position: absolute;
+    color: var(--desk-page-text);
     font-size: 20px;
   }
 }
@@ -387,6 +390,25 @@
     background:
       linear-gradient(145deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.2)),
       rgba(255, 255, 255, 0.3);
+  }
+
+  .desk-card__icon--pool {
+    color: color-mix(in srgb, var(--desk-page-accent) 34%, #ffffff);
+    background:
+      linear-gradient(
+        145deg,
+        color-mix(in srgb, var(--desk-page-accent) 13%, #ffffff),
+        rgba(255, 255, 255, 0.32)
+      ),
+      color-mix(in srgb, var(--desk-page-accent) 8%, #ffffff);
+
+    > svg {
+      opacity: 1;
+    }
+
+    > i {
+      color: var(--desk-page-accent-strong);
+    }
   }
 
   .desk-card__default-mark {
