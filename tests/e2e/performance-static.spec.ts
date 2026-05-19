@@ -54,6 +54,10 @@ test('keeps route design-system styles out of the global stylesheet', () => {
   expect(source('src/styles/index.scss')).not.toContain("@use '@/styles/design-system.css'");
 });
 
+test('keeps component library styles out of the global stylesheet', () => {
+  expect(source('src/styles/index.scss')).not.toContain("@use '@/ui/styles.scss'");
+});
+
 test('lazy-loads the authenticated app layout with its route styles', () => {
   const routerSource = source('src/router/index.tsx');
 
