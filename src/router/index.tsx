@@ -1,5 +1,4 @@
 import { LoginAuthType } from '@/native/interfaces/login_history';
-import { AppLayout } from '@/layouts/AppLayout';
 import { appStore } from '@/store';
 import { getLoginHistory, setCurrentLoginType } from '@/store/feature/app';
 import { fetchConfigInfo } from '@/store/feature/config';
@@ -13,6 +12,9 @@ import ClientLayout from '../layouts/clientLayout';
 
 const LoginPage = lazy(() => import('@/pages/login/LoginPage'));
 const SettingsPage = lazy(() => import('@/pages/configPage/SettingsPage'));
+const AppLayout = lazy(() =>
+  import('@/layouts/AppLayout').then((module) => ({ default: module.AppLayout })),
+);
 const ServerSetting = lazy(() => import('@/pages/configPage/subPages/serverSetting'));
 const CurrencySetting = lazy(() => import('@/pages/configPage/subPages/commonSetting'));
 const AdvancedSetting = lazy(() => import('@/pages/configPage/subPages/advancedSetting'));
@@ -127,7 +129,7 @@ const rootRoutes: RouteObject[] = [
       },
       {
         path: 'app',
-        element: <AppLayout />,
+        element: routeElement(<AppLayout />),
         children: createAppRoutes({
           desk: routeElement(<DeskPage />),
           deskDetail: routeElement(<DeskDetailPage />),

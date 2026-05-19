@@ -41,6 +41,17 @@ test('keeps async route styles split from the startup stylesheet', () => {
   expect(source('vite.config.ts')).not.toContain('cssCodeSplit: false');
 });
 
+test('keeps route design-system styles out of the global stylesheet', () => {
+  expect(source('src/styles/index.scss')).not.toContain("@use '@/styles/design-system.css'");
+});
+
+test('lazy-loads the authenticated app layout with its route styles', () => {
+  const routerSource = source('src/router/index.tsx');
+
+  expect(routerSource).not.toContain("import { AppLayout } from '@/layouts/AppLayout'");
+  expect(routerSource).toContain("import('@/layouts/AppLayout')");
+});
+
 test('loads slider verification images on demand', () => {
   const sliderSource = source('src/components/SliderVerify/index.tsx');
 
