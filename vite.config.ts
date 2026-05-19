@@ -34,8 +34,6 @@ export default defineConfig({
     minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
     // 为调试构建生成源代码映射 (sourcemap)
     sourcemap: !!process.env.TAURI_DEBUG,
-    // 启用/禁用 CSS 代码拆分。当启用时，在异步 chunk 中导入的 CSS 将内联到异步 chunk 本身，并在其被加载时插入。如果禁用，整个项目中的所有 CSS 将被提取到一个 CSS 文件中。
-    cssCodeSplit: false,
     rollupOptions: {
       output: {
         manualChunks(id) {

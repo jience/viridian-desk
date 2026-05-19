@@ -35,3 +35,7 @@ test('does not statically bundle every locale at startup', () => {
   expect(i18nSource).not.toContain("from '@/ui/i18n/locales/zh-CN/common.json'");
   expect(i18nSource).not.toContain("from '@/ui/i18n/locales/zh-CN/assistant.json'");
 });
+
+test('keeps async route styles split from the startup stylesheet', () => {
+  expect(source('vite.config.ts')).not.toContain('cssCodeSplit: false');
+});
