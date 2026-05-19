@@ -1,5 +1,5 @@
 import type { InvokeArgs, InvokeOptions } from '@tauri-apps/api/core';
-import { message } from '@/ui';
+import { message } from '@/ui/message';
 import { logger } from '@/utils/logger';
 
 export type InvokeOpt = Partial<

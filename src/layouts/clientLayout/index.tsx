@@ -1,12 +1,11 @@
 import './index.scss';
-import { useMemo, useEffect, useRef, type CSSProperties } from 'react';
+import { lazy, Suspense, useMemo, useEffect, useRef, type CSSProperties } from 'react';
 import useSharedState from './useSharedState';
 import { bridge } from '@/native';
 import { convertNativeFileSrc } from '@/native/file-src';
 import { Outlet } from 'react-router';
-import MessageListModal from '@/components/MessageCenter';
 import { globalEmitter } from '@/utils/mitt';
-import { message } from '@/ui';
+import { message } from '@/ui/message';
 import { useInitState } from './useInitState';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { selectBackgroundImage } from '@/store/feature/client';
@@ -17,6 +16,8 @@ import { setConnected } from '@/store/feature/gateway';
 import type { UnlistenFn } from '@/native/interfaces/types';
 import { useTranslation } from 'react-i18next';
 import { logger } from '@/utils/logger';
+
+const MessageListModal = lazy(() => import('@/components/MessageCenter'));
 
 const ClientLayout = () => {
   const dispatch = useAppDispatch();
@@ -177,13 +178,15 @@ const ClientLayout = () => {
       <Outlet />
 
       {msgModalShow && (
-        <MessageListModal
-          visible={msgModalShow}
-          setVisible={(val: boolean) => {
-            dispatch(setMsgModalShow({ msgModalShow: val, msgId: '' }));
-          }}
-          msgId={msgId}
-        />
+        <Suspense fallback={null}>
+          <MessageListModal
+            visible={msgModalShow}
+            setVisible={(val: boolean) => {
+              dispatch(setMsgModalShow({ msgModalShow: val, msgId: '' }));
+            }}
+            msgId={msgId}
+          />
+        </Suspense>
       )}
     </div>
   );

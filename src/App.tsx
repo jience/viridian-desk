@@ -1,4 +1,3 @@
-import { ConfigProvider, App as ClientApp } from '@/ui';
 import { RouterProvider } from 'react-router';
 import router from './router';
 import { Suspense, useEffect } from 'react';
@@ -33,15 +32,11 @@ function App() {
 
   return (
     <UiThemeProvider>
-      <ConfigProvider>
-        <ClientApp component={false}>
-          <ErrorBoundary>
-            <Suspense fallback={<RouteFallback />}>
-              <RouterProvider router={router} />
-            </Suspense>
-          </ErrorBoundary>
-        </ClientApp>
-      </ConfigProvider>
+      <ErrorBoundary>
+        <Suspense fallback={<RouteFallback />}>
+          <RouterProvider router={router} />
+        </Suspense>
+      </ErrorBoundary>
     </UiThemeProvider>
   );
 }

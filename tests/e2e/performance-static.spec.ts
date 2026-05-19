@@ -27,6 +27,15 @@ test('loads the assistant panel only when the user opens it', () => {
   );
 });
 
+test('loads the message center only when the user opens it', () => {
+  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
+
+  expect(clientLayoutSource).not.toContain(
+    "import MessageListModal from '@/components/MessageCenter'",
+  );
+  expect(clientLayoutSource).toContain("import('@/components/MessageCenter')");
+});
+
 test('does not statically bundle every locale at startup', () => {
   const i18nSource = source('src/utils/i18n.ts');
 
@@ -50,6 +59,29 @@ test('lazy-loads the authenticated app layout with its route styles', () => {
 
   expect(routerSource).not.toContain("import { AppLayout } from '@/layouts/AppLayout'");
   expect(routerSource).toContain("import('@/layouts/AppLayout')");
+});
+
+test('keeps the full UI component bundle out of the app bootstrap', () => {
+  const appSource = source('src/App.tsx');
+
+  expect(appSource).not.toContain("from '@/ui'");
+  expect(appSource).not.toContain('ConfigProvider');
+  expect(appSource).not.toContain('ClientApp');
+});
+
+test('keeps startup notifications out of the full UI component bundle', () => {
+  const startupSources = [
+    source('src/layouts/clientLayout/index.tsx'),
+    source('src/services/requestErrorHandler.ts'),
+    source('src/utils/invoke/index.ts'),
+  ];
+
+  for (const startupSource of startupSources) {
+    expect(startupSource).not.toContain("from '@/ui'");
+  }
+
+  expect(source('src/ui/message.ts')).toContain("import './message.scss'");
+  expect(source('src/ui/styles.scss')).not.toContain('.vd-toast');
 });
 
 test('loads slider verification images on demand', () => {

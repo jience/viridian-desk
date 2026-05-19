@@ -1,5 +1,5 @@
 import type { NativeResponse } from '@/native/interfaces/types';
-import { message as uiMessage } from '@/ui';
+import { message as uiMessage } from '@/ui/message';
 import { logger } from '@/utils/logger';
 import { t, type Resources } from 'i18next';
 import { isEmpty } from 'lodash-es';
