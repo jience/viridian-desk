@@ -5,6 +5,7 @@ import { getLoginHistory, setCurrentLoginType } from '@/store/feature/app';
 import { fetchConfigInfo } from '@/store/feature/config';
 import { setNetwork } from '@/store/feature/gateway';
 import { fetchTerminalInfo } from '@/store/feature/terminal';
+import { RouteErrorBoundary } from '@/ui/shell/error-boundary';
 import { RouteFallback } from '@/ui/shell/route-fallback';
 import { lazy, Suspense, type ReactNode } from 'react';
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
@@ -90,6 +91,7 @@ const rootRoutes: RouteObject[] = [
   {
     path: '/',
     element: <ClientLayout />,
+    errorElement: <RouteErrorBoundary />,
     // HydrateFallback: () => {
     //   return <div>Loading...</div>;
     // },

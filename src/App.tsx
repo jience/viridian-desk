@@ -8,6 +8,7 @@ import { selectLanguage } from './store/feature/config';
 import { UiThemeProvider } from '@/ui/theme/theme-provider';
 import { LanguageType } from './native/interfaces/config';
 import { logger } from '@/utils/logger';
+import { ErrorBoundary } from '@/ui/shell/error-boundary';
 
 const IS_THIN_CLIENT = import.meta.env.TAURI_IS_THIN_CLIENT === 'true';
 
@@ -43,7 +44,9 @@ function App() {
             locale={language}
             messages={window.LanguageData[language] ?? window.LanguageData[LanguageType.ZH_CN]}
           >
-            <RouterProvider router={router} />
+            <ErrorBoundary>
+              <RouterProvider router={router} />
+            </ErrorBoundary>
           </IntlProvider>
         </ClientApp>
       </ConfigProvider>
