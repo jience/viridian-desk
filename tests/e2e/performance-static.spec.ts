@@ -15,7 +15,9 @@ test('keeps low-frequency modal components lazy-loaded', () => {
   expect(source('src/pages/application/index.tsx')).not.toContain(
     "import { AddFromSelfModal } from './component/AddFromSelfModal'",
   );
-  expect(source('src/pages/malfunction/index.tsx')).not.toContain("import CreatedModal from './create'");
+  expect(source('src/pages/malfunction/index.tsx')).not.toContain(
+    "import CreatedModal from './create'",
+  );
   expect(source('src/pages/desk/DeskPage.tsx')).not.toContain(
     "import DeskPoolModal from './components/deskPoolDetail'",
   );
@@ -136,6 +138,34 @@ test('keeps desk detail fact values free of nested paragraph markup', () => {
   expect(source('src/pages/deskDetail/useDeskDetail.tsx')).not.toContain('<p');
 });
 
+test('removes login history and operation record features from the client', () => {
+  const removedFiles = [
+    'src/native/interfaces/login_history/index.ts',
+    'src/native/interfaces/login_history/types.ts',
+    'src/native/adapters/tauri/login_history/index.ts',
+    'src/native/adapters/web/login_history.ts',
+    'src/native/adapters/electron/login_history.ts',
+  ];
+
+  for (const removedFile of removedFiles) {
+    expect(existsSync(join(process.cwd(), removedFile)), removedFile).toBe(false);
+  }
+
+  const sourceFiles = [
+    source('src/native/interfaces/index.ts'),
+    source('src/store/feature/app/appSlice.ts'),
+    source('src/pages/login/UsernamePwd/index.tsx'),
+    source('src/components/Sidebar/index.tsx'),
+  ].join('\n');
+
+  expect(sourceFiles).not.toContain('login_history');
+  expect(sourceFiles).not.toContain('loginHistory');
+  expect(sourceFiles).not.toContain('clearLoginHistory');
+  expect(sourceFiles).not.toContain('showEasyLog');
+  expect(source('src/assets/locales/zh-CN.json')).not.toContain('"EasyLog"');
+  expect(source('src/assets/locales/zh-CN.json')).not.toContain('login_page.clear_account');
+});
+
 test('build script always enables the Tauri production frontend protocol', () => {
   const packageJson = source('package.json');
   const cargoToml = source('src-tauri/Cargo.toml');
@@ -215,7 +245,7 @@ test('loads the Tauri HTTP plugin only when a request is executed', () => {
   ];
 
   for (const requestSource of requestSources) {
-    expect(requestSource).not.toContain("import { fetch");
+    expect(requestSource).not.toContain('import { fetch');
     expect(requestSource).toContain("import('@tauri-apps/plugin-http')");
   }
 });
@@ -236,15 +266,14 @@ test('keeps Tauri core and filesystem modules out of adapter top-level imports',
     source('src/native/adapters/tauri/utils.ts'),
     source('src/native/adapters/tauri/cmd/index.ts'),
     source('src/native/adapters/tauri/app_updates/index.ts'),
-    source('src/native/adapters/tauri/login_history/index.ts'),
     source('src/utils/base64.ts'),
   ];
 
   for (const deferredSource of deferredSources) {
-    expect(deferredSource).not.toContain("import { Channel");
-    expect(deferredSource).not.toContain("import { invoke");
-    expect(deferredSource).not.toContain("import { readFile");
-    expect(deferredSource).not.toContain("import { BaseDirectory");
+    expect(deferredSource).not.toContain('import { Channel');
+    expect(deferredSource).not.toContain('import { invoke');
+    expect(deferredSource).not.toContain('import { readFile');
+    expect(deferredSource).not.toContain('import { BaseDirectory');
   }
 
   expect(deferredSources.join('\n')).toContain("import('@tauri-apps/api/core')");
@@ -259,8 +288,8 @@ test('keeps Tauri core out of startup utility imports', () => {
   ];
 
   for (const startupUtilitySource of startupUtilitySources) {
-    expect(startupUtilitySource).not.toContain("import { invoke");
-    expect(startupUtilitySource).not.toContain("import { convertFileSrc");
+    expect(startupUtilitySource).not.toContain('import { invoke');
+    expect(startupUtilitySource).not.toContain('import { convertFileSrc');
   }
 
   expect(startupUtilitySources.join('\n')).toContain("import('@tauri-apps/api/core')");
@@ -269,9 +298,9 @@ test('keeps Tauri core out of startup utility imports', () => {
 test('loads only the active native adapter at runtime', () => {
   const nativeIndexSource = source('src/native/index.ts');
 
-  expect(nativeIndexSource).not.toContain("import { TauriAdapter }");
-  expect(nativeIndexSource).not.toContain("import { ElectronAdapter }");
-  expect(nativeIndexSource).not.toContain("import { WebAdapter }");
+  expect(nativeIndexSource).not.toContain('import { TauriAdapter }');
+  expect(nativeIndexSource).not.toContain('import { ElectronAdapter }');
+  expect(nativeIndexSource).not.toContain('import { WebAdapter }');
   expect(nativeIndexSource).toContain("import('./adapters/tauri')");
   expect(nativeIndexSource).toContain("import('./adapters/electron')");
   expect(nativeIndexSource).toContain("import('./adapters/web')");

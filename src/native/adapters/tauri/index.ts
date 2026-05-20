@@ -10,7 +10,6 @@ import type {
   UnlistenFn,
 } from '@/native/interfaces/types';
 import { cmd_module } from './cmd';
-import { login_history_module } from './login_history';
 import { api_module } from './api';
 
 export class TauriAdapter implements INativeBridge {
@@ -23,8 +22,6 @@ export class TauriAdapter implements INativeBridge {
   config = config_module;
 
   cmd = cmd_module;
-
-  login_history = login_history_module;
 
   api = api_module;
 

@@ -5,7 +5,6 @@ import { Button, Form, Input, Space, type FormInstance } from '@/ui';
 import type { LoginFormType } from '../../types';
 import { selectConnected } from '@/store/feature/gateway';
 import useSmsCountdown from '@/hooks/useSmsCountdown';
-import { selectLastLoginEntry } from '@/store/feature/app';
 import { useTranslation } from 'react-i18next';
 import { bridge } from '@/native';
 import './index.scss';
@@ -20,7 +19,6 @@ export const PhoneFormItem = (props: PhoneFormItemProps) => {
   const { isCounting, countdown, start } = useSmsCountdown();
 
   const connected = useAppSelector(selectConnected);
-  const lastLoginInfo = useAppSelector(selectLastLoginEntry);
 
   const [getTerminalAuthCodeLoading, setGetTerminalAuthCodeLoading] = useState(false);
 
@@ -38,9 +36,8 @@ export const PhoneFormItem = (props: PhoneFormItemProps) => {
 
   useEffect(() => {
     if (!formIns) return;
-    const { telephone } = lastLoginInfo || {};
+    formIns?.resetFields(['phone']);
     formIns?.resetFields(['smsCaptcha']);
-    if (telephone) formIns.setFieldValue('phone', telephone);
   }, [formIns]);
 
   return (

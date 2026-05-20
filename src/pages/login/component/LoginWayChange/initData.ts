@@ -1,4 +1,4 @@
-import { LoginAuthType } from '@/native/interfaces/login_history';
+import { LoginAuthType } from '@/native/interfaces/login_auth';
 import { useAppSelector } from '@/store';
 import { selectLoginTypes } from '@/store/feature/client';
 import { useMemo } from 'react';

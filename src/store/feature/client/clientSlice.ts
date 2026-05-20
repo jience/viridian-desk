@@ -1,5 +1,5 @@
 import { bridge } from '@/native';
-import { LoginAuthType } from '@/native/interfaces/login_history/types';
+import { LoginAuthType } from '@/native/interfaces/login_auth';
 import type { AppState } from '@/store';
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import { initState } from './initState';

@@ -1,6 +1,5 @@
 import { bridge } from '@/native';
 import { useAppSelector } from '@/store';
-import { selectLastLoginEntry } from '@/store/feature/app';
 import { selectConnected } from '@/store/feature/gateway';
 import { Form, Input, Select } from '@/ui';
 import { useEffect, useState, type FocusEventHandler } from 'react';
@@ -15,7 +14,6 @@ export const DomainFormItem = (props: DomainFormItemProps) => {
   const { t } = useTranslation();
 
   const connected = useAppSelector(selectConnected);
-  const lastLoginInfo = useAppSelector(selectLastLoginEntry);
 
   const [orgs, setOrgs] = useState<string[]>([]);
   const [listAdLoading, setListAdLoading] = useState(false);
@@ -27,13 +25,7 @@ export const DomainFormItem = (props: DomainFormItemProps) => {
     });
     const orgs = res.data.results?.map((it) => it.ou) || [];
     setOrgs(orgs);
-    const { ou, domainServerName } = lastLoginInfo || {};
-    // 如果上次登录的域服务器和组织机构在当前列表中，则默认选中
-    if (domainServerName === value && ou && orgs.includes(ou)) {
-      formIns?.setFieldValue('ou', ou);
-    } else {
-      formIns?.setFieldValue('ou', orgs[0]);
-    }
+    formIns?.setFieldValue('ou', orgs[0]);
   };
 
   const handleDomainServerNameBlur: FocusEventHandler<HTMLInputElement> = async (e) => {
@@ -43,19 +35,17 @@ export const DomainFormItem = (props: DomainFormItemProps) => {
     }
   };
 
-  // 初始化时，设置域服务器名称和组织机构
+  // 初始化时，清空域服务器名称和组织机构
   useEffect(() => {
     if (!formIns) return;
     formIns?.resetFields(['domainServerName']);
     formIns?.resetFields(['ou']);
-    const { domainServerName } = lastLoginInfo || {};
-    if (domainServerName) formIns.setFieldValue('domainServerName', domainServerName);
   }, [formIns]);
 
-  // 当与网关连接成功后，获取重新域信息
+  // 当与网关连接成功后，按当前输入重新获取域信息
   useEffect(() => {
     if (!formIns || !connected) return;
-    const { domainServerName } = lastLoginInfo || {};
+    const domainServerName = formIns.getFieldValue('domainServerName');
     if (domainServerName) getDomain(domainServerName);
   }, [connected, formIns]);
 

@@ -78,13 +78,6 @@
     }
   }
 
-  .vd-auth-checkboxes {
-    .vdui-checkbox-wrapper {
-      color: var(--auth-muted);
-      font-size: 12px;
-    }
-  }
-
   .login-way-change {
     width: 100%;
 
@@ -99,13 +92,6 @@
       background: color-mix(in srgb, var(--auth-accent) 12%, transparent);
       color: var(--auth-accent-strong);
     }
-  }
-
-  .username-option-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
   }
 
   .login-footer {

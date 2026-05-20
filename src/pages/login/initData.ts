@@ -1,4 +1,4 @@
-import { LoginAuthType } from '@/native/interfaces/login_history';
+import { LoginAuthType } from '@/native/interfaces/login_auth';
 import { useTranslation } from 'react-i18next';
 
 export const useLoginWayData = () => {

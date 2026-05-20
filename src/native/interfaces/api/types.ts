@@ -1,4 +1,4 @@
-import type { LoginAuthType } from '../login_history';
+import type { LoginAuthType } from '../login_auth';
 
 export type EmptyObject = Record<string, never>;
 

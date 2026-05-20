@@ -1,31 +1,16 @@
 import type { LoginUserInfo, LoginUserReq, TerminalPhoneLoginReq } from '@/native/interfaces/api';
-import { LoginAuthType, type AddHistoryEntryParams } from '@/native/interfaces/login_history';
 import { useAppDispatch, useAppSelector } from '@/store';
-import {
-  addLoginEntry,
-  selectIsAutoLogin,
-  selectIsRememberMe,
-  setAutoLogin,
-  setCurrentUser,
-  setRememberMe,
-} from '@/store/feature/app';
+import { setCurrentUser } from '@/store/feature/app';
 import { selectIsThin } from '@/store/feature/terminal';
 import Actions from '@/utils/actions';
 import { encryption, LEGACY_PASSWORD_PREFIX } from '@/utils/utils';
 import { message } from '@/ui';
 import { useNavigate } from 'react-router';
 
-export const useLoginSuccessHandler = (opt: {
-  autoLoginChecked: boolean;
-  rememberMeChecked: boolean;
-}) => {
-  const { autoLoginChecked, rememberMeChecked } = opt;
-
+export const useLoginSuccessHandler = () => {
   const navigate = useNavigate();
   const appDispatch = useAppDispatch();
 
-  const isAutoLogin = useAppSelector(selectIsAutoLogin);
-  const isRememberMe = useAppSelector(selectIsRememberMe);
   const isThin = useAppSelector(selectIsThin);
 
   // 登录成功后跳转路由的权限对照
@@ -69,11 +54,7 @@ export const useLoginSuccessHandler = (opt: {
   };
 
   // 登录成功后回调的处理
-  const loginSuccessFun = async (
-    res: LoginUserInfo,
-    req: TerminalPhoneLoginReq | LoginUserReq,
-    isPhoneLogin: boolean,
-  ) => {
+  const loginSuccessFun = async (res: LoginUserInfo, req: TerminalPhoneLoginReq | LoginUserReq) => {
     // TODO 后面需要去除password字段
     if ((req as LoginUserReq).password) {
       const password = encryption(
@@ -96,30 +77,6 @@ export const useLoginSuccessHandler = (opt: {
 
     if (res.passwordIsExpireSoon) {
       message.warning('您的密码即将过期，请及时修改密码以确保账户安全!');
-    }
-
-    // 保存记住我 和 自动登录 状态
-    if (autoLoginChecked !== isAutoLogin) await appDispatch(setAutoLogin(autoLoginChecked));
-    if (rememberMeChecked !== isRememberMe) await appDispatch(setRememberMe(rememberMeChecked));
-
-    // 保存历史登录条目
-    if (isPhoneLogin) {
-      const phoneLoginInfo: AddHistoryEntryParams = {
-        username: req.phone || '',
-        isLocalPhoneLogin: true,
-      };
-      await appDispatch(addLoginEntry(phoneLoginInfo));
-    } else {
-      const loginReq = req as LoginUserReq;
-      const otherLoginInfo: AddHistoryEntryParams = {
-        username: loginReq.loginName,
-        domainServerName:
-          loginReq.authType === LoginAuthType.DOMAIN ? loginReq.domainServerName : undefined,
-        ou: loginReq.authType === LoginAuthType.DOMAIN ? loginReq.ou : undefined,
-        corpId: loginReq.authType === LoginAuthType.CORP ? loginReq.corpId : undefined,
-        nisId: loginReq.authType === LoginAuthType.NIS ? loginReq.nisId : undefined,
-      };
-      await appDispatch(addLoginEntry(otherLoginInfo));
     }
 
     loginSuccessActionRoute(res.permissions || []);

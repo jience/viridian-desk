@@ -5,14 +5,9 @@ import type {
   LoginUserReq,
   TerminalPhoneLoginReq,
 } from '@/native/interfaces/api';
-import { LoginAuthType } from '@/native/interfaces/login_history';
+import { LoginAuthType } from '@/native/interfaces/login_auth';
 import { useAppSelector } from '@/store';
-import {
-  selectCurrentLoginType,
-  selectIsAutoLogin,
-  selectIsRememberMe,
-  selectLastLoginEntry,
-} from '@/store/feature/app';
+import { selectCurrentLoginType } from '@/store/feature/app';
 import {
   selectOneTimePasswordSwitch,
   selectTerminalGraphAuthenticationSwitch,
@@ -27,28 +22,20 @@ import { useLoginSuccessHandler } from './useLoginSuccessHandler';
 
 export const useLoginHandler = () => {
   const currentLoginType = useAppSelector(selectCurrentLoginType);
-  const lastLoginHistory = useAppSelector(selectLastLoginEntry);
   const terminalGraphAuthenticationSwitch = useAppSelector(selectTerminalGraphAuthenticationSwitch);
   const terminalMultiFactorAuthenticationSwitch = useAppSelector(
     selectTerminalMultiFactorAuthenticationSwitch,
   );
   const oneTimePasswordSwitch = useAppSelector(selectOneTimePasswordSwitch);
-  const isAutoLogin = useAppSelector(selectIsAutoLogin);
-  const isRememberMe = useAppSelector(selectIsRememberMe);
 
   const sliderVerifyModalRef = useRef<SliderVerifyModalRef>(null);
   const sendMsgModalRef = useRef<SendMsgModalRef>(null);
   const oneTimePwdModalRef = useRef<OneTimePwdModalRef>(null);
 
   const [loginLoading, setLoginLoading] = useState(false);
-  const [isLocalPhoneLogin, setIsLocalPhoneLogin] = useState(!!lastLoginHistory?.isLocalPhoneLogin);
-  const [autoLoginChecked, setAutoLoginChecked] = useState(isAutoLogin);
-  const [rememberMeChecked, setRememberMeChecked] = useState(isRememberMe);
+  const [isLocalPhoneLogin, setIsLocalPhoneLogin] = useState(false);
 
-  const { loginSuccessFun } = useLoginSuccessHandler({
-    autoLoginChecked,
-    rememberMeChecked,
-  });
+  const { loginSuccessFun } = useLoginSuccessHandler();
 
   const showOneTimePassword = useMemo(() => {
     return (
@@ -103,7 +90,7 @@ export const useLoginHandler = () => {
           smsCaptcha: values.smsCaptcha,
         };
         const { data } = await bridge.api.terminalPhoneLogin(req);
-        await loginSuccessFun(data.data, req, true);
+        await loginSuccessFun(data.data, req);
         return;
       }
 
@@ -157,7 +144,7 @@ export const useLoginHandler = () => {
       }
 
       const { data } = await bridge.api.loginUser(loginParam);
-      await loginSuccessFun(data.data, loginParam, false);
+      await loginSuccessFun(data.data, loginParam);
     } finally {
       setLoginLoading(false);
     }
@@ -171,9 +158,5 @@ export const useLoginHandler = () => {
     sliderVerifyModalRef,
     sendMsgModalRef,
     oneTimePwdModalRef,
-    autoLoginChecked,
-    setAutoLoginChecked,
-    rememberMeChecked,
-    setRememberMeChecked,
   };
 };

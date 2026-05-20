@@ -9,7 +9,7 @@ import sidebarLogo from '@/assets/images/logo.svg';
 import useRequest from '@/hooks/useRequest';
 import { bridge } from '@/native';
 import { LoginUserType } from '@/native/interfaces/api';
-import { LoginAuthType } from '@/native/interfaces/login_history';
+import { LoginAuthType } from '@/native/interfaces/login_auth';
 import { changePasswordUser } from '@/services/user';
 import { useAppDispatch, useAppSelector } from '@/store';
 import {
@@ -359,25 +359,18 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
             </Tooltip>
           </li>
         )}
-        {
-          <>
-            {/* <li onClick={showEasyLog}>
-              <i className="iconfont icon-done"></i>
-            </li> */}
-            <li className="sidebar__item">
-              <Tooltip title={intl.formatMessage({ id: 'MSG' })} placement="right">
-                <button
-                  aria-label={intl.formatMessage({ id: 'MSG' })}
-                  className={cn('sidebar__button', msgDot && 'sidebar__button--unread')}
-                  type="button"
-                  onClick={getMsg}
-                >
-                  <i className="iconfont icon-message" />
-                </button>
-              </Tooltip>
-            </li>
-          </>
-        }
+        <li className="sidebar__item">
+          <Tooltip title={intl.formatMessage({ id: 'MSG' })} placement="right">
+            <button
+              aria-label={intl.formatMessage({ id: 'MSG' })}
+              className={cn('sidebar__button', msgDot && 'sidebar__button--unread')}
+              type="button"
+              onClick={getMsg}
+            >
+              <i className="iconfont icon-message" />
+            </button>
+          </Tooltip>
+        </li>
         <li className="sidebar__item">
           <Popover
             content={userMenus}

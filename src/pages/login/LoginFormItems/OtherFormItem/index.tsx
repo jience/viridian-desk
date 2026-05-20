@@ -4,7 +4,6 @@ import { Form, Select } from '@/ui';
 import type { CorpItem } from '@/native/interfaces/api';
 import { bridge } from '@/native';
 import { useAppSelector } from '@/store';
-import { selectLastLoginEntry } from '@/store/feature/app';
 import { selectConnected } from '@/store/feature/gateway';
 import { useTranslation } from 'react-i18next';
 
@@ -16,7 +15,6 @@ export const OtherFormItem = (props: OtherFormItemProps) => {
   const { formIns, setThreeChannel } = props;
   const { t } = useTranslation();
 
-  const lastLoginInfo = useAppSelector(selectLastLoginEntry);
   const connected = useAppSelector(selectConnected);
 
   const [cropListLoading, setCropListLoading] = useState(false);
@@ -32,15 +30,9 @@ export const OtherFormItem = (props: OtherFormItemProps) => {
       setCropListLoading(false);
     });
     const filteredCorpList = data.results?.filter((i) => i?.type == 'wechat') || [];
-    const { corpId } = lastLoginInfo || {};
 
-    if (filteredCorpList.length && corpId) {
-      const corp = filteredCorpList.find((item) => item.id === corpId);
-      if (corp) {
-        formIns?.setFieldValue('corpId', corpId);
-      } else {
-        formIns?.setFieldValue('corpId', filteredCorpList[0].id);
-      }
+    if (filteredCorpList.length) {
+      formIns?.setFieldValue('corpId', filteredCorpList[0].id);
     }
     setCorpList(filteredCorpList);
     setThreeChannel('wechat');

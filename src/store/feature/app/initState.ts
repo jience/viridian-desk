@@ -1,4 +1,4 @@
-import { LoginAuthType } from '@/native/interfaces/login_history';
+import { LoginAuthType } from '@/native/interfaces/login_auth';
 import { type AppRenderState } from './types';
 
 export const initState: AppRenderState = {
@@ -6,11 +6,6 @@ export const initState: AppRenderState = {
   msgModalShow: false,
   msgId: '',
   smsResetPasswordSwitch: 'Disabled',
-  loginHistory: {
-    isRememberMe: false,
-    isAutoLogin: false,
-    history: [],
-  },
   currentLoginType: LoginAuthType.LOCAL,
   currentUser: null,
 };

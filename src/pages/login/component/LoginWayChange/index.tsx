@@ -1,4 +1,4 @@
-import type { LoginAuthType } from '@/native/interfaces/login_history';
+import type { LoginAuthType } from '@/native/interfaces/login_auth';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { selectCurrentLoginType, setCurrentLoginType } from '@/store/feature/app';
 import { selectLoginTypes } from '@/store/feature/client';

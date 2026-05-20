@@ -1,18 +1,14 @@
 import loginLogo from '@/assets/images/logo.svg';
 import Footer from '@/components/Footer';
-import { LoginAuthType } from '@/native/interfaces/login_history';
+import { LoginAuthType } from '@/native/interfaces/login_auth';
 import { useAppSelector } from '@/store';
 import { selectCurrentLoginType } from '@/store/feature/app';
-import {
-  selectLoginTypes,
-  selectSmsResetPasswordSwitch,
-  selectTerminalRememberPasswordSwitch,
-} from '@/store/feature/client';
+import { selectLoginTypes, selectSmsResetPasswordSwitch } from '@/store/feature/client';
 import { selectAutoGateway, selectConnected, selectNetwork } from '@/store/feature/gateway';
 import '@/styles/design-system.css';
 import { Button } from '@/ui/components/button';
 import { QrcodeOutlined } from '@/ui/icons';
-import { Checkbox, Form } from '@/ui';
+import { Form } from '@/ui';
 import { DocumentTitle } from '@/ui/shell/document-title';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -38,7 +34,6 @@ export default function LoginPage() {
   const connected = useAppSelector(selectConnected);
   const network = useAppSelector(selectNetwork);
   const autoGateway = useAppSelector(selectAutoGateway);
-  const terminalRememberPasswordSwitch = useAppSelector(selectTerminalRememberPasswordSwitch);
   const loginTypes = useAppSelector(selectLoginTypes);
   const smsResetPasswordSwitch = useAppSelector(selectSmsResetPasswordSwitch);
   const currentLoginWay = useAppSelector(selectCurrentLoginType);
@@ -54,10 +49,6 @@ export default function LoginPage() {
     sliderVerifyModalRef,
     sendMsgModalRef,
     oneTimePwdModalRef,
-    autoLoginChecked,
-    setAutoLoginChecked,
-    rememberMeChecked,
-    setRememberMeChecked,
   } = useLoginHandler();
 
   const [canScan] = useState(false);
@@ -78,12 +69,6 @@ export default function LoginPage() {
         : formatMessage({ id: 'Disconnected', defaultMessage: '未连接' });
   const gatewayStatusTone = connected && network ? 'success' : autoGateway ? 'danger' : 'info';
   const showLocalLinks = currentLoginWay === LoginAuthType.LOCAL;
-  const showRememberControls =
-    (!isLocalPhoneLogin || currentLoginWay !== LoginAuthType.LOCAL) &&
-    terminalRememberPasswordSwitch;
-  const showAutoLogin =
-    (!isLocalPhoneLogin || currentLoginWay !== LoginAuthType.LOCAL) &&
-    currentLoginWay !== LoginAuthType.IAM;
 
   const handleSubmit = useCallback(async () => {
     if (!canSubmit || loginLoading || submitLockRef.current) return;
@@ -282,29 +267,6 @@ export default function LoginPage() {
                     {loginLoading && <span className="auth-page__submit-spinner" />}
                     {formatMessage({ id: loginLoading ? 'LOGING' : 'LOGIN' })}
                   </Button>
-
-                  <div className="vd-auth-checkboxes">
-                    {showRememberControls ? (
-                      <Checkbox
-                        checked={rememberMeChecked}
-                        onChange={(event) => setRememberMeChecked(!!event.target.checked)}
-                      >
-                        {formatMessage({ id: 'REMEMBER_PASSWORD' })}
-                      </Checkbox>
-                    ) : (
-                      <span />
-                    )}
-                    {showAutoLogin ? (
-                      <Checkbox
-                        checked={autoLoginChecked}
-                        onChange={(event) => setAutoLoginChecked(!!event.target.checked)}
-                      >
-                        {formatMessage({ id: 'AUTOLOGIN' })}
-                      </Checkbox>
-                    ) : (
-                      <span />
-                    )}
-                  </div>
                 </>
               )}
             </div>

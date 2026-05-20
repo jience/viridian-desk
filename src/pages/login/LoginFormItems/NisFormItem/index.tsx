@@ -3,7 +3,6 @@ import { useAppSelector } from '@/store';
 import { UsernamePwd, type UsernamePwdProps } from '../../UsernamePwd';
 import { Form, Select } from '@/ui';
 import { selectConnected } from '@/store/feature/gateway';
-import { selectLastLoginEntry } from '@/store/feature/app';
 import { bridge } from '@/native';
 import type { NisServer } from '@/native/interfaces/api';
 import { useTranslation } from 'react-i18next';
@@ -15,8 +14,6 @@ export const NisFormItem = (props: NisFormItemProps) => {
   const { t } = useTranslation();
   const connected = useAppSelector(selectConnected);
 
-  const lastLoginInfo = useAppSelector(selectLastLoginEntry);
-
   const [listNisServerLoading, setListNisServerLoading] = useState(false);
   const [nisServerList, setNisServerList] = useState<NisServer[]>([]);
 
@@ -26,7 +23,6 @@ export const NisFormItem = (props: NisFormItemProps) => {
 
   const getNisIpList = async () => {
     setListNisServerLoading(true);
-    const { nisId } = lastLoginInfo || {};
 
     const { data } = await bridge.api.nis
       .listNisServer({ pageNumber: 1, pageSize: 20 })
@@ -35,13 +31,8 @@ export const NisFormItem = (props: NisFormItemProps) => {
       });
     const { results = [] } = data;
 
-    if (results.length && nisId) {
-      const nis = results.find((item) => item.id === nisId);
-      if (nis) {
-        formIns?.setFieldValue('nisId', nisId);
-      } else {
-        formIns?.setFieldValue('nisId', results[0].id);
-      }
+    if (results.length) {
+      formIns?.setFieldValue('nisId', results[0].id);
     }
     setNisServerList(results);
   };

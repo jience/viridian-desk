@@ -319,14 +319,6 @@
   background: var(--vd-color-panel);
 }
 
-.vd-auth-checkboxes {
-  display: flex;
-  min-height: 28px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
 .vd-prelogin-settings-shell {
   grid-template-columns: 236px minmax(0, 1fr);
 }

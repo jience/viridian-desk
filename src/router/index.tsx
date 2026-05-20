@@ -1,6 +1,4 @@
-import { LoginAuthType } from '@/native/interfaces/login_history';
 import { appStore } from '@/store';
-import { getLoginHistory, setCurrentLoginType } from '@/store/feature/app';
 import { fetchConfigInfo } from '@/store/feature/config';
 import { setNetwork } from '@/store/feature/gateway';
 import { fetchTerminalInfo } from '@/store/feature/terminal';
@@ -101,16 +99,6 @@ const rootRoutes: RouteObject[] = [
       appStore.dispatch(setNetwork(navigator.onLine));
       await appStore.dispatch(fetchTerminalInfo());
       await appStore.dispatch(fetchConfigInfo());
-
-      // 获取登录历史记录，并设置当前登录方式
-      const res = await appStore.dispatch(getLoginHistory());
-      if (getLoginHistory.fulfilled.match(res)) {
-        // 获取第一个登录历史条目的登录类型
-        const firstEntry = res.payload.history[0];
-        const firstLoginType = firstEntry ? firstEntry.loginType : LoginAuthType.LOCAL;
-        // 更新当前登录方式
-        appStore.dispatch(setCurrentLoginType(firstLoginType));
-      }
       return null;
     },
     children: [

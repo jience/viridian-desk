@@ -2,7 +2,6 @@ import type { IApiModule } from './api';
 import type { IAppUpdatesModule } from './app_updates';
 import type { ICmdModule } from './cmd';
 import type { IConfigModule } from './config';
-import type { ILoginHistoryModule } from './login_history';
 import type { ITerminalModule } from './terminal';
 import type { AppEventMap, NativeOpenDialogOptions, NativeResponse, UnlistenFn } from './types';
 
@@ -58,11 +57,6 @@ export interface INativeBridge {
    * 网络请求模块接口
    */
   api: IApiModule;
-
-  /**
-   * 登录历史模块
-   */
-  login_history: ILoginHistoryModule;
 
   /**
    * 监听事件
