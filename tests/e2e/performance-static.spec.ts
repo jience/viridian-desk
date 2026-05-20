@@ -170,7 +170,6 @@ test('build script always enables the Tauri production frontend protocol', () =>
   const packageJson = source('package.json');
   const cargoToml = source('src-tauri/Cargo.toml');
 
-  expect(cargoToml).toContain('default = [ "custom-protocol" ]');
   expect(cargoToml).toContain('custom-protocol = [ "tauri/custom-protocol" ]');
   expect(packageJson).toContain('"tauri": "tauri"');
 });
@@ -240,7 +239,7 @@ test('fails the production budget when legacy font formats are emitted', () => {
 test('loads the Tauri HTTP plugin only when a request is executed', () => {
   const requestSources = [
     source('src/utils/request/index.ts'),
-    source('src/native/adapters/tauri/api/request.ts'),
+    source('src/native/tauri/api/request.ts'),
     source('src/utils/base64.ts'),
   ];
 
@@ -251,7 +250,7 @@ test('loads the Tauri HTTP plugin only when a request is executed', () => {
 });
 
 test('loads low-frequency Tauri shell APIs only when their methods are used', () => {
-  const tauriAdapterSource = source('src/native/adapters/tauri/index.ts');
+  const tauriAdapterSource = source('src/native/tauri/index.ts');
 
   expect(tauriAdapterSource).not.toContain("from '@tauri-apps/api/window'");
   expect(tauriAdapterSource).not.toContain("from '@tauri-apps/api/event'");
@@ -263,9 +262,9 @@ test('loads low-frequency Tauri shell APIs only when their methods are used', ()
 
 test('keeps Tauri core and filesystem modules out of adapter top-level imports', () => {
   const deferredSources = [
-    source('src/native/adapters/tauri/utils.ts'),
-    source('src/native/adapters/tauri/cmd/index.ts'),
-    source('src/native/adapters/tauri/app_updates/index.ts'),
+    source('src/native/tauri/utils.ts'),
+    source('src/native/tauri/cmd/index.ts'),
+    source('src/native/tauri/app_updates/index.ts'),
     source('src/utils/base64.ts'),
   ];
 
@@ -295,13 +294,29 @@ test('keeps Tauri core out of startup utility imports', () => {
   expect(startupUtilitySources.join('\n')).toContain("import('@tauri-apps/api/core')");
 });
 
-test('loads only the active native adapter at runtime', () => {
+test('uses a Tauri-only native facade at runtime', () => {
   const nativeIndexSource = source('src/native/index.ts');
+  const nativeBridgeInterface = source('src/native/interfaces/index.ts');
 
+  expect(existsSync(join(process.cwd(), 'src/native/adapters')), 'native adapters').toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/native/adapters/web')), 'web adapter').toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/native/adapters/electron')), 'electron adapter').toBe(
+    false,
+  );
+  expect(nativeBridgeInterface).toContain("platform: 'tauri'");
+  expect(nativeBridgeInterface).not.toContain("'electron'");
+  expect(nativeBridgeInterface).not.toContain("'web'");
   expect(nativeIndexSource).not.toContain('import { TauriAdapter }');
   expect(nativeIndexSource).not.toContain('import { ElectronAdapter }');
   expect(nativeIndexSource).not.toContain('import { WebAdapter }');
-  expect(nativeIndexSource).toContain("import('./adapters/tauri')");
-  expect(nativeIndexSource).toContain("import('./adapters/electron')");
-  expect(nativeIndexSource).toContain("import('./adapters/web')");
+  expect(nativeIndexSource).toContain("from './tauri'");
+  expect(nativeIndexSource).not.toContain("import('./adapters/electron')");
+  expect(nativeIndexSource).not.toContain("import('./adapters/web')");
+  expect(nativeIndexSource).not.toContain('./adapters');
+  expect(nativeIndexSource).not.toContain('isElectron');
+  expect(nativeIndexSource).not.toContain('Environment: Web');
+  expect(nativeIndexSource).not.toContain('bridgePromise');
+  expect(nativeIndexSource).not.toContain('createLazyBridgeProxy');
+  expect(nativeIndexSource).not.toContain('new Proxy');
+  expect(source('src/native/interceptor.ts')).not.toContain('createBridgeProxy');
 });

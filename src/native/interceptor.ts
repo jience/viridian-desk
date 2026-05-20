@@ -53,98 +53,93 @@ class InterceptorManager {
 
 export const globalInterceptors = new InterceptorManager();
 
-/**
- * 创建代理 Bridge
- * 使用 Proxy 模式递归拦截所有方法调用
- */
-export function createBridgeProxy<T extends object>(target: T, moduleName?: string): T {
-  return new Proxy(target, {
-    get(obj, prop, receiver) {
-      const value = Reflect.get(obj, prop, receiver);
-      const key = String(prop);
-      // 1. 如果是函数，进行拦截
-      if (typeof value === 'function') {
-        return async (...args: any[]) => {
-          const ctx: InterceptorContext = {
+const wrapEventCallback = (eventName: string, callback: (payload: any) => void) => {
+  return (payload: any) => {
+    for (const interceptor of globalInterceptors.getInterceptors()) {
+      if (!interceptor.onEventTrigger) continue;
+      try {
+        interceptor.onEventTrigger(eventName, payload);
+      } catch (error) {
+        logger.error('[Interceptor] onEventTrigger error:', error);
+      }
+    }
+
+    callback(payload);
+  };
+};
+
+export async function runNativeMethod<T>(
+  ctx: InterceptorContext,
+  action: () => Promise<T> | T,
+): Promise<T> {
+  const interceptors = globalInterceptors.getInterceptors();
+
+  try {
+    for (const interceptor of interceptors) {
+      await interceptor.onRequest?.(ctx);
+    }
+
+    let result = (await action()) as Awaited<T>;
+
+    for (const interceptor of interceptors) {
+      if (interceptor.onResponse) {
+        result = (await interceptor.onResponse(result as NativeResponse<any>, ctx)) as Awaited<T>;
+      }
+    }
+
+    return result;
+  } catch (error) {
+    let handledError = error;
+    for (const interceptor of interceptors) {
+      if (!interceptor.onError) continue;
+      try {
+        const nextError = await interceptor.onError(handledError, ctx);
+        if (nextError !== undefined) {
+          throw nextError;
+        }
+      } catch (e) {
+        handledError = e;
+      }
+    }
+    throw handledError;
+  }
+}
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null;
+
+export function withNativeInterceptors<T extends Record<string, unknown>>(
+  target: T,
+  moduleName?: string,
+): T {
+  const wrapped = {} as Record<string, unknown>;
+
+  for (const [key, value] of Object.entries(target)) {
+    if (typeof value === 'function') {
+      wrapped[key] = (...args: any[]) => {
+        const nextArgs = [...args];
+        if (
+          key === 'onEvent' &&
+          typeof nextArgs[0] === 'string' &&
+          typeof nextArgs[1] === 'function'
+        ) {
+          nextArgs[1] = wrapEventCallback(nextArgs[0], nextArgs[1]);
+        }
+
+        return runNativeMethod(
+          {
             module: moduleName,
             method: key,
             args,
-          };
+          },
+          () => value(...nextArgs),
+        );
+      };
+      continue;
+    }
 
-          const interceptors = globalInterceptors.getInterceptors();
+    wrapped[key] = isRecord(value) ? withNativeInterceptors(value, key) : value;
+  }
 
-          // onEvent 的签名固定为: onEvent(eventName, callback)
-          if (key === 'onEvent' && args.length >= 2 && typeof args[1] === 'function') {
-            const eventName = args[0];
-            const originalCallback = args[1];
-
-            // 劫持回调函数
-            args[1] = (payload: any) => {
-              // 1. 触发拦截器的 onEventTrigger
-              interceptors.forEach((interceptor) => {
-                if (interceptor.onEventTrigger) {
-                  try {
-                    interceptor.onEventTrigger(eventName, payload);
-                  } catch (e) {
-                    logger.error('[Interceptor] onEventTrigger error:', e);
-                  }
-                }
-              });
-
-              // 2. 执行原始回调
-              originalCallback(payload);
-            };
-          }
-
-          try {
-            // --- onRequest 阶段 ---
-            for (const interceptor of interceptors) {
-              if (interceptor.onRequest) {
-                await interceptor.onRequest(ctx);
-              }
-            }
-
-            // --- 执行原方法 ---
-            // 绑定 this 防止上下文丢失
-            let result = await value.apply(obj, args);
-
-            // --- onResponse 阶段 ---
-            for (const interceptor of interceptors) {
-              if (interceptor.onResponse) {
-                result = await interceptor.onResponse(result, ctx);
-              }
-            }
-
-            return result;
-          } catch (error) {
-            // --- onError 阶段 ---
-            let handledError = error;
-            for (const interceptor of interceptors) {
-              if (interceptor.onError) {
-                // 允许拦截器处理错误并返回新的结果，或者继续抛出
-                try {
-                  const newResult = await interceptor.onError(handledError, ctx);
-                  if (newResult !== undefined) {
-                    throw newResult; // 错误被处理，返回兜底数据
-                  }
-                } catch (e) {
-                  handledError = e; // 拦截器内部报错，更新错误对象
-                }
-              }
-            }
-            throw handledError; // 如果没被完全吞掉，继续抛出
-          }
-        };
-      }
-
-      // 2. 如果是对象（且不是 null），递归代理（用于处理 bridge.appUpdates.xxx 这种嵌套结构）
-      if (typeof value === 'object' && value !== null) {
-        // 传递模块名，方便日志追踪
-        return createBridgeProxy(value, key);
-      }
-
-      // 3. 其他属性直接返回
-      return value;
-    },
-  });
+  return wrapped as T;
 }

@@ -9,7 +9,7 @@ export interface INativeBridge {
   /**
    * 运行平台
    */
-  platform: 'tauri' | 'electron' | 'web';
+  platform: 'tauri';
 
   /**
    * 最小化窗口

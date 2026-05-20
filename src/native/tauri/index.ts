@@ -1,4 +1,5 @@
 import type { INativeBridge } from '@/native/interfaces';
+import { withNativeInterceptors } from '@/native/interceptor';
 import { success } from '@/native/utils';
 import { app_updates_module } from './app_updates';
 import { terminal_module } from './terminal';
@@ -12,36 +13,31 @@ import type {
 import { cmd_module } from './cmd';
 import { api_module } from './api';
 
-export class TauriAdapter implements INativeBridge {
-  platform = 'tauri' as const;
+const tauriNative: INativeBridge = {
+  platform: 'tauri',
+  app_updates: app_updates_module,
+  terminal: terminal_module,
+  config: config_module,
+  cmd: cmd_module,
+  api: api_module,
 
-  app_updates = app_updates_module;
-
-  terminal = terminal_module;
-
-  config = config_module;
-
-  cmd = cmd_module;
-
-  api = api_module;
-
-  async minimizeWindow(): Promise<NativeResponse> {
+  async minimizeWindow() {
     const { getCurrentWindow } = await import('@tauri-apps/api/window');
     await getCurrentWindow().minimize();
     return success();
-  }
+  },
 
-  async maximizeWindow(): Promise<NativeResponse> {
+  async maximizeWindow() {
     const { getCurrentWindow } = await import('@tauri-apps/api/window');
     await getCurrentWindow().maximize();
     return success();
-  }
+  },
 
-  async closeWindow(): Promise<NativeResponse> {
+  async closeWindow() {
     const { getCurrentWindow } = await import('@tauri-apps/api/window');
     await getCurrentWindow().close();
     return success();
-  }
+  },
 
   async openDialog(
     options: NativeOpenDialogOptions,
@@ -49,7 +45,7 @@ export class TauriAdapter implements INativeBridge {
     const { open } = await import('@tauri-apps/plugin-dialog');
     const selected = await open(options);
     return success(selected);
-  }
+  },
 
   async onEvent<K extends keyof AppEventMap>(
     event: K,
@@ -61,5 +57,9 @@ export class TauriAdapter implements INativeBridge {
     });
 
     return unlisten;
-  }
-}
+  },
+};
+
+export const nativeBridge = withNativeInterceptors(
+  tauriNative as unknown as Record<string, unknown>,
+) as unknown as INativeBridge;
