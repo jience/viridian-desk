@@ -10,21 +10,31 @@ import { Button } from '@/ui/components/button';
 import { QrcodeOutlined } from '@/ui/icons';
 import { Form } from '@/ui';
 import { DocumentTitle } from '@/ui/shell/document-title';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMessageFormatter } from '@/utils/message-format';
 import { LoginGatewayDock } from '@/components/LoginGatewayDock';
-import FindPasswordModal from './component/FindPasswordModal';
 import LoginWayChange from './component/LoginWayChange';
 import { useLoginHandler } from './hooks/useLoginHandler';
 import { useLoginWayData } from './initData';
 import { LoginFormItems } from './LoginFormItems';
-import { OneTimePwdModal } from './OneTimePasswordModal';
-import { OrgScanLoginModal, type OrgScanLoginModalRef } from './OrgScanLoginModal';
-import { SendMsgModal } from './SendMsgModal';
-import { SliderVerifyModal } from './SliderVerifyModal';
+import type { OrgScanLoginModalRef } from './OrgScanLoginModal';
 import type { LoginFormType } from './types';
 import './LoginPage.scss';
+
+const FindPasswordModal = lazy(() => import('./component/FindPasswordModal'));
+const OneTimePwdModal = lazy(() =>
+  import('./OneTimePasswordModal').then((module) => ({ default: module.OneTimePwdModal })),
+);
+const OrgScanLoginModal = lazy(() =>
+  import('./OrgScanLoginModal').then((module) => ({ default: module.OrgScanLoginModal })),
+);
+const SendMsgModal = lazy(() =>
+  import('./SendMsgModal').then((module) => ({ default: module.SendMsgModal })),
+);
+const SliderVerifyModal = lazy(() =>
+  import('./SliderVerifyModal').then((module) => ({ default: module.SliderVerifyModal })),
+);
 
 export default function LoginPage() {
   const { formatMessage } = useMessageFormatter();
@@ -38,7 +48,8 @@ export default function LoginPage() {
   const smsResetPasswordSwitch = useAppSelector(selectSmsResetPasswordSwitch);
   const currentLoginWay = useAppSelector(selectCurrentLoginType);
 
-  const orgScanLoginModalRef = useRef<OrgScanLoginModalRef>(null);
+  const orgScanLoginModalRef = useRef<OrgScanLoginModalRef | null>(null);
+  const orgScanLoginModalResolveRef = useRef<((modal: OrgScanLoginModalRef) => void) | null>(null);
   const submitLockRef = useRef(false);
   const { loginWayKv } = useLoginWayData();
   const {
@@ -49,12 +60,16 @@ export default function LoginPage() {
     sliderVerifyModalRef,
     sendMsgModalRef,
     oneTimePwdModalRef,
+    sliderVerifyModalMounted,
+    sendMsgModalMounted,
+    oneTimePwdModalMounted,
   } = useLoginHandler();
 
   const [canScan] = useState(false);
   const [threeChannel, setThreeChannel] = useState('');
   const [changeLoginWayVisible, setChangeLoginWayVisible] = useState(false);
   const [findPwdVisible, setFindPwdVisible] = useState(false);
+  const [orgScanLoginModalMounted, setOrgScanLoginModalMounted] = useState(false);
 
   const canSubmit = connected && network;
   const gatewayStatusLabel = !autoGateway
@@ -82,13 +97,31 @@ export default function LoginPage() {
     }
   }, [canSubmit, form, loginLoading, userLogin]);
 
-  const handleOrgScanLogin = () => {
+  const setOrgScanLoginModalRef = useCallback((modal: OrgScanLoginModalRef | null) => {
+    orgScanLoginModalRef.current = modal;
+    if (modal && orgScanLoginModalResolveRef.current) {
+      orgScanLoginModalResolveRef.current(modal);
+      orgScanLoginModalResolveRef.current = null;
+    }
+  }, []);
+
+  const waitForOrgScanLoginModal = useCallback(() => {
+    if (orgScanLoginModalRef.current) return Promise.resolve(orgScanLoginModalRef.current);
+
+    setOrgScanLoginModalMounted(true);
+    return new Promise<OrgScanLoginModalRef>((resolve) => {
+      orgScanLoginModalResolveRef.current = resolve;
+    });
+  }, []);
+
+  const handleOrgScanLogin = useCallback(async () => {
     if (!canScan) return;
-    orgScanLoginModalRef.current?.show({
+    const orgScanLoginModal = await waitForOrgScanLoginModal();
+    orgScanLoginModal.show({
       corpId: form.getFieldValue('corpId'),
       threeChannel,
     });
-  };
+  }, [canScan, form, threeChannel, waitForOrgScanLoginModal]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -273,11 +306,31 @@ export default function LoginPage() {
           </div>
         </section>
 
-        <FindPasswordModal visible={findPwdVisible} setVisible={setFindPwdVisible} />
-        <SliderVerifyModal ref={sliderVerifyModalRef} />
-        <SendMsgModal ref={sendMsgModalRef} />
-        <OneTimePwdModal ref={oneTimePwdModalRef} />
-        <OrgScanLoginModal ref={orgScanLoginModalRef} />
+        {findPwdVisible && (
+          <Suspense fallback={null}>
+            <FindPasswordModal visible={findPwdVisible} setVisible={setFindPwdVisible} />
+          </Suspense>
+        )}
+        {sliderVerifyModalMounted && (
+          <Suspense fallback={null}>
+            <SliderVerifyModal ref={sliderVerifyModalRef} />
+          </Suspense>
+        )}
+        {sendMsgModalMounted && (
+          <Suspense fallback={null}>
+            <SendMsgModal ref={sendMsgModalRef} />
+          </Suspense>
+        )}
+        {oneTimePwdModalMounted && (
+          <Suspense fallback={null}>
+            <OneTimePwdModal ref={oneTimePwdModalRef} />
+          </Suspense>
+        )}
+        {orgScanLoginModalMounted && (
+          <Suspense fallback={null}>
+            <OrgScanLoginModal ref={setOrgScanLoginModalRef} />
+          </Suspense>
+        )}
       </section>
       <div className="auth-page__footer-bar">
         <Footer rightSlot={<LoginGatewayDock />} />

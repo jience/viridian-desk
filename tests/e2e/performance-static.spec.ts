@@ -30,6 +30,29 @@ test('loads the desk connection overlay only while connecting', () => {
   expect(deskPageSource).toContain("import('@/components/DeskLoading')");
 });
 
+test('loads low-frequency login modals only when needed', () => {
+  const loginPageSource = source('src/pages/login/LoginPage.tsx');
+
+  expect(loginPageSource).not.toContain(
+    "import FindPasswordModal from './component/FindPasswordModal'",
+  );
+  expect(loginPageSource).not.toContain("import { OneTimePwdModal } from './OneTimePasswordModal'");
+  expect(loginPageSource).not.toContain('import { OrgScanLoginModal');
+  expect(loginPageSource).not.toContain("import { SendMsgModal } from './SendMsgModal'");
+  expect(loginPageSource).not.toContain("import { SliderVerifyModal } from './SliderVerifyModal'");
+  expect(loginPageSource).toContain("import('./component/FindPasswordModal')");
+  expect(loginPageSource).toContain("import('./OneTimePasswordModal')");
+  expect(loginPageSource).toContain("import('./OrgScanLoginModal')");
+  expect(loginPageSource).toContain("import('./SendMsgModal')");
+  expect(loginPageSource).toContain("import('./SliderVerifyModal')");
+
+  const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
+  expect(loginHandlerSource).toContain('sliderVerifyModalMounted');
+  expect(loginHandlerSource).toContain('waitForSliderVerifyModal');
+  expect(loginHandlerSource).toContain('sendMsgModalMounted');
+  expect(loginHandlerSource).toContain('oneTimePwdModalMounted');
+});
+
 test('loads the assistant panel only when the user opens it', () => {
   expect(source('src/layouts/AppLayout/index.tsx')).not.toContain(
     "import { AssistantPanel } from '@/ui/assistant/assistant-panel'",

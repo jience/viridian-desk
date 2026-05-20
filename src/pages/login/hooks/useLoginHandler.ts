@@ -13,7 +13,7 @@ import {
   selectTerminalGraphAuthenticationSwitch,
   selectTerminalMultiFactorAuthenticationSwitch,
 } from '@/store/feature/client';
-import { useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import type { OneTimePwdModalRef } from '../OneTimePasswordModal';
 import type { SendMsgModalRef } from '../SendMsgModal';
 import type { SliderVerifyModalRef } from '../SliderVerifyModal';
@@ -31,9 +31,15 @@ export const useLoginHandler = () => {
   const sliderVerifyModalRef = useRef<SliderVerifyModalRef>(null);
   const sendMsgModalRef = useRef<SendMsgModalRef>(null);
   const oneTimePwdModalRef = useRef<OneTimePwdModalRef>(null);
+  const sliderVerifyModalResolveRef = useRef<((modal: SliderVerifyModalRef) => void) | null>(null);
+  const sendMsgModalResolveRef = useRef<((modal: SendMsgModalRef) => void) | null>(null);
+  const oneTimePwdModalResolveRef = useRef<((modal: OneTimePwdModalRef) => void) | null>(null);
 
   const [loginLoading, setLoginLoading] = useState(false);
   const [isLocalPhoneLogin, setIsLocalPhoneLogin] = useState(false);
+  const [sliderVerifyModalMounted, setSliderVerifyModalMounted] = useState(false);
+  const [sendMsgModalMounted, setSendMsgModalMounted] = useState(false);
+  const [oneTimePwdModalMounted, setOneTimePwdModalMounted] = useState(false);
 
   const { loginSuccessFun } = useLoginSuccessHandler();
 
@@ -43,6 +49,57 @@ export const useLoginHandler = () => {
       (currentLoginType === 'LocalAuth' || currentLoginType === 'DomainAuth')
     );
   }, [oneTimePasswordSwitch, currentLoginType]);
+
+  const setSliderVerifyModalRef = useCallback((modal: SliderVerifyModalRef | null) => {
+    sliderVerifyModalRef.current = modal;
+    if (modal && sliderVerifyModalResolveRef.current) {
+      sliderVerifyModalResolveRef.current(modal);
+      sliderVerifyModalResolveRef.current = null;
+    }
+  }, []);
+
+  const setSendMsgModalRef = useCallback((modal: SendMsgModalRef | null) => {
+    sendMsgModalRef.current = modal;
+    if (modal && sendMsgModalResolveRef.current) {
+      sendMsgModalResolveRef.current(modal);
+      sendMsgModalResolveRef.current = null;
+    }
+  }, []);
+
+  const setOneTimePwdModalRef = useCallback((modal: OneTimePwdModalRef | null) => {
+    oneTimePwdModalRef.current = modal;
+    if (modal && oneTimePwdModalResolveRef.current) {
+      oneTimePwdModalResolveRef.current(modal);
+      oneTimePwdModalResolveRef.current = null;
+    }
+  }, []);
+
+  const waitForSliderVerifyModal = useCallback(() => {
+    if (sliderVerifyModalRef.current) return Promise.resolve(sliderVerifyModalRef.current);
+
+    setSliderVerifyModalMounted(true);
+    return new Promise<SliderVerifyModalRef>((resolve) => {
+      sliderVerifyModalResolveRef.current = resolve;
+    });
+  }, []);
+
+  const waitForSendMsgModal = useCallback(() => {
+    if (sendMsgModalRef.current) return Promise.resolve(sendMsgModalRef.current);
+
+    setSendMsgModalMounted(true);
+    return new Promise<SendMsgModalRef>((resolve) => {
+      sendMsgModalResolveRef.current = resolve;
+    });
+  }, []);
+
+  const waitForOneTimePwdModal = useCallback(() => {
+    if (oneTimePwdModalRef.current) return Promise.resolve(oneTimePwdModalRef.current);
+
+    setOneTimePwdModalMounted(true);
+    return new Promise<OneTimePwdModalRef>((resolve) => {
+      oneTimePwdModalResolveRef.current = resolve;
+    });
+  }, []);
 
   /** 检查用户是否绑定手机，如果绑定手机则打开短信验证弹窗验证 */
   const getLoginSmsLoginInfo = async (req: GetSmsCaptchaReq) => {
@@ -54,7 +111,7 @@ export const useLoginHandler = () => {
     };
     const { data } = await bridge.api.checkTerminalUser(checkTerminalUserReq);
     // 用户已绑定手机，走短信验证流程
-    if (data.data.phone && sendMsgModalRef.current) {
+    if (data.data.phone) {
       const req = {
         title: '短信验证码',
         loginName: loginName,
@@ -65,7 +122,8 @@ export const useLoginHandler = () => {
         ...(currentLoginType === LoginAuthType.NIS && { nisId }),
       };
 
-      const smsCaptcha = await sendMsgModalRef.current.show(req);
+      const sendMsgModal = await waitForSendMsgModal();
+      const smsCaptcha = await sendMsgModal.show(req);
 
       return smsCaptcha;
     }
@@ -81,7 +139,8 @@ export const useLoginHandler = () => {
 
         // 流程 1.1: 图形滑块验证
         if (terminalGraphAuthenticationSwitch) {
-          await sliderVerifyModalRef.current?.show();
+          const sliderVerifyModal = await waitForSliderVerifyModal();
+          await sliderVerifyModal.show();
         }
 
         const req: TerminalPhoneLoginReq = {
@@ -128,7 +187,8 @@ export const useLoginHandler = () => {
         showOneTimePassword &&
         (currentLoginType === LoginAuthType.LOCAL || currentLoginType === LoginAuthType.DOMAIN)
       ) {
-        const dynamicPwd = await oneTimePwdModalRef.current?.show({
+        const oneTimePwdModal = await waitForOneTimePwdModal();
+        const dynamicPwd = await oneTimePwdModal.show({
           loginName,
           password,
           authType: currentLoginType,
@@ -140,7 +200,8 @@ export const useLoginHandler = () => {
 
       // 流程 4: 图形滑块验证
       if (terminalGraphAuthenticationSwitch && currentLoginType !== LoginAuthType.IAM) {
-        await sliderVerifyModalRef.current?.show();
+        const sliderVerifyModal = await waitForSliderVerifyModal();
+        await sliderVerifyModal.show();
       }
 
       const { data } = await bridge.api.loginUser(loginParam);
@@ -155,8 +216,11 @@ export const useLoginHandler = () => {
     loginLoading,
     isLocalPhoneLogin,
     setIsLocalPhoneLogin,
-    sliderVerifyModalRef,
-    sendMsgModalRef,
-    oneTimePwdModalRef,
+    sliderVerifyModalRef: setSliderVerifyModalRef,
+    sendMsgModalRef: setSendMsgModalRef,
+    oneTimePwdModalRef: setOneTimePwdModalRef,
+    sliderVerifyModalMounted,
+    sendMsgModalMounted,
+    oneTimePwdModalMounted,
   };
 };
