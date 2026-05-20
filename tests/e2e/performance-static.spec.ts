@@ -30,6 +30,15 @@ test('loads the desk connection overlay only while connecting', () => {
   expect(deskPageSource).toContain("import('@/components/DeskLoading')");
 });
 
+test('loads desk detail modals only when opened', () => {
+  const deskDetailSource = source('src/pages/deskDetail/DeskDetailPage.tsx');
+
+  expect(deskDetailSource).not.toContain("import AllDiskListModal from './allDiskListModal'");
+  expect(deskDetailSource).not.toContain("import CreateModal from './createSnap'");
+  expect(deskDetailSource).toContain("import('./allDiskListModal')");
+  expect(deskDetailSource).toContain("import('./createSnap')");
+});
+
 test('loads low-frequency login modals only when needed', () => {
   const loginPageSource = source('src/pages/login/LoginPage.tsx');
 

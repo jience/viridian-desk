@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Button, Dropdown, Empty, Spin, Tag, Tooltip } from '@/ui';
 import { useMessageFormatter } from '@/utils/message-format';
 import { useLocation, useNavigate } from 'react-router';
@@ -10,11 +10,12 @@ import { DESK_STATUS, EmptyText } from '@/utils/constant';
 import { transIcon } from '@/utils/utils';
 import snapPng from '@/assets/images/snap.png';
 import { transStatus } from '../desk/useDeskHooks';
-import AllDiskListModal from './allDiskListModal';
-import CreateModal from './createSnap';
 import useDeskDetail from './useDeskDetail';
 import useSnap from './useSnap';
 import './DeskDetailPage.scss';
+
+const AllDiskListModal = lazy(() => import('./allDiskListModal'));
+const CreateModal = lazy(() => import('./createSnap'));
 
 const ActionDropdown = ActionAuth(Dropdown);
 const AuthCreateButton = ActionAuth(Button);
@@ -262,19 +263,27 @@ export function DeskDetailPage() {
         </section>
       </Spin>
 
-      <CreateModal
-        visible={visible}
-        setVisible={setVisible}
-        desktopId={desk?.id}
-        desktopDiskList={desktopDiskList}
-        refreshList={handleRefresh}
-      />
-      <AllDiskListModal
-        title={formatMessage({ id: 'AllDisks' })}
-        visiable={showAllDiskList}
-        setVisiable={setShowAllDiskList}
-        desktopId={id}
-      />
+      {visible && (
+        <Suspense fallback={null}>
+          <CreateModal
+            visible={visible}
+            setVisible={setVisible}
+            desktopId={desk?.id}
+            desktopDiskList={desktopDiskList}
+            refreshList={handleRefresh}
+          />
+        </Suspense>
+      )}
+      {showAllDiskList && (
+        <Suspense fallback={null}>
+          <AllDiskListModal
+            title={formatMessage({ id: 'AllDisks' })}
+            visiable={showAllDiskList}
+            setVisiable={setShowAllDiskList}
+            desktopId={id}
+          />
+        </Suspense>
+      )}
     </main>
   );
 }
