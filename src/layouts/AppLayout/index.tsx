@@ -1,8 +1,7 @@
-import { lazy, Suspense, useMemo, useState } from 'react';
+import { lazy, Suspense, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router';
 import Sidebar from '@/components/Sidebar';
-import { LoginGatewayDock } from '@/components/LoginGatewayDock';
 import { AppShell, type AssistantState } from '@/ui/shell/app-shell';
 import { DocumentTitle } from '@/ui/shell/document-title';
 import '@/styles/design-system.css';
@@ -11,6 +10,11 @@ import './index.scss';
 const AssistantPanel = lazy(() =>
   import('@/ui/assistant/assistant-panel').then((module) => ({
     default: module.AssistantPanel,
+  })),
+);
+const LoginGatewayDock = lazy(() =>
+  import('@/components/LoginGatewayDock').then((module) => ({
+    default: module.LoginGatewayDock,
   })),
 );
 
@@ -35,23 +39,40 @@ export function AppLayout() {
 
   const assistantState: AssistantState = assistantOpen ? 'expanded' : 'hidden';
   const isAssistantOpen = assistantState === 'expanded';
-  const toggleAssistant = () => {
+  const toggleAssistant = useCallback(() => {
     setAssistantOpen((current) => !current);
-  };
+  }, []);
+
+  const assistantSlot = useMemo(() => {
+    if (assistantState === 'hidden') return undefined;
+    return (
+      <Suspense fallback={null}>
+        <AssistantPanel collapsed={false} onToggle={toggleAssistant} />
+      </Suspense>
+    );
+  }, [assistantState, toggleAssistant]);
+
+  const navSlot = useMemo(
+    () => <Sidebar assistantOpen={isAssistantOpen} onAssistantToggle={toggleAssistant} />,
+    [isAssistantOpen, toggleAssistant],
+  );
+
+  const footerSlot = useMemo(
+    () => (
+      <Suspense fallback={null}>
+        <LoginGatewayDock readonly />
+      </Suspense>
+    ),
+    [],
+  );
 
   return (
     <div className="app-layout">
       <DocumentTitle title={commonT(routeMeta.titleKey)} />
       <AppShell
-        assistant={
-          assistantState === 'hidden' ? undefined : (
-            <Suspense fallback={null}>
-              <AssistantPanel collapsed={false} onToggle={toggleAssistant} />
-            </Suspense>
-          )
-        }
+        assistant={assistantSlot}
         assistantState={assistantState}
-        nav={<Sidebar assistantOpen={isAssistantOpen} onAssistantToggle={toggleAssistant} />}
+        nav={navSlot}
         userMenu={null}
       >
         <section className="app-layout__workspace">
@@ -65,9 +86,7 @@ export function AppLayout() {
             <Outlet />
           </main>
 
-          <footer className="app-layout__footer">
-            <LoginGatewayDock readonly />
-          </footer>
+          <footer className="app-layout__footer">{footerSlot}</footer>
         </section>
       </AppShell>
     </div>

@@ -12,7 +12,7 @@ import { logger } from '@/utils/logger';
 import { bridge } from '@/native';
 import type { MenuProps } from '@/ui';
 import { message, Modal, Tag, Tooltip } from '@/ui';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import {
   createDesktopFromPool,
@@ -168,7 +168,7 @@ const useDeskHooks = (props: any) => {
     },
   });
 
-  const resize = () => {
+  const resize = useCallback(() => {
     const docEl = document.documentElement;
 
     // set 1rem = viewWidth / 10
@@ -183,237 +183,259 @@ const useDeskHooks = (props: any) => {
     }
 
     setRemUnit();
-  };
+  }, [isFullScreen, isThin]);
 
   //网络连接情况
-  function getNetworkClass() {
+  const getNetworkClass = useCallback(() => {
     if (!autoGateway) return '';
     if (!network) return 'info';
     if (!connected) return 'danger';
     return 'success';
-  }
+  }, [autoGateway, connected, network]);
 
   // 获取桌面数据
-  const getDeskList = () => {
+  const getDeskList = useCallback(() => {
     const queryData = {
       pageSize: 9999,
       pageNumber: 1,
     };
     listResourceUserRun(queryData);
-  };
+  }, [listResourceUserRun]);
 
   //获取桌面池
-  const getDeskPoolList = () => {
+  const getDeskPoolList = useCallback(() => {
     const queryData = {
       pageSize: 9999,
       pageNumber: 1,
       returnDetail: true,
     };
     listDesktopPoolRun(queryData);
-  };
+  }, [listDesktopPoolRun]);
 
-  const getDeskPoolDetail = (detId: any) => {
-    setCheckDeskPoolItem(deskPoolData?.find((i: any) => i?.id == detId));
-  };
+  const getDeskPoolDetail = useCallback(
+    (detId: any) => {
+      setCheckDeskPoolItem(deskPoolData?.find((i: any) => i?.id == detId));
+    },
+    [deskPoolData],
+  );
 
   //设为默认、取消默认桌面
-  const setAutoDesktopFun = (desktopId: string, _name: string) => {
-    setAutoDesktopRun({
-      desktopId,
-    });
-  };
+  const setAutoDesktopFun = useCallback(
+    (desktopId: string, _name: string) => {
+      setAutoDesktopRun({
+        desktopId,
+      });
+    },
+    [setAutoDesktopRun],
+  );
 
   //桌面重启/强制重启
-  const restartDesk = (data: any, force: any) => {
-    Modal.confirm({
-      icon: null,
-      title: intl.formatMessage({
-        id: `${force ? 'DESK_FORCERESTART' : 'DESK_RESTART'}`,
-      }),
-      content: (
-        <div>
-          {force ? intl.formatMessage({ id: 'FORCERESTART_DESK_TIPS' }) : ''}
-          {intl.formatMessage({ id: `SURE_TO` })}
-          <Tag color="blue">{data.name}</Tag>
-          {intl.formatMessage({
-            id: `${force ? 'FORCERESTART_DESK_MSG' : 'RESTART_DESK_MSG'}`,
-          })}
-        </div>
-      ),
+  const restartDesk = useCallback(
+    (data: any, force: any) => {
+      Modal.confirm({
+        icon: null,
+        title: intl.formatMessage({
+          id: `${force ? 'DESK_FORCERESTART' : 'DESK_RESTART'}`,
+        }),
+        content: (
+          <div>
+            {force ? intl.formatMessage({ id: 'FORCERESTART_DESK_TIPS' }) : ''}
+            {intl.formatMessage({ id: `SURE_TO` })}
+            <Tag color="blue">{data.name}</Tag>
+            {intl.formatMessage({
+              id: `${force ? 'FORCERESTART_DESK_MSG' : 'RESTART_DESK_MSG'}`,
+            })}
+          </div>
+        ),
 
-      okText: intl.formatMessage({
-        id: `${force ? 'FORCERESTART' : 'RESTART'}`,
-      }),
-      cancelText: intl.formatMessage({ id: 'CANCEL' }),
-      centered: true,
-      onOk: (close: any) => {
-        rebootDesktopRun({
-          ids: [data.id],
-          force,
-        });
-        close();
-      },
-    });
-  };
+        okText: intl.formatMessage({
+          id: `${force ? 'FORCERESTART' : 'RESTART'}`,
+        }),
+        cancelText: intl.formatMessage({ id: 'CANCEL' }),
+        centered: true,
+        onOk: (close: any) => {
+          rebootDesktopRun({
+            ids: [data.id],
+            force,
+          });
+          close();
+        },
+      });
+    },
+    [intl, rebootDesktopRun],
+  );
   // 关机
-  const shutDownDesktop = (data: any) => {
-    Modal.confirm({
-      icon: null,
-      title: (
-        <span>
-          <i className="iconfont icon-malfunction1 modal-confirm-icon" />
-          {intl.formatMessage({ id: `DESK_SHUT_DOWN` })}
-        </span>
-      ),
-      content: (
-        <div>
-          {intl.formatMessage({ id: `SURE_TO` })}
-          <Tag color="blue">{data.name}</Tag>
-          {intl.formatMessage({ id: 'SHUT_DOWN_DESKTOP_MSG' })}
-        </div>
-      ),
-      okText: intl.formatMessage({ id: `SHUT_DOWN` }),
-      cancelText: intl.formatMessage({ id: 'CANCEL' }),
-      centered: true,
-      width: modalWidth,
-      onOk: (close: any) => {
-        stopDesktopRun({
-          ids: [data.id],
-          isReleaseResource: data?.desktopPool?.isKeepData || false,
-        });
-        close();
-      },
-    });
-  };
+  const shutDownDesktop = useCallback(
+    (data: any) => {
+      Modal.confirm({
+        icon: null,
+        title: (
+          <span>
+            <i className="iconfont icon-malfunction1 modal-confirm-icon" />
+            {intl.formatMessage({ id: `DESK_SHUT_DOWN` })}
+          </span>
+        ),
+        content: (
+          <div>
+            {intl.formatMessage({ id: `SURE_TO` })}
+            <Tag color="blue">{data.name}</Tag>
+            {intl.formatMessage({ id: 'SHUT_DOWN_DESKTOP_MSG' })}
+          </div>
+        ),
+        okText: intl.formatMessage({ id: `SHUT_DOWN` }),
+        cancelText: intl.formatMessage({ id: 'CANCEL' }),
+        centered: true,
+        width: modalWidth,
+        onOk: (close: any) => {
+          stopDesktopRun({
+            ids: [data.id],
+            isReleaseResource: data?.desktopPool?.isKeepData || false,
+          });
+          close();
+        },
+      });
+    },
+    [intl, modalWidth, stopDesktopRun],
+  );
 
   // 关闭电源
-  const shutDownDesktopForce = (data: any) => {
-    Modal.confirm({
-      icon: null,
-      title: intl.formatMessage({ id: `DESK_SHUTDOWNDESTOP` }),
-      content: (
-        <div>
-          {intl.formatMessage({ id: 'SHUT_DOWN_DESKTOP_TIPS' })}
-          {intl.formatMessage({ id: `SURE_TO` })}
-          <Tag color="blue">{data.name}</Tag>
-          {intl.formatMessage({ id: 'SHUT_DOWN_DESKTOP_STOP_MSG' })}
-        </div>
-      ),
-      okText: intl.formatMessage({ id: `SHUTDOWNDESTOP` }),
-      cancelText: intl.formatMessage({ id: 'CANCEL' }),
-      centered: true,
-      width: modalWidth,
-      onOk: (close: any) => {
-        shutdownDesktopRun({
-          ids: [data.id],
-          isReleaseResource: data?.desktopPool?.isKeepData || false,
-        });
-        close();
-      },
-    });
-  };
+  const shutDownDesktopForce = useCallback(
+    (data: any) => {
+      Modal.confirm({
+        icon: null,
+        title: intl.formatMessage({ id: `DESK_SHUTDOWNDESTOP` }),
+        content: (
+          <div>
+            {intl.formatMessage({ id: 'SHUT_DOWN_DESKTOP_TIPS' })}
+            {intl.formatMessage({ id: `SURE_TO` })}
+            <Tag color="blue">{data.name}</Tag>
+            {intl.formatMessage({ id: 'SHUT_DOWN_DESKTOP_STOP_MSG' })}
+          </div>
+        ),
+        okText: intl.formatMessage({ id: `SHUTDOWNDESTOP` }),
+        cancelText: intl.formatMessage({ id: 'CANCEL' }),
+        centered: true,
+        width: modalWidth,
+        onOk: (close: any) => {
+          shutdownDesktopRun({
+            ids: [data.id],
+            isReleaseResource: data?.desktopPool?.isKeepData || false,
+          });
+          close();
+        },
+      });
+    },
+    [intl, modalWidth, shutdownDesktopRun],
+  );
 
-  const distribute = (data: any, key: any, clickActions?: any) => {
-    switch (key) {
-      case 'cancelDefaultItem':
-        setAutoDesktopFun('', data.name);
-        break;
-      case 'setDefayltItem':
-        setAutoDesktopFun(data.id, data.name);
-        break;
-      case 'forcerRestart':
-        restartDesk(data, true);
-        break;
-      case 'forcerShutdown':
-        shutDownDesktopForce(data);
-        break;
-      case 'unmountItem':
-        clickActions.map((clickAction: any) => {
-          if (clickAction.actionId === 'PersonalDiskManagement') {
-            clickAction.action('unmount', data);
-          }
-        });
-        break;
-      case 'mountItem':
-        clickActions.map((clickAction: any) => {
-          if (clickAction.actionId === 'PersonalDiskManagement') {
-            clickAction.action('mount', data);
-          }
-        });
-        break;
-    }
-  };
+  const distribute = useCallback(
+    (data: any, key: any, clickActions?: any) => {
+      switch (key) {
+        case 'cancelDefaultItem':
+          setAutoDesktopFun('', data.name);
+          break;
+        case 'setDefayltItem':
+          setAutoDesktopFun(data.id, data.name);
+          break;
+        case 'forcerRestart':
+          restartDesk(data, true);
+          break;
+        case 'forcerShutdown':
+          shutDownDesktopForce(data);
+          break;
+        case 'unmountItem':
+          clickActions.map((clickAction: any) => {
+            if (clickAction.actionId === 'PersonalDiskManagement') {
+              clickAction.action('unmount', data);
+            }
+          });
+          break;
+        case 'mountItem':
+          clickActions.map((clickAction: any) => {
+            if (clickAction.actionId === 'PersonalDiskManagement') {
+              clickAction.action('mount', data);
+            }
+          });
+          break;
+      }
+    },
+    [restartDesk, setAutoDesktopFun, shutDownDesktopForce],
+  );
   //生成操作菜单
-  function generateMenus(data: any, clickActions: Array<any>): MenuProps {
-    const personalDisk = data.disks
-      ? data.disks.filter((disk: any) => disk.attribute === 'personal')
-      : [];
+  const generateMenus = useCallback(
+    (data: any, clickActions: Array<any>): MenuProps => {
+      const personalDisk = data.disks
+        ? data.disks.filter((disk: any) => disk.attribute === 'personal')
+        : [];
 
-    const items: MenuProps['items'] = [];
+      const items: MenuProps['items'] = [];
 
-    // 取消/设置默认
-    if (authActionShow([Actions.TerminalRWDesktopSetOrUnsetDefault])) {
-      items.push({
-        key: data.isDefault ? 'cancelDefaultItem' : 'setDefayltItem',
-        label: (
-          <p>
-            {intl.formatMessage({
-              id: data.isDefault ? 'CANCEL_DEFAULT' : 'SET_DEFAULT',
-            })}
-          </p>
-        ),
-      });
-    }
+      // 取消/设置默认
+      if (authActionShow([Actions.TerminalRWDesktopSetOrUnsetDefault])) {
+        items.push({
+          key: data.isDefault ? 'cancelDefaultItem' : 'setDefayltItem',
+          label: (
+            <p>
+              {intl.formatMessage({
+                id: data.isDefault ? 'CANCEL_DEFAULT' : 'SET_DEFAULT',
+              })}
+            </p>
+          ),
+        });
+      }
 
-    // 强制重启
-    if (authActionShow([Actions.TerminalRWDesktopForceReboot])) {
-      items.push({
-        key: 'forcerRestart',
-        label: <p>{intl.formatMessage({ id: 'FORCERESTART' })}</p>,
-        disabled: ![DESK_STATUS.START, DESK_STATUS.REBOOTING].includes(data.status) || data.isLock,
-      });
-    }
+      // 强制重启
+      if (authActionShow([Actions.TerminalRWDesktopForceReboot])) {
+        items.push({
+          key: 'forcerRestart',
+          label: <p>{intl.formatMessage({ id: 'FORCERESTART' })}</p>,
+          disabled:
+            ![DESK_STATUS.START, DESK_STATUS.REBOOTING].includes(data.status) || data.isLock,
+        });
+      }
 
-    // 强制关机
-    if (authActionShow([Actions.TerminalRWDesktopShutdown])) {
-      items.push({
-        key: 'forcerShutdown',
-        label: <p>{intl.formatMessage({ id: 'SHUTDOWNDESTOP' })}</p>,
-        disabled: ![DESK_STATUS.START, DESK_STATUS.STOPPING].includes(data.status) || data.isLock,
-      });
-    }
+      // 强制关机
+      if (authActionShow([Actions.TerminalRWDesktopShutdown])) {
+        items.push({
+          key: 'forcerShutdown',
+          label: <p>{intl.formatMessage({ id: 'SHUTDOWNDESTOP' })}</p>,
+          disabled: ![DESK_STATUS.START, DESK_STATUS.STOPPING].includes(data.status) || data.isLock,
+        });
+      }
 
-    // 个人盘挂载/卸载
-    if (authActionShow([Actions.TerminalRWDesktopAttachOrDetachPrivateDisk])) {
-      items.push({
-        key: personalDisk.length ? 'unmountItem' : 'mountItem',
-        label: (
-          <p>
-            {intl.formatMessage({
-              id: personalDisk.length ? 'PersonalDiskUnmounted' : 'PersonalDiskMounted',
-            })}
-          </p>
-        ),
-        disabled:
-          data.locked ||
-          (personalDisk.length
-            ? ![DESK_STATUS.STOP].includes(data.status)
-            : ![DESK_STATUS.START, DESK_STATUS.STOP].includes(data.status)) ||
-          data.desktopPool.type === 'SHARE',
-      });
-    }
+      // 个人盘挂载/卸载
+      if (authActionShow([Actions.TerminalRWDesktopAttachOrDetachPrivateDisk])) {
+        items.push({
+          key: personalDisk.length ? 'unmountItem' : 'mountItem',
+          label: (
+            <p>
+              {intl.formatMessage({
+                id: personalDisk.length ? 'PersonalDiskUnmounted' : 'PersonalDiskMounted',
+              })}
+            </p>
+          ),
+          disabled:
+            data.locked ||
+            (personalDisk.length
+              ? ![DESK_STATUS.STOP].includes(data.status)
+              : ![DESK_STATUS.START, DESK_STATUS.STOP].includes(data.status)) ||
+            data.desktopPool.type === 'SHARE',
+        });
+      }
 
-    return {
-      items,
-      className: 'deskAcitonMenu',
-      onClick: ({ domEvent, key }) => {
-        domEvent.stopPropagation();
-        distribute(data, key, clickActions);
-      },
-    };
-  }
+      return {
+        items,
+        className: 'deskAcitonMenu',
+        onClick: ({ domEvent, key }) => {
+          domEvent.stopPropagation();
+          distribute(data, key, clickActions);
+        },
+      };
+    },
+    [distribute, intl],
+  );
 
-  const transType = (item: any) => {
+  const transType = useCallback((item: any) => {
     if (item.type === 'SHARE') {
       return <i className="iconfont icon-shared-desktop"></i>;
     } else if (item.type === 'RESTORE') {
@@ -421,69 +443,75 @@ const useDeskHooks = (props: any) => {
     } else {
       return <i className="iconfont icon-exclusive1"></i>;
     }
-  };
+  }, []);
 
   //进入桌面
-  const enterDesk = async (data: any) => {
-    const activeStatus = [
-      DESK_STATUS.START,
-      DESK_STATUS.STOP,
-      DESK_STATUS.STOPRETAIN,
-      DESK_STATUS.PAUSED,
-    ];
+  const enterDesk = useCallback(
+    async (data: any) => {
+      const activeStatus = [
+        DESK_STATUS.START,
+        DESK_STATUS.STOP,
+        DESK_STATUS.STOPRETAIN,
+        DESK_STATUS.PAUSED,
+      ];
 
-    if (activeStatus.includes(data.status) && !data.isLock) {
-      if (data?.sessionStatus == '1') {
-        message.warning(intl.formatMessage({ id: 'DESK_INUSING' }));
-        return;
-      }
+      if (activeStatus.includes(data.status) && !data.isLock) {
+        if (data?.sessionStatus == '1') {
+          message.warning(intl.formatMessage({ id: 'DESK_INUSING' }));
+          return;
+        }
 
-      if (getNetworkClass() === 'success') {
-        setIsLoadingDesk(true);
+        if (getNetworkClass() === 'success') {
+          setIsLoadingDesk(true);
+        } else {
+          message.warning(intl.formatMessage({ id: 'NewWorkFail' }));
+          return false;
+        }
+        try {
+          const req = {
+            desktopId: data.id,
+            desktopIp: '127.0.0.1',
+            macAddress: 'FF:FF:FF:FF',
+          };
+          if (data.interfaces && data.interfaces.length > 0) {
+            req.desktopIp = data.interfaces[0].ip;
+            req.macAddress = data.interfaces[0].macAddress;
+          }
+          await bridge.cmd.connectDesktop(req);
+        } catch (error) {
+          logger.error('Error connecting to desktop:', error);
+          message.error(intl.formatMessage({ id: 'DESK_CONNECT_ERROR' }));
+        }
       } else {
-        message.warning(intl.formatMessage({ id: 'NewWorkFail' }));
+        message.warning(intl.formatMessage({ id: 'DesktopConnectionTimeout' }));
         return false;
       }
-      try {
-        const req = {
-          desktopId: data.id,
-          desktopIp: '127.0.0.1',
-          macAddress: 'FF:FF:FF:FF',
-        };
-        if (data.interfaces && data.interfaces.length > 0) {
-          req.desktopIp = data.interfaces[0].ip;
-          req.macAddress = data.interfaces[0].macAddress;
-        }
-        await bridge.cmd.connectDesktop(req);
-      } catch (error) {
-        logger.error('Error connecting to desktop:', error);
-        message.error(intl.formatMessage({ id: 'DESK_CONNECT_ERROR' }));
-      }
-    } else {
-      message.warning(intl.formatMessage({ id: 'DesktopConnectionTimeout' }));
-      return false;
-    }
-  };
+    },
+    [getNetworkClass, intl],
+  );
 
-  const createDeskFromDeskPool = (item: any) => {
-    Modal.confirm({
-      icon: null,
-      title: intl.formatMessage({ id: 'CreatDesk' }),
-      content: intl.formatMessage({ id: 'SureCreateDeskFromDeskPool' }, { name: item.name }),
-      okText: intl.formatMessage({ id: 'SURE' }),
-      cancelText: intl.formatMessage({ id: 'CANCEL' }),
-      centered: true,
-      width: modalWidth,
-      onOk: (close: any) => {
-        createDesktopFromPoolRun({
-          poolId: item.id,
-          count: 1,
-          userId: currentUser?.userId,
-        });
-        close();
-      },
-    });
-  };
+  const createDeskFromDeskPool = useCallback(
+    (item: any) => {
+      Modal.confirm({
+        icon: null,
+        title: intl.formatMessage({ id: 'CreatDesk' }),
+        content: intl.formatMessage({ id: 'SureCreateDeskFromDeskPool' }, { name: item.name }),
+        okText: intl.formatMessage({ id: 'SURE' }),
+        cancelText: intl.formatMessage({ id: 'CANCEL' }),
+        centered: true,
+        width: modalWidth,
+        onOk: (close: any) => {
+          createDesktopFromPoolRun({
+            poolId: item.id,
+            count: 1,
+            userId: currentUser?.userId,
+          });
+          close();
+        },
+      });
+    },
+    [createDesktopFromPoolRun, currentUser?.userId, intl, modalWidth],
+  );
 
   useEffect(() => {
     //获取桌面
@@ -493,31 +521,57 @@ const useDeskHooks = (props: any) => {
     resize();
   }, []);
 
-  return {
-    transStatus,
-    appKeys,
-    deskData,
-    deskPoolData,
-    deskLoading,
-    deskPoolLoading,
-    generateMenus,
-    shutDownDesktop,
-    shutDownDesktopForce,
-    restartDesk,
-    isLoadingDesk,
-    enterDesk,
-    createDeskFromDeskPool,
-    checkDeskPoolItem,
-    setCheckDeskPoolItem,
-    getDeskPoolDetail,
-    getDeskList,
-    getDeskPoolList,
-    transType,
-    loadingDeskText,
-    listResourceUserRefresh,
-    listDesktopPoolRefresh,
-    setIsLoadingDesk,
-  };
+  const hookResult = useMemo(
+    () => ({
+      transStatus,
+      appKeys,
+      deskData,
+      deskPoolData,
+      deskLoading,
+      deskPoolLoading,
+      generateMenus,
+      shutDownDesktop,
+      shutDownDesktopForce,
+      restartDesk,
+      isLoadingDesk,
+      enterDesk,
+      createDeskFromDeskPool,
+      checkDeskPoolItem,
+      setCheckDeskPoolItem,
+      getDeskPoolDetail,
+      getDeskList,
+      getDeskPoolList,
+      transType,
+      loadingDeskText,
+      listResourceUserRefresh,
+      listDesktopPoolRefresh,
+      setIsLoadingDesk,
+    }),
+    [
+      appKeys,
+      checkDeskPoolItem,
+      createDeskFromDeskPool,
+      deskData,
+      deskLoading,
+      deskPoolData,
+      deskPoolLoading,
+      enterDesk,
+      generateMenus,
+      getDeskList,
+      getDeskPoolDetail,
+      getDeskPoolList,
+      isLoadingDesk,
+      listDesktopPoolRefresh,
+      listResourceUserRefresh,
+      loadingDeskText,
+      restartDesk,
+      shutDownDesktop,
+      shutDownDesktopForce,
+      transType,
+    ],
+  );
+
+  return hookResult;
 };
 
 export default useDeskHooks;

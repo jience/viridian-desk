@@ -23,10 +23,49 @@ test('keeps low-frequency modal components lazy-loaded', () => {
   );
 });
 
+test('loads the desk connection overlay only while connecting', () => {
+  const deskPageSource = source('src/pages/desk/DeskPage.tsx');
+
+  expect(deskPageSource).not.toContain("import DeskLoading from '@/components/DeskLoading'");
+  expect(deskPageSource).toContain("import('@/components/DeskLoading')");
+});
+
 test('loads the assistant panel only when the user opens it', () => {
   expect(source('src/layouts/AppLayout/index.tsx')).not.toContain(
     "import { AssistantPanel } from '@/ui/assistant/assistant-panel'",
   );
+});
+
+test('keeps authenticated shell slots stable across route content renders', () => {
+  const appLayoutSource = source('src/layouts/AppLayout/index.tsx');
+
+  expect(appLayoutSource).not.toContain('import { LoginGatewayDock }');
+  expect(appLayoutSource).toContain("import('@/components/LoginGatewayDock')");
+  expect(appLayoutSource).toContain('useCallback');
+  expect(appLayoutSource).toContain('const assistantSlot = useMemo');
+  expect(appLayoutSource).toContain('const navSlot = useMemo');
+  expect(appLayoutSource).toContain('const footerSlot = useMemo');
+});
+
+test('keeps desk resource cards memoized away from page-level refresh state', () => {
+  const deskPageSource = source('src/pages/desk/DeskPage.tsx');
+
+  expect(deskPageSource).toContain('memo(');
+  expect(deskPageSource).toContain('function DesktopCard');
+  expect(deskPageSource).toContain('function DeskPoolCard');
+  expect(deskPageSource).toContain('useCallback');
+  expect(deskPageSource).toContain('useMemo');
+});
+
+test('keeps desk hook actions stable for memoized desk cards', () => {
+  const deskHookSource = source('src/pages/desk/useDeskHooks.tsx');
+
+  expect(deskHookSource).toContain('useCallback');
+  expect(deskHookSource).toContain('useMemo');
+  expect(deskHookSource).toContain('const generateMenus = useCallback');
+  expect(deskHookSource).toContain('const enterDesk = useCallback');
+  expect(deskHookSource).toContain('const createDeskFromDeskPool = useCallback');
+  expect(deskHookSource).toContain('const hookResult = useMemo');
 });
 
 test('loads the message center only when the user opens it', () => {
