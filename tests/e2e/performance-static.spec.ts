@@ -50,6 +50,19 @@ test('keeps async route styles split from the startup stylesheet', () => {
   expect(source('vite.config.ts')).not.toContain('cssCodeSplit: false');
 });
 
+test('splits vendor chunks by exact package name to avoid production init cycles', () => {
+  const viteConfig = source('vite.config.ts');
+
+  expect(viteConfig).toContain('function getNodePackageName');
+  expect(viteConfig).toContain("packageName === 'react-i18next'");
+  expect(viteConfig).toContain("return 'vendor-icons'");
+  expect(viteConfig).toContain("return 'vendor-scrollbars'");
+  expect(viteConfig).toContain("return 'vendor-state'");
+  expect(viteConfig).not.toContain("return 'vendor-react'");
+  expect(viteConfig).not.toContain("id.includes('/react')");
+  expect(viteConfig).not.toContain("id.includes('/react-i18next')");
+});
+
 test('keeps route design-system styles out of the global stylesheet', () => {
   expect(source('src/styles/index.scss')).not.toContain("@use '@/styles/design-system.css'");
 });
@@ -121,6 +134,15 @@ test('does not load cached native background images in the renderer', () => {
 
 test('keeps desk detail fact values free of nested paragraph markup', () => {
   expect(source('src/pages/deskDetail/useDeskDetail.tsx')).not.toContain('<p');
+});
+
+test('build script always enables the Tauri production frontend protocol', () => {
+  const packageJson = source('package.json');
+  const cargoToml = source('src-tauri/Cargo.toml');
+
+  expect(cargoToml).toContain('default = [ "custom-protocol" ]');
+  expect(cargoToml).toContain('custom-protocol = [ "tauri/custom-protocol" ]');
+  expect(packageJson).toContain('"tauri": "tauri"');
 });
 
 test('keeps the update modal background CSS-only', () => {

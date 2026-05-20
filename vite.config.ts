@@ -5,6 +5,19 @@ import svgr from 'vite-plugin-svgr';
 
 const host = process.env.TAURI_DEV_HOST;
 
+function getNodePackageName(id: string) {
+  const segments = id.split('/node_modules/');
+  if (segments.length < 2) return null;
+
+  const packagePath = segments.at(-1);
+  if (!packagePath) return null;
+
+  const [scopeOrName, name] = packagePath.split('/');
+  if (!scopeOrName) return null;
+
+  return scopeOrName.startsWith('@') && name ? `${scopeOrName}/${name}` : scopeOrName;
+}
+
 export default defineConfig({
   plugins: [react(), svgr()],
   resolve: {
@@ -38,21 +51,38 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (!id.includes('node_modules')) return;
-          if (id.includes('/react') || id.includes('/react-dom') || id.includes('/react-router')) {
-            return 'vendor-react';
-          }
-          if (id.includes('/@tauri-apps/')) {
+          const packageName = getNodePackageName(id);
+
+          if (packageName?.startsWith('@tauri-apps/')) {
             return 'vendor-tauri';
           }
           if (
-            id.includes('/i18next') ||
-            id.includes('/react-i18next') ||
-            id.includes('/react-intl')
+            packageName === 'i18next' ||
+            packageName === 'react-i18next' ||
+            packageName === 'react-intl' ||
+            packageName === 'i18next-browser-languagedetector' ||
+            packageName === 'i18next-resources-to-backend'
           ) {
             return 'vendor-i18n';
           }
-          if (id.includes('/@radix-ui/')) {
+          if (packageName?.startsWith('@radix-ui/')) {
             return 'vendor-radix';
+          }
+          if (packageName === 'lucide-react' || packageName === 'lucide') {
+            return 'vendor-icons';
+          }
+          if (packageName === 'react-custom-scrollbars') {
+            return 'vendor-scrollbars';
+          }
+          if (
+            packageName === '@reduxjs/toolkit' ||
+            packageName === 'react-redux' ||
+            packageName === 'redux' ||
+            packageName === 'redux-thunk' ||
+            packageName === 'reselect' ||
+            packageName === 'immer'
+          ) {
+            return 'vendor-state';
           }
           return 'vendor';
         },
