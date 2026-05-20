@@ -39,6 +39,15 @@ test('loads desk detail modals only when opened', () => {
   expect(deskDetailSource).toContain("import('./createSnap')");
 });
 
+test('loads application detail modal only when opened', () => {
+  const applicationPageSource = source('src/pages/application/ApplicationPage.tsx');
+
+  expect(applicationPageSource).not.toContain(
+    "import { AppDetailModal } from './component/AppDetailModal'",
+  );
+  expect(applicationPageSource).toContain("import('./component/AppDetailModal')");
+});
+
 test('loads low-frequency login modals only when needed', () => {
   const loginPageSource = source('src/pages/login/LoginPage.tsx');
 

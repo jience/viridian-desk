@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useRef, useState, type FC } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FC } from 'react';
 import { Button, Dropdown, Empty, Modal, Spin, Tooltip } from '@/ui';
 import type { ItemType } from '@/ui';
 import type { ModalFunc } from '@/ui';
 import { Trans, useTranslation } from 'react-i18next';
-import { AppDetailModal } from './component/AppDetailModal';
 import { AppIcon } from './component/AppIcon';
 import { useLoading } from '@/hooks/useLoading';
 import { VappApi } from '@/services/api/vapp';
@@ -18,6 +17,10 @@ import type {
 import type { ConnectVappReq } from '@/services/invoke/vapp/types';
 import type { DefaultOptionType } from '@/ui';
 import './ApplicationPage.scss';
+
+const AppDetailModal = lazy(() =>
+  import('./component/AppDetailModal').then((module) => ({ default: module.AppDetailModal })),
+);
 
 export interface ApplicationPageProps {
   category: VappCategory | 'all';
@@ -268,11 +271,13 @@ export const ApplicationPage: FC<ApplicationPageProps> = (props) => {
       </Spin>
 
       {detailApp && (
-        <AppDetailModal
-          visible={!!detailApp}
-          app={detailApp}
-          setVisible={() => setDetailApp(null)}
-        />
+        <Suspense fallback={null}>
+          <AppDetailModal
+            visible={!!detailApp}
+            app={detailApp}
+            setVisible={() => setDetailApp(null)}
+          />
+        </Suspense>
       )}
       {contextHolder}
     </main>
