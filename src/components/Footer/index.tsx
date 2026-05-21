@@ -9,6 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { bridge } from '@/native';
 import { cn } from '@/ui/lib/cn';
 
+const isThinFromEnv = import.meta.env.TAURI_IS_THIN_CLIENT === 'true';
+
 interface FooterAction {
   key: string;
   label: string;
@@ -28,6 +30,7 @@ const Footer: FC<FooterProps> = ({ rightSlot }) => {
   const [modal, contextHolder] = Modal.useModal();
 
   const isThin = useAppSelector(selectIsThin);
+  const resolvedIsThin = isThin ?? isThinFromEnv;
 
   const developerMode = useAppSelector(selectDeveloperMode);
 
@@ -69,7 +72,7 @@ const Footer: FC<FooterProps> = ({ rightSlot }) => {
         onClick: () => {
           void shutdown();
         },
-        hidden: !isIntegratedMode && !isThin,
+        hidden: !isIntegratedMode && !resolvedIsThin,
         tone: 'danger',
       },
     ] satisfies FooterAction[]

@@ -7,7 +7,7 @@ import {
 } from '@/native/interfaces/api';
 import { failure, success } from '@/native/utils';
 import type { ApiResponse } from '@/utils/request/types';
-import { encryptionPassword } from '@/utils/utils';
+import { encryptionPassword } from '@/utils/passwordCrypto';
 import { request } from './request';
 
 export const ApiInvoke = {

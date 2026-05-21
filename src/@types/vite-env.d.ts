@@ -14,4 +14,6 @@ interface ImportMetaEnv {
   readonly VITE_API_TIMEOUT: string;
   /** API请求前缀 */
   readonly VITE_API_PREFIX: string;
+  /** 是否为瘦终端构建 */
+  readonly TAURI_IS_THIN_CLIENT?: string;
 }

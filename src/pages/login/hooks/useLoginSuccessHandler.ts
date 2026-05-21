@@ -3,7 +3,6 @@ import { useAppDispatch } from '@/store';
 import { setCurrentUser } from '@/store/feature/app';
 import { fetchTerminalInfo } from '@/store/feature/terminal';
 import Actions from '@/utils/actions';
-import { encryption, LEGACY_PASSWORD_PREFIX } from '@/utils/utils';
 import { message } from '@/ui';
 import { logger } from '@/utils/logger';
 import { useNavigate } from 'react-router';
@@ -66,9 +65,8 @@ export const useLoginSuccessHandler = () => {
   const loginSuccessFun = async (res: LoginUserInfo, req: LoginUserReq) => {
     // TODO 后面需要去除password字段
     if (req.password) {
-      const password = encryption(
-        LEGACY_PASSWORD_PREFIX + '-' + req.password + '_' + new Date().getTime(),
-      );
+      const { encryptionPassword } = await import('@/utils/passwordCrypto');
+      const password = encryptionPassword(req.password);
       await appDispatch(
         setCurrentUser({
           ...res,

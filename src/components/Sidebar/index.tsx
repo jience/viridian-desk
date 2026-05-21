@@ -25,7 +25,7 @@ import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
 import { cn } from '@/ui/lib/cn';
 import { authActionShow } from '@/utils/actionAuth';
 import { logger } from '@/utils/logger';
-import { LEGACY_PASSWORD_PREFIX } from '@/utils/utils';
+import { LEGACY_PASSWORD_PREFIX } from '@/utils/passwordPrefix';
 import { Menu, message, Modal, Popover, Tooltip } from '@/ui';
 import { Buffer } from 'buffer';
 import { isEmpty } from 'lodash-es';

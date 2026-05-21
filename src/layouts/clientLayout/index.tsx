@@ -5,12 +5,11 @@ import { bridge } from '@/native';
 import { Outlet } from 'react-router';
 import { globalEmitter } from '@/utils/mitt';
 import { message } from '@/ui/message';
-import { useInitState } from './useInitState';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { selectMsgId, selectMsgModalShow, setMsgModalShow } from '@/store/feature/app/appSlice';
 import { selectIsThin } from '@/store/feature/terminal';
 import ControlWindow from '@/components/ControlWindow';
-import { setConnected } from '@/store/feature/gateway';
+import { fetchClientOnlineStatus, setConnected } from '@/store/feature/gateway';
 import type { UnlistenFn } from '@/native/interfaces/types';
 import { useTranslation } from 'react-i18next';
 import { logger } from '@/utils/logger';
@@ -20,7 +19,6 @@ const MessageListModal = lazy(() => import('@/components/MessageCenter'));
 const ClientLayout = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  useInitState();
 
   const isThin = useAppSelector(selectIsThin);
 
@@ -45,11 +43,10 @@ const ClientLayout = () => {
 
   // 手动获取桌面上线状态
   const getConnectStatue = () => {
-    bridge.cmd
-      .getClientOnlineStatus()
-      .then(({ data }) => {
-        logger.debug('getConnectStatue', data);
-        dispatch(setConnected(data));
+    dispatch(fetchClientOnlineStatus())
+      .unwrap()
+      .then((isOnline) => {
+        logger.debug('getConnectStatue', isOnline);
       })
       .catch((error) => {
         logger.debug('getConnectStatue unavailable', error);

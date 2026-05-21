@@ -110,6 +110,55 @@ test('loads saved config before rendering the lightweight login route', () => {
   expect(routerSource).toContain('loader: preAuthConfigLoader');
 });
 
+test('loads saved gateway selection before rendering the lightweight login route', () => {
+  const routerSource = source('src/router/index.tsx');
+  const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
+  const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
+  const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
+
+  expect(routerSource).toContain('fetchGatewayList');
+  expect(preAuthLoaderBlock).toContain('fetchGatewayList');
+  expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
+});
+
+test('loads gateway online status before rendering the lightweight login route', () => {
+  const routerSource = source('src/router/index.tsx');
+  const gatewaySource = source('src/store/feature/gateway/gatewaySlice.ts');
+  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
+  const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
+  const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
+  const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
+
+  expect(gatewaySource).toContain('fetchClientOnlineStatus');
+  expect(gatewaySource).toContain('bridge.cmd.getClientOnlineStatus()');
+  expect(gatewaySource).toContain('state.connected = action.payload');
+  expect(preAuthLoaderBlock).toContain('fetchClientOnlineStatus');
+  expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
+  expect(clientLayoutSource).toContain('dispatch(fetchClientOnlineStatus())');
+});
+
+test('keeps network status synced before authenticated layout loads', () => {
+  const appSource = source('src/App.tsx');
+  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
+  const clientLayoutNetworkHookPath = 'src/layouts/clientLayout/useInitState.ts';
+
+  expect(appSource).toContain('setNetwork(navigator.onLine)');
+  expect(appSource).toContain("window.addEventListener('online', handleNetworkChange)");
+  expect(appSource).toContain("window.addEventListener('offline', handleNetworkChange)");
+  expect(clientLayoutSource).not.toContain('useInitState');
+  expect(existsSync(join(process.cwd(), clientLayoutNetworkHookPath)), clientLayoutNetworkHookPath)
+    .toBe(false);
+});
+
+test('keeps thin-client footer actions correct before terminal info loads', () => {
+  const footerSource = source('src/components/Footer/index.tsx');
+  const viteEnvSource = source('src/@types/vite-env.d.ts');
+
+  expect(footerSource).toContain('TAURI_IS_THIN_CLIENT');
+  expect(footerSource).toContain('?? isThinFromEnv');
+  expect(viteEnvSource).toContain('TAURI_IS_THIN_CLIENT');
+});
+
 test('keeps login window controls local to the lightweight login route', () => {
   const loginPageSource = source('src/pages/login/LoginPage.tsx');
   const loginPageStyles = source('src/pages/login/LoginPage.scss');
@@ -619,4 +668,30 @@ test('uses a Tauri-only native facade at runtime', () => {
   expect(nativeIndexSource).not.toContain('createLazyBridgeProxy');
   expect(nativeIndexSource).not.toContain('new Proxy');
   expect(source('src/native/interceptor.ts')).not.toContain('createBridgeProxy');
+});
+
+test('defers Tauri feature modules until their methods are used', () => {
+  const tauriBridgeSource = source('src/native/tauri/index.ts');
+
+  expect(tauriBridgeSource).not.toContain("from './api'");
+  expect(tauriBridgeSource).not.toContain("from './app_updates'");
+  expect(tauriBridgeSource).not.toContain("from './cmd'");
+  expect(tauriBridgeSource).not.toContain("from './config'");
+  expect(tauriBridgeSource).not.toContain("from './terminal'");
+  expect(tauriBridgeSource).toContain('createModuleLoader');
+  expect(tauriBridgeSource).toContain("import('./api')");
+  expect(tauriBridgeSource).toContain("import('./cmd')");
+  expect(tauriBridgeSource).toContain("import('./config')");
+});
+
+test('loads password crypto only when login work needs it', () => {
+  const legacyUtilsSource = source('src/utils/utils.jsx');
+  const loginSuccessSource = source('src/pages/login/hooks/useLoginSuccessHandler.ts');
+  const apiModuleSource = source('src/native/tauri/api/index.ts');
+
+  expect(legacyUtilsSource).not.toContain('crypto-js');
+  expect(loginSuccessSource).not.toContain("from '@/utils/utils'");
+  expect(loginSuccessSource).toContain("import('@/utils/passwordCrypto')");
+  expect(apiModuleSource).not.toContain("from '@/utils/utils'");
+  expect(apiModuleSource).toContain("from '@/utils/passwordCrypto'");
 });

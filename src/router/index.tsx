@@ -1,6 +1,6 @@
 import { appStore } from '@/store';
 import { fetchConfigInfo } from '@/store/feature/config';
-import { setNetwork } from '@/store/feature/gateway';
+import { fetchClientOnlineStatus, fetchGatewayList, setNetwork } from '@/store/feature/gateway';
 import { fetchTerminalInfo } from '@/store/feature/terminal';
 import { RouteErrorBoundary } from '@/ui/shell/error-boundary';
 import { RouteFallback } from '@/ui/shell/route-fallback';
@@ -88,7 +88,11 @@ const createAppRoutes = ({
 ];
 
 const preAuthConfigLoader = async () => {
-  await appStore.dispatch(fetchConfigInfo());
+  await Promise.all([
+    appStore.dispatch(fetchConfigInfo()),
+    appStore.dispatch(fetchGatewayList()),
+    appStore.dispatch(fetchClientOnlineStatus()),
+  ]);
   return null;
 };
 

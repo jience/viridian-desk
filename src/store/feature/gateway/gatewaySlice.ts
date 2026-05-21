@@ -16,6 +16,14 @@ export const fetchGatewayList = createAsyncThunk('gateway/fetchGatewayList', asy
   return response.data;
 });
 
+export const fetchClientOnlineStatus = createAsyncThunk(
+  'gateway/fetchClientOnlineStatus',
+  async () => {
+    const response = await bridge.cmd.getClientOnlineStatus();
+    return response.data;
+  },
+);
+
 export const addGateway = createAsyncThunk(
   'gateway/addGateway',
   async (gatewayInfo: AddGatewayServerReq) => {
@@ -72,6 +80,9 @@ const gatewaySlice = createSlice({
         // 更新自动网关信息
         const autoGateway = action.payload.find((item) => item.auto);
         state.autoGateway = autoGateway || null;
+      })
+      .addCase(fetchClientOnlineStatus.fulfilled, (state, action) => {
+        state.connected = action.payload;
       })
 
       // 添加网关

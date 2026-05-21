@@ -1,9 +1,6 @@
 import { Gi, Ki, Mi, Pi, Ti } from '@/utils/constant';
-import * as CryptoJS from 'crypto-js';
 import { isEmpty } from 'lodash-es';
 import i18next from 'i18next';
-const CRYPTION_PUBLIC_KEY = 'QWER1234asdf5678';
-export const LEGACY_PASSWORD_PREFIX = ['arch', 'eroscmp'].join('');
 
 /**
  * @author zhoujingjing
@@ -200,73 +197,6 @@ export const clearEmpty = (obj) => {
 
 export const formatTel = (tel) => {
   return tel && tel.length == 11 ? tel.substring(0, 3) + '****' + tel.substr(tel.length - 4) : '';
-};
-
-/**
- * aes加密
- * @param data 待加密内容
- * @param key 必须为32位私钥
- * @returns {string}
- */
-export const encryption = (str) => {
-  let encrypted = CryptoJS.AES.encrypt(
-    CryptoJS.enc.Utf8.parse(btoa(str)),
-    CryptoJS.enc.Utf8.parse(CRYPTION_PUBLIC_KEY),
-    {
-      mode: CryptoJS.mode.ECB,
-      padding: CryptoJS.pad.Pkcs7,
-      iv: '',
-      key: 128,
-    },
-  );
-  // 将加密后的数据转换成 Base64
-  return encrypted.ciphertext.toString(CryptoJS.enc.Base64);
-};
-
-export const encryptionPassword = (password) => {
-  return encryption(LEGACY_PASSWORD_PREFIX + '-' + password + '_' + new Date().getTime());
-};
-
-/**
- * aes解密
- * @param data 待解密内容
- * @param key 必须为32位私钥
- * @returns {string}
- */
-export const decryption = (data, key = CRYPTION_PUBLIC_KEY) => {
-  let decrypted = CryptoJS.AES.decrypt(
-    {
-      ciphertext: CryptoJS.enc.Base64.parse(data),
-    },
-    CryptoJS.enc.Utf8.parse(key),
-    {
-      mode: CryptoJS.mode.ECB,
-      padding: CryptoJS.pad.Pkcs7,
-      iv: '',
-      key: 128,
-    },
-  );
-  // 将解密后的数据转换成字符串
-  return atob(decrypted.toString(CryptoJS.enc.Utf8));
-};
-
-export const pkcs7 = (data, digit) => {
-  if (typeof data === 'string' && typeof digit === 'number' && data.length > 0) {
-    let differenceCount = digit - (data.length % digit);
-    return data + Array(differenceCount + 1).join('\x07');
-  } else {
-    return data;
-  }
-};
-
-export const pkcs7Password = (password) => {
-  if (password === '') return '';
-  return pkcs7(
-    Buffer.from(LEGACY_PASSWORD_PREFIX + '-' + password + '_' + new Date().getTime()).toString(
-      'base64',
-    ),
-    16,
-  );
 };
 
 /**
