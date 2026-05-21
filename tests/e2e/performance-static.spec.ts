@@ -718,6 +718,25 @@ test('keeps desk hook actions stable for memoized desk cards', () => {
   expect(deskHookSource).toContain('const hookResult = useMemo');
 });
 
+test('defers desktop resource requests until after the desk route first paint', () => {
+  const deskHookSource = source('src/pages/desk/useDeskHooks.tsx');
+
+  expect(deskHookSource).toContain('scheduleDeskResourceBootstrap');
+  expect(deskHookSource).toContain('window.requestAnimationFrame');
+  expect(deskHookSource).toContain('window.setTimeout');
+  expect(deskHookSource).toContain('window.cancelAnimationFrame');
+  expect(deskHookSource).not.toContain('getDeskList();\n    //获取桌面池\n    getDeskPoolList();');
+});
+
+test('loads desktop idle cleanup shell command only when idle disconnect fires', () => {
+  const deskPageSource = source('src/pages/desk/DeskPage.tsx');
+
+  expect(deskPageSource).not.toContain(
+    "import { killAllHdpViewers } from '@/services/invoke/shell'",
+  );
+  expect(deskPageSource).toContain("import('@/services/invoke/shell')");
+});
+
 test('loads the message center only when the user opens it', () => {
   const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
 
@@ -842,6 +861,21 @@ test('keeps startup notifications out of the full UI component bundle', () => {
 
   expect(source('src/ui/message.ts')).toContain("import './message.scss'");
   expect(source('src/ui/styles.scss')).not.toContain('.vd-toast');
+});
+
+test('uses a lightweight local request hook instead of the ahooks runtime', () => {
+  const packageJson = source('package.json');
+  const requestHookSource = source('src/hooks/useRequest.js');
+
+  expect(packageJson).not.toContain('"ahooks"');
+  expect(requestHookSource).not.toContain("from 'ahooks'");
+  expect(requestHookSource).not.toContain("from 'lodash-es'");
+  expect(requestHookSource).toContain('lastParamsRef');
+  expect(requestHookSource).toContain('throttleTimerRef');
+  expect(requestHookSource).toContain('return {');
+  expect(requestHookSource).toContain('run,');
+  expect(requestHookSource).toContain('refresh,');
+  expect(requestHookSource).toContain('loading,');
 });
 
 test('removes slider verification assets from the login client', () => {

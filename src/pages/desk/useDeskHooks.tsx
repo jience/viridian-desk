@@ -513,13 +513,30 @@ const useDeskHooks = (props: any) => {
     [createDesktopFromPoolRun, currentUser?.userId, intl, modalWidth],
   );
 
+  const scheduleDeskResourceBootstrap = useCallback(() => {
+    let timeoutId: number | undefined;
+    const frameId = window.requestAnimationFrame(() => {
+      timeoutId = window.setTimeout(() => {
+        getDeskList();
+        getDeskPoolList();
+      }, 0);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, [getDeskList, getDeskPoolList]);
+
   useEffect(() => {
-    //获取桌面
-    getDeskList();
-    //获取桌面池
-    getDeskPoolList();
+    return scheduleDeskResourceBootstrap();
+  }, [scheduleDeskResourceBootstrap]);
+
+  useEffect(() => {
     resize();
-  }, []);
+  }, [resize]);
 
   const hookResult = useMemo(
     () => ({

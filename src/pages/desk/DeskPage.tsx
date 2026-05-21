@@ -6,7 +6,6 @@ import { get } from 'lodash-es';
 import Deskpool from '@/components/Deskpoolsvg';
 import useRequest from '@/hooks/useRequest';
 import { detachVolume } from '@/services/resource';
-import { killAllHdpViewers } from '@/services/invoke/shell';
 import { bridge } from '@/native';
 import { useAppSelector } from '@/store';
 import { selectFullScreen } from '@/store/feature/config';
@@ -313,6 +312,7 @@ export function DeskPage() {
 
     registerListener(
       bridge.onEvent('desktop-idle-disconnect', async () => {
+        const { killAllHdpViewers } = await import('@/services/invoke/shell');
         await killAllHdpViewers();
         message.warning('用户闲置策略生效，断开桌面连接');
       }),
