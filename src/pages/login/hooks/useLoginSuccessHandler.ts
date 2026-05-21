@@ -1,20 +1,19 @@
 import type { LoginUserInfo, LoginUserReq } from '@/native/interfaces/api';
-import { useAppDispatch, useAppSelector } from '@/store';
+import { useAppDispatch } from '@/store';
 import { setCurrentUser } from '@/store/feature/app';
-import { selectIsThin } from '@/store/feature/terminal';
+import { fetchTerminalInfo } from '@/store/feature/terminal';
 import Actions from '@/utils/actions';
 import { encryption, LEGACY_PASSWORD_PREFIX } from '@/utils/utils';
 import { message } from '@/ui';
+import { logger } from '@/utils/logger';
 import { useNavigate } from 'react-router';
 
 export const useLoginSuccessHandler = () => {
   const navigate = useNavigate();
   const appDispatch = useAppDispatch();
 
-  const isThin = useAppSelector(selectIsThin);
-
   // 登录成功后跳转路由的权限对照
-  const getRouteActionMap = () => {
+  const getRouteActionMap = (isThin?: boolean) => {
     const routeActionMap: { [key: string]: any } = {
       '/app/desk': Actions.TerminalRODesktopRead,
     };
@@ -32,8 +31,18 @@ export const useLoginSuccessHandler = () => {
     return routeActionMap;
   };
 
-  const loginSuccessActionRoute = (userPermissions: string[]) => {
-    const routActionMap = getRouteActionMap();
+  const resolveTerminalThinMode = async () => {
+    try {
+      const terminalInfo = await appDispatch(fetchTerminalInfo()).unwrap();
+      return Boolean(terminalInfo?.isThin);
+    } catch (error) {
+      logger.debug('fetchTerminalInfo before login route selection failed', error);
+      return false;
+    }
+  };
+
+  const loginSuccessActionRoute = (userPermissions: string[], isThin?: boolean) => {
+    const routActionMap = getRouteActionMap(isThin);
     const routes = Object.keys(routActionMap).filter((route: any) => {
       const auths = routActionMap[route];
       if (Array.isArray(auths)) {
@@ -79,7 +88,8 @@ export const useLoginSuccessHandler = () => {
       message.warning('您的密码即将过期，请及时修改密码以确保账户安全!');
     }
 
-    loginSuccessActionRoute(res.permissions || []);
+    const isThin = await resolveTerminalThinMode();
+    loginSuccessActionRoute(res.permissions || [], isThin);
   };
 
   return {

@@ -147,6 +147,26 @@
   overflow: hidden;
 }
 
+.auth-page__drag-region {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 19;
+  width: 100%;
+  height: 18px;
+}
+
+.auth-page__controls {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+
+  .control-window-content {
+    background: color-mix(in srgb, var(--auth-panel-strong) 58%, transparent);
+  }
+}
+
 .auth-page__brand-zone {
   position: relative;
   z-index: 1;

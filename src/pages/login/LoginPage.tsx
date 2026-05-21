@@ -1,4 +1,5 @@
 import loginLogo from '@/assets/images/logo.svg';
+import ControlWindow from '@/components/ControlWindow';
 import Footer from '@/components/Footer';
 import { useAppSelector } from '@/store';
 import { selectAutoGateway, selectConnected, selectNetwork } from '@/store/feature/gateway';
@@ -74,6 +75,10 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       <DocumentTitle title={formatMessage({ id: 'LOGIN' })} />
+      <div className="auth-page__drag-region" data-tauri-drag-region />
+      <div className="auth-page__controls">
+        <ControlWindow />
+      </div>
       <section className="auth-page__window">
         <section className="auth-page__brand-zone" aria-label={t('appName')}>
           <header className="auth-page__brand-header">

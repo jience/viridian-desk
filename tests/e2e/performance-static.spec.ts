@@ -86,6 +86,27 @@ test('keeps the login page local-account only', () => {
   }
 });
 
+test('keeps login route outside the authenticated client layout', () => {
+  const routerSource = source('src/router/index.tsx');
+  const clientLayoutBlockStart = routerSource.indexOf('element: <ClientLayout />');
+  const clientLayoutBlock = routerSource.slice(clientLayoutBlockStart);
+
+  expect(routerSource).toContain("path: 'login'");
+  expect(routerSource).toContain('element: routeElement(<LoginPage />)');
+  expect(clientLayoutBlock).not.toContain("path: 'login'");
+  expect(clientLayoutBlock).not.toContain('<LoginPage />');
+});
+
+test('keeps login window controls local to the lightweight login route', () => {
+  const loginPageSource = source('src/pages/login/LoginPage.tsx');
+  const loginPageStyles = source('src/pages/login/LoginPage.scss');
+
+  expect(loginPageSource).toContain("import ControlWindow from '@/components/ControlWindow'");
+  expect(loginPageSource).toContain('auth-page__drag-region');
+  expect(loginPageSource).toContain('<ControlWindow />');
+  expect(loginPageStyles).toContain('.auth-page__controls');
+});
+
 test('keeps the login typing path free of expensive live filters', () => {
   const loginCriticalStyles = [
     source('src/pages/login/LoginPage.scss'),
@@ -222,11 +243,35 @@ test('keeps login key handling off the per-character DOM query path', () => {
   expect(loginPageSource).toContain("if (event.key !== 'Enter') return;");
 });
 
+test('keeps login enter repeat guard out of React state updates', () => {
+  const enterGuardSource = source('src/pages/login/UsernamePwd/usePreventEnterKeyLongPress.ts');
+
+  expect(enterGuardSource).toContain('useRef');
+  expect(enterGuardSource).not.toContain('useState');
+  expect(enterGuardSource).not.toContain('setIsEnterPressed');
+});
+
 test('keeps the login form branch out of gateway status updates', () => {
   const loginPageSource = source('src/pages/login/LoginPage.tsx');
 
   expect(loginPageSource).toContain('<UsernamePwd formIns={form} />');
   expect(loginPageSource).not.toContain('LoginFormItems');
+});
+
+test('fetches terminal info after login before permission route selection', () => {
+  const successHandlerSource = source('src/pages/login/hooks/useLoginSuccessHandler.ts');
+
+  expect(successHandlerSource).toContain('fetchTerminalInfo');
+  expect(successHandlerSource).toContain('.unwrap()');
+  expect(successHandlerSource).not.toContain('selectIsThin');
+});
+
+test('avoids duplicate terminal bootstrap after login success', () => {
+  const routerSource = source('src/router/index.tsx');
+
+  expect(routerSource).toContain('const state = appStore.getState();');
+  expect(routerSource).toContain('if (!state.terminal)');
+  expect(routerSource).toContain('appStore.dispatch(fetchTerminalInfo())');
 });
 
 test('keeps the local username password form memoized away from parent shell renders', () => {

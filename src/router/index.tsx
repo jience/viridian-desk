@@ -6,10 +6,10 @@ import { RouteErrorBoundary } from '@/ui/shell/error-boundary';
 import { RouteFallback } from '@/ui/shell/route-fallback';
 import { lazy, Suspense, type ReactNode } from 'react';
 import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
-import ClientLayout from '../layouts/clientLayout';
 
 const LoginPage = lazy(() => import('@/pages/login/LoginPage'));
 const SettingsPage = lazy(() => import('@/pages/configPage/SettingsPage'));
+const ClientLayout = lazy(() => import('../layouts/clientLayout'));
 const AppLayout = lazy(() =>
   import('@/layouts/AppLayout').then((module) => ({ default: module.AppLayout })),
 );
@@ -87,29 +87,37 @@ const createAppRoutes = ({
   { path: '*', element: routeElement(<EmptyPage />) },
 ];
 
+const clientLayoutLoader = async () => {
+  appStore.dispatch(setNetwork(navigator.onLine));
+  const state = appStore.getState();
+  if (!state.terminal) {
+    await appStore.dispatch(fetchTerminalInfo());
+  }
+  await appStore.dispatch(fetchConfigInfo());
+  return null;
+};
+
 const rootRoutes: RouteObject[] = [
   {
     path: '/',
-    element: <ClientLayout />,
     errorElement: <RouteErrorBoundary />,
-    // HydrateFallback: () => {
-    //   return <div>Loading...</div>;
-    // },
-    loader: async () => {
-      appStore.dispatch(setNetwork(navigator.onLine));
-      await appStore.dispatch(fetchTerminalInfo());
-      await appStore.dispatch(fetchConfigInfo());
-      return null;
-    },
     children: [
       {
         index: true,
-        element: <Navigate to="/login" replace />, // 使用Navigate组件重定向到/login
+        element: <Navigate to="/login" replace />,
       },
       {
         path: 'login',
         element: routeElement(<LoginPage />),
       },
+    ],
+  },
+  {
+    path: '/',
+    element: <ClientLayout />,
+    errorElement: <RouteErrorBoundary />,
+    loader: clientLayoutLoader,
+    children: [
       {
         path: 'configPage',
         element: routeElement(<SettingsPage />),
