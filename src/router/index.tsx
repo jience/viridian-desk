@@ -87,6 +87,11 @@ const createAppRoutes = ({
   { path: '*', element: routeElement(<EmptyPage />) },
 ];
 
+const preAuthConfigLoader = async () => {
+  await appStore.dispatch(fetchConfigInfo());
+  return null;
+};
+
 const clientLayoutLoader = async () => {
   appStore.dispatch(setNetwork(navigator.onLine));
   const state = appStore.getState();
@@ -108,6 +113,7 @@ const rootRoutes: RouteObject[] = [
       },
       {
         path: 'login',
+        loader: preAuthConfigLoader,
         element: routeElement(<LoginPage />),
       },
     ],

@@ -97,6 +97,19 @@ test('keeps login route outside the authenticated client layout', () => {
   expect(clientLayoutBlock).not.toContain('<LoginPage />');
 });
 
+test('loads saved config before rendering the lightweight login route', () => {
+  const routerSource = source('src/router/index.tsx');
+  const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
+  const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
+  const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
+
+  expect(preAuthLoaderStart).toBeGreaterThanOrEqual(0);
+  expect(preAuthLoaderEnd).toBeGreaterThan(preAuthLoaderStart);
+  expect(preAuthLoaderBlock).toContain('fetchConfigInfo');
+  expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
+  expect(routerSource).toContain('loader: preAuthConfigLoader');
+});
+
 test('keeps login window controls local to the lightweight login route', () => {
   const loginPageSource = source('src/pages/login/LoginPage.tsx');
   const loginPageStyles = source('src/pages/login/LoginPage.scss');
