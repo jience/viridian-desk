@@ -80,6 +80,22 @@ test('keeps login layout scaled to the desktop viewport', async ({ page }) => {
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });
 
+test('keeps login hero and feature cards separated in fullscreen desktop height', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 640 });
+  await page.goto('/login');
+
+  const heroRuleBox = await page.locator('.auth-page__hero-rule').boundingBox();
+  const statusGridBox = await page.locator('.auth-page__status-grid').boundingBox();
+  const brandZoneBox = await page.locator('.auth-page__brand-zone').boundingBox();
+
+  if (!heroRuleBox || !statusGridBox || !brandZoneBox) {
+    throw new Error('Login brand layout was not measurable');
+  }
+
+  expect(statusGridBox.y).toBeGreaterThanOrEqual(heroRuleBox.y + heroRuleBox.height + 24);
+  expect(statusGridBox.y + statusGridBox.height).toBeLessThanOrEqual(brandZoneBox.y + brandZoneBox.height);
+});
+
 test('renders pre-login settings route', async ({ page }) => {
   await page.goto('/configPage/serverSetting');
 
