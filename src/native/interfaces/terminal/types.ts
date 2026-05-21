@@ -23,28 +23,15 @@ export interface GetClientConfigResp {
   clientTheme: string;
   deskToolbar: string;
   deskToolbarPosition: string;
-  loginTypes: string;
   companyPhone: string;
   companyEmail: string;
   gatewayAddrShowSwitch: string;
   displayVersion: string;
   backgroundImage: string;
-  terminalRememberPasswordSwitch: string;
   publicityImage: string;
   floatBall: string;
-  firstLoginResetPasswordSwitch: string;
-  oneTimePasswordSwitch: string;
   securityPassword: string;
   securityPasswordSwitch: string;
-  smsResetPasswordSwitch: string;
-  terminalGraphAuthenticationSwitch: string;
-  terminalLoginErrorTimes: string;
-  terminalLoginMeteringMinute: string;
-  terminalMultiFactorAuthenticationSwitch: string;
-  terminalPasswordRemainingValidity: string;
-  terminalPasswordValidDays: string;
-  terminalStrongPasswordSwitch: string;
-  warnLoginFromDifferentLocationSwitch: string;
 }
 
 export interface GetTerminalInfoResp {

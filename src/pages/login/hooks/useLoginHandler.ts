@@ -1,6 +1,5 @@
 import { bridge } from '@/native';
-import type { LoginUserReq } from '@/native/interfaces/api';
-import { LoginAuthType } from '@/native/interfaces/login_auth';
+import { LoginAuthType, type LoginUserReq } from '@/native/interfaces/api';
 import { useRef, useState } from 'react';
 import type { LoginFormType } from '../types';
 import { useLoginSuccessHandler } from './useLoginSuccessHandler';

@@ -9,12 +9,10 @@ import sidebarLogo from '@/assets/images/logo.svg';
 import useRequest from '@/hooks/useRequest';
 import { bridge } from '@/native';
 import { LoginUserType } from '@/native/interfaces/api';
-import { LoginAuthType } from '@/native/interfaces/login_auth';
 import { changePasswordUser } from '@/services/user';
 import { useAppDispatch, useAppSelector } from '@/store';
 import {
   logoutCurrentUser,
-  selectCurrentLoginType,
   selectCurrentUser,
   selectMsgDot,
   setMsgDot,
@@ -74,18 +72,13 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
   const [changePhoneVisible, setChangePhoneVisible] = useState(false);
   const [diffLoginTipVisible, setDiffLoginTipVisible] = useState(false);
   const [isBindLogin, _setBindLogin] = useState(true);
-  const currentLoginType = useAppSelector(selectCurrentLoginType);
 
   // 判断当前登录方式下，是否可以修改密码
   const canModifyMod = useMemo(() => {
     // 本地用户可以修改密码
-    // 企微用户可以修改密码
-    // iam用户且用本地登录模式登录的用户可以修改密码
-    return (
-      currentUser?.type === LoginUserType.LOCAL ||
-      (currentUser?.type === LoginUserType.CORP ? currentLoginType !== LoginAuthType.IAM : false)
-    );
-  }, [currentUser, currentLoginType]);
+    // 历史上企微用户在非 IAM 登录时也可以修改密码；当前仅保留本地登录入口。
+    return currentUser?.type === LoginUserType.LOCAL || currentUser?.type === LoginUserType.CORP;
+  }, [currentUser]);
 
   /**
    * @author zhoujingjing

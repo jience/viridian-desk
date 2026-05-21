@@ -1,13 +1,7 @@
 import { bridge } from '@/native';
 import type { LoginUserInfo } from '@/native/interfaces/api/types';
-import type { LoginAuthType } from '@/native/interfaces/login_auth';
 import type { AppState } from '@/store';
-import {
-  createAsyncThunk,
-  createSelector,
-  createSlice,
-  type PayloadAction,
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { initState } from './initState';
 
 /**
@@ -41,18 +35,12 @@ const appSlice = createSlice({
   name: 'app',
   initialState: initState,
   reducers: {
-    setSmsResetPasswordSwitch(state, res: PayloadAction<'Disabled' | 'Enabled'>) {
-      state.smsResetPasswordSwitch = res.payload;
-    },
     setMsgDot(state, res: PayloadAction<boolean>) {
       state.msgDot = res.payload;
     },
     setMsgModalShow(state, res: PayloadAction<{ msgModalShow: boolean; msgId: string }>) {
       state.msgModalShow = res.payload.msgModalShow;
       state.msgId = res.payload.msgId;
-    },
-    setCurrentLoginType(state, res: PayloadAction<LoginAuthType>) {
-      state.currentLoginType = res.payload;
     },
   },
   extraReducers: (builder) => {
@@ -67,8 +55,7 @@ const appSlice = createSlice({
 
 export const { reducer: appReducer, name: appSliceName } = appSlice;
 
-export const { setMsgModalShow, setMsgDot, setSmsResetPasswordSwitch, setCurrentLoginType } =
-  appSlice.actions;
+export const { setMsgModalShow, setMsgDot } = appSlice.actions;
 
 export const selectIsLogin = createSelector(
   [(state: AppState) => state.app],
@@ -83,16 +70,6 @@ export const selectMsgModalShow = createSelector(
 );
 
 export const selectMsgId = createSelector([(state: AppState) => state.app], (app) => app.msgId);
-
-export const selectSmsResetPasswordSwitch = createSelector(
-  [(state: AppState) => state.app],
-  (app) => app.smsResetPasswordSwitch,
-);
-
-export const selectCurrentLoginType = createSelector(
-  [(state: AppState) => state.app],
-  (app) => app.currentLoginType,
-);
 
 export const selectCurrentUser = createSelector(
   [(state: AppState) => state.app],

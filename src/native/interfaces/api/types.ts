@@ -1,5 +1,3 @@
-import type { LoginAuthType } from '../login_auth';
-
 export type EmptyObject = Record<string, never>;
 
 export interface ApiResponse<T = EmptyObject> {
@@ -31,6 +29,12 @@ export const LoginUserType = {
   DOMAIN: 'Domain',
 } as const;
 export type LoginUserType = (typeof LoginUserType)[keyof typeof LoginUserType];
+
+export const LoginAuthType = {
+  LOCAL: 'LocalAuth',
+} as const;
+export type LoginAuthType = (typeof LoginAuthType)[keyof typeof LoginAuthType];
+
 export type UserPolicy = {
   session?: any;
   accessLimit: {

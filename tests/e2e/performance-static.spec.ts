@@ -87,6 +87,122 @@ test('keeps the login page local-account only', () => {
   }
 });
 
+test('removes deprecated non-local login copy and auth types from the client', () => {
+  const removedLocaleKeys = [
+    'OtherLoginTip',
+    'loginByphone',
+    'ForgetPassword',
+    'ResetPasswordForPhone',
+    'UserPhoneNotExist',
+    'ResetPwdSuccessInfo',
+    'NisAuthLogin',
+    'UserNotFoundByWWQrcode',
+    'login_page.domain_required',
+    'login_page.domain_placeholder',
+    'login_page.org_required',
+    'login_page.org_placeholder',
+    'login_page.nis_required',
+    'login_page.nis_placeholder',
+    'login_page.corp_required',
+    'login_page.corp_placeholder',
+    'login_page.phone_required',
+    'login_page.phone_pattern_error',
+    'login_page.phone_placeholder',
+    'login_page.sms_captcha_required',
+    'login_page.sms_captcha_pattern_error',
+    'login_page.sms_captcha_placeholder',
+    'login_page.sms_resend',
+    'login_page.get_sms_captcha',
+    'login_page.otp.title',
+    'login_page.otp.back',
+    'login_page.otp.fill_tip',
+    'login_page.otp.open_app_prefix',
+    'login_page.otp.scan_btn',
+    'login_page.otp.open_app_suffix',
+    'login_page.otp.placeholder',
+    'login_page.otp.cancel',
+    'login_page.otp.confirm',
+    'login_page.sms_modal.ok',
+    'login_page.sms_modal.placeholder',
+    'login_page.sms_modal.get_code',
+    'login_page.sms_modal.resend',
+    'login_page.sms_modal.error_required',
+    'login_page.sms_modal.error_pattern',
+    'login_page.slider_verify.text',
+    'login_page.scan_login_modal.title',
+    'login_page.scan_login_modal.tip',
+    'login_page.login_way.domain_user',
+    'login_page.login_way.other_user',
+    'login_page.login_way.iam',
+    'login_page.login_way.nis',
+    'error_code.UserNotFoundByWWQrcode',
+    'error_code.ListNisServerError',
+    'error_code.NisNotFound',
+    'error_code.NisServerError',
+    'error_code.NisServerRoleError',
+    'error_code.NisSetPasswordError',
+    'error_code.NisUpdateDatabaseError',
+    'error_code.NisUserLoginPermissionError',
+  ];
+  const localePaths = [
+    'src/assets/locales/zh-CN.json',
+    'src/assets/locales/zh-TW.json',
+    'src/assets/locales/en-US.json',
+  ];
+
+  for (const localePath of localePaths) {
+    const locale = JSON.parse(source(localePath));
+    for (const removedLocaleKey of removedLocaleKeys) {
+      expect(locale, `${localePath}:${removedLocaleKey}`).not.toHaveProperty(removedLocaleKey);
+    }
+  }
+
+  const appSliceSource = source('src/store/feature/app/appSlice.ts');
+  const clientSliceSource = source('src/store/feature/client/clientSlice.ts');
+  const clientTypesSource = source('src/store/feature/client/types.ts');
+  const terminalTypesSource = source('src/native/interfaces/terminal/types.ts');
+  const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
+  const apiTypesSource = source('src/native/interfaces/api/types.ts');
+  const loginAuthTypeStart = apiTypesSource.indexOf('export const LoginAuthType');
+  const loginAuthTypeBlock = apiTypesSource.slice(
+    loginAuthTypeStart,
+    apiTypesSource.indexOf('export type UserPolicy', loginAuthTypeStart),
+  );
+  const loginAuthPath = 'src/native/interfaces/login_auth.ts';
+  const removedClientConfigFields = [
+    'loginTypes',
+    'terminalRememberPasswordSwitch',
+    'firstLoginResetPasswordSwitch',
+    'oneTimePasswordSwitch',
+    'smsResetPasswordSwitch',
+    'terminalGraphAuthenticationSwitch',
+    'terminalLoginErrorTimes',
+    'terminalLoginMeteringMinute',
+    'terminalMultiFactorAuthenticationSwitch',
+    'terminalPasswordRemainingValidity',
+    'terminalPasswordValidDays',
+    'terminalStrongPasswordSwitch',
+    'warnLoginFromDifferentLocationSwitch',
+  ];
+
+  expect(existsSync(join(process.cwd(), loginAuthPath)), loginAuthPath).toBe(false);
+  expect(loginAuthTypeBlock).toContain('LoginAuthType');
+  expect(loginAuthTypeBlock).toContain('LOCAL');
+  expect(loginAuthTypeBlock).not.toContain('DOMAIN');
+  expect(loginAuthTypeBlock).not.toContain('CORP');
+  expect(loginAuthTypeBlock).not.toContain('IAM');
+  expect(loginAuthTypeBlock).not.toContain('NIS');
+  expect(loginHandlerSource).toContain('LoginAuthType.LOCAL');
+  expect(appSliceSource).not.toContain('currentLoginType');
+  expect(appSliceSource).not.toContain('smsResetPasswordSwitch');
+  expect(clientSliceSource).not.toContain('selectLoginTypes');
+  expect(clientTypesSource).not.toContain('LoginType');
+  for (const removedClientConfigField of removedClientConfigFields) {
+    expect(clientSliceSource).not.toContain(removedClientConfigField);
+    expect(terminalTypesSource).not.toContain(removedClientConfigField);
+  }
+});
+
 test('keeps login route outside the authenticated client layout', () => {
   const routerSource = source('src/router/index.tsx');
   const clientLayoutBlockStart = routerSource.indexOf('element: <ClientLayout />');
