@@ -82,6 +82,25 @@ test('keeps the login typing path free of expensive live filters', () => {
   expect(loginCriticalStyles).not.toContain('filter:');
 });
 
+test('keeps the login page hero and footer controls minimal', () => {
+  const loginPageSource = source('src/pages/login/LoginPage.tsx');
+  const loginPageStyles = source('src/pages/login/LoginPage.scss');
+  const footerSource = source('src/components/Footer/index.tsx');
+  const footerStyles = source('src/components/Footer/index.scss');
+
+  expect(loginPageSource).not.toContain("formatMessage({ id: 'Ready'");
+  expect(loginPageSource).not.toContain('auth-page__eyebrow');
+  expect(loginPageStyles).not.toContain('auth-page__eyebrow');
+  expect(loginPageSource).not.toContain('hiddenActionKeys');
+  expect(footerSource).not.toContain("key: 'msg'");
+  expect(footerSource).not.toContain("key: 'question'");
+  expect(footerSource).not.toContain('setMsgDot');
+  expect(footerSource).not.toContain('setMsgModalShow');
+  expect(footerSource).not.toContain('selectMsgDot');
+  expect(footerSource).not.toContain('openDocs');
+  expect(footerStyles).not.toContain('login-footer__action--unread');
+});
+
 test('keeps the login shell cheap to repaint on low-power devices', () => {
   const loginStyles = source('src/pages/login/LoginPage.scss');
 

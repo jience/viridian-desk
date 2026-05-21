@@ -82,7 +82,6 @@ export default function LoginPage() {
       : connected
         ? formatMessage({ id: 'Connected', defaultMessage: '已连接' })
         : formatMessage({ id: 'Disconnected', defaultMessage: '未连接' });
-  const gatewayStatusTone = connected && network ? 'success' : autoGateway ? 'danger' : 'info';
   const showLocalLinks = currentLoginWay === LoginAuthType.LOCAL;
 
   const handleSubmit = useCallback(async () => {
@@ -160,10 +159,6 @@ export default function LoginPage() {
           </header>
 
           <div className="auth-page__hero">
-            <div className="auth-page__eyebrow">
-              <span className={`auth-page__pulse auth-page__pulse--${gatewayStatusTone}`} />
-              {formatMessage({ id: 'Ready', defaultMessage: '安全桌面接入已就绪' })}
-            </div>
             <h1>{formatMessage({ id: 'LoginHeroTitle', defaultMessage: '进入你的云端工作台' })}</h1>
             <p>
               {formatMessage({

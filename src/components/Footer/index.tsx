@@ -2,10 +2,9 @@ import type { FC, ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import { Tooltip, Modal } from '@/ui';
 import './index.scss';
-import { useAppDispatch, useAppSelector } from '@/store';
+import { useAppSelector } from '@/store';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
 import { selectDeveloperMode, selectIntegration } from '@/store/feature/config';
-import { selectMsgDot, setMsgDot, setMsgModalShow } from '@/store/feature/app';
 import { useTranslation } from 'react-i18next';
 import { bridge } from '@/native';
 import { cn } from '@/ui/lib/cn';
@@ -20,23 +19,19 @@ interface FooterAction {
 }
 
 interface FooterProps {
-  hiddenActionKeys?: string[];
   rightSlot?: ReactNode;
 }
 
-const Footer: FC<FooterProps> = ({ hiddenActionKeys = [], rightSlot }) => {
+const Footer: FC<FooterProps> = ({ rightSlot }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
-
-  const dispatch = useAppDispatch();
 
   const isThin = useAppSelector(selectIsThin);
 
   const developerMode = useAppSelector(selectDeveloperMode);
 
   const isIntegratedMode = useAppSelector(selectIntegration);
-  const msgDot = useAppSelector(selectMsgDot);
 
   const shutdown = async () => {
     const confirmed = await modal.confirm({
@@ -68,28 +63,6 @@ const Footer: FC<FooterProps> = ({ hiddenActionKeys = [], rightSlot }) => {
         },
       },
       {
-        key: 'msg',
-        label: t('login_page.message_announcement'),
-        icon: <i className="iconfont icon-message" />,
-        onClick: () => {
-          dispatch(setMsgDot(false));
-          dispatch(
-            setMsgModalShow({
-              msgModalShow: true,
-              msgId: '',
-            }),
-          );
-        },
-      },
-      {
-        key: 'question',
-        label: t('login_page.help_document'),
-        icon: <i className="iconfont icon-c_question-s" />,
-        onClick: () => {
-          void bridge.cmd.openDocs();
-        },
-      },
-      {
         key: 'shutdown',
         label: t('login_page.shutdown'),
         icon: <i className="iconfont icon-power-off-filled" />,
@@ -100,7 +73,7 @@ const Footer: FC<FooterProps> = ({ hiddenActionKeys = [], rightSlot }) => {
         tone: 'danger',
       },
     ] satisfies FooterAction[]
-  ).filter((item) => !item.hidden && !hiddenActionKeys.includes(item.key));
+  ).filter((item) => !item.hidden);
 
   return (
     <footer className="login-footer" aria-label={t('login_page.footer_controls')}>
@@ -114,7 +87,6 @@ const Footer: FC<FooterProps> = ({ hiddenActionKeys = [], rightSlot }) => {
                   aria-label={action.label}
                   className={cn(
                     'login-footer__action',
-                    action.key === 'msg' && msgDot && 'login-footer__action--unread',
                     action.tone === 'danger' && 'login-footer__action--danger',
                   )}
                   onClick={action.onClick}

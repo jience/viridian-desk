@@ -226,40 +226,6 @@
   padding-bottom: 34px;
 }
 
-.auth-page__eyebrow {
-  display: inline-flex;
-  width: fit-content;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 18px;
-  border: 1px solid color-mix(in srgb, var(--auth-accent) 22%, transparent);
-  border-radius: 999px;
-  padding: 7px 11px;
-  color: color-mix(in srgb, var(--auth-text) 72%, transparent);
-  background: color-mix(in srgb, var(--auth-panel) 72%, transparent);
-  font-size: 12px;
-  font-weight: 680;
-}
-
-.auth-page__pulse {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--auth-muted);
-  box-shadow: 0 0 0 8px color-mix(in srgb, var(--auth-muted) 12%, transparent);
-}
-
-.auth-page__pulse--success {
-  background: var(--auth-success);
-  box-shadow: 0 0 0 8px color-mix(in srgb, var(--auth-success) 12%, transparent);
-}
-
-.auth-page__pulse--danger {
-  background: var(--auth-danger);
-  box-shadow: 0 0 0 8px color-mix(in srgb, var(--auth-danger) 12%, transparent);
-}
-
 .auth-page__hero h1 {
   max-width: 670px;
   margin: 0;
