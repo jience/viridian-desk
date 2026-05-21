@@ -131,18 +131,6 @@
   color: var(--vd-color-accent, #8ef2bd);
 }
 
-.sidebar__button--unread::after {
-  position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 7px;
-  height: 7px;
-  border: 1px solid var(--vd-color-rail, #0a0e0d);
-  border-radius: 999px;
-  background: #ff5d5d;
-  content: '';
-}
-
 .sidebar__button--danger {
   color: var(--vd-color-danger);
 

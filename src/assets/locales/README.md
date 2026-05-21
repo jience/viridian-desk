@@ -21,7 +21,7 @@ src/assets/locales/
 
 - `application_page.category_all`
 - `config_page.server_setting.gateway_name`
-- `common.message_modal.important_message`
+- `common.warning`
 
 ### 键的结构
 

@@ -209,7 +209,6 @@ test('keeps form control focus styles compositor-safe', () => {
   const settingsStyles = source('src/pages/configPage/SettingsPage.scss');
   const approvalStyles = source('src/pages/approval/ApprovalPage.scss');
   const malfunctionStyles = source('src/pages/malfunction/MalfunctionPage.scss');
-  const messageStyles = source('src/components/MessageCenter/messageList.scss');
   const snapStyles = source('src/pages/deskDetail/createSnap.scss');
   const appModalStyles = source('src/pages/application/component/AddFromSysModal/index.scss');
   const formTableStyles = source('src/components/FormTable/index.scss');
@@ -223,7 +222,7 @@ test('keeps form control focus styles compositor-safe', () => {
   );
   expect(approvalStyles).not.toContain('box-shadow: 0 0 0 2px var(--approval-page-focus)');
   expect(malfunctionStyles).not.toContain('box-shadow: 0 0 0 2px var(--malfunction-page-focus)');
-  for (const scopedStyles of [messageStyles, snapStyles, appModalStyles, formTableStyles, ipv4Styles]) {
+  for (const scopedStyles of [snapStyles, appModalStyles, formTableStyles, ipv4Styles]) {
     expect(scopedStyles).not.toContain('box-shadow: 0 0 0 2px');
   }
 });
@@ -764,13 +763,50 @@ test('loads desktop idle cleanup shell command only when idle disconnect fires',
   expect(deskPageSource).toContain("import('@/services/invoke/shell')");
 });
 
-test('loads the message center only when the user opens it', () => {
+test('removes authenticated message notification feature from the client', () => {
   const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
+  const sidebarSource = source('src/components/Sidebar/index.tsx');
+  const sidebarStyles = source('src/components/Sidebar/index.scss');
+  const appSliceSource = source('src/store/feature/app/appSlice.ts');
+  const appInitStateSource = source('src/store/feature/app/initState.ts');
+  const appTypesSource = source('src/store/feature/app/types.ts');
+  const publicServiceSource = source('src/services/public.ts');
+  const resourceServiceSource = source('src/services/resource.ts');
+  const localeSources = [
+    source('src/assets/locales/zh-CN.json'),
+    source('src/assets/locales/zh-TW.json'),
+    source('src/assets/locales/en-US.json'),
+  ].join('\n');
+  const removedPaths = [
+    'src/components/MessageCenter',
+    'src/services/api/msg',
+    'src/services/api/notice',
+  ];
 
-  expect(clientLayoutSource).not.toContain(
-    "import MessageListModal from '@/components/MessageCenter'",
-  );
-  expect(clientLayoutSource).toContain("import('@/components/MessageCenter')");
+  expect(clientLayoutSource).not.toContain('@/components/MessageCenter');
+  expect(clientLayoutSource).not.toContain('msgModalShow');
+  expect(clientLayoutSource).not.toContain('msgId');
+  expect(sidebarSource).not.toContain('setMsgModalShow');
+  expect(sidebarSource).not.toContain('setMsgDot');
+  expect(sidebarSource).not.toContain('selectMsgDot');
+  expect(sidebarSource).not.toContain('icon-message');
+  expect(sidebarSource).not.toContain("id: 'MSG'");
+  expect(sidebarStyles).not.toContain('sidebar__button--unread');
+  expect(appSliceSource).not.toContain('setMsgModalShow');
+  expect(appSliceSource).not.toContain('setMsgDot');
+  expect(appSliceSource).not.toContain('selectMsg');
+  expect(appInitStateSource).not.toContain('msg');
+  expect(appTypesSource).not.toContain('msg');
+  expect(publicServiceSource).not.toContain('listHistoryMessage');
+  expect(publicServiceSource).not.toContain('deleteHistoryMsg');
+  expect(publicServiceSource).not.toContain('listHistoryNotice');
+  expect(resourceServiceSource).not.toContain('listNotice');
+  expect(localeSources).not.toContain('common.message_modal');
+  expect(localeSources).not.toContain('"MSG"');
+  expect(localeSources).not.toContain('login_page.message_announcement');
+  for (const removedPath of removedPaths) {
+    expect(existsSync(join(process.cwd(), removedPath)), removedPath).toBe(false);
+  }
 });
 
 test('loads sidebar user security dialogs only when they are opened', () => {

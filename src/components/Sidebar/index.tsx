@@ -4,13 +4,7 @@ import sidebarLogo from '@/assets/images/logo.svg';
 import { bridge } from '@/native';
 import { LoginUserType } from '@/native/interfaces/api';
 import { useAppDispatch, useAppSelector } from '@/store';
-import {
-  logoutCurrentUser,
-  selectCurrentUser,
-  selectMsgDot,
-  setMsgDot,
-  setMsgModalShow,
-} from '@/store/feature/app';
+import { logoutCurrentUser, selectCurrentUser } from '@/store/feature/app';
 import { selectIntegration } from '@/store/feature/config';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
 import { cn } from '@/ui/lib/cn';
@@ -47,7 +41,6 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
   const location = useLocation();
   const [modal, contextHolder] = Modal.useModal();
 
-  const msgDot = useAppSelector(selectMsgDot);
   const isThin = useAppSelector(selectIsThin);
   const isIntegratedMode = useAppSelector(selectIntegration);
   const currentUser = useAppSelector(selectCurrentUser);
@@ -234,11 +227,6 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
     }
   }, [currentUser]);
 
-  const getMsg = () => {
-    appDispatch(setMsgDot(false));
-    appDispatch(setMsgModalShow({ msgModalShow: true, msgId: '' }));
-  };
-
   const onPersonalVisibleChange = (val: boolean) => {
     setUserBtnOpen(val);
     if (val) {
@@ -341,18 +329,6 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
             </Tooltip>
           </li>
         )}
-        <li className="sidebar__item">
-          <Tooltip title={intl.formatMessage({ id: 'MSG' })} placement="right">
-            <button
-              aria-label={intl.formatMessage({ id: 'MSG' })}
-              className={cn('sidebar__button', msgDot && 'sidebar__button--unread')}
-              type="button"
-              onClick={getMsg}
-            >
-              <i className="iconfont icon-message" />
-            </button>
-          </Tooltip>
-        </li>
         <li className="sidebar__item">
           <Popover
             content={userMenus}

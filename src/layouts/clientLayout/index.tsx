@@ -1,11 +1,10 @@
 import './index.scss';
-import { lazy, Suspense, useMemo, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 import { bridge } from '@/native';
 import { Outlet } from 'react-router';
 import { globalEmitter } from '@/utils/mitt';
 import { message } from '@/ui/message';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { selectMsgId, selectMsgModalShow, setMsgModalShow } from '@/store/feature/app/appSlice';
 import { selectIsThin } from '@/store/feature/terminal';
 import ControlWindow from '@/components/ControlWindow';
 import { setConnected } from '@/store/feature/gateway';
@@ -13,16 +12,11 @@ import type { UnlistenFn } from '@/native/interfaces/types';
 import { useTranslation } from 'react-i18next';
 import { logger } from '@/utils/logger';
 
-const MessageListModal = lazy(() => import('@/components/MessageCenter'));
-
 const ClientLayout = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const isThin = useAppSelector(selectIsThin);
-
-  const msgModalShow = useAppSelector(selectMsgModalShow);
-  const msgId = useAppSelector(selectMsgId);
 
   useEffect(() => {
     globalEmitter.on('api/error', (e) => {
@@ -89,18 +83,6 @@ const ClientLayout = () => {
         <ControlWindow />
       </div>
       <Outlet />
-
-      {msgModalShow && (
-        <Suspense fallback={null}>
-          <MessageListModal
-            visible={msgModalShow}
-            setVisible={(val: boolean) => {
-              dispatch(setMsgModalShow({ msgModalShow: val, msgId: '' }));
-            }}
-            msgId={msgId}
-          />
-        </Suspense>
-      )}
     </div>
   );
 };

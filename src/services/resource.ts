@@ -100,10 +100,6 @@ export const createFault = (data: any) => request(`/createFault`, { method: 'POS
 // 撤回工单
 export const revokeFault = (data: any) => request(`/revokeFault`, { method: 'POST', body: data });
 
-// 获取公告消息
-export const listNotice = (data: any) =>
-  request(`/notice/listNotice`, { method: 'POST', body: data });
-
 // 删除应用
 export const deleteVapp = (data: any) => request(`/deleteVapp`, { method: 'POST', body: data });
 
