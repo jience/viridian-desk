@@ -25,8 +25,6 @@ export const isApiErrResponse = <T = EmptyObject>(res: any): res is ApiErrRespon
 
 export const LoginUserType = {
   LOCAL: 'Local',
-  CORP: 'Corp',
-  DOMAIN: 'Domain',
 } as const;
 export type LoginUserType = (typeof LoginUserType)[keyof typeof LoginUserType];
 

@@ -75,9 +75,7 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
 
   // 判断当前登录方式下，是否可以修改密码
   const canModifyMod = useMemo(() => {
-    // 本地用户可以修改密码
-    // 历史上企微用户在非 IAM 登录时也可以修改密码；当前仅保留本地登录入口。
-    return currentUser?.type === LoginUserType.LOCAL || currentUser?.type === LoginUserType.CORP;
+    return currentUser?.type === LoginUserType.LOCAL;
   }, [currentUser]);
 
   /**
@@ -205,15 +203,6 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
     formRef.current
       .validateFields()
       .then((values: any) => {
-        const isLocal = currentUser?.type === LoginUserType.DOMAIN ? false : true;
-        const formValue = {
-          ...values,
-          isLocal: isLocal,
-          username: currentUser?.loginName,
-        };
-        if (isLocal) {
-          formValue.userId = currentUser?.userId;
-        }
         const { oldPassword, newPassword, confirmPassword } = values;
         changePasswordUserRun({
           oldPassword: decodePwd(oldPassword),

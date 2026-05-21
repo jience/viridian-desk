@@ -94,6 +94,7 @@ test('keeps the login auth panel aligned with the console reference', () => {
 
   expect(loginAuthPanelSource).toContain('LoginPanelTitle');
   expect(loginAuthPanelSource).toContain('LoginPanelSubtitle');
+  expect(loginAuthPanelSource).toContain('LocalAuthLogin');
   expect(loginAuthPanelSource).toContain('auth-page__mode-divider');
   expect(usernamePwdSource).toContain("label={t('login_page.username_label')}");
   expect(usernamePwdSource).toContain("label={t('login_page.password_label')}");
@@ -208,6 +209,9 @@ test('removes deprecated non-local login copy and auth types from the client', (
     'ResetPasswordForPhone',
     'UserPhoneNotExist',
     'ResetPwdSuccessInfo',
+    'DomainAuthLogin',
+    'CorpAuthLogin',
+    'IamAuthLogin',
     'NisAuthLogin',
     'UserNotFoundByWWQrcode',
     'login_page.domain_required',
@@ -244,6 +248,7 @@ test('removes deprecated non-local login copy and auth types from the client', (
     'login_page.slider_verify.text',
     'login_page.scan_login_modal.title',
     'login_page.scan_login_modal.tip',
+    'login_page.login_way.local_user',
     'login_page.login_way.domain_user',
     'login_page.login_way.other_user',
     'login_page.login_way.iam',
@@ -268,6 +273,7 @@ test('removes deprecated non-local login copy and auth types from the client', (
     for (const removedLocaleKey of removedLocaleKeys) {
       expect(locale, `${localePath}:${removedLocaleKey}`).not.toHaveProperty(removedLocaleKey);
     }
+    expect(locale, `${localePath}:LocalAuthLogin`).toHaveProperty('LocalAuthLogin');
   }
 
   const appSliceSource = source('src/store/feature/app/appSlice.ts');
@@ -275,13 +281,27 @@ test('removes deprecated non-local login copy and auth types from the client', (
   const clientTypesSource = source('src/store/feature/client/types.ts');
   const terminalTypesSource = source('src/native/interfaces/terminal/types.ts');
   const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
+  const loginStylesSource = source('src/pages/login/LoginPage.scss');
+  const sidebarSource = source('src/components/Sidebar/index.tsx');
   const apiTypesSource = source('src/native/interfaces/api/types.ts');
   const loginAuthTypeStart = apiTypesSource.indexOf('export const LoginAuthType');
   const loginAuthTypeBlock = apiTypesSource.slice(
     loginAuthTypeStart,
     apiTypesSource.indexOf('export type UserPolicy', loginAuthTypeStart),
   );
+  const loginUserTypeStart = apiTypesSource.indexOf('export const LoginUserType');
+  const loginUserTypeBlock = apiTypesSource.slice(
+    loginUserTypeStart,
+    apiTypesSource.indexOf('export const LoginAuthType', loginUserTypeStart),
+  );
   const loginAuthPath = 'src/native/interfaces/login_auth.ts';
+  const removedLegacyLoginPaths = [
+    'src/native/interfaces/login_history',
+    'src/native/tauri/login_history',
+    'src/pages/login/component',
+    'docs/superpowers/plans/2026-05-14-frontend-redesign-phase-2-auth-settings.md',
+  ];
   const removedClientConfigFields = [
     'loginTypes',
     'terminalRememberPasswordSwitch',
@@ -305,7 +325,16 @@ test('removes deprecated non-local login copy and auth types from the client', (
   expect(loginAuthTypeBlock).not.toContain('CORP');
   expect(loginAuthTypeBlock).not.toContain('IAM');
   expect(loginAuthTypeBlock).not.toContain('NIS');
+  expect(loginUserTypeBlock).toContain('LoginUserType');
+  expect(loginUserTypeBlock).toContain('LOCAL');
+  expect(loginUserTypeBlock).not.toContain('CORP');
+  expect(loginUserTypeBlock).not.toContain('DOMAIN');
   expect(loginHandlerSource).toContain('LoginAuthType.LOCAL');
+  expect(loginAuthPanelSource).toContain('LocalAuthLogin');
+  expect(loginAuthPanelSource).toContain('auth-page__mode-divider');
+  expect(loginStylesSource).toContain('.auth-page__mode-divider');
+  expect(sidebarSource).not.toContain('LoginUserType.CORP');
+  expect(sidebarSource).not.toContain('LoginUserType.DOMAIN');
   expect(appSliceSource).not.toContain('currentLoginType');
   expect(appSliceSource).not.toContain('smsResetPasswordSwitch');
   expect(clientSliceSource).not.toContain('selectLoginTypes');
@@ -313,6 +342,11 @@ test('removes deprecated non-local login copy and auth types from the client', (
   for (const removedClientConfigField of removedClientConfigFields) {
     expect(clientSliceSource).not.toContain(removedClientConfigField);
     expect(terminalTypesSource).not.toContain(removedClientConfigField);
+  }
+  for (const removedLegacyLoginPath of removedLegacyLoginPaths) {
+    expect(existsSync(join(process.cwd(), removedLegacyLoginPath)), removedLegacyLoginPath).toBe(
+      false,
+    );
   }
 });
 

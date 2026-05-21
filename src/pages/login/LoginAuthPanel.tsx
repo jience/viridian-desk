@@ -18,7 +18,7 @@ const LoginAuthPanelComponent = () => {
   const { userLogin, loginLoading, submitLockRef } = useLoginHandler();
   const localLoginLabel = formatMessage({
     id: 'LocalAuthLogin',
-    defaultMessage: '本地账号',
+    defaultMessage: '本地用户登录',
   });
   const panelTitle = formatMessage({
     id: 'LoginPanelTitle',
