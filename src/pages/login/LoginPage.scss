@@ -182,53 +182,27 @@
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  padding: 12px 18px 28px 44px;
+  padding: 86px 18px 28px 54px;
 }
 
 .auth-page__brand-header {
   display: flex;
   align-items: center;
-  min-height: 42px;
+  min-height: 132px;
 }
 
 .auth-page__brand-lockup {
   display: inline-flex;
   min-width: 0;
   align-items: center;
-  gap: 10px;
-  color: var(--auth-text);
-}
-
-.auth-page__brand-mark {
-  display: inline-grid;
-  width: 38px;
-  height: 38px;
   flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid var(--auth-border);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--auth-panel-strong) 70%, transparent);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 12px 28px rgba(55, 48, 38, 0.08);
 }
 
-.auth-page__brand-name {
-  overflow: hidden;
-  color: var(--auth-text);
-  font-size: 15px;
-  font-weight: 760;
-  letter-spacing: 0;
-  line-height: 1;
-  text-overflow: ellipsis;
-  text-transform: lowercase;
-  white-space: nowrap;
-}
-
-.auth-page__logo {
+.auth-page__brand-logo {
   display: block;
-  width: 24px;
-  height: 24px;
+  width: clamp(420px, 42vw, 620px);
+  max-width: 100%;
+  height: auto;
   object-fit: contain;
   pointer-events: none;
   user-select: none;
@@ -236,29 +210,41 @@
 
 .auth-page__hero {
   display: grid;
-  align-content: center;
-  max-width: 650px;
+  align-content: start;
+  max-width: 720px;
   min-height: 0;
+  padding-top: clamp(20px, 2.8vh, 34px);
   padding-bottom: 34px;
 }
 
 .auth-page__hero h1 {
-  max-width: 670px;
+  max-width: 720px;
   margin: 0;
   color: var(--auth-text);
-  font-size: clamp(42px, 5.5vw, 78px);
+  font-size: clamp(42px, 4.2vw, 60px);
   font-weight: 760;
-  line-height: 0.98;
+  line-height: 1.24;
   letter-spacing: 0;
-  text-wrap: balance;
 }
 
-.auth-page__hero p {
-  max-width: 540px;
-  margin: 22px 0 0;
-  color: var(--auth-muted);
-  font-size: 16px;
-  line-height: 1.7;
+.auth-page__hero-title-accent {
+  display: block;
+  color: var(--auth-accent-strong);
+  text-shadow: 0 0 24px color-mix(in srgb, var(--auth-accent) 18%, transparent);
+}
+
+.auth-page__hero-rule {
+  width: min(328px, 58%);
+  height: 2px;
+  margin-top: 24px;
+  background: linear-gradient(
+    90deg,
+    var(--auth-accent-strong) 0 34%,
+    color-mix(in srgb, var(--auth-accent) 62%, transparent) 34% 40%,
+    transparent 40% 100%
+  );
+  background-size: 18px 2px;
+  border-radius: 999px;
 }
 
 .auth-page__status-grid {
@@ -513,7 +499,7 @@
     padding: 0 24px 24px;
   }
 
-  .auth-page__hero p,
+  .auth-page__hero-rule,
   .auth-page__status-grid {
     display: none;
   }

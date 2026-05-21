@@ -1,17 +1,21 @@
-import loginLogo from '@/assets/images/logo.svg';
 import { useAppSelector } from '@/store';
 import { selectAutoGateway, selectConnected, selectNetwork } from '@/store/feature/gateway';
+import { useUiTheme } from '@/ui/theme/use-ui-theme';
 import { useMessageFormatter } from '@/utils/message-format';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import brandLogoDark from '@/assets/images/viridian_logo_with_text_dark.svg';
+import brandLogoLight from '@/assets/images/viridian_logo_with_text_light.svg';
 
 const LoginBrandPanelComponent = () => {
   const { formatMessage } = useMessageFormatter();
   const { t } = useTranslation('common');
+  const { resolvedTheme } = useUiTheme();
 
   const connected = useAppSelector(selectConnected);
   const network = useAppSelector(selectNetwork);
   const autoGateway = useAppSelector(selectAutoGateway);
+  const brandLogo = resolvedTheme === 'dark' ? brandLogoDark : brandLogoLight;
 
   const localLoginLabel = formatMessage({
     id: 'LocalAuthLogin',
@@ -32,27 +36,23 @@ const LoginBrandPanelComponent = () => {
     <section className="auth-page__brand-zone" aria-label={t('appName')}>
       <header className="auth-page__brand-header">
         <div className="auth-page__brand-lockup" aria-label="viridian desk">
-          <span className="auth-page__brand-mark" aria-hidden="true">
-            <img
-              src={loginLogo}
-              className="auth-page__logo"
-              alt=""
-              onDragStart={(event) => event.preventDefault()}
-            />
-          </span>
-          <span className="auth-page__brand-name">viridian desk</span>
+          <img
+            src={brandLogo}
+            className="auth-page__brand-logo"
+            alt={t('appName')}
+            onDragStart={(event) => event.preventDefault()}
+          />
         </div>
       </header>
 
       <div className="auth-page__hero">
-        <h1>{formatMessage({ id: 'LoginHeroTitle', defaultMessage: '进入你的云端工作台' })}</h1>
-        <p>
-          {formatMessage({
-            id: 'LoginSubTitle',
-            defaultMessage:
-              '统一访问桌面、应用与审批资源。登录前即可确认网关、网络与终端状态，减少等待和错误感知。',
-          })}
-        </p>
+        <h1>
+          <span>{formatMessage({ id: 'LoginHeroTitle', defaultMessage: '安全连接，' })}</span>
+          <span className="auth-page__hero-title-accent">
+            {formatMessage({ id: 'LoginSubTitle', defaultMessage: '高效访问工作空间' })}
+          </span>
+        </h1>
+        <div className="auth-page__hero-rule" aria-hidden="true" />
 
         <div className="auth-page__status-grid">
           <div className="auth-page__status-card">

@@ -51,7 +51,7 @@ test('renders login page shell', async ({ page }) => {
 
   await expect(page).toHaveTitle('登录 - Viridian Desk');
   await expect(page.locator('.auth-page')).toBeVisible();
-  await expect(page.locator('.auth-page__brand-name')).toHaveText(/viridian desk/i);
+  await expect(page.locator('.auth-page__brand-logo')).toHaveAttribute('alt', /viridian desk/i);
   await expect(page.locator('.auth-page__card')).toBeVisible();
 
   await page.evaluate(() => window.__assertNoConsoleErrors());

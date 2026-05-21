@@ -107,6 +107,49 @@ test('keeps the login auth panel aligned with the console reference', () => {
   expect(loginStyles).not.toContain('.auth-page__card::before');
 });
 
+test('uses theme-specific brand artwork on the login brand panel', () => {
+  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
+  const loginStyles = source('src/pages/login/LoginPage.scss');
+
+  expect(loginBrandPanelSource).toContain('viridian_logo_with_text_dark.svg');
+  expect(loginBrandPanelSource).toContain('viridian_logo_with_text_light.svg');
+  expect(loginBrandPanelSource).toContain("@/assets/images/viridian_logo_with_text_dark.svg");
+  expect(loginBrandPanelSource).toContain("@/assets/images/viridian_logo_with_text_light.svg");
+  expect(loginBrandPanelSource).not.toContain('../../../docs/images');
+  expect(loginBrandPanelSource).toContain('useUiTheme');
+  expect(loginBrandPanelSource).toContain("resolvedTheme === 'dark'");
+  expect(loginBrandPanelSource).toContain('auth-page__brand-logo');
+  expect(loginBrandPanelSource).not.toContain("import loginLogo from '@/assets/images/logo.svg'");
+  expect(loginBrandPanelSource).not.toContain('auth-page__brand-mark');
+  expect(loginStyles).toContain('.auth-page__brand-logo');
+  expect(loginStyles).toContain('padding: 86px 18px 28px 54px;');
+  expect(loginStyles).toContain('width: clamp(420px, 42vw, 620px);');
+  expect(loginStyles).not.toContain('.auth-page__brand-mark');
+  expect(loginStyles).not.toContain('.auth-page__brand-name');
+  expect(loginStyles).not.toContain('.auth-page__logo');
+});
+
+test('keeps login hero copy aligned with the visual reference', () => {
+  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
+  const loginStyles = source('src/pages/login/LoginPage.scss');
+  const zhCNLocale = JSON.parse(source('src/assets/locales/zh-CN.json'));
+  const zhTWLocale = JSON.parse(source('src/assets/locales/zh-TW.json'));
+  const enUSLocale = JSON.parse(source('src/assets/locales/en-US.json'));
+
+  expect(loginBrandPanelSource).toContain('auth-page__hero-title-accent');
+  expect(loginBrandPanelSource).toContain('auth-page__hero-rule');
+  expect(loginBrandPanelSource).not.toContain('统一访问桌面');
+  expect(loginStyles).toContain('.auth-page__hero-title-accent');
+  expect(loginStyles).toContain('.auth-page__hero-rule');
+  expect(loginStyles).toContain('padding-top: clamp(20px, 2.8vh, 34px);');
+  expect(zhCNLocale.LoginHeroTitle).toBe('安全连接，');
+  expect(zhCNLocale.LoginSubTitle).toBe('高效访问工作空间');
+  expect(zhTWLocale.LoginHeroTitle).toBe('安全連接，');
+  expect(zhTWLocale.LoginSubTitle).toBe('高效訪問工作空間');
+  expect(enUSLocale.LoginHeroTitle).toBe('Secure access,');
+  expect(enUSLocale.LoginSubTitle).toBe('workspaces without friction');
+});
+
 test('removes deprecated non-local login copy and auth types from the client', () => {
   const removedLocaleKeys = [
     'OtherLoginTip',
