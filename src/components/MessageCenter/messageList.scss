@@ -108,7 +108,9 @@
     &:focus,
     &.vdui-input-affix-wrapper-focused {
       border-color: color-mix(in srgb, var(--vd-color-accent) 42%, transparent);
-      box-shadow: 0 0 0 2px color-mix(in srgb, var(--vd-color-accent) 18%, transparent);
+      outline: 2px solid var(--vdui-control-focus-outline, rgba(105, 217, 154, 0.22));
+      outline-offset: -2px;
+      box-shadow: none;
     }
   }
 }

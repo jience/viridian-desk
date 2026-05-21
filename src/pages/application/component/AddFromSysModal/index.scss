@@ -66,7 +66,9 @@
       &:focus,
       &.vdui-input-affix-wrapper-focused {
         border-color: var(--app-modal-accent-border);
-        box-shadow: 0 0 0 2px var(--app-modal-accent-soft);
+        outline: 2px solid var(--app-modal-accent-soft);
+        outline-offset: -2px;
+        box-shadow: none;
       }
     }
   }

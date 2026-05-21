@@ -19,6 +19,7 @@
   --settings-page-info: #2f6690;
   --settings-page-shadow: 0 24px 64px rgba(55, 48, 38, 0.14);
   --settings-page-focus: 0 0 0 3px rgba(77, 124, 63, 0.24);
+  --settings-page-focus-outline: rgba(77, 124, 63, 0.24);
 
   --vd-color-bg: var(--settings-page-bg);
   --vd-color-panel: var(--settings-page-surface);
@@ -92,6 +93,7 @@
   --settings-page-info: #7db6e8;
   --settings-page-shadow: 0 26px 70px color-mix(in srgb, var(--settings-page-bg) 42%, transparent);
   --settings-page-focus: 0 0 0 3px rgba(126, 220, 166, 0.28);
+  --settings-page-focus-outline: rgba(126, 220, 166, 0.28);
 }
 
 .settings-page__sidebar {
@@ -602,8 +604,12 @@
     box-shadow: none;
   }
 
+  :where(.vdui-btn:focus-visible) {
+    border-color: var(--settings-page-accent);
+    box-shadow: var(--settings-page-focus);
+  }
+
   :where(
-    .vdui-btn:focus-visible,
     .vdui-select:focus-visible,
     .vdui-select-open,
     .vdui-input:focus,
@@ -612,7 +618,9 @@
     .vdui-input-affix-wrapper-focused
   ) {
     border-color: var(--settings-page-accent);
-    box-shadow: var(--settings-page-focus);
+    outline: 2px solid var(--settings-page-focus-outline);
+    outline-offset: -2px;
+    box-shadow: none;
   }
 
   :where(.vdui-select, .vdui-input, .vdui-input-affix-wrapper) {

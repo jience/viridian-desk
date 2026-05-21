@@ -60,7 +60,9 @@
   .vdui-input-affix-wrapper:hover,
   .vdui-input-affix-wrapper-focused {
     border-color: var(--desk-detail-modal-accent-border);
-    box-shadow: 0 0 0 2px var(--desk-detail-modal-accent-soft);
+    outline: 2px solid var(--desk-detail-modal-accent-soft);
+    outline-offset: -2px;
+    box-shadow: none;
   }
 
   .vdui-radio-wrapper {

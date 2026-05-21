@@ -241,7 +241,9 @@
   .vdui-select:focus,
   .vdui-select:focus-within {
     border-color: var(--malfunction-page-accent) !important;
-    box-shadow: 0 0 0 2px var(--malfunction-page-focus) !important;
+    outline: 2px solid var(--malfunction-page-focus);
+    outline-offset: -2px;
+    box-shadow: none !important;
   }
 }
 

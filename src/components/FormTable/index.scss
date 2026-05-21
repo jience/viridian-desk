@@ -18,8 +18,7 @@ $formtable-prefix-cls: vdui-formtable;
   border-radius: 7px;
   transition:
     border-color 160ms ease,
-    background-color 160ms ease,
-    box-shadow 160ms ease;
+    background-color 160ms ease;
 
   &:hover {
     border-color: color-mix(in srgb, var(--primary-color) 36%, transparent);
@@ -47,7 +46,8 @@ $formtable-prefix-cls: vdui-formtable;
       var(--vd-color-danger, #cf4f45) 74%,
       var(--app-surface-color, #fffdf8)
     );
-    outline: 0;
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--vd-color-danger, #cf4f45) 20%, transparent);
+    outline: 2px solid var(--vdui-control-error-outline, rgba(207, 79, 69, 0.2));
+    outline-offset: -2px;
+    box-shadow: none;
   }
 }

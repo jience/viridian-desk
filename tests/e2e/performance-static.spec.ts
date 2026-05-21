@@ -173,9 +173,12 @@ test('uses static product capability cards on the login brand panel', () => {
   expect(loginBrandPanelSource).not.toContain('selectAutoGateway');
   expect(loginBrandPanelSource).not.toContain('selectConnected');
   expect(loginBrandPanelSource).not.toContain('selectNetwork');
-  expect(loginStyles).toContain('grid-template-rows: auto auto minmax(0, 1fr);');
-  expect(loginStyles).toContain('align-self: end;');
-  expect(loginStyles).toContain('margin-top: clamp(50px, 7vh, 84px);');
+  expect(loginStyles).toContain('grid-template-rows: auto auto auto;');
+  expect(loginStyles).toContain('align-content: space-between;');
+  expect(loginStyles).toContain('row-gap: clamp(24px, 4.8vh, 56px);');
+  expect(loginStyles).not.toContain('grid-template-rows: auto auto minmax(0, 1fr);');
+  expect(loginStyles).not.toContain('align-self: end;');
+  expect(loginStyles).not.toContain('margin-top: clamp(50px, 7vh, 84px);');
   expect(loginStyles).toContain('.auth-page__feature-icon');
   expect(loginStyles).toContain('.auth-page__feature-lucide');
   expect(loginStyles).not.toContain('.auth-page__robot-icon');
@@ -199,6 +202,30 @@ test('uses static product capability cards on the login brand panel', () => {
   expect(enUSLocale.LoginFeatureWorkspaceDescription).toBe('Desktops and apps in one place');
   expect(enUSLocale.LoginFeatureAssistantTitle).toBe('Smart Assistance');
   expect(enUSLocale.LoginFeatureAssistantDescription).toBe('Diagnose connection issues');
+});
+
+test('keeps form control focus styles compositor-safe', () => {
+  const uiStyles = source('src/ui/styles.scss');
+  const settingsStyles = source('src/pages/configPage/SettingsPage.scss');
+  const approvalStyles = source('src/pages/approval/ApprovalPage.scss');
+  const malfunctionStyles = source('src/pages/malfunction/MalfunctionPage.scss');
+  const messageStyles = source('src/components/MessageCenter/messageList.scss');
+  const snapStyles = source('src/pages/deskDetail/createSnap.scss');
+  const appModalStyles = source('src/pages/application/component/AddFromSysModal/index.scss');
+  const formTableStyles = source('src/components/FormTable/index.scss');
+  const ipv4Styles = source('src/components/IPv4/index.scss');
+  expect(uiStyles).not.toContain('box-shadow 180ms ease');
+  expect(uiStyles).not.toContain('box-shadow: 0 0 0 2px');
+  expect(formTableStyles).not.toContain('box-shadow 160ms ease');
+  expect(ipv4Styles).not.toContain('box-shadow 160ms ease');
+  expect(settingsStyles).not.toMatch(
+    /vdui-input-affix-wrapper-focused[\s\S]{0,180}box-shadow:\s*var\(--settings-page-focus\)/,
+  );
+  expect(approvalStyles).not.toContain('box-shadow: 0 0 0 2px var(--approval-page-focus)');
+  expect(malfunctionStyles).not.toContain('box-shadow: 0 0 0 2px var(--malfunction-page-focus)');
+  for (const scopedStyles of [messageStyles, snapStyles, appModalStyles, formTableStyles, ipv4Styles]) {
+    expect(scopedStyles).not.toContain('box-shadow: 0 0 0 2px');
+  }
 });
 
 test('removes deprecated non-local login copy and auth types from the client', () => {
