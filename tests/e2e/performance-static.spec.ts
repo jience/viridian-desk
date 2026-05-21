@@ -473,6 +473,20 @@ test('fetches terminal info after login before permission route selection', () =
   expect(successHandlerSource).not.toContain('selectIsThin');
 });
 
+test('loads terminal info before sending the login request device header', () => {
+  const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
+  const requestSource = source('src/native/tauri/api/request.ts');
+  const ensureTerminalStart = loginHandlerSource.indexOf('ensureTerminalReady');
+  const loginRequestStart = loginHandlerSource.indexOf('bridge.api.loginUser');
+
+  expect(requestSource).toContain("h['X-Device-Id'] = deviceId");
+  expect(loginHandlerSource).toContain('fetchTerminalInfo');
+  expect(loginHandlerSource).toContain('selectId');
+  expect(ensureTerminalStart).toBeGreaterThanOrEqual(0);
+  expect(loginRequestStart).toBeGreaterThan(ensureTerminalStart);
+  expect(loginHandlerSource).toContain('await ensureTerminalReady()');
+});
+
 test('avoids duplicate terminal bootstrap after login success', () => {
   const routerSource = source('src/router/index.tsx');
 
