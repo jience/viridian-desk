@@ -1,9 +1,8 @@
 import { expect, test } from '@playwright/test';
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const source = (path: string) => readFileSync(join(process.cwd(), path), 'utf8');
-const fileSize = (path: string) => statSync(join(process.cwd(), path)).size;
 
 test('keeps low-frequency modal components lazy-loaded', () => {
   expect(source('src/pages/approval/index.tsx')).not.toContain(
@@ -48,27 +47,43 @@ test('loads application detail modal only when opened', () => {
   expect(applicationPageSource).toContain("import('./component/AppDetailModal')");
 });
 
-test('loads low-frequency login modals only when needed', () => {
+test('keeps the login page local-account only', () => {
   const loginPageSource = source('src/pages/login/LoginPage.tsx');
-
-  expect(loginPageSource).not.toContain(
-    "import FindPasswordModal from './component/FindPasswordModal'",
-  );
-  expect(loginPageSource).not.toContain("import { OneTimePwdModal } from './OneTimePasswordModal'");
-  expect(loginPageSource).not.toContain('import { OrgScanLoginModal');
-  expect(loginPageSource).not.toContain("import { SendMsgModal } from './SendMsgModal'");
-  expect(loginPageSource).not.toContain("import { SliderVerifyModal } from './SliderVerifyModal'");
-  expect(loginPageSource).toContain("import('./component/FindPasswordModal')");
-  expect(loginPageSource).toContain("import('./OneTimePasswordModal')");
-  expect(loginPageSource).toContain("import('./OrgScanLoginModal')");
-  expect(loginPageSource).toContain("import('./SendMsgModal')");
-  expect(loginPageSource).toContain("import('./SliderVerifyModal')");
-
   const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
-  expect(loginHandlerSource).toContain('sliderVerifyModalMounted');
-  expect(loginHandlerSource).toContain('waitForSliderVerifyModal');
-  expect(loginHandlerSource).toContain('sendMsgModalMounted');
-  expect(loginHandlerSource).toContain('oneTimePwdModalMounted');
+  const removedLoginPaths = [
+    'src/pages/login/LoginFormItems',
+    'src/pages/login/OneTimePasswordModal',
+    'src/pages/login/OrgScanLoginModal',
+    'src/pages/login/SendMsgModal',
+    'src/pages/login/SliderVerifyModal',
+    'src/pages/login/component/FindPasswordModal',
+    'src/pages/login/component/LoginWayChange',
+    'src/components/SliderVerify',
+    'src/assets/images/verify',
+    'src/assets/js/wwLogin-1.2.7.js',
+  ];
+
+  expect(loginPageSource).not.toContain('LoginWayChange');
+  expect(loginPageSource).not.toContain('QrcodeOutlined');
+  expect(loginPageSource).not.toContain('selectLoginTypes');
+  expect(loginPageSource).not.toContain('selectSmsResetPasswordSwitch');
+  expect(loginPageSource).not.toContain('selectCurrentLoginType');
+  expect(loginPageSource).not.toContain('isLocalPhoneLogin');
+  expect(loginPageSource).toContain('UsernamePwd');
+
+  expect(loginHandlerSource).toContain('authType: LoginAuthType.LOCAL');
+  expect(loginHandlerSource).not.toContain('selectCurrentLoginType');
+  expect(loginHandlerSource).not.toContain('selectTerminalGraphAuthenticationSwitch');
+  expect(loginHandlerSource).not.toContain('selectTerminalMultiFactorAuthenticationSwitch');
+  expect(loginHandlerSource).not.toContain('selectOneTimePasswordSwitch');
+  expect(loginHandlerSource).not.toContain('terminalPhoneLogin');
+  expect(loginHandlerSource).not.toContain('checkTerminalUser');
+  expect(loginHandlerSource).not.toContain('waitFor');
+  expect(loginHandlerSource).not.toContain('ModalRef');
+
+  for (const removedLoginPath of removedLoginPaths) {
+    expect(existsSync(join(process.cwd(), removedLoginPath)), removedLoginPath).toBe(false);
+  }
 });
 
 test('keeps the login typing path free of expensive live filters', () => {
@@ -207,26 +222,15 @@ test('keeps login key handling off the per-character DOM query path', () => {
   expect(loginPageSource).toContain("if (event.key !== 'Enter') return;");
 });
 
-test('keeps the login form branch memoized during gateway status updates', () => {
-  const loginFormSource = source('src/pages/login/LoginFormItems/index.tsx');
+test('keeps the login form branch out of gateway status updates', () => {
+  const loginPageSource = source('src/pages/login/LoginPage.tsx');
 
-  expect(loginFormSource).toContain('memo(');
+  expect(loginPageSource).toContain('<UsernamePwd formIns={form} />');
+  expect(loginPageSource).not.toContain('LoginFormItems');
 });
 
-test('keeps login form variants memoized away from parent shell renders', () => {
-  const loginFormVariantPaths = [
-    'src/pages/login/LoginFormItems/LocalFormItem/index.tsx',
-    'src/pages/login/LoginFormItems/PhoneFormItem/index.tsx',
-    'src/pages/login/LoginFormItems/DomainFormItem/index.tsx',
-    'src/pages/login/LoginFormItems/NisFormItem/index.tsx',
-    'src/pages/login/LoginFormItems/OtherFormItem/index.tsx',
-    'src/pages/login/LoginFormItems/UserDefinedFormItem/index.tsx',
-    'src/pages/login/UsernamePwd/index.tsx',
-  ];
-
-  for (const formVariantPath of loginFormVariantPaths) {
-    expect(source(formVariantPath), formVariantPath).toContain('memo(');
-  }
+test('keeps the local username password form memoized away from parent shell renders', () => {
+  expect(source('src/pages/login/UsernamePwd/index.tsx')).toContain('memo(');
 });
 
 test('loads the assistant panel only when the user opens it', () => {
@@ -351,11 +355,9 @@ test('keeps startup notifications out of the full UI component bundle', () => {
   expect(source('src/ui/styles.scss')).not.toContain('.vd-toast');
 });
 
-test('loads slider verification images on demand', () => {
-  const sliderSource = source('src/components/SliderVerify/index.tsx');
-
-  expect(sliderSource).not.toContain("import img0 from '@/assets/images/verify/0.jpg'");
-  expect(sliderSource).not.toContain("import img9 from '@/assets/images/verify/9.jpg'");
+test('removes slider verification assets from the login client', () => {
+  expect(existsSync(join(process.cwd(), 'src/components/SliderVerify'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/assets/images/verify'))).toBe(false);
 });
 
 test('keeps the app shell background CSS-only', () => {
@@ -417,15 +419,6 @@ test('keeps the update modal background CSS-only', () => {
 
   expect(themeSource).not.toContain('upgrade-bgc.png');
   expect(themeSource).not.toContain('upgrade-bgc-dark.png');
-});
-
-test('keeps slider verification image assets small', () => {
-  const verifyDir = join(process.cwd(), 'src/assets/images/verify');
-  const totalBytes = readdirSync(verifyDir)
-    .filter((fileName) => fileName.endsWith('.jpg'))
-    .reduce((total, fileName) => total + fileSize(`src/assets/images/verify/${fileName}`), 0);
-
-  expect(totalBytes).toBeLessThanOrEqual(150_000);
 });
 
 test('uses only woff2 icon font sources in the bundled CSS', () => {

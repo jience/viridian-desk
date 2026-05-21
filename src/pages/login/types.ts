@@ -5,16 +5,8 @@ export interface AccountPwd {
   password: string;
 }
 
-export interface LoginFormType extends AccountPwd {
-  domainServerName?: string;
-  ou?: string;
-  corpId?: string;
-  smsCaptcha?: string;
-  nisId?: string;
-  phone?: string;
-}
+export type LoginFormType = AccountPwd;
 
 export type LoginReq = LoginFormType & {
   authType: LoginAuthType;
-  dynamicPwd?: string;
 };

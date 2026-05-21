@@ -82,22 +82,6 @@
     }
   }
 
-  .login-way-change {
-    width: 100%;
-
-    li {
-      border-color: var(--auth-border);
-      background: color-mix(in srgb, var(--auth-panel-muted) 72%, transparent);
-      color: var(--auth-text);
-    }
-
-    li:hover,
-    li.on {
-      background: color-mix(in srgb, var(--auth-accent) 12%, transparent);
-      color: var(--auth-accent-strong);
-    }
-  }
-
   .login-footer {
     color: color-mix(in srgb, var(--auth-muted) 86%, transparent);
   }
@@ -389,74 +373,6 @@
     margin: 7px 0 0;
     color: var(--auth-muted);
     font-size: 13px;
-  }
-}
-
-.auth-page__login-way-row {
-  min-height: 42px;
-  border: 1px solid var(--auth-border);
-  border-radius: 12px;
-  padding: 4px;
-  background: var(--auth-panel-muted);
-}
-
-.auth-page__login-way-icons {
-  position: relative;
-  width: 16px;
-  height: 16px;
-
-  .iconfont {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .icon-left {
-    left: -2px;
-  }
-
-  .icon-minus {
-    left: 2px;
-  }
-}
-
-.auth-page__login-way-row .vd-auth-login-way {
-  border: 0;
-  border-radius: 9px;
-  background: transparent;
-  color: var(--auth-text);
-}
-
-.auth-page__links {
-  min-height: 22px;
-
-  .vd-auth-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--auth-accent-strong);
-  }
-}
-
-.auth-page__links-placeholder {
-  min-height: 22px;
-}
-
-.auth-page__qr {
-  display: inline-grid;
-  width: 34px;
-  height: 34px;
-  place-items: center;
-  border: 1px solid var(--auth-border);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--auth-panel-muted) 76%, transparent);
-  color: var(--auth-accent-strong);
-  cursor: pointer;
-  font-size: 20px;
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.45;
   }
 }
 

@@ -1,4 +1,4 @@
-import type { LoginUserInfo, LoginUserReq, TerminalPhoneLoginReq } from '@/native/interfaces/api';
+import type { LoginUserInfo, LoginUserReq } from '@/native/interfaces/api';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { setCurrentUser } from '@/store/feature/app';
 import { selectIsThin } from '@/store/feature/terminal';
@@ -54,11 +54,11 @@ export const useLoginSuccessHandler = () => {
   };
 
   // 登录成功后回调的处理
-  const loginSuccessFun = async (res: LoginUserInfo, req: TerminalPhoneLoginReq | LoginUserReq) => {
+  const loginSuccessFun = async (res: LoginUserInfo, req: LoginUserReq) => {
     // TODO 后面需要去除password字段
-    if ((req as LoginUserReq).password) {
+    if (req.password) {
       const password = encryption(
-        LEGACY_PASSWORD_PREFIX + '-' + (req as LoginUserReq).password + '_' + new Date().getTime(),
+        LEGACY_PASSWORD_PREFIX + '-' + req.password + '_' + new Date().getTime(),
       );
       await appDispatch(
         setCurrentUser({

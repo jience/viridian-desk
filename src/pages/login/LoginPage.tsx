@@ -1,40 +1,19 @@
 import loginLogo from '@/assets/images/logo.svg';
 import Footer from '@/components/Footer';
-import { LoginAuthType } from '@/native/interfaces/login_auth';
 import { useAppSelector } from '@/store';
-import { selectCurrentLoginType } from '@/store/feature/app';
-import { selectLoginTypes, selectSmsResetPasswordSwitch } from '@/store/feature/client';
 import { selectAutoGateway, selectConnected, selectNetwork } from '@/store/feature/gateway';
 import '@/styles/design-system.css';
 import { Button } from '@/ui/components/button';
-import { QrcodeOutlined } from '@/ui/icons';
 import { Form } from '@/ui';
 import { DocumentTitle } from '@/ui/shell/document-title';
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMessageFormatter } from '@/utils/message-format';
 import { LoginGatewayDock } from '@/components/LoginGatewayDock';
-import LoginWayChange from './component/LoginWayChange';
 import { useLoginHandler } from './hooks/useLoginHandler';
-import { useLoginWayData } from './initData';
-import { LoginFormItems } from './LoginFormItems';
-import type { OrgScanLoginModalRef } from './OrgScanLoginModal';
+import { UsernamePwd } from './UsernamePwd';
 import type { LoginFormType } from './types';
 import './LoginPage.scss';
-
-const FindPasswordModal = lazy(() => import('./component/FindPasswordModal'));
-const OneTimePwdModal = lazy(() =>
-  import('./OneTimePasswordModal').then((module) => ({ default: module.OneTimePwdModal })),
-);
-const OrgScanLoginModal = lazy(() =>
-  import('./OrgScanLoginModal').then((module) => ({ default: module.OrgScanLoginModal })),
-);
-const SendMsgModal = lazy(() =>
-  import('./SendMsgModal').then((module) => ({ default: module.SendMsgModal })),
-);
-const SliderVerifyModal = lazy(() =>
-  import('./SliderVerifyModal').then((module) => ({ default: module.SliderVerifyModal })),
-);
 
 export default function LoginPage() {
   const { formatMessage } = useMessageFormatter();
@@ -44,32 +23,12 @@ export default function LoginPage() {
   const connected = useAppSelector(selectConnected);
   const network = useAppSelector(selectNetwork);
   const autoGateway = useAppSelector(selectAutoGateway);
-  const loginTypes = useAppSelector(selectLoginTypes);
-  const smsResetPasswordSwitch = useAppSelector(selectSmsResetPasswordSwitch);
-  const currentLoginWay = useAppSelector(selectCurrentLoginType);
 
-  const orgScanLoginModalRef = useRef<OrgScanLoginModalRef | null>(null);
-  const orgScanLoginModalResolveRef = useRef<((modal: OrgScanLoginModalRef) => void) | null>(null);
-  const submitLockRef = useRef(false);
-  const { loginWayKv } = useLoginWayData();
-  const {
-    userLogin,
-    loginLoading,
-    isLocalPhoneLogin,
-    setIsLocalPhoneLogin,
-    sliderVerifyModalRef,
-    sendMsgModalRef,
-    oneTimePwdModalRef,
-    sliderVerifyModalMounted,
-    sendMsgModalMounted,
-    oneTimePwdModalMounted,
-  } = useLoginHandler();
-
-  const [canScan] = useState(false);
-  const [threeChannel, setThreeChannel] = useState('');
-  const [changeLoginWayVisible, setChangeLoginWayVisible] = useState(false);
-  const [findPwdVisible, setFindPwdVisible] = useState(false);
-  const [orgScanLoginModalMounted, setOrgScanLoginModalMounted] = useState(false);
+  const { userLogin, loginLoading, submitLockRef } = useLoginHandler();
+  const localLoginLabel = formatMessage({
+    id: 'LocalAuthLogin',
+    defaultMessage: '本地账号',
+  });
 
   const canSubmit = connected && network;
   const gatewayStatusLabel = !autoGateway
@@ -82,7 +41,6 @@ export default function LoginPage() {
       : connected
         ? formatMessage({ id: 'Connected', defaultMessage: '已连接' })
         : formatMessage({ id: 'Disconnected', defaultMessage: '未连接' });
-  const showLocalLinks = currentLoginWay === LoginAuthType.LOCAL;
 
   const handleSubmit = useCallback(async () => {
     if (!canSubmit || loginLoading || submitLockRef.current) return;
@@ -94,33 +52,7 @@ export default function LoginPage() {
     } finally {
       submitLockRef.current = false;
     }
-  }, [canSubmit, form, loginLoading, userLogin]);
-
-  const setOrgScanLoginModalRef = useCallback((modal: OrgScanLoginModalRef | null) => {
-    orgScanLoginModalRef.current = modal;
-    if (modal && orgScanLoginModalResolveRef.current) {
-      orgScanLoginModalResolveRef.current(modal);
-      orgScanLoginModalResolveRef.current = null;
-    }
-  }, []);
-
-  const waitForOrgScanLoginModal = useCallback(() => {
-    if (orgScanLoginModalRef.current) return Promise.resolve(orgScanLoginModalRef.current);
-
-    setOrgScanLoginModalMounted(true);
-    return new Promise<OrgScanLoginModalRef>((resolve) => {
-      orgScanLoginModalResolveRef.current = resolve;
-    });
-  }, []);
-
-  const handleOrgScanLogin = useCallback(async () => {
-    if (!canScan) return;
-    const orgScanLoginModal = await waitForOrgScanLoginModal();
-    orgScanLoginModal.show({
-      corpId: form.getFieldValue('corpId'),
-      threeChannel,
-    });
-  }, [canScan, form, threeChannel, waitForOrgScanLoginModal]);
+  }, [canSubmit, form, loginLoading, submitLockRef, userLogin]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -202,8 +134,8 @@ export default function LoginPage() {
                   <i className="iconfont icon-key" aria-hidden="true" />
                   {formatMessage({ id: 'LoginWay', defaultMessage: '登录方式' })}
                 </span>
-                <strong>{loginTypes?.length || 1}</strong>
-                <small>{loginWayKv[currentLoginWay]}</small>
+                <strong>1</strong>
+                <small>{localLoginLabel}</small>
               </div>
             </div>
           </div>
@@ -214,127 +146,28 @@ export default function LoginPage() {
             <div className="auth-page__card-heading">
               <div>
                 <h2>{formatMessage({ id: 'LOGIN' })}</h2>
-                <p>{loginWayKv[currentLoginWay]}</p>
+                <p>{localLoginLabel}</p>
               </div>
             </div>
 
             <div className="vd-auth-stack">
-              {changeLoginWayVisible ? (
-                <LoginWayChange onChange={() => setChangeLoginWayVisible(false)} />
-              ) : (
-                <>
-                  <div className="vd-auth-row auth-page__login-way-row">
-                    <button
-                      className="vd-auth-login-way"
-                      type="button"
-                      onClick={() => {
-                        if (loginTypes && loginTypes.length > 1) {
-                          setChangeLoginWayVisible(true);
-                        }
-                      }}
-                    >
-                      {loginTypes && loginTypes.length > 1 && (
-                        <span className="auth-page__login-way-icons">
-                          <i className="iconfont icon-left" />
-                          <i className="iconfont icon-minus" />
-                        </span>
-                      )}
-                      {loginWayKv[currentLoginWay]}
-                    </button>
+              <Form form={form} layout="vertical" className="vd-auth-form" requiredMark={false}>
+                <UsernamePwd formIns={form} />
+              </Form>
 
-                    {currentLoginWay === LoginAuthType.CORP && (
-                      <button
-                        aria-label={loginWayKv[currentLoginWay]}
-                        className="auth-page__qr"
-                        disabled={!canScan}
-                        type="button"
-                        onClick={handleOrgScanLogin}
-                      >
-                        <QrcodeOutlined />
-                      </button>
-                    )}
-                  </div>
-
-                  <Form form={form} layout="vertical" className="vd-auth-form" requiredMark={false}>
-                    <LoginFormItems
-                      formIns={form}
-                      isLocalPhoneLogin={isLocalPhoneLogin}
-                      setThreeChannel={setThreeChannel}
-                    />
-                  </Form>
-
-                  {showLocalLinks ? (
-                    <div className="vd-auth-row auth-page__links">
-                      <button
-                        className="vd-auth-link"
-                        type="button"
-                        onClick={() => setIsLocalPhoneLogin(!isLocalPhoneLogin)}
-                      >
-                        <i className="iconfont icon-icon_phone" />
-                        {formatMessage({
-                          id: !isLocalPhoneLogin ? 'loginByphone' : 'loginByUser',
-                        })}
-                      </button>
-                      {smsResetPasswordSwitch === 'Enabled' && (
-                        <button
-                          className="vd-auth-link"
-                          disabled={!canSubmit}
-                          type="button"
-                          onClick={() => {
-                            if (canSubmit) {
-                              setFindPwdVisible(true);
-                            }
-                          }}
-                        >
-                          {formatMessage({ id: 'ForgetPassword' })}
-                        </button>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="auth-page__links-placeholder" />
-                  )}
-
-                  <Button
-                    aria-busy={loginLoading}
-                    className="auth-page__submit"
-                    disabled={!canSubmit || loginLoading}
-                    onClick={handleSubmit}
-                    size="lg"
-                  >
-                    {loginLoading && <span className="auth-page__submit-spinner" />}
-                    {formatMessage({ id: loginLoading ? 'LOGING' : 'LOGIN' })}
-                  </Button>
-                </>
-              )}
+              <Button
+                aria-busy={loginLoading}
+                className="auth-page__submit"
+                disabled={!canSubmit || loginLoading}
+                onClick={handleSubmit}
+                size="lg"
+              >
+                {loginLoading && <span className="auth-page__submit-spinner" />}
+                {formatMessage({ id: loginLoading ? 'LOGING' : 'LOGIN' })}
+              </Button>
             </div>
           </div>
         </section>
-
-        {findPwdVisible && (
-          <Suspense fallback={null}>
-            <FindPasswordModal visible={findPwdVisible} setVisible={setFindPwdVisible} />
-          </Suspense>
-        )}
-        {sliderVerifyModalMounted && (
-          <Suspense fallback={null}>
-            <SliderVerifyModal ref={sliderVerifyModalRef} />
-          </Suspense>
-        )}
-        {sendMsgModalMounted && (
-          <Suspense fallback={null}>
-            <SendMsgModal ref={sendMsgModalRef} />
-          </Suspense>
-        )}
-        {oneTimePwdModalMounted && (
-          <Suspense fallback={null}>
-            <OneTimePwdModal ref={oneTimePwdModalRef} />
-          </Suspense>
-        )}
-        {orgScanLoginModalMounted && (
-          <Suspense fallback={null}>
-            <OrgScanLoginModal ref={setOrgScanLoginModalRef} />
-          </Suspense>
-        )}
       </section>
       <div className="auth-page__footer-bar">
         <Footer rightSlot={<LoginGatewayDock />} />
