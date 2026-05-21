@@ -2,14 +2,14 @@ import { bridge } from '@/native';
 import { useAppSelector } from '@/store';
 import { selectConnected } from '@/store/feature/gateway';
 import { Form, Input, Select } from '@/ui';
-import { useEffect, useState, type FocusEventHandler } from 'react';
+import { memo, useEffect, useState, type FocusEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UsernamePwd, type UsernamePwdProps } from '../../UsernamePwd';
 import './index.scss';
 
 export interface DomainFormItemProps extends UsernamePwdProps {}
 
-export const DomainFormItem = (props: DomainFormItemProps) => {
+const DomainFormItemComponent = (props: DomainFormItemProps) => {
   const { formIns } = props;
   const { t } = useTranslation();
 
@@ -89,3 +89,5 @@ export const DomainFormItem = (props: DomainFormItemProps) => {
     </>
   );
 };
+
+export const DomainFormItem = memo(DomainFormItemComponent);

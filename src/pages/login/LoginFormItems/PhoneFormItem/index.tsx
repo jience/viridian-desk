@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import Regex from '@/utils/regex.ts';
 import { useAppSelector } from '@/store';
 import { Button, Form, Input, Space, type FormInstance } from '@/ui';
@@ -13,7 +13,7 @@ export interface PhoneFormItemProps {
   formIns: FormInstance<LoginFormType>;
 }
 
-export const PhoneFormItem = (props: PhoneFormItemProps) => {
+const PhoneFormItemComponent = (props: PhoneFormItemProps) => {
   const { formIns } = props;
   const { t } = useTranslation();
   const { isCounting, countdown, start } = useSmsCountdown();
@@ -89,3 +89,5 @@ export const PhoneFormItem = (props: PhoneFormItemProps) => {
     </>
   );
 };
+
+export const PhoneFormItem = memo(PhoneFormItemComponent);

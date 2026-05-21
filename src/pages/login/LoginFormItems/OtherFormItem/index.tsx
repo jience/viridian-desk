@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { UsernamePwd, type UsernamePwdProps } from '../../UsernamePwd';
 import { Form, Select } from '@/ui';
 import type { CorpItem } from '@/native/interfaces/api';
@@ -11,7 +11,7 @@ export interface OtherFormItemProps extends UsernamePwdProps {
   setThreeChannel: (value: string) => void;
 }
 
-export const OtherFormItem = (props: OtherFormItemProps) => {
+const OtherFormItemComponent = (props: OtherFormItemProps) => {
   const { formIns, setThreeChannel } = props;
   const { t } = useTranslation();
 
@@ -66,3 +66,5 @@ export const OtherFormItem = (props: OtherFormItemProps) => {
     </>
   );
 };
+
+export const OtherFormItem = memo(OtherFormItemComponent);

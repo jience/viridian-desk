@@ -29,11 +29,11 @@
       color-mix(in srgb, var(--login-gateway-accent) 8%, transparent),
       transparent 38%
     ),
-    color-mix(in srgb, var(--login-gateway-panel) 58%, transparent);
+    color-mix(in srgb, var(--login-gateway-panel) 86%, var(--auth-bg, transparent));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 12px 28px rgba(55, 48, 38, 0.09);
-  backdrop-filter: blur(16px);
+    0 8px 20px rgba(55, 48, 38, 0.08);
+  contain: layout paint style;
 }
 
 .login-gateway-dock__signal {

@@ -30,7 +30,7 @@
         "minWidth": 1100,
         "resizable": true,
         "shadow": false,
-        "transparent": true,
+        "transparent": false,
         "visible": true,
         "width": 1280
       }

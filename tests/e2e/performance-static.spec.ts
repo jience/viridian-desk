@@ -71,6 +71,63 @@ test('loads low-frequency login modals only when needed', () => {
   expect(loginHandlerSource).toContain('oneTimePwdModalMounted');
 });
 
+test('keeps the login typing path free of expensive live filters', () => {
+  const loginCriticalStyles = [
+    source('src/pages/login/LoginPage.scss'),
+    source('src/components/LoginGatewayDock/index.scss'),
+  ].join('\n');
+
+  expect(loginCriticalStyles).not.toContain('backdrop-filter');
+  expect(loginCriticalStyles).not.toContain('mask-image');
+  expect(loginCriticalStyles).not.toContain('filter:');
+});
+
+test('keeps the login shell cheap to repaint on low-power devices', () => {
+  const loginStyles = source('src/pages/login/LoginPage.scss');
+
+  expect(loginStyles).not.toContain('radial-gradient');
+  expect(loginStyles).not.toContain('background-size: 34px 34px');
+  expect(loginStyles).not.toContain('.auth-page__window::before');
+});
+
+test('keeps the main Tauri window opaque for low-power Linux compositors', () => {
+  const tauriConfig = source('src-tauri/tauri.conf.json');
+
+  expect(tauriConfig).not.toContain('"transparent": true');
+  expect(tauriConfig).toContain('"transparent": false');
+});
+
+test('notifies only changed form fields while typing', () => {
+  const uiSource = source('src/ui/index.tsx');
+
+  expect(uiSource).toContain('fieldListeners');
+  expect(uiSource).toContain('notifyField');
+  expect(uiSource).toContain('_subscribeField');
+  expect(uiSource).not.toContain('form._subscribe?.(() => force((value) => value + 1))');
+});
+
+test('keeps the login form branch memoized during gateway status updates', () => {
+  const loginFormSource = source('src/pages/login/LoginFormItems/index.tsx');
+
+  expect(loginFormSource).toContain('memo(');
+});
+
+test('keeps login form variants memoized away from parent shell renders', () => {
+  const loginFormVariantPaths = [
+    'src/pages/login/LoginFormItems/LocalFormItem/index.tsx',
+    'src/pages/login/LoginFormItems/PhoneFormItem/index.tsx',
+    'src/pages/login/LoginFormItems/DomainFormItem/index.tsx',
+    'src/pages/login/LoginFormItems/NisFormItem/index.tsx',
+    'src/pages/login/LoginFormItems/OtherFormItem/index.tsx',
+    'src/pages/login/LoginFormItems/UserDefinedFormItem/index.tsx',
+    'src/pages/login/UsernamePwd/index.tsx',
+  ];
+
+  for (const formVariantPath of loginFormVariantPaths) {
+    expect(source(formVariantPath), formVariantPath).toContain('memo(');
+  }
+});
+
 test('loads the assistant panel only when the user opens it', () => {
   expect(source('src/layouts/AppLayout/index.tsx')).not.toContain(
     "import { AssistantPanel } from '@/ui/assistant/assistant-panel'",

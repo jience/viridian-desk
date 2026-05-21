@@ -1,5 +1,5 @@
 import { Form, Input, type FormInstance } from '@/ui';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { LoginFormType } from '../types';
 import { usePreventEnterKeyLongPress } from './usePreventEnterKeyLongPress';
@@ -8,7 +8,7 @@ export interface UsernamePwdProps {
   formIns: FormInstance<LoginFormType>;
 }
 
-export const UsernamePwd = (_props: UsernamePwdProps) => {
+const UsernamePwdComponent = (_props: UsernamePwdProps) => {
   const { t } = useTranslation();
 
   const { onKeyDown, onKeyUp } = usePreventEnterKeyLongPress();
@@ -72,3 +72,5 @@ export const UsernamePwd = (_props: UsernamePwdProps) => {
     </>
   );
 };
+
+export const UsernamePwd = memo(UsernamePwdComponent);

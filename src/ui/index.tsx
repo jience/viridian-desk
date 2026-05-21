@@ -396,6 +396,7 @@ export type FormInstance<T = AnyRecord> = {
   validateFields: (names?: Array<keyof T | string>) => Promise<T>;
   _register?: (name: string, rules?: RuleInput[]) => () => void;
   _subscribe?: (listener: () => void) => () => void;
+  _subscribeField?: (name: string, listener: () => void) => () => void;
 };
 
 const normalizeRuleError = (error: any, fallback?: ReactNode): ReactNode => {
@@ -438,7 +439,12 @@ const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
   const rules = new Map<string, RuleInput[]>();
   const errors = new Map<string, ReactNode[]>();
   const listeners = new Set<() => void>();
+  const fieldListeners = new Map<string, Set<() => void>>();
   const notify = () => listeners.forEach((listener) => listener());
+  const notifyField = (name: string) => {
+    fieldListeners.get(name)?.forEach((listener) => listener());
+    notify();
+  };
   const api: FormInstance<T> = {
     getFieldValue: (name) => values[String(name)],
     getFieldsValue: () => ({ ...values }) as T,
@@ -446,15 +452,18 @@ const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
     setFieldsValue: (next) => {
       Object.assign(values, next);
       Object.keys(next).forEach((key) => errors.delete(key));
-      notify();
+      Object.keys(next).forEach((key) => notifyField(key));
     },
     setFieldValue: (name, value) => {
       const key = String(name);
       values[key] = value;
       errors.delete(key);
-      notify();
+      notifyField(key);
     },
     resetFields: (names) => {
+      const changedKeys =
+        names?.map(String) ??
+        Array.from(new Set([...Object.keys(values), ...Object.keys(initial)]));
       if (!names) {
         Object.keys(values).forEach((key) => delete values[key]);
         Object.assign(values, initial);
@@ -467,7 +476,7 @@ const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
           errors.delete(key);
         });
       }
-      notify();
+      changedKeys.forEach((key) => notifyField(key));
     },
     validateFields: async (names) => {
       const keys = names?.map(String) ?? Array.from(rules.keys());
@@ -489,7 +498,7 @@ const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
         }
       }
 
-      notify();
+      keys.forEach((key) => notifyField(key));
 
       if (errorFields.length) {
         throw { errorFields, values: { ...values } };
@@ -504,6 +513,19 @@ const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
     _subscribe: (listener) => {
       listeners.add(listener);
       return () => listeners.delete(listener);
+    },
+    _subscribeField: (name, listener) => {
+      const key = String(name);
+      const nextListeners = fieldListeners.get(key) ?? new Set<() => void>();
+      nextListeners.add(listener);
+      fieldListeners.set(key, nextListeners);
+
+      return () => {
+        nextListeners.delete(listener);
+        if (!nextListeners.size) {
+          fieldListeners.delete(key);
+        }
+      };
     },
   };
   (api as any)._initial = initial;
@@ -551,7 +573,7 @@ function FormItem({
   useEffect(() => {
     if (!form || !key) return;
     const unreg = form._register?.(key, rules);
-    const unsub = form._subscribe?.(() => force((value) => value + 1));
+    const unsub = form._subscribeField?.(key, () => force((value) => value + 1));
     return () => {
       unreg?.();
       unsub?.();
@@ -795,7 +817,9 @@ export const Select = Object.assign(
     const options = readOptions(props.options, props.children);
     const multiple = props.mode === 'multiple' || props.mode === 'tags';
     const isControlled = props.value !== undefined;
-    const [internalValue, setInternalValue] = useState<any>(props.defaultValue ?? (multiple ? [] : ''));
+    const [internalValue, setInternalValue] = useState<any>(
+      props.defaultValue ?? (multiple ? [] : ''),
+    );
     const [open, setOpen] = useState(false);
     const rootRef = useRef<HTMLSpanElement>(null);
     const value = isControlled ? props.value : internalValue;
@@ -865,7 +889,10 @@ export const Select = Object.assign(
         tabIndex={disabled ? -1 : 0}
         style={props.style}
         onBlur={(event) => {
-          if (event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget)) {
+          if (
+            event.relatedTarget instanceof Node &&
+            event.currentTarget.contains(event.relatedTarget)
+          ) {
             return;
           }
           setOpen(false);
@@ -895,9 +922,7 @@ export const Select = Object.assign(
           }
         }}
       >
-        <span className="vdui-select-selection-item">
-          {selectedLabel ?? props.placeholder}
-        </span>
+        <span className="vdui-select-selection-item">{selectedLabel ?? props.placeholder}</span>
         {props.placeholder && selectedValues.length === 0 ? (
           <span className="vdui-select-placeholder">{props.placeholder}</span>
         ) : null}

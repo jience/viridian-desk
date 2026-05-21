@@ -1,6 +1,7 @@
 import { useAppSelector } from '@/store';
 import { selectCurrentLoginType } from '@/store/feature/app';
 import type { FormInstance } from '@/ui';
+import { memo } from 'react';
 import type { LoginFormType } from '../types';
 import { DomainFormItem } from './DomainFormItem';
 import { LocalFormItem } from './LocalFormItem';
@@ -15,7 +16,7 @@ interface LoginFormItemsProps {
   setThreeChannel: (channel: string) => void;
 }
 
-export const LoginFormItems = ({
+const LoginFormItemsComponent = ({
   formIns,
   isLocalPhoneLogin,
   setThreeChannel,
@@ -54,3 +55,5 @@ export const LoginFormItems = ({
 
   return null;
 };
+
+export const LoginFormItems = memo(LoginFormItemsComponent);

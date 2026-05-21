@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useAppSelector } from '@/store';
 import { UsernamePwd, type UsernamePwdProps } from '../../UsernamePwd';
 import { Form, Select } from '@/ui';
@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 export interface NisFormItemProps extends UsernamePwdProps {}
 
-export const NisFormItem = (props: NisFormItemProps) => {
+const NisFormItemComponent = (props: NisFormItemProps) => {
   const { formIns } = props;
   const { t } = useTranslation();
   const connected = useAppSelector(selectConnected);
@@ -65,3 +65,5 @@ export const NisFormItem = (props: NisFormItemProps) => {
     </>
   );
 };
+
+export const NisFormItem = memo(NisFormItemComponent);
