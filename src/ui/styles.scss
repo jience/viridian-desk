@@ -129,14 +129,6 @@
     }
   }
 
-  &:hover {
-    border-color: color-mix(
-      in srgb,
-      var(--vd-color-accent, #69d99a) 42%,
-      var(--vd-color-border, rgba(148, 163, 184, 0.2))
-    );
-  }
-
   &:focus-within {
     border-color: var(--vd-color-accent, #69d99a);
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--vd-color-accent, #69d99a) 18%, transparent);

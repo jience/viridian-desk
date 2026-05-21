@@ -45,8 +45,7 @@
       border-radius: 12px !important;
       color: var(--auth-text);
       background: color-mix(in srgb, var(--auth-panel-strong) 74%, transparent) !important;
-      outline: 2px solid transparent;
-      outline-offset: 1px;
+      outline: 0;
       box-shadow: none;
       transition:
         border-color 180ms ease,
@@ -60,7 +59,7 @@
       .vdui-select:focus-within
     ) {
       border-color: color-mix(in srgb, var(--auth-accent) 42%, transparent) !important;
-      outline: 2px solid color-mix(in srgb, var(--auth-accent) 28%, transparent);
+      background: color-mix(in srgb, var(--auth-panel-strong) 88%, transparent) !important;
       box-shadow: none !important;
     }
 
@@ -73,6 +72,12 @@
       min-height: auto;
       border: 0 !important;
       background: transparent !important;
+      outline: 0 !important;
+      box-shadow: none !important;
+    }
+
+    :where(.vdui-input-affix-wrapper .vdui-input:focus) {
+      outline: 0 !important;
       box-shadow: none !important;
     }
   }

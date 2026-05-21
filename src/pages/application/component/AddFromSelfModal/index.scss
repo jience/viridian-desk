@@ -1,13 +1,6 @@
 .add-self-Modal {
   --app-modal-border: var(--app-border-color, rgba(61, 91, 78, 0.18));
   --app-modal-surface: var(--app-surface-color, rgba(255, 253, 248, 0.92));
-  --app-modal-surface-subtle: color-mix(
-    in srgb,
-    var(--app-surface-subtle-color, #f5f8f6) 72%,
-    transparent
-  );
-  --app-modal-accent-soft: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 10%, transparent);
-  --app-modal-accent-border: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 34%, transparent);
   --app-modal-shadow: var(--vd-shadow-window, 0 24px 64px rgba(55, 48, 38, 0.14));
 
   width: 500px !important;
@@ -35,32 +28,6 @@
     color: var(--app-muted-color, #6f7f90);
     font-size: 13px;
     font-weight: 550;
-  }
-
-  .vdui-input,
-  .vdui-input-affix-wrapper,
-  .vdui-select,
-  .vdui-input-outlined {
-    border-color: var(--app-modal-border) !important;
-    border-radius: 7px !important;
-    color: var(--app-text-color, #20231e);
-    background: var(--app-modal-surface-subtle) !important;
-  }
-
-  .vdui-input::placeholder,
-  .vdui-select-placeholder {
-    color: var(--app-muted-color, #6f7f90);
-  }
-
-  .vdui-input:hover,
-  .vdui-input:focus,
-  .vdui-input-affix-wrapper:hover,
-  .vdui-input-affix-wrapper-focused,
-  .vdui-select-focused .vdui-select,
-  .vdui-select:focus,
-  .vdui-select:focus-within {
-    border-color: var(--app-modal-accent-border) !important;
-    box-shadow: 0 0 0 2px var(--app-modal-accent-soft) !important;
   }
 
   .vdui-btn {

@@ -144,7 +144,35 @@ test('keeps login input focus styles cheap to repaint while typing', () => {
 
   expect(loginStyles).not.toContain('box-shadow 180ms ease');
   expect(loginStyles).not.toContain('box-shadow: 0 0 0 3px');
-  expect(loginStyles).toContain('outline: 2px solid');
+  expect(loginStyles).not.toContain(
+    'outline: 2px solid color-mix(in srgb, var(--auth-accent) 28%, transparent)',
+  );
+  expect(loginStyles).not.toContain('outline-offset: 1px');
+  expect(loginStyles).toContain(
+    'border-color: color-mix(in srgb, var(--auth-accent) 42%, transparent) !important;',
+  );
+});
+
+test('keeps modal and login input focus rings single-layered', () => {
+  const loginStyles = source('src/pages/login/LoginPage.scss');
+  const publishAppModalStyles = source(
+    'src/pages/application/component/AddFromSelfModal/index.scss',
+  );
+  const uiStyles = source('src/ui/styles.scss');
+  const inputAffixWrapperStart = uiStyles.indexOf('.vdui-input-affix-wrapper {');
+  const inputAffixWrapperBlock = uiStyles.slice(
+    inputAffixWrapperStart,
+    uiStyles.indexOf('\n.vdui-input,', inputAffixWrapperStart),
+  );
+
+  expect(loginStyles).toContain('.vdui-input-affix-wrapper .vdui-input:focus');
+  expect(loginStyles).toContain('outline: 0 !important');
+  expect(publishAppModalStyles).not.toContain('.vdui-input');
+  expect(publishAppModalStyles).not.toContain('.vdui-select');
+  expect(publishAppModalStyles).not.toContain('--app-modal-accent');
+  expect(publishAppModalStyles).not.toContain('--app-modal-surface-subtle');
+  expect(inputAffixWrapperBlock).not.toContain('&:hover');
+  expect(inputAffixWrapperBlock).toContain('&:focus-within');
 });
 
 test('keeps the main Tauri window opaque for low-power Linux compositors', () => {
