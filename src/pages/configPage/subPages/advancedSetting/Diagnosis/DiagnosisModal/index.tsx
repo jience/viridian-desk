@@ -19,10 +19,10 @@ import { selectAutoGateway, selectConnected, selectNetwork } from '@/store/featu
 import { getNetworkType } from '@/utils/common';
 import type { UnlistenFn } from '@/native/interfaces/types';
 import { useTranslation } from 'react-i18next';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { CheckCircleFilled, CopyOutlined } from '@/ui/icons';
 import type { NetProbeItemRender } from '@/native/interfaces/cmd';
 import { bridge } from '@/native';
+import { copyText } from '@/utils/clipboard';
 
 export type DiagnosisModalRef = {
   openModal: () => Promise<void>;
@@ -121,6 +121,11 @@ const DiagnosisModal: FC<DiagnosisModalProps> = ({ ref }) => {
     }, 2000);
   };
 
+  const handleCopyDiagnosis = async () => {
+    await copyText(copyDiagnosis);
+    handleCopied();
+  };
+
   useEffect(() => {
     if (visible) {
       getNetworkType();
@@ -174,16 +179,15 @@ const DiagnosisModal: FC<DiagnosisModalProps> = ({ ref }) => {
           >
             {t('config_page.close')}
           </Button>
-          <CopyToClipboard text={copyDiagnosis} onCopy={handleCopied}>
-            <Button
-              key="copy"
-              type="primary"
-              disabled={diagnosing}
-              icon={diagnosisCopied ? <CheckCircleFilled /> : <CopyOutlined />}
-            >
-              {t('config_page.advanced_setting.copy_content')}
-            </Button>
-          </CopyToClipboard>
+          <Button
+            key="copy"
+            type="primary"
+            disabled={diagnosing}
+            icon={diagnosisCopied ? <CheckCircleFilled /> : <CopyOutlined />}
+            onClick={handleCopyDiagnosis}
+          >
+            {t('config_page.advanced_setting.copy_content')}
+          </Button>
           <Button
             key="link"
             type="primary"

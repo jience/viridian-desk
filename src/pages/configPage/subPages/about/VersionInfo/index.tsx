@@ -1,4 +1,4 @@
-import { useMemo, useState, type FC } from 'react';
+import { useCallback, useMemo, useState, type FC } from 'react';
 import style from './index.module.scss';
 import { useAppSelector } from '@/store';
 import { selectIsThin } from '@/store/feature/terminal';
@@ -6,11 +6,11 @@ import { Button, Tag } from '@/ui';
 import { CheckCircleFilled, CopyOutlined, RocketOutlined } from '@/ui/icons';
 import { useTranslation } from 'react-i18next';
 import DownloadModal from '@/components/DownloadModal';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import type { FetchUpdateResp } from '@/native/interfaces/app_updates';
 import { bridge } from '@/native';
 import type { GetClientAboutResp } from '@/native/interfaces/terminal';
 import { SettingsGroup, SettingsMetric, SettingsRow } from '../../../components';
+import { copyText } from '@/utils/clipboard';
 
 type PendingAboutKey =
   | 'client_type'
@@ -81,40 +81,51 @@ export const VersionInfo: FC<VersionInfoProps> = (props) => {
     setDownloadData(params);
   };
 
-  const handleClientIdCopy = () => {
+  const handleClientIdCopy = useCallback(async () => {
+    await copyText(aboutInfo?.clientId || '');
     setClientIdCopied(true);
     setTimeout(() => {
       setClientIdCopied(false);
     }, 2000);
-  };
+  }, [aboutInfo?.clientId]);
 
-  const handleBuildIdCopy = () => {
+  const handleBuildIdCopy = useCallback(async () => {
+    await copyText(aboutInfo?.buildId || '-');
     setBuildIdCopied(true);
     setTimeout(() => {
       setBuildIdCopied(false);
     }, 2000);
-  };
+  }, [aboutInfo?.buildId]);
 
   const subTitle = useMemo(() => {
-    const clientIdText = aboutInfo?.clientId || '';
     const buildIdText = aboutInfo?.buildId || '-';
     return (
       <div className={style.subTitleWrapper}>
         <div className={style.subTitleItem}>
           <span>{t('config_page.about.client_id', { clientId: aboutInfo?.clientId || '-' })}</span>
-          <CopyToClipboard text={clientIdText} onCopy={handleClientIdCopy}>
-            {clientIdCopied ? <CheckCircleFilled /> : <CopyOutlined />}
-          </CopyToClipboard>
+          <Button
+            aria-label={t('config_page.advanced_setting.copy_content')}
+            className={style.copyInlineButton}
+            icon={clientIdCopied ? <CheckCircleFilled /> : <CopyOutlined />}
+            size="small"
+            type="text"
+            onClick={handleClientIdCopy}
+          />
         </div>
         <div className={style.subTitleItem}>
           <span>{t('config_page.about.build_id', { buildId: buildIdText })}</span>
-          <CopyToClipboard text={buildIdText} onCopy={handleBuildIdCopy}>
-            {buildIdCopied ? <CheckCircleFilled /> : <CopyOutlined />}
-          </CopyToClipboard>
+          <Button
+            aria-label={t('config_page.advanced_setting.copy_content')}
+            className={style.copyInlineButton}
+            icon={buildIdCopied ? <CheckCircleFilled /> : <CopyOutlined />}
+            size="small"
+            type="text"
+            onClick={handleBuildIdCopy}
+          />
         </div>
       </div>
     );
-  }, [aboutInfo, clientIdCopied, buildIdCopied, t]);
+  }, [aboutInfo, buildIdCopied, clientIdCopied, handleBuildIdCopy, handleClientIdCopy, t]);
 
   return (
     <div className={style.versionInfoWrapper}>

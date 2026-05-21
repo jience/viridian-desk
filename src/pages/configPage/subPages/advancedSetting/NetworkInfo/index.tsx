@@ -1,7 +1,6 @@
 import './index.scss';
-import { useEffect, useMemo, useRef, useState, type FC } from 'react';
+import { useEffect, useMemo, useRef, useState, type FC, type MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { Button, message } from '@/ui';
 import InfoTable from '@/components/InfoTable';
 import { CheckCircleOutlined, CopyOutlined, EditOutlined } from '@/ui/icons';
@@ -11,6 +10,7 @@ import { EditNetModal, type EditNetModalRef, type EditNetModalReqType } from './
 import type { NetProbeItemRender } from '@/native/interfaces/cmd';
 import { bridge } from '@/native';
 import { SettingsRow } from '../../../components';
+import { copyText } from '@/utils/clipboard';
 
 type PendingNetworkInfoKey = 'network_info_description';
 
@@ -88,11 +88,17 @@ export const NetworkInfo: FC = () => {
     }
   };
 
-  const handleOnCopy = () => {
+  const markNetCopied = () => {
     setNetCopied(true);
     setTimeout(() => {
       setNetCopied(false);
     }, 2000);
+  };
+
+  const handleCopyNetworkInfo = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    await copyText(copyIpMacInfo);
+    markNetCopied();
   };
 
   useEffect(() => {
@@ -107,15 +113,13 @@ export const NetworkInfo: FC = () => {
         title={t('config_page.advanced_setting.network_info')}
         description={networkInfo?.name || tPending('network_info_description')}
         action={
-          <CopyToClipboard text={copyIpMacInfo} onCopy={handleOnCopy}>
-            <Button
-              size="small"
-              icon={netCopied ? <CheckCircleOutlined /> : <CopyOutlined />}
-              onClick={(e: any) => e.stopPropagation()}
-            >
-              {t('config_page.advanced_setting.copy_content')}
-            </Button>
-          </CopyToClipboard>
+          <Button
+            size="small"
+            icon={netCopied ? <CheckCircleOutlined /> : <CopyOutlined />}
+            onClick={handleCopyNetworkInfo}
+          >
+            {t('config_page.advanced_setting.copy_content')}
+          </Button>
         }
       >
         <InfoTable

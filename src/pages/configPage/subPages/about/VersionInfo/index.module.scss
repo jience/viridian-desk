@@ -56,6 +56,19 @@
   }
 }
 
+.copy-inline-button {
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0;
+  color: var(--settings-page-muted);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--settings-page-accent-strong);
+  }
+}
+
 .version-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

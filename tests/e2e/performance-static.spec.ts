@@ -878,6 +878,24 @@ test('uses a lightweight local request hook instead of the ahooks runtime', () =
   expect(requestHookSource).toContain('loading,');
 });
 
+test('uses the native clipboard helper instead of a React copy dependency', () => {
+  const packageJson = source('package.json');
+  const clipboardHelperPath = 'src/utils/clipboard.ts';
+  const clipboardConsumers = [
+    source('src/pages/configPage/subPages/advancedSetting/NetworkInfo/index.tsx'),
+    source('src/pages/configPage/subPages/about/VersionInfo/index.tsx'),
+    source('src/pages/configPage/subPages/advancedSetting/Diagnosis/DiagnosisModal/index.tsx'),
+  ].join('\n');
+
+  expect(packageJson).not.toContain('react-copy-to-clipboard');
+  expect(clipboardConsumers).not.toContain('CopyToClipboard');
+  expect(clipboardConsumers).not.toContain('react-copy-to-clipboard');
+  expect(clipboardConsumers).toContain("from '@/utils/clipboard'");
+  expect(existsSync(join(process.cwd(), clipboardHelperPath)), clipboardHelperPath).toBe(true);
+  expect(source(clipboardHelperPath)).toContain('navigator.clipboard.writeText');
+  expect(source(clipboardHelperPath)).toContain("document.execCommand('copy')");
+});
+
 test('removes slider verification assets from the login client', () => {
   expect(existsSync(join(process.cwd(), 'src/components/SliderVerify'))).toBe(false);
   expect(existsSync(join(process.cwd(), 'src/assets/images/verify'))).toBe(false);
