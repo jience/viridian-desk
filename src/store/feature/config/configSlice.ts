@@ -4,10 +4,12 @@ import type { AppState } from '@/store';
 import i18next from 'i18next';
 import { bridge } from '@/native';
 import type { LanguageType, ThemeType } from '@/native/interfaces/config';
+import { patchCachedConfig, writeCachedConfig } from './configCache';
 
 export const fetchConfigInfo = createAsyncThunk('config/fetchConfigInfo', async () => {
   const { data } = await bridge.config.getAppConf();
   await i18next.changeLanguage(data.language);
+  writeCachedConfig(data);
   return data;
 });
 
@@ -25,6 +27,7 @@ export const configDeveloperMode = createAsyncThunk(
  */
 export const configTheme = createAsyncThunk('config/configTheme', async (theme: ThemeType) => {
   await bridge.config.setTheme(theme);
+  patchCachedConfig({ theme });
   return theme;
 });
 
@@ -36,6 +39,7 @@ export const configLanguage = createAsyncThunk(
   async (language: LanguageType) => {
     await bridge.config.setLanguage(language);
     await i18next.changeLanguage(language);
+    patchCachedConfig({ language });
     return language;
   },
 );

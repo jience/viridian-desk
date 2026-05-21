@@ -1,7 +1,8 @@
 import { LanguageType, LogLevel, ThemeType } from '@/native/interfaces/config';
+import { readCachedConfig } from './configCache';
 import type { ConfigState } from './types';
 
-export const initState: ConfigState = {
+const defaultState: ConfigState = {
   theme: ThemeType.LIGHT,
   auto_update: false,
   auto_start: false,
@@ -19,4 +20,9 @@ export const initState: ConfigState = {
     path: '',
     rotation_strategy: 1,
   },
+};
+
+export const initState: ConfigState = {
+  ...defaultState,
+  ...readCachedConfig(),
 };

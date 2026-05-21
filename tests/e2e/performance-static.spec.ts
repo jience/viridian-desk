@@ -49,6 +49,7 @@ test('loads application detail modal only when opened', () => {
 
 test('keeps the login page local-account only', () => {
   const loginPageSource = source('src/pages/login/LoginPage.tsx');
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
   const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
   const removedLoginPaths = [
     'src/pages/login/LoginFormItems',
@@ -69,7 +70,7 @@ test('keeps the login page local-account only', () => {
   expect(loginPageSource).not.toContain('selectSmsResetPasswordSwitch');
   expect(loginPageSource).not.toContain('selectCurrentLoginType');
   expect(loginPageSource).not.toContain('isLocalPhoneLogin');
-  expect(loginPageSource).toContain('UsernamePwd');
+  expect(loginAuthPanelSource).toContain('UsernamePwd');
 
   expect(loginHandlerSource).toContain('authType: LoginAuthType.LOCAL');
   expect(loginHandlerSource).not.toContain('selectCurrentLoginType');
@@ -97,8 +98,11 @@ test('keeps login route outside the authenticated client layout', () => {
   expect(clientLayoutBlock).not.toContain('<LoginPage />');
 });
 
-test('loads saved config before rendering the lightweight login route', () => {
+test('starts saved config loading without blocking the lightweight login route', () => {
   const routerSource = source('src/router/index.tsx');
+  const configInitSource = source('src/store/feature/config/initState.ts');
+  const configSliceSource = source('src/store/feature/config/configSlice.ts');
+  const i18nSource = source('src/utils/i18n.ts');
   const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
   const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
   const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
@@ -107,10 +111,18 @@ test('loads saved config before rendering the lightweight login route', () => {
   expect(preAuthLoaderEnd).toBeGreaterThan(preAuthLoaderStart);
   expect(preAuthLoaderBlock).toContain('fetchConfigInfo');
   expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
+  expect(preAuthLoaderBlock).not.toContain('await ');
+  expect(preAuthLoaderBlock).not.toContain('Promise.all');
+  expect(preAuthLoaderBlock).toContain('window.setTimeout');
+  expect(preAuthLoaderBlock).toContain('return null');
+  expect(configInitSource).toContain('readCachedConfig');
+  expect(configSliceSource).toContain('writeCachedConfig');
+  expect(i18nSource).toContain('readCachedConfig');
+  expect(i18nSource).toContain('lng: cachedLanguage');
   expect(routerSource).toContain('loader: preAuthConfigLoader');
 });
 
-test('loads saved gateway selection before rendering the lightweight login route', () => {
+test('starts saved gateway selection loading without blocking the lightweight login route', () => {
   const routerSource = source('src/router/index.tsx');
   const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
   const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
@@ -119,9 +131,12 @@ test('loads saved gateway selection before rendering the lightweight login route
   expect(routerSource).toContain('fetchGatewayList');
   expect(preAuthLoaderBlock).toContain('fetchGatewayList');
   expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
+  expect(preAuthLoaderBlock).not.toContain('await ');
+  expect(preAuthLoaderBlock).not.toContain('Promise.all');
+  expect(preAuthLoaderBlock).toContain('window.setTimeout');
 });
 
-test('loads gateway online status before rendering the lightweight login route', () => {
+test('starts gateway online status loading without blocking the lightweight login route', () => {
   const routerSource = source('src/router/index.tsx');
   const gatewaySource = source('src/store/feature/gateway/gatewaySlice.ts');
   const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
@@ -134,6 +149,9 @@ test('loads gateway online status before rendering the lightweight login route',
   expect(gatewaySource).toContain('state.connected = action.payload');
   expect(preAuthLoaderBlock).toContain('fetchClientOnlineStatus');
   expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
+  expect(preAuthLoaderBlock).not.toContain('await ');
+  expect(preAuthLoaderBlock).not.toContain('Promise.all');
+  expect(preAuthLoaderBlock).toContain('window.setTimeout');
   expect(clientLayoutSource).toContain('dispatch(fetchClientOnlineStatus())');
 });
 
@@ -228,13 +246,13 @@ test('keeps the final server action menu from being clipped', () => {
 });
 
 test('shows restrained icons on login status labels', () => {
-  const loginPageSource = source('src/pages/login/LoginPage.tsx');
+  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
   const loginPageStyles = source('src/pages/login/LoginPage.scss');
 
-  expect(loginPageSource).toContain('auth-page__status-label');
-  expect(loginPageSource).toContain('icon-hosts');
-  expect(loginPageSource).toContain('icon-net');
-  expect(loginPageSource).toContain('icon-key');
+  expect(loginBrandPanelSource).toContain('auth-page__status-label');
+  expect(loginBrandPanelSource).toContain('icon-hosts');
+  expect(loginBrandPanelSource).toContain('icon-net');
+  expect(loginBrandPanelSource).toContain('icon-key');
   expect(loginPageStyles).toContain('.auth-page__status-label');
   expect(loginPageStyles).toContain('gap: 6px');
   expect(loginPageStyles).toContain('font-size: 14px');
@@ -311,9 +329,9 @@ test('allows login text fields to avoid controlled React value writes while typi
 });
 
 test('keeps login key handling off the per-character DOM query path', () => {
-  const loginPageSource = source('src/pages/login/LoginPage.tsx');
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
 
-  expect(loginPageSource).toContain("if (event.key !== 'Enter') return;");
+  expect(loginAuthPanelSource).toContain("if (event.key !== 'Enter') return;");
 });
 
 test('keeps login enter repeat guard out of React state updates', () => {
@@ -325,10 +343,10 @@ test('keeps login enter repeat guard out of React state updates', () => {
 });
 
 test('keeps the login form branch out of gateway status updates', () => {
-  const loginPageSource = source('src/pages/login/LoginPage.tsx');
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
 
-  expect(loginPageSource).toContain('<UsernamePwd formIns={form} />');
-  expect(loginPageSource).not.toContain('LoginFormItems');
+  expect(loginAuthPanelSource).toContain('<UsernamePwd formIns={form} />');
+  expect(loginAuthPanelSource).not.toContain('LoginFormItems');
 });
 
 test('fetches terminal info after login before permission route selection', () => {
@@ -349,6 +367,24 @@ test('avoids duplicate terminal bootstrap after login success', () => {
 
 test('keeps the local username password form memoized away from parent shell renders', () => {
   expect(source('src/pages/login/UsernamePwd/index.tsx')).toContain('memo(');
+});
+
+test('keeps the login page shell split away from live auth and gateway state', () => {
+  const loginPageSource = source('src/pages/login/LoginPage.tsx');
+  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
+
+  expect(loginPageSource).toContain('LoginBrandPanel');
+  expect(loginPageSource).toContain('LoginAuthPanel');
+  expect(loginPageSource).not.toContain('useLoginHandler');
+  expect(loginPageSource).not.toContain('useAppSelector');
+  expect(loginPageSource).not.toContain('selectConnected');
+  expect(loginPageSource).not.toContain('selectAutoGateway');
+  expect(loginPageSource).not.toContain('Form.useForm');
+
+  expect(loginBrandPanelSource).toContain('memo(');
+  expect(loginAuthPanelSource).toContain('memo(');
+  expect(loginAuthPanelSource).toContain('<UsernamePwd formIns={form} />');
 });
 
 test('loads the assistant panel only when the user opens it', () => {

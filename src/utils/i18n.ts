@@ -4,6 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import dayjs from 'dayjs';
 import { LanguageType, type LanguageType as SupportedLanguage } from '@/native/interfaces/config';
+import { readCachedConfig } from '@/store/feature/config/configCache';
 
 type LocaleNamespace = 'translation' | 'common' | 'assistant';
 type LocaleModule = Promise<{ default: Record<string, unknown> }>;
@@ -33,6 +34,9 @@ const isSupportedLanguage = (language?: string): language is SupportedLanguage =
   return supportedLanguages.includes(language as SupportedLanguage);
 };
 
+const cachedConfigLanguage = readCachedConfig().language;
+const cachedLanguage = isSupportedLanguage(cachedConfigLanguage) ? cachedConfigLanguage : undefined;
+
 const isLocaleNamespace = (namespace?: string): namespace is LocaleNamespace => {
   return localeNamespaces.includes(namespace as LocaleNamespace);
 };
@@ -53,6 +57,7 @@ i18next
     nsSeparator: '::',
     keySeparator: false,
     debug: import.meta.env.DEV,
+    lng: cachedLanguage,
     fallbackLng: LanguageType.ZH_CN,
     interpolation: {
       escapeValue: false, // React 已经自动防止 XSS，无需再次转义

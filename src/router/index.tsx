@@ -87,12 +87,13 @@ const createAppRoutes = ({
   { path: '*', element: routeElement(<EmptyPage />) },
 ];
 
-const preAuthConfigLoader = async () => {
-  await Promise.all([
-    appStore.dispatch(fetchConfigInfo()),
-    appStore.dispatch(fetchGatewayList()),
-    appStore.dispatch(fetchClientOnlineStatus()),
-  ]);
+const preAuthConfigLoader = () => {
+  appStore.dispatch(setNetwork(navigator.onLine));
+  window.setTimeout(() => {
+    void appStore.dispatch(fetchConfigInfo());
+    void appStore.dispatch(fetchGatewayList());
+    void appStore.dispatch(fetchClientOnlineStatus());
+  }, 0);
   return null;
 };
 
