@@ -5,12 +5,15 @@ import { UiThemeProvider } from '@/ui/theme/theme-provider';
 import { logger } from '@/utils/logger';
 import { ErrorBoundary } from '@/ui/shell/error-boundary';
 import { RouteFallback } from '@/ui/shell/route-fallback';
+import { setupViewportScale } from '@/utils/setupViewportScale';
 
 const IS_THIN_CLIENT = import.meta.env.TAURI_IS_THIN_CLIENT === 'true';
 
 function App() {
   useEffect(() => {
     logger.debug('Client is thin: ?', IS_THIN_CLIENT);
+    const disposeViewportScale = setupViewportScale();
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'F5' || e.key === 'F12') {
         e.preventDefault();
@@ -25,6 +28,7 @@ function App() {
     window.addEventListener('contextmenu', handleContextMenu);
 
     return () => {
+      disposeViewportScale();
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('contextmenu', handleContextMenu);
     };

@@ -32,62 +32,6 @@ const ClientLayout = () => {
   const msgModalShow = useAppSelector(selectMsgModalShow);
   const msgId = useAppSelector(selectMsgId);
 
-  const resize = () => {
-    const docEl = document.documentElement;
-    const dpr = window.devicePixelRatio || 1;
-
-    function setBodyFontSize() {
-      if (document.body) {
-        document.body.style.fontSize = 12 * dpr + 'px';
-      } else {
-        document.addEventListener('DOMContentLoaded', setBodyFontSize);
-      }
-    }
-    setBodyFontSize();
-
-    function setRemUnit() {
-      const rem = docEl.clientWidth / 12;
-
-      if (window.innerWidth <= 1000) {
-        docEl.style.fontSize = 100 + 'px';
-      } else {
-        docEl.style.fontSize = rem + 'px';
-      }
-    }
-
-    setRemUnit();
-
-    const handlePageShow = (e: PageTransitionEvent) => {
-      if (e.persisted) {
-        setRemUnit();
-      }
-    };
-
-    window.addEventListener('resize', setRemUnit);
-    window.addEventListener('pageshow', handlePageShow);
-
-    if (dpr >= 2) {
-      const fakeBody = document.createElement('body');
-      const testElement = document.createElement('div');
-      testElement.style.border = '.5px solid transparent';
-      fakeBody.appendChild(testElement);
-      docEl.appendChild(fakeBody);
-      if (testElement.offsetHeight === 1) {
-        docEl.classList.add('hairlines');
-      }
-      docEl.removeChild(fakeBody);
-    }
-
-    return () => {
-      window.removeEventListener('resize', setRemUnit);
-      window.removeEventListener('pageshow', handlePageShow);
-    };
-  };
-
-  useEffect(() => {
-    return resize();
-  }, []);
-
   useEffect(() => {
     globalEmitter.on('api/error', (e) => {
       const id = `error_code.${e.errorCode}`;

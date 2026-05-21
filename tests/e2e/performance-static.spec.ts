@@ -107,6 +107,17 @@ test('keeps login window controls local to the lightweight login route', () => {
   expect(loginPageStyles).toContain('.auth-page__controls');
 });
 
+test('keeps viewport rem scaling available before authenticated layout loads', () => {
+  const viewportScalePath = 'src/utils/setupViewportScale.ts';
+  const appSource = source('src/App.tsx');
+  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
+
+  expect(existsSync(join(process.cwd(), viewportScalePath)), viewportScalePath).toBe(true);
+  expect(appSource).toContain('setupViewportScale');
+  expect(clientLayoutSource).not.toContain('docEl.clientWidth / 12');
+  expect(clientLayoutSource).not.toContain('setBodyFontSize');
+});
+
 test('keeps the login typing path free of expensive live filters', () => {
   const loginCriticalStyles = [
     source('src/pages/login/LoginPage.scss'),
