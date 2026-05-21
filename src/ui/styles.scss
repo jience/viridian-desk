@@ -600,6 +600,50 @@
   right: 0;
 }
 
+.vdui-dropdown--bottom,
+.vdui-dropdown--bottomRight {
+  top: calc(100% + 8px);
+  right: 0;
+  bottom: auto;
+  left: auto;
+}
+
+.vdui-dropdown--bottomLeft {
+  top: calc(100% + 8px);
+  right: auto;
+  bottom: auto;
+  left: 0;
+}
+
+.vdui-dropdown--bottomCenter {
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.vdui-dropdown--top,
+.vdui-dropdown--topCenter {
+  top: auto;
+  right: auto;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.vdui-dropdown--topRight {
+  top: auto;
+  right: 0;
+  bottom: calc(100% + 8px);
+  left: auto;
+}
+
+.vdui-dropdown--topLeft {
+  top: auto;
+  right: auto;
+  bottom: calc(100% + 8px);
+  left: 0;
+}
+
 .vdui-dropdown-menu-item,
 .vdui-menu-item,
 .vdui-menu > button {

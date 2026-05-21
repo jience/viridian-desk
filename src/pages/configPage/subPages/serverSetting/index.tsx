@@ -230,7 +230,7 @@ export default function ServerSetting() {
             <p>{tPending('empty_description')}</p>
           </div>
         ) : (
-          gatewayList.map((g) => {
+          gatewayList.map((g, index) => {
             const address =
               gatewayAddrShowSwitch === 'Enabled'
                 ? `${g.address}:${g.port}`
@@ -249,7 +249,12 @@ export default function ServerSetting() {
                     <SettingsStatus>{tPending('available_gateway')}</SettingsStatus>
                   )
                 }
-                action={<DropdownBtn options={generateMenus(g)}></DropdownBtn>}
+                action={
+                  <DropdownBtn
+                    options={generateMenus(g)}
+                    placement={index === gatewayList.length - 1 ? 'topRight' : 'bottomRight'}
+                  />
+                }
               >
                 <div className="server-setting-gateway-meta">
                   <span>

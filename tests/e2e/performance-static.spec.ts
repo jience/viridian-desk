@@ -101,6 +101,23 @@ test('keeps the login page hero and footer controls minimal', () => {
   expect(footerStyles).not.toContain('login-footer__action--unread');
 });
 
+test('keeps the final server action menu from being clipped', () => {
+  const serverSettingSource = source('src/pages/configPage/subPages/serverSetting/index.tsx');
+  const serverSettingStyles = source('src/pages/configPage/subPages/serverSetting/index.scss');
+  const uiSource = source('src/ui/index.tsx');
+  const uiStyles = source('src/ui/styles.scss');
+
+  expect(serverSettingSource).toContain('gatewayList.map((g, index)');
+  expect(serverSettingSource).toContain(
+    "placement={index === gatewayList.length - 1 ? 'topRight' : 'bottomRight'}",
+  );
+  expect(serverSettingStyles).toContain('.vd-settings-group__content');
+  expect(serverSettingStyles).toContain('overflow: visible');
+  expect(uiSource).toContain("`vdui-dropdown--${placement}`");
+  expect(uiStyles).toContain('.vdui-dropdown--topRight');
+  expect(uiStyles).toContain('bottom: calc(100% + 8px)');
+});
+
 test('shows restrained icons on login status labels', () => {
   const loginPageSource = source('src/pages/login/LoginPage.tsx');
   const loginPageStyles = source('src/pages/login/LoginPage.scss');

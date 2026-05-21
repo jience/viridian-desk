@@ -1029,7 +1029,7 @@ export function AutoComplete({ children, options, onSelect, showSearch }: Select
   );
 }
 
-export function Dropdown({ menu, children, classNames }: any) {
+export function Dropdown({ menu, children, classNames, placement = 'bottomRight' }: any) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLSpanElement>(null);
   const shouldFocusMenuRef = useRef(false);
@@ -1122,7 +1122,15 @@ export function Dropdown({ menu, children, classNames }: any) {
     >
       {child}
       {open && (
-        <div className={cn('vdui-dropdown', classNames?.root, menu?.className)} role="menu">
+        <div
+          className={cn(
+            'vdui-dropdown',
+            `vdui-dropdown--${placement}`,
+            classNames?.root,
+            menu?.className,
+          )}
+          role="menu"
+        >
           {(menu?.items || []).map((item: ItemType) => (
             <button
               key={String(item.key)}
