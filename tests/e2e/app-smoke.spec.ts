@@ -57,6 +57,29 @@ test('renders login page shell', async ({ page }) => {
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });
 
+test('keeps login layout scaled to the desktop viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 820 });
+  await page.goto('/login');
+
+  const rootFontSize = await page.evaluate(() =>
+    Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
+  );
+  const heroBox = await page.locator('.auth-page__hero h1').boundingBox();
+  const cardBox = await page.locator('.auth-page__card').boundingBox();
+
+  if (!heroBox || !cardBox) {
+    throw new Error('Login layout was not measurable');
+  }
+
+  expect(rootFontSize).toBeGreaterThan(80);
+  expect(heroBox.width).toBeGreaterThan(500);
+  expect(cardBox.width).toBeGreaterThan(360);
+  expect(cardBox.x).toBeGreaterThan(heroBox.x + heroBox.width);
+  await expect(page.locator('.auth-page')).toBeInViewport();
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
 test('renders pre-login settings route', async ({ page }) => {
   await page.goto('/configPage/serverSetting');
 
