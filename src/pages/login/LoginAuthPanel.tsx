@@ -20,6 +20,14 @@ const LoginAuthPanelComponent = () => {
     id: 'LocalAuthLogin',
     defaultMessage: '本地账号',
   });
+  const panelTitle = formatMessage({
+    id: 'LoginPanelTitle',
+    defaultMessage: '欢迎回来',
+  });
+  const panelSubtitle = formatMessage({
+    id: 'LoginPanelSubtitle',
+    defaultMessage: '安全访问你的工作空间',
+  });
 
   const canSubmit = connected && network;
 
@@ -57,8 +65,8 @@ const LoginAuthPanelComponent = () => {
       <div className="auth-page__card">
         <div className="auth-page__card-heading">
           <div>
-            <h2>{formatMessage({ id: 'LOGIN' })}</h2>
-            <p>{localLoginLabel}</p>
+            <h2>{panelTitle}</h2>
+            <p>{panelSubtitle}</p>
           </div>
         </div>
 
@@ -77,6 +85,10 @@ const LoginAuthPanelComponent = () => {
             {loginLoading && <span className="auth-page__submit-spinner" />}
             {formatMessage({ id: loginLoading ? 'LOGING' : 'LOGIN' })}
           </Button>
+
+          <div className="auth-page__mode-divider" aria-label={localLoginLabel}>
+            <span>{localLoginLabel}</span>
+          </div>
         </div>
       </div>
     </section>

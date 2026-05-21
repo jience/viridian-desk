@@ -41,6 +41,7 @@ const UsernamePwdComponent = (_props: UsernamePwdProps) => {
       <Form.Item
         name="loginName"
         className="basic-form-item username-input-group"
+        label={t('login_page.username_label')}
         liveValue={false}
         rules={formRules['loginName']}
       >
@@ -56,6 +57,7 @@ const UsernamePwdComponent = (_props: UsernamePwdProps) => {
       <Form.Item
         name="password"
         className="basic-form-item"
+        label={t('login_page.password_label')}
         liveValue={false}
         rules={formRules['password']}
       >

@@ -87,6 +87,26 @@ test('keeps the login page local-account only', () => {
   }
 });
 
+test('keeps the login auth panel aligned with the console reference', () => {
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
+  const usernamePwdSource = source('src/pages/login/UsernamePwd/index.tsx');
+  const loginStyles = source('src/pages/login/LoginPage.scss');
+
+  expect(loginAuthPanelSource).toContain('LoginPanelTitle');
+  expect(loginAuthPanelSource).toContain('LoginPanelSubtitle');
+  expect(loginAuthPanelSource).toContain('auth-page__mode-divider');
+  expect(usernamePwdSource).toContain("label={t('login_page.username_label')}");
+  expect(usernamePwdSource).toContain("label={t('login_page.password_label')}");
+  expect(loginStyles).toContain('grid-template-columns: minmax(0, 0.56fr) minmax(390px, 0.44fr);');
+  expect(loginStyles).toContain('width: min(100%, 410px);');
+  expect(loginStyles).toContain('min-height: 54px;');
+  expect(loginStyles).toContain('height: 54px;');
+  expect(loginStyles).toContain('font-size: 26px;');
+  expect(loginStyles).toContain('.auth-page__mode-divider');
+  expect(loginStyles).not.toContain('min-height: min(760px, calc(100vh - 164px));');
+  expect(loginStyles).not.toContain('.auth-page__card::before');
+});
+
 test('removes deprecated non-local login copy and auth types from the client', () => {
   const removedLocaleKeys = [
     'OtherLoginTip',
