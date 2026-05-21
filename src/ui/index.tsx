@@ -397,6 +397,8 @@ export type FormInstance<T = AnyRecord> = {
   _register?: (name: string, rules?: RuleInput[]) => () => void;
   _subscribe?: (listener: () => void) => () => void;
   _subscribeField?: (name: string, listener: () => void) => () => void;
+  _notifyField?: (name: string) => void;
+  _setFieldValueSilently?: (name: keyof T | string, value: any) => void;
 };
 
 const normalizeRuleError = (error: any, fallback?: ReactNode): ReactNode => {
@@ -445,6 +447,12 @@ const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
     fieldListeners.get(name)?.forEach((listener) => listener());
     notify();
   };
+  const setValue = (name: keyof T | string, value: any, shouldNotify: boolean) => {
+    const key = String(name);
+    values[key] = value;
+    errors.delete(key);
+    if (shouldNotify) notifyField(key);
+  };
   const api: FormInstance<T> = {
     getFieldValue: (name) => values[String(name)],
     getFieldsValue: () => ({ ...values }) as T,
@@ -454,12 +462,7 @@ const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
       Object.keys(next).forEach((key) => errors.delete(key));
       Object.keys(next).forEach((key) => notifyField(key));
     },
-    setFieldValue: (name, value) => {
-      const key = String(name);
-      values[key] = value;
-      errors.delete(key);
-      notifyField(key);
-    },
+    setFieldValue: (name, value) => setValue(name, value, true),
     resetFields: (names) => {
       const changedKeys =
         names?.map(String) ??
@@ -527,6 +530,8 @@ const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
         }
       };
     },
+    _notifyField: (name) => notifyField(String(name)),
+    _setFieldValueSilently: (name, value) => setValue(name, value, false),
   };
   (api as any)._initial = initial;
   return api;
@@ -551,6 +556,7 @@ interface FormItemProps extends HTMLAttributes<HTMLDivElement> {
   label?: ReactNode;
   rules?: RuleInput[];
   valuePropName?: string;
+  liveValue?: boolean;
   children?: ReactNode;
   [key: string]: any;
 }
@@ -560,6 +566,7 @@ function FormItem({
   label,
   rules,
   valuePropName = 'value',
+  liveValue = true,
   children,
   className,
 }: FormItemProps) {
@@ -580,13 +587,22 @@ function FormItem({
     };
   }, [form, key, rules]);
 
+  const shouldWriteLiveValue = liveValue || valuePropName !== 'value';
+  const fieldValue = key && form ? form.getFieldValue(key) : undefined;
+  const valueProps =
+    key && form
+      ? shouldWriteLiveValue
+        ? { [valuePropName]: fieldValue ?? (valuePropName === 'checked' ? false : '') }
+        : { defaultValue: fieldValue ?? '' }
+      : {};
+
   const child =
     key && form && isValidElement(children)
       ? cloneElement(children as ReactElement<any>, {
           id: (children as ReactElement<any>).props.id ?? fieldId,
           'aria-invalid': hasError || undefined,
           'aria-describedby': hasError ? errorId : undefined,
-          [valuePropName]: form.getFieldValue(key) ?? (valuePropName === 'checked' ? false : ''),
+          ...valueProps,
           onChange: (...args: any[]) => {
             const event = args[0];
             const value =
@@ -595,8 +611,18 @@ function FormItem({
                 : event?.target
                   ? event.target.value
                   : event;
-            form.setFieldValue(key, value);
+            if (shouldWriteLiveValue) {
+              form.setFieldValue(key, value);
+            } else {
+              form._setFieldValueSilently?.(key, value);
+            }
             (children as ReactElement<any>).props.onChange?.(...args);
+          },
+          onBlur: (...args: any[]) => {
+            if (!shouldWriteLiveValue) {
+              form._notifyField?.(key);
+            }
+            (children as ReactElement<any>).props.onBlur?.(...args);
           },
         })
       : children;

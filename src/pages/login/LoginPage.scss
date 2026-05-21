@@ -45,10 +45,11 @@
       border-radius: 12px !important;
       color: var(--auth-text);
       background: color-mix(in srgb, var(--auth-panel-strong) 74%, transparent) !important;
+      outline: 2px solid transparent;
+      outline-offset: 1px;
       box-shadow: none;
       transition:
         border-color 180ms ease,
-        box-shadow 180ms ease,
         background-color 180ms ease;
     }
 
@@ -59,7 +60,8 @@
       .vdui-select:focus-within
     ) {
       border-color: color-mix(in srgb, var(--auth-accent) 42%, transparent) !important;
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--auth-accent) 13%, transparent) !important;
+      outline: 2px solid color-mix(in srgb, var(--auth-accent) 28%, transparent);
+      box-shadow: none !important;
     }
 
     :where(.vdui-input::placeholder) {

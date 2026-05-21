@@ -41,6 +41,7 @@ const UsernamePwdComponent = (_props: UsernamePwdProps) => {
       <Form.Item
         name="loginName"
         className="basic-form-item username-input-group"
+        liveValue={false}
         rules={formRules['loginName']}
       >
         <Input
@@ -52,7 +53,12 @@ const UsernamePwdComponent = (_props: UsernamePwdProps) => {
           onKeyUp={onKeyUp}
         />
       </Form.Item>
-      <Form.Item name="password" className="basic-form-item" rules={formRules['password']}>
+      <Form.Item
+        name="password"
+        className="basic-form-item"
+        liveValue={false}
+        rules={formRules['password']}
+      >
         <Input.Password
           placeholder={t('login_page.password_placeholder')}
           prefix={<i className="iconfont icon-lock form-prefix-icon" />}

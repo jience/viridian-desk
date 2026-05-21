@@ -90,6 +90,14 @@ test('keeps the login shell cheap to repaint on low-power devices', () => {
   expect(loginStyles).not.toContain('.auth-page__window::before');
 });
 
+test('keeps login input focus styles cheap to repaint while typing', () => {
+  const loginStyles = source('src/pages/login/LoginPage.scss');
+
+  expect(loginStyles).not.toContain('box-shadow 180ms ease');
+  expect(loginStyles).not.toContain('box-shadow: 0 0 0 3px');
+  expect(loginStyles).toContain('outline: 2px solid');
+});
+
 test('keeps the main Tauri window opaque for low-power Linux compositors', () => {
   const tauriConfig = source('src-tauri/tauri.conf.json');
 
@@ -104,6 +112,22 @@ test('notifies only changed form fields while typing', () => {
   expect(uiSource).toContain('notifyField');
   expect(uiSource).toContain('_subscribeField');
   expect(uiSource).not.toContain('form._subscribe?.(() => force((value) => value + 1))');
+});
+
+test('allows login text fields to avoid controlled React value writes while typing', () => {
+  const uiSource = source('src/ui/index.tsx');
+  const usernamePasswordSource = source('src/pages/login/UsernamePwd/index.tsx');
+
+  expect(uiSource).toContain('liveValue?: boolean');
+  expect(uiSource).toContain('_setFieldValueSilently');
+  expect(uiSource).toContain('defaultValue');
+  expect(usernamePasswordSource).toContain('liveValue={false}');
+});
+
+test('keeps login key handling off the per-character DOM query path', () => {
+  const loginPageSource = source('src/pages/login/LoginPage.tsx');
+
+  expect(loginPageSource).toContain("if (event.key !== 'Enter') return;");
 });
 
 test('keeps the login form branch memoized during gateway status updates', () => {

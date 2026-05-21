@@ -125,15 +125,15 @@ export default function LoginPage() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Enter') return;
+
       const target = event.target instanceof HTMLElement ? event.target : null;
       const isDialogInput = target?.closest('.vdui-modal-root, .vdui-drawer, [role="dialog"]');
 
-      if (event.key === 'Enter') {
-        if (event.defaultPrevented || event.isComposing || isDialogInput) return;
+      if (event.defaultPrevented || event.isComposing || isDialogInput) return;
 
-        event.preventDefault();
-        handleSubmit();
-      }
+      event.preventDefault();
+      handleSubmit();
     };
 
     document.addEventListener('keydown', handleKeyDown);
