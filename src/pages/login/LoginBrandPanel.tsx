@@ -1,36 +1,50 @@
-import { useAppSelector } from '@/store';
-import { selectAutoGateway, selectConnected, selectNetwork } from '@/store/feature/gateway';
 import { useUiTheme } from '@/ui/theme/use-ui-theme';
 import { useMessageFormatter } from '@/utils/message-format';
+import { Bot } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import brandLogoDark from '@/assets/images/viridian_logo_with_text_dark.svg';
 import brandLogoLight from '@/assets/images/viridian_logo_with_text_light.svg';
+
+const LOGIN_FEATURE_CARDS = [
+  {
+    iconType: 'iconfont',
+    icon: 'icon-lock-o',
+    title: 'LoginFeatureSecureTitle',
+    titleDefault: '安全接入',
+    description: 'LoginFeatureSecureDescription',
+    descriptionDefault: '可信网关加密访问',
+    tag: 'LoginFeatureSecureTag',
+    tagDefault: 'TLS 保护',
+  },
+  {
+    iconType: 'iconfont',
+    icon: 'icon-desktop',
+    title: 'LoginFeatureWorkspaceTitle',
+    titleDefault: '统一工作空间',
+    description: 'LoginFeatureWorkspaceDescription',
+    descriptionDefault: '桌面、应用统一入口',
+    tag: 'LoginFeatureWorkspaceTag',
+    tagDefault: '桌面 + 应用',
+  },
+  {
+    iconType: 'lucide',
+    Icon: Bot,
+    title: 'LoginFeatureAssistantTitle',
+    titleDefault: '智能辅助',
+    description: 'LoginFeatureAssistantDescription',
+    descriptionDefault: '助手诊断连接问题',
+    tag: 'LoginFeatureAssistantTag',
+    tagDefault: 'AI / 诊断',
+  },
+] as const;
 
 const LoginBrandPanelComponent = () => {
   const { formatMessage } = useMessageFormatter();
   const { t } = useTranslation('common');
   const { resolvedTheme } = useUiTheme();
 
-  const connected = useAppSelector(selectConnected);
-  const network = useAppSelector(selectNetwork);
-  const autoGateway = useAppSelector(selectAutoGateway);
   const brandLogo = resolvedTheme === 'dark' ? brandLogoDark : brandLogoLight;
-
-  const localLoginLabel = formatMessage({
-    id: 'LocalAuthLogin',
-    defaultMessage: '本地账号',
-  });
-  const gatewayStatusLabel = !autoGateway
-    ? `${formatMessage({ id: 'PleaseSelect', defaultMessage: '请选择' })}${formatMessage({
-        id: 'GATEWAY',
-        defaultMessage: '服务器',
-      })}`
-    : !network
-      ? formatMessage({ id: 'NetworkError', defaultMessage: '网络异常' })
-      : connected
-        ? formatMessage({ id: 'Connected', defaultMessage: '已连接' })
-        : formatMessage({ id: 'Disconnected', defaultMessage: '未连接' });
 
   return (
     <section className="auth-page__brand-zone" aria-label={t('appName')}>
@@ -55,42 +69,39 @@ const LoginBrandPanelComponent = () => {
         <div className="auth-page__hero-rule" aria-hidden="true" />
 
         <div className="auth-page__status-grid">
-          <div className="auth-page__status-card">
-            <span className="auth-page__status-label">
-              <i className="iconfont icon-hosts" aria-hidden="true" />
-              {formatMessage({ id: 'GATEWAY', defaultMessage: '服务器' })}
-            </span>
-            <strong>{gatewayStatusLabel}</strong>
-            <small>
-              {autoGateway?.name ||
-                autoGateway?.address ||
-                formatMessage({ id: 'NoData', defaultMessage: '暂无数据' })}
-            </small>
-          </div>
-          <div className="auth-page__status-card">
-            <span className="auth-page__status-label">
-              <i className="iconfont icon-net" aria-hidden="true" />
-              {formatMessage({ id: 'Network', defaultMessage: '网络' })}
-            </span>
-            <strong>
-              {network
-                ? formatMessage({ id: 'Normal', defaultMessage: '正常' })
-                : formatMessage({ id: 'Abnormal', defaultMessage: '异常' })}
-            </strong>
-            <small>
-              {connected
-                ? formatMessage({ id: 'TlsProtected', defaultMessage: 'TLS 已保护' })
-                : formatMessage({ id: 'Disconnected', defaultMessage: '未连接' })}
-            </small>
-          </div>
-          <div className="auth-page__status-card">
-            <span className="auth-page__status-label">
-              <i className="iconfont icon-key" aria-hidden="true" />
-              {formatMessage({ id: 'LoginWay', defaultMessage: '登录方式' })}
-            </span>
-            <strong>1</strong>
-            <small>{localLoginLabel}</small>
-          </div>
+          {LOGIN_FEATURE_CARDS.map((feature) => {
+            const icon =
+              feature.iconType === 'lucide' ? (
+                <feature.Icon className="auth-page__feature-lucide" strokeWidth={2.1} />
+              ) : (
+                <i className={`iconfont ${feature.icon}`} />
+              );
+
+            return (
+              <article
+                className="auth-page__status-card auth-page__feature-card"
+                key={feature.title}
+              >
+                <span className="auth-page__feature-icon" aria-hidden="true">
+                  {icon}
+                </span>
+                <div className="auth-page__feature-copy">
+                  <strong>
+                    {formatMessage({ id: feature.title, defaultMessage: feature.titleDefault })}
+                  </strong>
+                  <small>
+                    {formatMessage({
+                      id: feature.description,
+                      defaultMessage: feature.descriptionDefault,
+                    })}
+                  </small>
+                </div>
+                <span className="auth-page__feature-tag">
+                  {formatMessage({ id: feature.tag, defaultMessage: feature.tagDefault })}
+                </span>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

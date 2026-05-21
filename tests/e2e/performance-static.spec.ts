@@ -150,6 +150,56 @@ test('keeps login hero copy aligned with the visual reference', () => {
   expect(enUSLocale.LoginSubTitle).toBe('workspaces without friction');
 });
 
+test('uses static product capability cards on the login brand panel', () => {
+  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
+  const loginStyles = source('src/pages/login/LoginPage.scss');
+  const zhCNLocale = JSON.parse(source('src/assets/locales/zh-CN.json'));
+  const zhTWLocale = JSON.parse(source('src/assets/locales/zh-TW.json'));
+  const enUSLocale = JSON.parse(source('src/assets/locales/en-US.json'));
+
+  expect(loginBrandPanelSource).toContain('LOGIN_FEATURE_CARDS');
+  expect(loginBrandPanelSource).toContain('LoginFeatureSecureTitle');
+  expect(loginBrandPanelSource).toContain('LoginFeatureWorkspaceTitle');
+  expect(loginBrandPanelSource).toContain('LoginFeatureAssistantTitle');
+  expect(loginBrandPanelSource).toContain('icon-lock-o');
+  expect(loginBrandPanelSource).toContain('icon-desktop');
+  expect(loginBrandPanelSource).toContain("import { Bot } from 'lucide-react';");
+  expect(loginBrandPanelSource).toContain("iconType: 'lucide'");
+  expect(loginBrandPanelSource).toContain('Icon: Bot');
+  expect(loginBrandPanelSource).not.toContain("icon: 'robot'");
+  expect(loginBrandPanelSource).not.toContain('icon-c_question-s');
+  expect(loginBrandPanelSource).not.toContain('useAppSelector');
+  expect(loginBrandPanelSource).not.toContain('selectAutoGateway');
+  expect(loginBrandPanelSource).not.toContain('selectConnected');
+  expect(loginBrandPanelSource).not.toContain('selectNetwork');
+  expect(loginStyles).toContain('grid-template-rows: auto auto minmax(0, 1fr);');
+  expect(loginStyles).toContain('align-self: end;');
+  expect(loginStyles).toContain('margin-top: clamp(50px, 7vh, 84px);');
+  expect(loginStyles).toContain('.auth-page__feature-icon');
+  expect(loginStyles).toContain('.auth-page__feature-lucide');
+  expect(loginStyles).not.toContain('.auth-page__robot-icon');
+  expect(loginStyles).toContain('.auth-page__feature-tag');
+
+  expect(zhCNLocale.LoginFeatureSecureTitle).toBe('安全接入');
+  expect(zhCNLocale.LoginFeatureSecureDescription).toBe('可信网关加密访问');
+  expect(zhCNLocale.LoginFeatureWorkspaceTitle).toBe('统一工作空间');
+  expect(zhCNLocale.LoginFeatureWorkspaceDescription).toBe('桌面、应用统一入口');
+  expect(zhCNLocale.LoginFeatureAssistantTitle).toBe('智能辅助');
+  expect(zhCNLocale.LoginFeatureAssistantDescription).toBe('助手诊断连接问题');
+  expect(zhTWLocale.LoginFeatureSecureTitle).toBe('安全接入');
+  expect(zhTWLocale.LoginFeatureSecureDescription).toBe('可信網關加密訪問');
+  expect(zhTWLocale.LoginFeatureWorkspaceTitle).toBe('統一工作空間');
+  expect(zhTWLocale.LoginFeatureWorkspaceDescription).toBe('桌面、應用統一入口');
+  expect(zhTWLocale.LoginFeatureAssistantTitle).toBe('智能輔助');
+  expect(zhTWLocale.LoginFeatureAssistantDescription).toBe('助手診斷連接問題');
+  expect(enUSLocale.LoginFeatureSecureTitle).toBe('Secure Access');
+  expect(enUSLocale.LoginFeatureSecureDescription).toBe('Trusted encrypted access');
+  expect(enUSLocale.LoginFeatureWorkspaceTitle).toBe('Unified Workspace');
+  expect(enUSLocale.LoginFeatureWorkspaceDescription).toBe('Desktops and apps in one place');
+  expect(enUSLocale.LoginFeatureAssistantTitle).toBe('Smart Assistance');
+  expect(enUSLocale.LoginFeatureAssistantDescription).toBe('Diagnose connection issues');
+});
+
 test('removes deprecated non-local login copy and auth types from the client', () => {
   const removedLocaleKeys = [
     'OtherLoginTip',
@@ -424,17 +474,22 @@ test('keeps the final server action menu from being clipped', () => {
   expect(uiStyles).toContain('bottom: calc(100% + 8px)');
 });
 
-test('shows restrained icons on login status labels', () => {
+test('shows restrained icons on login feature cards', () => {
   const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
   const loginPageStyles = source('src/pages/login/LoginPage.scss');
 
-  expect(loginBrandPanelSource).toContain('auth-page__status-label');
-  expect(loginBrandPanelSource).toContain('icon-hosts');
-  expect(loginBrandPanelSource).toContain('icon-net');
-  expect(loginBrandPanelSource).toContain('icon-key');
-  expect(loginPageStyles).toContain('.auth-page__status-label');
-  expect(loginPageStyles).toContain('gap: 6px');
-  expect(loginPageStyles).toContain('font-size: 14px');
+  expect(loginBrandPanelSource).toContain('auth-page__feature-icon');
+  expect(loginBrandPanelSource).toContain('icon-lock-o');
+  expect(loginBrandPanelSource).toContain('icon-desktop');
+  expect(loginBrandPanelSource).toContain("import { Bot } from 'lucide-react';");
+  expect(loginBrandPanelSource).toContain('Icon: Bot');
+  expect(loginBrandPanelSource).not.toContain("icon: 'robot'");
+  expect(loginBrandPanelSource).not.toContain('icon-c_question-s');
+  expect(loginPageStyles).toContain('.auth-page__feature-icon');
+  expect(loginPageStyles).toContain('.auth-page__feature-lucide');
+  expect(loginPageStyles).not.toContain('.auth-page__robot-icon');
+  expect(loginPageStyles).toContain('.auth-page__feature-tag');
+  expect(loginPageStyles).toContain('font-size: 17px');
 });
 
 test('keeps the login shell cheap to repaint on low-power devices', () => {
