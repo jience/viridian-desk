@@ -101,6 +101,19 @@ test('keeps the login page hero and footer controls minimal', () => {
   expect(footerStyles).not.toContain('login-footer__action--unread');
 });
 
+test('shows restrained icons on login status labels', () => {
+  const loginPageSource = source('src/pages/login/LoginPage.tsx');
+  const loginPageStyles = source('src/pages/login/LoginPage.scss');
+
+  expect(loginPageSource).toContain('auth-page__status-label');
+  expect(loginPageSource).toContain('icon-hosts');
+  expect(loginPageSource).toContain('icon-net');
+  expect(loginPageSource).toContain('icon-key');
+  expect(loginPageStyles).toContain('.auth-page__status-label');
+  expect(loginPageStyles).toContain('gap: 6px');
+  expect(loginPageStyles).toContain('font-size: 14px');
+});
+
 test('keeps the login shell cheap to repaint on low-power devices', () => {
   const loginStyles = source('src/pages/login/LoginPage.scss');
 

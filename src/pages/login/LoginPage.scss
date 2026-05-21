@@ -271,6 +271,20 @@
     white-space: nowrap;
   }
 
+  .auth-page__status-label {
+    display: inline-flex;
+    max-width: 100%;
+    align-items: center;
+    gap: 6px;
+
+    .iconfont {
+      flex: 0 0 auto;
+      color: color-mix(in srgb, var(--auth-muted) 82%, transparent);
+      font-size: 14px;
+      line-height: 1;
+    }
+  }
+
   strong {
     display: block;
     overflow: hidden;

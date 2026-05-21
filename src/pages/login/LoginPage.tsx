@@ -170,7 +170,10 @@ export default function LoginPage() {
 
             <div className="auth-page__status-grid">
               <div className="auth-page__status-card">
-                <span>{formatMessage({ id: 'GATEWAY', defaultMessage: '服务器' })}</span>
+                <span className="auth-page__status-label">
+                  <i className="iconfont icon-hosts" aria-hidden="true" />
+                  {formatMessage({ id: 'GATEWAY', defaultMessage: '服务器' })}
+                </span>
                 <strong>{gatewayStatusLabel}</strong>
                 <small>
                   {autoGateway?.name ||
@@ -179,7 +182,10 @@ export default function LoginPage() {
                 </small>
               </div>
               <div className="auth-page__status-card">
-                <span>{formatMessage({ id: 'Network', defaultMessage: '网络' })}</span>
+                <span className="auth-page__status-label">
+                  <i className="iconfont icon-net" aria-hidden="true" />
+                  {formatMessage({ id: 'Network', defaultMessage: '网络' })}
+                </span>
                 <strong>
                   {network
                     ? formatMessage({ id: 'Normal', defaultMessage: '正常' })
@@ -192,7 +198,10 @@ export default function LoginPage() {
                 </small>
               </div>
               <div className="auth-page__status-card">
-                <span>{formatMessage({ id: 'LoginWay', defaultMessage: '登录方式' })}</span>
+                <span className="auth-page__status-label">
+                  <i className="iconfont icon-key" aria-hidden="true" />
+                  {formatMessage({ id: 'LoginWay', defaultMessage: '登录方式' })}
+                </span>
                 <strong>{loginTypes?.length || 1}</strong>
                 <small>{loginWayKv[currentLoginWay]}</small>
               </div>
