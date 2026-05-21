@@ -661,6 +661,16 @@ test('keeps the login form branch out of gateway status updates', () => {
   expect(loginAuthPanelSource).not.toContain('LoginFormItems');
 });
 
+test('keeps the login submit path free of shared button runtime dependencies', () => {
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
+
+  expect(loginAuthPanelSource).not.toContain("@/ui/components/button");
+  expect(loginAuthPanelSource).not.toContain('<Button');
+  expect(loginAuthPanelSource).toContain('<button');
+  expect(loginAuthPanelSource).toContain('type="submit"');
+  expect(loginAuthPanelSource).toContain('className="auth-page__submit"');
+});
+
 test('reuses prepared terminal info after login before permission route selection', () => {
   const successHandlerSource = source('src/pages/login/hooks/useLoginSuccessHandler.ts');
   const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
@@ -868,6 +878,27 @@ test('keeps authenticated client bootstrap centralized outside ClientLayout rend
   expect(clientLayoutSource).not.toContain('getGateWays');
   expect(clientLayoutSource).not.toContain('getClientConfig');
   expect(existsSync(join(process.cwd(), sharedStatePath)), sharedStatePath).toBe(false);
+});
+
+test('stages authenticated bootstrap work after first paint on low-power devices', () => {
+  const routerSource = source('src/router/index.tsx');
+  const bootstrapStart = routerSource.indexOf('function scheduleAuthenticatedClientBootstrap()');
+  const bootstrapEnd = routerSource.indexOf('const rootRoutes', bootstrapStart);
+  const bootstrapBlock = routerSource.slice(bootstrapStart, bootstrapEnd);
+
+  expect(bootstrapBlock).toContain('scheduleAfterFirstPaint');
+  expect(bootstrapBlock).toContain('scheduleWhenIdle');
+  expect(bootstrapBlock).toContain('window.requestAnimationFrame');
+  expect(bootstrapBlock).toContain('window.requestIdleCallback');
+  expect(bootstrapBlock.indexOf('fetchGatewayList')).toBeLessThan(
+    bootstrapBlock.indexOf('fetchConfigInfo'),
+  );
+  expect(bootstrapBlock.indexOf('fetchClientOnlineStatus')).toBeLessThan(
+    bootstrapBlock.indexOf('fetchClientInfo'),
+  );
+  expect(bootstrapBlock).not.toContain(
+    'void appStore.dispatch(fetchConfigInfo());\n    void appStore.dispatch(fetchGatewayList());',
+  );
 });
 
 test('does not statically bundle every locale at startup', () => {

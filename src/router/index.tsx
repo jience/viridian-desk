@@ -111,16 +111,33 @@ function scheduleAuthenticatedClientBootstrap() {
   if (authenticatedClientBootstrapScheduled) return;
   authenticatedClientBootstrapScheduled = true;
 
-  window.setTimeout(() => {
+  const scheduleAfterFirstPaint = (task: () => void) => {
+    window.requestAnimationFrame(() => {
+      window.setTimeout(task, 0);
+    });
+  };
+
+  const scheduleWhenIdle = (task: () => void) => {
+    const requestIdle =
+      window.requestIdleCallback ??
+      ((callback: IdleRequestCallback) =>
+        window.setTimeout(() => callback({} as IdleDeadline), 180));
+    requestIdle(() => task(), { timeout: 1200 });
+  };
+
+  scheduleAfterFirstPaint(() => {
     const state = appStore.getState();
     if (!state.terminal) {
       void appStore.dispatch(fetchTerminalInfo());
     }
-    void appStore.dispatch(fetchConfigInfo());
     void appStore.dispatch(fetchGatewayList());
     void appStore.dispatch(fetchClientOnlineStatus());
+  });
+
+  scheduleWhenIdle(() => {
+    void appStore.dispatch(fetchConfigInfo());
     void appStore.dispatch(fetchClientInfo());
-  }, 0);
+  });
 }
 
 const rootRoutes: RouteObject[] = [

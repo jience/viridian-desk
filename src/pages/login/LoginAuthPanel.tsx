@@ -1,6 +1,5 @@
 import { useAppSelector } from '@/store';
 import { selectConnected, selectNetwork } from '@/store/feature/gateway';
-import { Button } from '@/ui/components/button';
 import { useMessageFormatter } from '@/utils/message-format';
 import { memo, type FormEvent, useCallback, useRef, useState } from 'react';
 import { useLoginHandler } from './hooks/useLoginHandler';
@@ -154,16 +153,15 @@ const LoginAuthPanelComponent = () => {
               )}
             </label>
 
-            <Button
+            <button
               aria-busy={loginLoading}
               className="auth-page__submit"
               disabled={!canSubmit || loginLoading}
-              size="lg"
               type="submit"
             >
               {loginLoading && <span className="auth-page__submit-spinner" />}
               {formatMessage({ id: loginLoading ? 'LOGING' : 'LOGIN' })}
-            </Button>
+            </button>
           </form>
 
           <div className="auth-page__mode-divider" aria-label={localLoginLabel}>
