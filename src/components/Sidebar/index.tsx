@@ -1,15 +1,8 @@
 import './index.scss';
 
-import ChangePhone from '@/components/ChangePhone';
-import ComModal from '@/components/ComModal';
-import DiffLoginTip from '@/components/DiffLoginTip';
-import PwdForm from '@/components/PwdForm';
-import UserInfo from '@/components/UserInfo';
 import sidebarLogo from '@/assets/images/logo.svg';
-import useRequest from '@/hooks/useRequest';
 import { bridge } from '@/native';
 import { LoginUserType } from '@/native/interfaces/api';
-import { changePasswordUser } from '@/services/user';
 import { useAppDispatch, useAppSelector } from '@/store';
 import {
   logoutCurrentUser,
@@ -25,14 +18,19 @@ import { authActionShow } from '@/utils/actionAuth';
 import { logger } from '@/utils/logger';
 import { LEGACY_PASSWORD_PREFIX } from '@/utils/passwordPrefix';
 import { Menu, message, Modal, Popover, Tooltip } from '@/ui';
-import { Buffer } from 'buffer';
 import { isEmpty } from 'lodash-es';
 import { Sparkles } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMessageFormatter } from '@/utils/message-format';
 import { useLocation, useNavigate } from 'react-router';
 import { initMenus as menus } from './initData';
+
+const ChangePhone = lazy(() => import('@/components/ChangePhone'));
+const ComModal = lazy(() => import('@/components/ComModal'));
+const DiffLoginTip = lazy(() => import('@/components/DiffLoginTip'));
+const PwdForm = lazy(() => import('@/components/PwdForm'));
+const UserInfo = lazy(() => import('@/components/UserInfo'));
 
 interface SidebarProps {
   assistantOpen?: boolean;
@@ -55,18 +53,7 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
   const currentUser = useAppSelector(selectCurrentUser);
 
   const [userBtnOpen, setUserBtnOpen] = useState(false);
-
-  // 修改密码
-  const { run: changePasswordUserRun, loading: isSubmitting } = useRequest(changePasswordUser, {
-    manual: true,
-    onSuccess: () => {
-      closeModal();
-      message.success({
-        content: intl.formatMessage({ id: 'SUCCESS_CHANGE_PASSWORD' }),
-      });
-      logout();
-    },
-  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [userInfoVisible, setUserInfoVisible] = useState(false);
   const [changePhoneVisible, setChangePhoneVisible] = useState(false);
@@ -183,6 +170,7 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
       ...data,
       visible: false,
     }));
+    closeModalCallback();
   }
 
   /**
@@ -194,7 +182,8 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
   }
 
   // 修改密码时，密码加密传参方式
-  const decodePwd = (str: any) => {
+  const decodePwd = async (str: any) => {
+    const { Buffer } = await import('buffer');
     const localDate = new Date().getTime();
     return Buffer.from(LEGACY_PASSWORD_PREFIX + str + '_' + localDate).toString('base64');
   };
@@ -202,13 +191,24 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
   const submitForm = () => {
     formRef.current
       .validateFields()
-      .then((values: any) => {
+      .then(async (values: any) => {
         const { oldPassword, newPassword, confirmPassword } = values;
-        changePasswordUserRun({
-          oldPassword: decodePwd(oldPassword),
-          newPassword: decodePwd(newPassword),
-          confirmPassword: decodePwd(confirmPassword),
-        });
+        setIsSubmitting(true);
+        try {
+          const { changePasswordUser } = await import('@/services/user');
+          await changePasswordUser({
+            oldPassword: await decodePwd(oldPassword),
+            newPassword: await decodePwd(newPassword),
+            confirmPassword: await decodePwd(confirmPassword),
+          });
+          closeModal();
+          message.success({
+            content: intl.formatMessage({ id: 'SUCCESS_CHANGE_PASSWORD' }),
+          });
+          logout();
+        } finally {
+          setIsSubmitting(false);
+        }
       })
       .catch();
   };
@@ -391,21 +391,33 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
           </li>
         )}
       </ul>
-      <ComModal
-        modalData={modalData}
-        onCancel={closeModal}
-        onOk={submitForm}
-        afterClose={closeModalCallback}
-        okButtonProps={{ disabled: isSubmitting }}
-      >
-        <PwdForm ref={formRef} formData={formData} />
-      </ComModal>
-      <UserInfo visible={userInfoVisible} setVisible={setUserInfoVisible}></UserInfo>
+      {modalData.visible && (
+        <Suspense fallback={null}>
+          <ComModal
+            modalData={modalData}
+            onCancel={closeModal}
+            onOk={submitForm}
+            afterClose={closeModalCallback}
+            okButtonProps={{ disabled: isSubmitting }}
+          >
+            <PwdForm ref={formRef} formData={formData} />
+          </ComModal>
+        </Suspense>
+      )}
+      {userInfoVisible && (
+        <Suspense fallback={null}>
+          <UserInfo visible={userInfoVisible} setVisible={setUserInfoVisible} />
+        </Suspense>
+      )}
       {changePhoneVisible && (
-        <ChangePhone visible={changePhoneVisible} setVisible={setChangePhoneVisible} />
+        <Suspense fallback={null}>
+          <ChangePhone visible={changePhoneVisible} setVisible={setChangePhoneVisible} />
+        </Suspense>
       )}
       {diffLoginTipVisible && (
-        <DiffLoginTip visible={diffLoginTipVisible} setVisible={setDiffLoginTipVisible} />
+        <Suspense fallback={null}>
+          <DiffLoginTip visible={diffLoginTipVisible} setVisible={setDiffLoginTipVisible} />
+        </Suspense>
       )}
       <>{contextHolder}</>
     </nav>

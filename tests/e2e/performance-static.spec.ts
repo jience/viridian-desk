@@ -406,6 +406,9 @@ test('starts gateway online status loading without blocking the lightweight logi
   const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
   const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
   const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
+  const clientLayoutLoaderStart = routerSource.indexOf('const clientLayoutLoader');
+  const clientLayoutLoaderEnd = routerSource.indexOf('const rootRoutes', clientLayoutLoaderStart);
+  const clientLayoutLoaderBlock = routerSource.slice(clientLayoutLoaderStart, clientLayoutLoaderEnd);
 
   expect(gatewaySource).toContain('fetchClientOnlineStatus');
   expect(gatewaySource).toContain('bridge.cmd.getClientOnlineStatus()');
@@ -415,7 +418,8 @@ test('starts gateway online status loading without blocking the lightweight logi
   expect(preAuthLoaderBlock).not.toContain('await ');
   expect(preAuthLoaderBlock).not.toContain('Promise.all');
   expect(preAuthLoaderBlock).toContain('window.setTimeout');
-  expect(clientLayoutSource).toContain('dispatch(fetchClientOnlineStatus())');
+  expect(clientLayoutLoaderBlock).toContain('fetchClientOnlineStatus');
+  expect(clientLayoutSource).not.toContain('dispatch(fetchClientOnlineStatus())');
 });
 
 test('keeps network status synced before authenticated layout loads', () => {
@@ -617,12 +621,17 @@ test('keeps the login form branch out of gateway status updates', () => {
   expect(loginAuthPanelSource).not.toContain('LoginFormItems');
 });
 
-test('fetches terminal info after login before permission route selection', () => {
+test('reuses prepared terminal info after login before permission route selection', () => {
   const successHandlerSource = source('src/pages/login/hooks/useLoginSuccessHandler.ts');
+  const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
 
-  expect(successHandlerSource).toContain('fetchTerminalInfo');
-  expect(successHandlerSource).toContain('.unwrap()');
-  expect(successHandlerSource).not.toContain('selectIsThin');
+  expect(successHandlerSource).not.toContain('fetchTerminalInfo');
+  expect(successHandlerSource).not.toContain('resolveTerminalThinMode');
+  expect(successHandlerSource).not.toContain('.unwrap()');
+  expect(successHandlerSource).toContain('isThin');
+  expect(loginHandlerSource).toContain('const terminalInfo = await ensureTerminalReady()');
+  expect(loginHandlerSource).toContain('loginSuccessFun(data.data, loginParam, {');
+  expect(loginHandlerSource).toContain('isThin: Boolean(terminalInfo?.isThin)');
 });
 
 test('loads terminal info before sending the login request device header', () => {
@@ -636,15 +645,17 @@ test('loads terminal info before sending the login request device header', () =>
   expect(loginHandlerSource).toContain('selectId');
   expect(ensureTerminalStart).toBeGreaterThanOrEqual(0);
   expect(loginRequestStart).toBeGreaterThan(ensureTerminalStart);
-  expect(loginHandlerSource).toContain('await ensureTerminalReady()');
+  expect(loginHandlerSource).toContain('const terminalInfo = await ensureTerminalReady()');
 });
 
 test('avoids duplicate terminal bootstrap after login success', () => {
   const routerSource = source('src/router/index.tsx');
+  const successHandlerSource = source('src/pages/login/hooks/useLoginSuccessHandler.ts');
 
   expect(routerSource).toContain('const state = appStore.getState();');
   expect(routerSource).toContain('if (!state.terminal)');
   expect(routerSource).toContain('appStore.dispatch(fetchTerminalInfo())');
+  expect(successHandlerSource).not.toContain('fetchTerminalInfo');
 });
 
 test('keeps the local username password form memoized away from parent shell renders', () => {
@@ -714,6 +725,48 @@ test('loads the message center only when the user opens it', () => {
     "import MessageListModal from '@/components/MessageCenter'",
   );
   expect(clientLayoutSource).toContain("import('@/components/MessageCenter')");
+});
+
+test('loads sidebar user security dialogs only when they are opened', () => {
+  const sidebarSource = source('src/components/Sidebar/index.tsx');
+
+  expect(sidebarSource).not.toContain("import ChangePhone from '@/components/ChangePhone'");
+  expect(sidebarSource).not.toContain("import ComModal from '@/components/ComModal'");
+  expect(sidebarSource).not.toContain("import DiffLoginTip from '@/components/DiffLoginTip'");
+  expect(sidebarSource).not.toContain("import PwdForm from '@/components/PwdForm'");
+  expect(sidebarSource).not.toContain("import UserInfo from '@/components/UserInfo'");
+  expect(sidebarSource).not.toContain("import useRequest from '@/hooks/useRequest'");
+  expect(sidebarSource).not.toContain("import { changePasswordUser } from '@/services/user'");
+  expect(sidebarSource).not.toContain("import { Buffer } from 'buffer'");
+  expect(sidebarSource).toContain("import('@/components/ChangePhone')");
+  expect(sidebarSource).toContain("import('@/components/ComModal')");
+  expect(sidebarSource).toContain("import('@/components/DiffLoginTip')");
+  expect(sidebarSource).toContain("import('@/components/PwdForm')");
+  expect(sidebarSource).toContain("import('@/components/UserInfo')");
+  expect(sidebarSource).toContain("import('@/services/user')");
+  expect(sidebarSource).toContain("import('buffer')");
+});
+
+test('keeps authenticated client bootstrap centralized outside ClientLayout render effects', () => {
+  const routerSource = source('src/router/index.tsx');
+  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
+  const sharedStatePath = 'src/layouts/clientLayout/useSharedState';
+  const clientLayoutLoaderStart = routerSource.indexOf('const clientLayoutLoader');
+  const clientLayoutLoaderEnd = routerSource.indexOf('const rootRoutes', clientLayoutLoaderStart);
+  const clientLayoutLoaderBlock = routerSource.slice(clientLayoutLoaderStart, clientLayoutLoaderEnd);
+
+  expect(clientLayoutLoaderBlock).toContain('scheduleAuthenticatedClientBootstrap');
+  expect(routerSource).toContain('let authenticatedClientBootstrapScheduled = false');
+  expect(clientLayoutLoaderBlock).toContain('if (authenticatedClientBootstrapScheduled) return');
+  expect(clientLayoutLoaderBlock).toContain('fetchGatewayList');
+  expect(clientLayoutLoaderBlock).toContain('fetchClientOnlineStatus');
+  expect(clientLayoutLoaderBlock).toContain('fetchClientInfo');
+  expect(clientLayoutLoaderBlock).not.toContain('await ');
+  expect(clientLayoutSource).not.toContain("import useSharedState from './useSharedState'");
+  expect(clientLayoutSource).not.toContain('dispatch(fetchClientOnlineStatus())');
+  expect(clientLayoutSource).not.toContain('getGateWays');
+  expect(clientLayoutSource).not.toContain('getClientConfig');
+  expect(existsSync(join(process.cwd(), sharedStatePath)), sharedStatePath).toBe(false);
 });
 
 test('does not statically bundle every locale at startup', () => {

@@ -1,7 +1,7 @@
 import { bridge } from '@/native';
 import { LoginAuthType, type LoginUserReq } from '@/native/interfaces/api';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { fetchTerminalInfo, selectId } from '@/store/feature/terminal';
+import { fetchTerminalInfo, selectId, selectIsThin } from '@/store/feature/terminal';
 import { useRef, useState } from 'react';
 import type { LoginFormType } from '../types';
 import { useLoginSuccessHandler } from './useLoginSuccessHandler';
@@ -9,14 +9,15 @@ import { useLoginSuccessHandler } from './useLoginSuccessHandler';
 export const useLoginHandler = () => {
   const dispatch = useAppDispatch();
   const terminalId = useAppSelector(selectId);
+  const terminalIsThin = useAppSelector(selectIsThin);
   const submitLockRef = useRef(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const { loginSuccessFun } = useLoginSuccessHandler();
 
   const ensureTerminalReady = async () => {
-    if (terminalId) return;
+    if (terminalId) return { isThin: terminalIsThin };
 
-    await dispatch(fetchTerminalInfo()).unwrap();
+    return dispatch(fetchTerminalInfo()).unwrap();
   };
 
   const userLogin = async ({ loginName, password }: LoginFormType) => {
@@ -28,9 +29,11 @@ export const useLoginHandler = () => {
         password,
       };
 
-      await ensureTerminalReady();
+      const terminalInfo = await ensureTerminalReady();
       const { data } = await bridge.api.loginUser(loginParam);
-      await loginSuccessFun(data.data, loginParam);
+      await loginSuccessFun(data.data, loginParam, {
+        isThin: Boolean(terminalInfo?.isThin),
+      });
     } finally {
       setLoginLoading(false);
     }

@@ -1,6 +1,5 @@
 import './index.scss';
-import { lazy, Suspense, useMemo, useEffect, useRef } from 'react';
-import useSharedState from './useSharedState';
+import { lazy, Suspense, useMemo, useEffect } from 'react';
 import { bridge } from '@/native';
 import { Outlet } from 'react-router';
 import { globalEmitter } from '@/utils/mitt';
@@ -9,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { selectMsgId, selectMsgModalShow, setMsgModalShow } from '@/store/feature/app/appSlice';
 import { selectIsThin } from '@/store/feature/terminal';
 import ControlWindow from '@/components/ControlWindow';
-import { fetchClientOnlineStatus, setConnected } from '@/store/feature/gateway';
+import { setConnected } from '@/store/feature/gateway';
 import type { UnlistenFn } from '@/native/interfaces/types';
 import { useTranslation } from 'react-i18next';
 import { logger } from '@/utils/logger';
@@ -21,11 +20,6 @@ const ClientLayout = () => {
   const { t } = useTranslation();
 
   const isThin = useAppSelector(selectIsThin);
-
-  const clientOnlineMonitorRef = useRef<UnlistenFn>(null);
-  const desktopConnectMonitorRef = useRef<UnlistenFn>(null);
-
-  const { getGateWays, reconnectGateWay, getClientConfig } = useSharedState();
 
   const msgModalShow = useAppSelector(selectMsgModalShow);
   const msgId = useAppSelector(selectMsgId);
@@ -41,59 +35,48 @@ const ClientLayout = () => {
     };
   }, []);
 
-  // 手动获取桌面上线状态
-  const getConnectStatue = () => {
-    dispatch(fetchClientOnlineStatus())
-      .unwrap()
-      .then((isOnline) => {
-        logger.debug('getConnectStatue', isOnline);
-      })
-      .catch((error) => {
-        logger.debug('getConnectStatue unavailable', error);
-      });
-  };
-
-  // 注册长监听: 终端上线状态
-  const startListenClientOnline = async () => {
-    try {
-      clientOnlineMonitorRef.current = await bridge.onEvent('client-online', (payload) => {
-        const { is_online } = payload;
-        // 网关连接状态
-        dispatch(setConnected(is_online));
-      });
-    } catch (error) {
-      logger.debug('client-online listener unavailable', error);
-    }
-  };
-
-  const startListenDesktopConnect = async () => {
-    try {
-      desktopConnectMonitorRef.current = await bridge.onEvent('desktop-connect', (payload) => {
-        logger.debug('desktopConnectMonitor', payload);
-      });
-    } catch (error) {
-      logger.debug('desktop-connect listener unavailable', error);
-    }
-  };
-
   useEffect(() => {
-    getConnectStatue(); // 首次手动触发获取connect 状态
-    startListenClientOnline();
-    startListenDesktopConnect();
-    return () => {
-      clientOnlineMonitorRef.current?.();
-      desktopConnectMonitorRef.current?.();
+    let disposed = false;
+    let clientOnlineUnlisten: UnlistenFn | null = null;
+    let desktopConnectUnlisten: UnlistenFn | null = null;
+
+    const setupListeners = async () => {
+      try {
+        const unlisten = await bridge.onEvent('client-online', (payload) => {
+          const { is_online } = payload;
+          dispatch(setConnected(is_online));
+        });
+        if (disposed) {
+          unlisten();
+        } else {
+          clientOnlineUnlisten = unlisten;
+        }
+      } catch (error) {
+        logger.debug('client-online listener unavailable', error);
+      }
+
+      try {
+        const unlisten = await bridge.onEvent('desktop-connect', (payload) => {
+          logger.debug('desktopConnectMonitor', payload);
+        });
+        if (disposed) {
+          unlisten();
+        } else {
+          desktopConnectUnlisten = unlisten;
+        }
+      } catch (error) {
+        logger.debug('desktop-connect listener unavailable', error);
+      }
     };
-  }, []);
 
-  useEffect(() => {
-    // 获取网关列表
-    getGateWays();
-  }, []);
+    void setupListeners();
 
-  useEffect(() => {
-    getClientConfig();
-  }, [reconnectGateWay]);
+    return () => {
+      disposed = true;
+      clientOnlineUnlisten?.();
+      desktopConnectUnlisten?.();
+    };
+  }, [dispatch]);
 
   const dragAttr = useMemo(() => {
     return !isThin ? { 'data-tauri-drag-region': 'true' } : { 'none-drag-region': 'true' };

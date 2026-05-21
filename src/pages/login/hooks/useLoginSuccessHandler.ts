@@ -1,11 +1,13 @@
 import type { LoginUserInfo, LoginUserReq } from '@/native/interfaces/api';
 import { useAppDispatch } from '@/store';
 import { setCurrentUser } from '@/store/feature/app';
-import { fetchTerminalInfo } from '@/store/feature/terminal';
 import Actions from '@/utils/actions';
 import { message } from '@/ui';
-import { logger } from '@/utils/logger';
 import { useNavigate } from 'react-router';
+
+type LoginSuccessOptions = {
+  isThin?: boolean;
+};
 
 export const useLoginSuccessHandler = () => {
   const navigate = useNavigate();
@@ -30,16 +32,6 @@ export const useLoginSuccessHandler = () => {
     return routeActionMap;
   };
 
-  const resolveTerminalThinMode = async () => {
-    try {
-      const terminalInfo = await appDispatch(fetchTerminalInfo()).unwrap();
-      return Boolean(terminalInfo?.isThin);
-    } catch (error) {
-      logger.debug('fetchTerminalInfo before login route selection failed', error);
-      return false;
-    }
-  };
-
   const loginSuccessActionRoute = (userPermissions: string[], isThin?: boolean) => {
     const routActionMap = getRouteActionMap(isThin);
     const routes = Object.keys(routActionMap).filter((route: any) => {
@@ -62,7 +54,11 @@ export const useLoginSuccessHandler = () => {
   };
 
   // 登录成功后回调的处理
-  const loginSuccessFun = async (res: LoginUserInfo, req: LoginUserReq) => {
+  const loginSuccessFun = async (
+    res: LoginUserInfo,
+    req: LoginUserReq,
+    options: LoginSuccessOptions = {},
+  ) => {
     // TODO 后面需要去除password字段
     if (req.password) {
       const { encryptionPassword } = await import('@/utils/passwordCrypto');
@@ -86,8 +82,7 @@ export const useLoginSuccessHandler = () => {
       message.warning('您的密码即将过期，请及时修改密码以确保账户安全!');
     }
 
-    const isThin = await resolveTerminalThinMode();
-    loginSuccessActionRoute(res.permissions || [], isThin);
+    loginSuccessActionRoute(res.permissions || [], options.isThin);
   };
 
   return {

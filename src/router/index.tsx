@@ -1,4 +1,5 @@
 import { appStore } from '@/store';
+import { fetchClientInfo } from '@/store/feature/client';
 import { fetchConfigInfo } from '@/store/feature/config';
 import { fetchClientOnlineStatus, fetchGatewayList, setNetwork } from '@/store/feature/gateway';
 import { fetchTerminalInfo } from '@/store/feature/terminal';
@@ -87,7 +88,10 @@ const createAppRoutes = ({
   { path: '*', element: routeElement(<EmptyPage />) },
 ];
 
+let authenticatedClientBootstrapScheduled = false;
+
 const preAuthConfigLoader = () => {
+  authenticatedClientBootstrapScheduled = false;
   appStore.dispatch(setNetwork(navigator.onLine));
   window.setTimeout(() => {
     void appStore.dispatch(fetchConfigInfo());
@@ -97,15 +101,27 @@ const preAuthConfigLoader = () => {
   return null;
 };
 
-const clientLayoutLoader = async () => {
+const clientLayoutLoader = () => {
   appStore.dispatch(setNetwork(navigator.onLine));
-  const state = appStore.getState();
-  if (!state.terminal) {
-    await appStore.dispatch(fetchTerminalInfo());
-  }
-  await appStore.dispatch(fetchConfigInfo());
+  scheduleAuthenticatedClientBootstrap();
   return null;
 };
+
+function scheduleAuthenticatedClientBootstrap() {
+  if (authenticatedClientBootstrapScheduled) return;
+  authenticatedClientBootstrapScheduled = true;
+
+  window.setTimeout(() => {
+    const state = appStore.getState();
+    if (!state.terminal) {
+      void appStore.dispatch(fetchTerminalInfo());
+    }
+    void appStore.dispatch(fetchConfigInfo());
+    void appStore.dispatch(fetchGatewayList());
+    void appStore.dispatch(fetchClientOnlineStatus());
+    void appStore.dispatch(fetchClientInfo());
+  }, 0);
+}
 
 const rootRoutes: RouteObject[] = [
   {
