@@ -1,16 +1,23 @@
 import { useAppSelector } from '@/store';
 import { selectConnected, selectNetwork } from '@/store/feature/gateway';
 import { Button } from '@/ui/components/button';
-import { Form } from '@/ui';
 import { useMessageFormatter } from '@/utils/message-format';
-import { memo, useCallback, useEffect } from 'react';
+import { memo, type FormEvent, useCallback, useRef, useState } from 'react';
 import { useLoginHandler } from './hooks/useLoginHandler';
 import type { LoginFormType } from './types';
-import { UsernamePwd } from './UsernamePwd';
+
+type LoginFieldErrors = Partial<Record<keyof LoginFormType, string>>;
+
+const readLoginForm = (formData: FormData): LoginFormType => ({
+  loginName: String(formData.get('loginName') ?? '').trim(),
+  password: String(formData.get('password') ?? ''),
+});
 
 const LoginAuthPanelComponent = () => {
   const { formatMessage } = useMessageFormatter();
-  const [form] = Form.useForm<LoginFormType>();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const connected = useAppSelector(selectConnected);
   const network = useAppSelector(selectNetwork);
@@ -28,37 +35,58 @@ const LoginAuthPanelComponent = () => {
     id: 'LoginPanelSubtitle',
     defaultMessage: '安全访问你的工作空间',
   });
+  const usernameLabel = formatMessage({ id: 'login_page.username_label' });
+  const usernamePlaceholder = formatMessage({ id: 'login_page.username_placeholder' });
+  const usernameMinLengthTip = formatMessage({ id: 'login_page.username_min_length_tip' });
+  const passwordLabel = formatMessage({ id: 'login_page.password_label' });
+  const passwordPlaceholder = formatMessage({ id: 'login_page.password_placeholder' });
 
   const canSubmit = connected && network;
 
-  const handleSubmit = useCallback(async () => {
-    if (!canSubmit || loginLoading || submitLockRef.current) return;
+  const validateLoginForm = useCallback(
+    (values: LoginFormType) => {
+      const errors: LoginFieldErrors = {};
+      if (!values.loginName) {
+        errors.loginName = usernamePlaceholder;
+      } else if (values.loginName.length < 2) {
+        errors.loginName = usernameMinLengthTip;
+      }
+      if (!values.password) {
+        errors.password = passwordPlaceholder;
+      }
+      return errors;
+    },
+    [passwordPlaceholder, usernameMinLengthTip, usernamePlaceholder],
+  );
 
-    submitLockRef.current = true;
-    try {
-      const values = await form.validateFields();
-      await userLogin(values);
-    } finally {
-      submitLockRef.current = false;
-    }
-  }, [canSubmit, form, loginLoading, submitLockRef, userLogin]);
+  const focusInvalidField = (name: keyof LoginFormType) => {
+    const field = formRef.current?.elements.namedItem(name);
+    if (field instanceof HTMLElement) field.focus();
+  };
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Enter') return;
-
-      const target = event.target instanceof HTMLElement ? event.target : null;
-      const isDialogInput = target?.closest('.vdui-modal-root, .vdui-drawer, [role="dialog"]');
-
-      if (event.defaultPrevented || event.isComposing || isDialogInput) return;
-
+  const handleSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      handleSubmit();
-    };
+      if (!canSubmit || loginLoading || submitLockRef.current || !formRef.current) return;
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleSubmit]);
+      const values = readLoginForm(new FormData(formRef.current));
+      const errors = validateLoginForm(values);
+      setFieldErrors(errors);
+      const firstErrorName = Object.keys(errors)[0] as keyof LoginFormType | undefined;
+      if (firstErrorName) {
+        focusInvalidField(firstErrorName);
+        return;
+      }
+
+      submitLockRef.current = true;
+      try {
+        await userLogin(values);
+      } finally {
+        submitLockRef.current = false;
+      }
+    },
+    [canSubmit, loginLoading, submitLockRef, userLogin, validateLoginForm],
+  );
 
   return (
     <section className="auth-page__auth-zone" aria-label={formatMessage({ id: 'LOGIN' })}>
@@ -71,20 +99,72 @@ const LoginAuthPanelComponent = () => {
         </div>
 
         <div className="vd-auth-stack">
-          <Form form={form} layout="vertical" className="vd-auth-form" requiredMark={false}>
-            <UsernamePwd formIns={form} />
-          </Form>
+          <form ref={formRef} className="vd-auth-form" noValidate onSubmit={handleSubmit}>
+            <label className="auth-page__field">
+              <span className="auth-page__label">{usernameLabel}</span>
+              <span className="auth-page__input-shell">
+                <i className="iconfont icon-user form-prefix-icon" aria-hidden="true" />
+                <input
+                  autoComplete="username"
+                  className="auth-page__input"
+                  maxLength={60}
+                  name="loginName"
+                  placeholder={usernamePlaceholder}
+                  aria-invalid={fieldErrors.loginName ? 'true' : undefined}
+                  aria-describedby={fieldErrors.loginName ? 'login-name-error' : undefined}
+                />
+              </span>
+              {fieldErrors.loginName && (
+                <span className="auth-page__field-error" id="login-name-error" role="alert">
+                  {fieldErrors.loginName}
+                </span>
+              )}
+            </label>
 
-          <Button
-            aria-busy={loginLoading}
-            className="auth-page__submit"
-            disabled={!canSubmit || loginLoading}
-            onClick={handleSubmit}
-            size="lg"
-          >
-            {loginLoading && <span className="auth-page__submit-spinner" />}
-            {formatMessage({ id: loginLoading ? 'LOGING' : 'LOGIN' })}
-          </Button>
+            <label className="auth-page__field">
+              <span className="auth-page__label">{passwordLabel}</span>
+              <span className="auth-page__input-shell">
+                <i className="iconfont icon-lock form-prefix-icon" aria-hidden="true" />
+                <input
+                  autoComplete="current-password"
+                  className="auth-page__input"
+                  name="password"
+                  placeholder={passwordPlaceholder}
+                  type={passwordVisible ? 'text' : 'password'}
+                  aria-invalid={fieldErrors.password ? 'true' : undefined}
+                  aria-describedby={fieldErrors.password ? 'login-password-error' : undefined}
+                />
+                <button
+                  className="auth-page__password-toggle"
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => setPasswordVisible((visible) => !visible)}
+                  aria-label={passwordLabel}
+                >
+                  <i
+                    className={`iconfont ${passwordVisible ? 'icon-visible' : 'icon-invisible'}`}
+                    aria-hidden="true"
+                  />
+                </button>
+              </span>
+              {fieldErrors.password && (
+                <span className="auth-page__field-error" id="login-password-error" role="alert">
+                  {fieldErrors.password}
+                </span>
+              )}
+            </label>
+
+            <Button
+              aria-busy={loginLoading}
+              className="auth-page__submit"
+              disabled={!canSubmit || loginLoading}
+              size="lg"
+              type="submit"
+            >
+              {loginLoading && <span className="auth-page__submit-spinner" />}
+              {formatMessage({ id: loginLoading ? 'LOGING' : 'LOGIN' })}
+            </Button>
+          </form>
 
           <div className="auth-page__mode-divider" aria-label={localLoginLabel}>
             <span>{localLoginLabel}</span>

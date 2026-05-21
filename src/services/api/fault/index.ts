@@ -11,6 +11,7 @@ export const listFault = (data: FaultListRequest) => {
   return request<FaultListResponse, FaultListRequest>(FaultApi.LIST_FAULT, {
     method: 'POST',
     body: data,
+    trackLoading: true,
   });
 };
 

@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { appStore } from './store';
 import { setupServices } from './services';
 import { logger } from '@/utils/logger';
+import { applyInitialPerformanceTier } from '@/utils/performanceTier';
 
 function setupEnvLog() {
   const canvas = document.createElement('canvas');
@@ -34,6 +35,8 @@ function scheduleHardwareAccelerationLog() {
 }
 
 function main() {
+  applyInitialPerformanceTier();
+
   setupServices();
 
   setupView();

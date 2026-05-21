@@ -70,7 +70,7 @@ test('keeps the login page local-account only', () => {
   expect(loginPageSource).not.toContain('selectSmsResetPasswordSwitch');
   expect(loginPageSource).not.toContain('selectCurrentLoginType');
   expect(loginPageSource).not.toContain('isLocalPhoneLogin');
-  expect(loginAuthPanelSource).toContain('UsernamePwd');
+  expect(loginAuthPanelSource).toContain('<form');
 
   expect(loginHandlerSource).toContain('authType: LoginAuthType.LOCAL');
   expect(loginHandlerSource).not.toContain('selectCurrentLoginType');
@@ -89,15 +89,14 @@ test('keeps the login page local-account only', () => {
 
 test('keeps the login auth panel aligned with the console reference', () => {
   const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
-  const usernamePwdSource = source('src/pages/login/UsernamePwd/index.tsx');
   const loginStyles = source('src/pages/login/LoginPage.scss');
 
   expect(loginAuthPanelSource).toContain('LoginPanelTitle');
   expect(loginAuthPanelSource).toContain('LoginPanelSubtitle');
   expect(loginAuthPanelSource).toContain('LocalAuthLogin');
   expect(loginAuthPanelSource).toContain('auth-page__mode-divider');
-  expect(usernamePwdSource).toContain("label={t('login_page.username_label')}");
-  expect(usernamePwdSource).toContain("label={t('login_page.password_label')}");
+  expect(loginAuthPanelSource).toContain("formatMessage({ id: 'login_page.username_label' })");
+  expect(loginAuthPanelSource).toContain("formatMessage({ id: 'login_page.password_label' })");
   expect(loginStyles).toContain('grid-template-columns: minmax(0, 0.56fr) minmax(390px, 0.44fr);');
   expect(loginStyles).toContain('width: min(100%, 410px);');
   expect(loginStyles).toContain('min-height: 54px;');
@@ -574,7 +573,7 @@ test('keeps login input focus styles cheap to repaint while typing', () => {
   );
   expect(loginStyles).not.toContain('outline-offset: 1px');
   expect(loginStyles).toContain(
-    'border-color: color-mix(in srgb, var(--auth-accent) 42%, transparent) !important;',
+    'border-color: color-mix(in srgb, var(--auth-accent) 42%, transparent);',
   );
 });
 
@@ -590,8 +589,11 @@ test('keeps modal and login input focus rings single-layered', () => {
     uiStyles.indexOf('\n.vdui-input,', inputAffixWrapperStart),
   );
 
-  expect(loginStyles).toContain('.vdui-input-affix-wrapper .vdui-input:focus');
-  expect(loginStyles).toContain('outline: 0 !important');
+  expect(loginStyles).toContain('.auth-page__input-shell');
+  expect(loginStyles).toContain('&:focus-within');
+  expect(loginStyles).toContain('.auth-page__input');
+  expect(loginStyles).toContain('outline: 0;');
+  expect(loginStyles).not.toContain('.vdui-input-affix-wrapper .vdui-input:focus');
   expect(publishAppModalStyles).not.toContain('.vdui-input');
   expect(publishAppModalStyles).not.toContain('.vdui-select');
   expect(publishAppModalStyles).not.toContain('--app-modal-accent');
@@ -618,32 +620,44 @@ test('notifies only changed form fields while typing', () => {
 
 test('allows login text fields to avoid controlled React value writes while typing', () => {
   const uiSource = source('src/ui/index.tsx');
-  const usernamePasswordSource = source('src/pages/login/UsernamePwd/index.tsx');
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
 
   expect(uiSource).toContain('liveValue?: boolean');
   expect(uiSource).toContain('_setFieldValueSilently');
   expect(uiSource).toContain('defaultValue');
-  expect(usernamePasswordSource).toContain('liveValue={false}');
+  expect(loginAuthPanelSource).toContain('useRef<HTMLFormElement');
+  expect(loginAuthPanelSource).toContain('new FormData(formRef.current)');
+  expect(loginAuthPanelSource).toContain('name="loginName"');
+  expect(loginAuthPanelSource).toContain('name="password"');
+  expect(loginAuthPanelSource).not.toContain('value={');
+  expect(loginAuthPanelSource).not.toContain('Form.useForm');
+  expect(loginAuthPanelSource).not.toContain('validateFields');
+  expect(loginAuthPanelSource).not.toContain('UsernamePwd');
+  expect(existsSync(join(process.cwd(), 'src/pages/login/UsernamePwd')), 'UsernamePwd').toBe(
+    false,
+  );
 });
 
 test('keeps login key handling off the per-character DOM query path', () => {
   const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
 
-  expect(loginAuthPanelSource).toContain("if (event.key !== 'Enter') return;");
+  expect(loginAuthPanelSource).toContain('onSubmit={handleSubmit}');
+  expect(loginAuthPanelSource).not.toContain("document.addEventListener('keydown'");
+  expect(loginAuthPanelSource).not.toContain('closest(');
 });
 
 test('keeps login enter repeat guard out of React state updates', () => {
-  const enterGuardSource = source('src/pages/login/UsernamePwd/usePreventEnterKeyLongPress.ts');
+  const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
 
-  expect(enterGuardSource).toContain('useRef');
-  expect(enterGuardSource).not.toContain('useState');
-  expect(enterGuardSource).not.toContain('setIsEnterPressed');
+  expect(loginHandlerSource).toContain('submitLockRef');
+  expect(loginHandlerSource).toContain('useRef(false)');
+  expect(loginHandlerSource).not.toContain('setIsEnterPressed');
 });
 
 test('keeps the login form branch out of gateway status updates', () => {
   const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
 
-  expect(loginAuthPanelSource).toContain('<UsernamePwd formIns={form} />');
+  expect(loginAuthPanelSource).toContain('<form');
   expect(loginAuthPanelSource).not.toContain('LoginFormItems');
 });
 
@@ -684,8 +698,12 @@ test('avoids duplicate terminal bootstrap after login success', () => {
   expect(successHandlerSource).not.toContain('fetchTerminalInfo');
 });
 
-test('keeps the local username password form memoized away from parent shell renders', () => {
-  expect(source('src/pages/login/UsernamePwd/index.tsx')).toContain('memo(');
+test('keeps the local username password form native and isolated from parent shell renders', () => {
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
+
+  expect(loginAuthPanelSource).toContain('memo(');
+  expect(loginAuthPanelSource).toContain('useRef<HTMLFormElement');
+  expect(loginAuthPanelSource).not.toContain("import { Form");
 });
 
 test('keeps the login page shell split away from live auth and gateway state', () => {
@@ -703,7 +721,8 @@ test('keeps the login page shell split away from live auth and gateway state', (
 
   expect(loginBrandPanelSource).toContain('memo(');
   expect(loginAuthPanelSource).toContain('memo(');
-  expect(loginAuthPanelSource).toContain('<UsernamePwd formIns={form} />');
+  expect(loginAuthPanelSource).toContain('<form');
+  expect(loginAuthPanelSource).not.toContain('Form.useForm');
 });
 
 test('loads the assistant panel only when the user opens it', () => {
@@ -998,7 +1017,7 @@ test('removes login history and operation record features from the client', () =
   const sourceFiles = [
     source('src/native/interfaces/index.ts'),
     source('src/store/feature/app/appSlice.ts'),
-    source('src/pages/login/UsernamePwd/index.tsx'),
+    source('src/pages/login/LoginAuthPanel.tsx'),
     source('src/components/Sidebar/index.tsx'),
   ].join('\n');
 
@@ -1054,12 +1073,36 @@ test('keeps removed legacy static assets out of the source tree', () => {
 
 test('defers non-critical hardware acceleration probing until after first render', () => {
   const mainSource = source('src/main.tsx');
+  const tierSetupIndex = mainSource.indexOf('applyInitialPerformanceTier();');
   const setupViewIndex = mainSource.indexOf('setupView();');
   const setupEnvLogIndex = mainSource.indexOf('scheduleHardwareAccelerationLog();');
 
+  expect(tierSetupIndex).toBeGreaterThan(-1);
+  expect(tierSetupIndex).toBeLessThan(setupViewIndex);
   expect(setupViewIndex).toBeGreaterThan(-1);
   expect(setupEnvLogIndex).toBeGreaterThan(setupViewIndex);
   expect(mainSource).not.toContain('  setupEnvLog();\n\n  setupServices();');
+});
+
+test('enables a low-performance rendering tier for RK-class devices', () => {
+  const mainSource = source('src/main.tsx');
+  const performanceTierSource = source('src/utils/performanceTier.ts');
+  const globalStyles = source('src/styles/index.scss');
+  const performanceStyles = source('src/styles/performance-tier.scss');
+
+  expect(mainSource).toContain("import { applyInitialPerformanceTier } from '@/utils/performanceTier'");
+  expect(mainSource).toContain('applyInitialPerformanceTier();');
+  expect(performanceTierSource).toContain("dataset.performanceTier");
+  expect(performanceTierSource).toContain('TAURI_ARCH');
+  expect(performanceTierSource).toContain('hardwareConcurrency');
+  expect(performanceTierSource).toContain('aarch64');
+  expect(globalStyles).toContain("@use '@/styles/performance-tier.scss';");
+  expect(performanceStyles).toContain(":root[data-performance-tier='low']");
+  expect(performanceStyles).toContain('backdrop-filter: none !important');
+  expect(performanceStyles).toContain('filter: none !important');
+  expect(performanceStyles).toContain('box-shadow: none !important');
+  expect(performanceStyles).toContain('transition-duration: 0ms !important');
+  expect(performanceStyles).toContain('animation: none !important');
 });
 
 test('fails the production budget when legacy font formats are emitted', () => {
@@ -1082,6 +1125,19 @@ test('loads the Tauri HTTP plugin only when a request is executed', () => {
     expect(requestSource).not.toContain('import { fetch');
     expect(requestSource).toContain("import('@tauri-apps/plugin-http')");
   }
+});
+
+test('tracks global request loading only for explicitly opted-in APIs', () => {
+  const requestSource = source('src/utils/request/index.ts');
+  const vappSource = source('src/services/api/vapp/index.ts');
+  const faultSource = source('src/services/api/fault/index.ts');
+
+  expect(requestSource).toContain('trackLoading?: boolean');
+  expect(requestSource).toContain('const shouldTrackLoading = opt?.trackLoading === true');
+  expect(requestSource).toContain('if (shouldTrackLoading) {');
+  expect(requestSource).not.toContain(") => {\n  globalEmitter.emit('api/startLoading', api);");
+  expect(vappSource).toContain('trackLoading: true');
+  expect(faultSource).toContain('trackLoading: true');
 });
 
 test('loads low-frequency Tauri shell APIs only when their methods are used', () => {

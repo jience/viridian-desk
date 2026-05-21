@@ -9,6 +9,7 @@ import { getWebPreviewResponse } from './web-preview';
 type FetchOpt = RequestInit & ClientOptions;
 export interface RequestOptions<B = any> extends Omit<FetchOpt, 'body'> {
   body?: B;
+  trackLoading?: boolean;
 }
 
 /**
@@ -34,7 +35,7 @@ const interceptorErr = async (resp: any) => {
  * @description 前置拦截器，处理headers参数，处理请求体参数query，body
  */
 const beforeRequest = (config?: RequestOptions): FetchOpt => {
-  const { headers, ...resConfig } = config || {};
+  const { headers, trackLoading: _trackLoading, ...resConfig } = config || {};
 
   const newHeaders: HeadersInit = {
     Accept: 'application/json',
@@ -99,7 +100,10 @@ export const request = async <RESP = ApiResponse, REQ = any>(
   api: string,
   opt?: RequestOptions<REQ>,
 ) => {
-  globalEmitter.emit('api/startLoading', api);
+  const shouldTrackLoading = opt?.trackLoading === true;
+  if (shouldTrackLoading) {
+    globalEmitter.emit('api/startLoading', api);
+  }
   const opts: FetchOpt = beforeRequest(opt);
 
   const fullApi = formateApi(api);
@@ -125,6 +129,8 @@ export const request = async <RESP = ApiResponse, REQ = any>(
     logHttpRequest(`${opts.method || 'GET'} ${api}`, e);
     throw await interceptorErr(e);
   } finally {
-    globalEmitter.emit('api/stopLoading', api);
+    if (shouldTrackLoading) {
+      globalEmitter.emit('api/stopLoading', api);
+    }
   }
 };
