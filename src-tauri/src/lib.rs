@@ -7,17 +7,20 @@ mod services;
 mod utils;
 
 use crate::app::updater::app_updates;
+use crate::core::handle;
 use app::{auth, cmd, setup, terminal, ws};
 use services::{desktop, shell, vapp};
 use tauri::{Manager, UserAttentionType, WindowEvent};
 use tauri_plugin_autostart::MacosLauncher;
 use tracing::{error, info};
-use crate::core::handle;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     #[cfg(target_os = "linux")]
-    std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+    {
+        std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+        std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
+    }
 
     // NOTE: Logging is initialized inside the setup hook to access app paths and configuration.
 

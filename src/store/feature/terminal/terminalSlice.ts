@@ -5,9 +5,6 @@ import { bridge } from '@/native';
 
 export const fetchTerminalInfo = createAsyncThunk('terminal/fetchTerminalInfo', async () => {
   const { data } = await bridge.terminal.getTerminalInfo();
-  if (data.isThin) {
-    await bridge.maximizeWindow();
-  }
   return data;
 });
 

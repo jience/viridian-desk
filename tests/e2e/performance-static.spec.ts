@@ -1615,6 +1615,26 @@ test('keeps editable focus cheap and native text helpers disabled on low-power d
   expect(lowPowerStyles).toContain('background-image: none !important');
 });
 
+test('keeps terminal info loading free of window maximize side effects', () => {
+  const terminalSliceSource = source('src/store/feature/terminal/terminalSlice.ts');
+
+  expect(terminalSliceSource).toContain('fetchTerminalInfo');
+  expect(terminalSliceSource).toContain('bridge.terminal.getTerminalInfo');
+  expect(terminalSliceSource).not.toContain('maximizeWindow');
+});
+
+test('disables unstable WebKitGTK compositing paths on low-power Linux', () => {
+  const tauriLibSource = source('src-tauri/src/lib.rs');
+  const dmabufIndex = tauriLibSource.indexOf('WEBKIT_DISABLE_DMABUF_RENDERER');
+  const compositingIndex = tauriLibSource.indexOf('WEBKIT_DISABLE_COMPOSITING_MODE');
+  const builderIndex = tauriLibSource.indexOf('tauri::Builder::default()');
+
+  expect(tauriLibSource).toContain('#[cfg(target_os = "linux")]');
+  expect(dmabufIndex).toBeGreaterThanOrEqual(0);
+  expect(compositingIndex).toBeGreaterThan(dmabufIndex);
+  expect(builderIndex).toBeGreaterThan(compositingIndex);
+});
+
 test('routes high-frequency text inputs through the low-power lean input path', () => {
   const leanInputPath = 'src/ui/lean-input.tsx';
   const uiSource = source('src/ui/index.tsx');
