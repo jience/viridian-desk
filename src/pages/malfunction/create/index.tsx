@@ -96,6 +96,7 @@ const CreatedModal = (props: any) => {
       className={'self_modal'}
       // alertSlots={formFeatures?.[0]?.alertSlots || []}
       cancelText={formatMessage({ id: 'Cancel' })}
+      okText={formatMessage({ id: 'Create' })}
     >
       <BaseForm
         ref={formRef}

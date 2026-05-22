@@ -167,7 +167,7 @@ const DiagnosisModal: FC<DiagnosisModalProps> = ({ ref }) => {
         resetData();
       }}
       footer={
-        <div className="diagnosis-modal-footer">
+        <div className="vdui-modal-footer diagnosis-modal-footer">
           <Button
             key="cancel"
             onClick={() => {

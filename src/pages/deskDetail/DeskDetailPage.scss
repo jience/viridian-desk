@@ -229,11 +229,19 @@
     color: var(--detail-primary-text);
     background: var(--detail-primary-bg);
     font-weight: 550;
+    font-size: 13px;
     transition:
       border-color 160ms ease,
       color 160ms ease,
       background-color 160ms ease,
       transform 160ms ease;
+
+    > span {
+      color: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: 1;
+    }
 
     &:not(:disabled):hover,
     &:not(:disabled):focus-visible {
