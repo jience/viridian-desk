@@ -14,7 +14,7 @@ import { LEGACY_PASSWORD_PREFIX } from '@/utils/passwordPrefix';
 import { Menu, message, Modal, Popover, Tooltip } from '@/ui';
 import { isEmptyValue } from '@/utils/value';
 import { Sparkles } from 'lucide-react';
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMessageFormatter } from '@/utils/message-format';
 import { useLocation, useNavigate } from 'react-router';
@@ -52,6 +52,7 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
   const [changePhoneVisible, setChangePhoneVisible] = useState(false);
   const [diffLoginTipVisible, setDiffLoginTipVisible] = useState(false);
   const [isBindLogin, _setBindLogin] = useState(true);
+  const closeUserMenu = useCallback(() => setUserBtnOpen(false), []);
 
   // 判断当前登录方式下，是否可以修改密码
   const canModifyMod = useMemo(() => {
@@ -74,6 +75,7 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
           // actions={[Actions.TerminalROUserRead]}
           key="info"
           onClick={() => {
+            closeUserMenu();
             setUserInfoVisible(true);
           }}
         >
@@ -84,7 +86,10 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
           <Menu.Item
             // actions={[Actions.TerminalRWUserUpdatePassword]}
             key="pwd"
-            onClick={modifyPwd}
+            onClick={() => {
+              closeUserMenu();
+              modifyPwd();
+            }}
           >
             <i className="iconfont icon-authority"></i>
             {intl.formatMessage({ id: 'MODIFY_PASSWORD' })}
@@ -95,7 +100,10 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
           <Menu.Item
             // actions={[Actions.TerminalRWUserUpdatePhone]}
             key="changePhone"
-            onClick={() => setChangePhoneVisible(true)}
+            onClick={() => {
+              closeUserMenu();
+              setChangePhoneVisible(true);
+            }}
           >
             <i className="iconfont icon-icon_phone"></i>
             {intl.formatMessage({ id: 'ChangePhone' })}
@@ -103,7 +111,10 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
         )}
         <Menu.Item
           // actions={[Actions.TerminalRWUserLoginOrLogout]}
-          onClick={logout}
+          onClick={() => {
+            closeUserMenu();
+            logout();
+          }}
           disabled={!isBindLogin}
         >
           <i className="iconfont icon-signout"></i>
@@ -111,7 +122,7 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
         </Menu.Item>
       </Menu>
     );
-  }, [canModifyMod, intl, isBindLogin, currentUser]);
+  }, [canModifyMod, closeUserMenu, intl, isBindLogin, currentUser]);
 
   const [activeMenu, setActiveMenu] = useState('');
 

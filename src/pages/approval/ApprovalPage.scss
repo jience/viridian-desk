@@ -350,7 +350,6 @@
     margin: 12px 16px;
     color: var(--approval-page-muted);
 
-    .vdui-pagination-item,
     .vdui-pagination-prev .vdui-pagination-item-link,
     .vdui-pagination-next .vdui-pagination-item-link {
       border-color: var(--approval-page-border);
@@ -358,14 +357,20 @@
       background: var(--approval-page-pagination-bg);
     }
 
+    .vdui-pagination-item {
+      border-color: transparent;
+      color: var(--approval-page-muted);
+      background: transparent;
+    }
+
     .vdui-pagination-item a {
       color: inherit;
     }
 
     .vdui-pagination-item-active {
-      border-color: var(--approval-page-accent);
+      border-color: transparent;
       color: var(--approval-page-accent-strong);
-      background: var(--approval-page-pagination-active-bg);
+      background: transparent;
     }
   }
 

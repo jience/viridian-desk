@@ -878,6 +878,54 @@ test('loads sidebar user security dialogs only when they are opened', () => {
   expect(sidebarSource).toContain("import('buffer')");
 });
 
+test('keeps sidebar user popover dismissible', () => {
+  const uiSource = source('src/ui/index.tsx');
+  const sidebarSource = source('src/components/Sidebar/index.tsx');
+
+  expect(uiSource).toContain('rootRef.current?.contains(target)');
+  expect(uiSource).toContain("document.addEventListener('pointerdown', handlePointerDown, true)");
+  expect(uiSource).toContain("document.addEventListener('keydown', handleKeyDown)");
+  expect(uiSource).toContain("event.key === 'Escape'");
+  expect(uiSource).toContain('onOpenChange?.(false)');
+  expect(sidebarSource).toContain('const closeUserMenu = useCallback');
+  expect(sidebarSource).toContain('closeUserMenu();\n            setUserInfoVisible(true);');
+  expect(sidebarSource).toContain('closeUserMenu();\n              modifyPwd();');
+  expect(sidebarSource).toContain('closeUserMenu();\n              setChangePhoneVisible(true);');
+  expect(sidebarSource).toContain('closeUserMenu();\n            logout();');
+});
+
+test('keeps shared action controls visually consistent', () => {
+  const deskDetailSource = source('src/pages/deskDetail/DeskDetailPage.tsx');
+  const deskDetailStyles = source('src/pages/deskDetail/DeskDetailPage.scss');
+  const addFavoriteSource = source('src/pages/application/component/AddFromSysModal/index.tsx');
+  const approvalStyles = source('src/pages/approval/ApprovalPage.scss');
+  const malfunctionStyles = source('src/pages/malfunction/MalfunctionPage.scss');
+  const malfunctionSource = source('src/pages/malfunction/index.tsx');
+  const faultTypesSource = source('src/services/api/fault/types.ts');
+
+  expect(deskDetailSource).toContain('className="desk-detail-page__create-button"');
+  expect(deskDetailStyles).toContain('&__create-button');
+  expect(deskDetailStyles).toContain('min-height: 34px;');
+  expect(deskDetailStyles).toContain('border-radius: 7px;');
+  expect(deskDetailStyles).toContain('background: var(--detail-primary-bg);');
+
+  expect(addFavoriteSource).not.toContain('ReloadOutlined');
+  expect(addFavoriteSource).toContain('iconfont icon-refresh');
+  expect(addFavoriteSource).toContain('loading={listVappLoading}');
+
+  for (const pageStyles of [approvalStyles, malfunctionStyles]) {
+    expect(pageStyles).toContain('.vdui-pagination-item {\n      border-color: transparent;');
+    expect(pageStyles).toContain('background: transparent;');
+    expect(pageStyles).toContain('.vdui-pagination-item-active {\n      border-color: transparent;');
+  }
+
+  expect(malfunctionSource).toContain('selectCurrentUser');
+  expect(malfunctionSource).toContain('const currentUser = useAppSelector(selectCurrentUser);');
+  expect(malfunctionSource).toContain('userId: currentUser?.userId');
+  expect(malfunctionSource).toContain('if (!currentUser?.userId)');
+  expect(faultTypesSource).toContain('userId?: string;');
+});
+
 test('keeps authenticated client bootstrap centralized outside ClientLayout render effects', () => {
   const routerSource = source('src/router/index.tsx');
   const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');

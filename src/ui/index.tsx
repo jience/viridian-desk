@@ -1230,15 +1230,47 @@ type PopoverProps = {
 
 export function Popover({ content, children, open, onOpenChange }: PopoverProps) {
   const [internalOpen, setInternalOpen] = useState(false);
+  const rootRef = useRef<HTMLSpanElement>(null);
   const visible = open ?? internalOpen;
+
+  useEffect(() => {
+    if (!visible) return;
+
+    const closePopover = () => {
+      setInternalOpen(false);
+      onOpenChange?.(false);
+    };
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (target instanceof Node && rootRef.current?.contains(target)) return;
+      closePopover();
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closePopover();
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown, true);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown, true);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [visible, onOpenChange]);
+
   return (
-    <span className="vd-popover vdui-popover">
+    <span ref={rootRef} className="vd-popover vdui-popover">
       {isValidElement(children)
         ? cloneElement(children as ReactElement<any>, {
             onClick: (event: any) => {
               (children as ReactElement<any>).props.onClick?.(event);
-              setInternalOpen(!visible);
-              onOpenChange?.(!visible);
+              const nextOpen = !visible;
+              setInternalOpen(nextOpen);
+              onOpenChange?.(nextOpen);
             },
           })
         : children}

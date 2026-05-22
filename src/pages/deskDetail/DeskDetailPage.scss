@@ -7,6 +7,9 @@
   --detail-muted: #6c7268;
   --detail-accent: #4d7c3f;
   --detail-success: #277a4a;
+  --detail-primary-bg: var(--detail-accent);
+  --detail-primary-hover-bg: color-mix(in srgb, var(--detail-accent) 78%, #183623);
+  --detail-primary-text: #ffffff;
   --detail-panel-shadow: 0 18px 42px
     color-mix(in srgb, var(--detail-accent, #4d7c3f) 12%, transparent);
 
@@ -219,6 +222,36 @@
     }
   }
 
+  &__create-button {
+    min-height: 34px;
+    border-color: color-mix(in srgb, var(--detail-accent) 42%, transparent);
+    border-radius: 7px;
+    color: var(--detail-primary-text);
+    background: var(--detail-primary-bg);
+    font-weight: 550;
+    transition:
+      border-color 160ms ease,
+      color 160ms ease,
+      background-color 160ms ease,
+      transform 160ms ease;
+
+    &:not(:disabled):hover,
+    &:not(:disabled):focus-visible {
+      border-color: color-mix(in srgb, var(--detail-accent) 56%, transparent);
+      color: var(--detail-primary-text);
+      background: var(--detail-primary-hover-bg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--detail-accent) 42%, transparent);
+      outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(1px) scale(0.98);
+    }
+  }
+
   &__empty {
     display: grid;
     min-height: 220px;
@@ -240,6 +273,9 @@
   --detail-muted: #98a6b8;
   --detail-accent: #8ef2bd;
   --detail-success: #48b884;
+  --detail-primary-bg: rgba(142, 242, 189, 0.16);
+  --detail-primary-hover-bg: rgba(142, 242, 189, 0.23);
+  --detail-primary-text: #c5f7e6;
   --detail-panel-shadow: 0 18px 42px color-mix(in srgb, #000000 24%, transparent);
 
   .desk-detail-page__icon-button:hover {
