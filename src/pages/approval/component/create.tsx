@@ -19,7 +19,7 @@ import { clearEmpty } from '@/utils/utils';
 import dayjs from 'dayjs';
 import { listDesktopPool, listResourceUser, listAppLib, createWorkflow } from '@/services/resource';
 import useRequest from '@/hooks/useRequest';
-import { isArray, isEmpty } from 'lodash-es';
+import { isEmptyValue } from '@/utils/value';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -309,7 +309,7 @@ const CreateForm = (props: any, _ref: any) => {
   }, [desktopDetail?.storageType, diskIdvalue, diskList]);
 
   useEffect(() => {
-    if (workflowTempValue == 'extendDisk' && !isEmpty(diskDetial)) {
+    if (workflowTempValue == 'extendDisk' && !isEmptyValue(diskDetial)) {
       const sizeTemp =
         diskDetial?.size == 10240
           ? 10240
@@ -914,7 +914,7 @@ const CreateForm = (props: any, _ref: any) => {
               required: true,
               validator: (_rul: any, val: any) =>
                 new Promise((resolve, reject) => {
-                  if (!isArray(val) || isEmpty(val)) {
+                  if (!Array.isArray(val) || isEmptyValue(val)) {
                     reject(`请选择${formatMessage({ id: 'ApplicationDeadline' })}`);
                   } else if (dayjs(val[0]).add(3599, 's') > dayjs(val[1])) {
                     reject('起止时间间隔至少1小时');

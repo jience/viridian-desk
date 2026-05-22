@@ -2,14 +2,13 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { message } from '@/ui';
 import { useInitData } from './initData';
 import { useTranslation } from 'react-i18next';
-import { deleteVapp, listVapp, removeVapp, VappApi } from '@/services/api/vapp';
+import { deleteVapp, listVapp, removeVapp } from '@/services/api/vapp';
 import type {
   DeleteVappReq,
   ListVappItem,
   RemoveVappReq,
   VappCategory,
 } from '@/services/api/vapp/types';
-import { useLoading } from '@/hooks/useLoading';
 import { connectVapp } from '@/services/invoke/vapp';
 import type { ConnectVappReq } from '@/services/invoke/vapp/types';
 import { ApplicationPage } from './ApplicationPage';
@@ -27,7 +26,7 @@ export const Application = () => {
   const { appCategoryList } = useInitData();
   const [addFormSysVisible, setAddFromSysVisible] = useState(false);
   const [addFormSelfVisible, setAddFromSelfVisible] = useState(false);
-  const listVappLoading = useLoading(VappApi.LIST_VAPP);
+  const [listVappLoading, setListVappLoading] = useState(false);
 
   // 分类默认选中全部
   const [category, setCategory] = useState<VappCategory | 'all'>('all');
@@ -36,17 +35,24 @@ export const Application = () => {
 
   const getListVapp = async (c: VappCategory | 'all' = category) => {
     const requestSeq = ++listRequestSeqRef.current;
-    const res = await listVapp({
-      pageNumber: 1,
-      pageSize: 999,
-      isAdded: true,
-      category: c === 'all' ? undefined : c,
-    });
-    if (requestSeq !== listRequestSeqRef.current) {
-      return;
+    setListVappLoading(true);
+    try {
+      const res = await listVapp({
+        pageNumber: 1,
+        pageSize: 999,
+        isAdded: true,
+        category: c === 'all' ? undefined : c,
+      });
+      if (requestSeq !== listRequestSeqRef.current) {
+        return;
+      }
+      setCategory(c);
+      setVappList(res.data.results || []);
+    } finally {
+      if (requestSeq === listRequestSeqRef.current) {
+        setListVappLoading(false);
+      }
     }
-    setCategory(c);
-    setVappList(res.data.results || []);
   };
 
   const handleRefresh = async () => {

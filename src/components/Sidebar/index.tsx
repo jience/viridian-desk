@@ -12,7 +12,7 @@ import { authActionShow } from '@/utils/actionAuth';
 import { logger } from '@/utils/logger';
 import { LEGACY_PASSWORD_PREFIX } from '@/utils/passwordPrefix';
 import { Menu, message, Modal, Popover, Tooltip } from '@/ui';
-import { isEmpty } from 'lodash-es';
+import { isEmptyValue } from '@/utils/value';
 import { Sparkles } from 'lucide-react';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -286,7 +286,7 @@ function Sidebar({ assistantOpen = false, onAssistantToggle }: SidebarProps) {
         </Tooltip>
         <ul className="sidebar__menus" aria-label={commonT('appName')}>
           {menus.map((item) => {
-            const visible = isEmpty(item.actions) || authActionShow(item.actions);
+            const visible = isEmptyValue(item.actions) || authActionShow(item.actions);
             if (!visible) return null;
 
             const label = commonT(item.labelKey);

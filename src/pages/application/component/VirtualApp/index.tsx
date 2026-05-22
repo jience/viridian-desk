@@ -10,8 +10,6 @@ import { hasPermission } from '@/utils/permission';
 import { useTranslation } from 'react-i18next';
 import type { ListVappItem } from '@/services/api/vapp/types';
 import type { ItemType } from '@/ui';
-import { useLoading } from '@/hooks/useLoading';
-import { VappApi } from '@/services/api/vapp';
 import type { ModalFunc } from '@/ui';
 import type { ConnectVappReq } from '@/services/invoke/vapp/types';
 
@@ -46,7 +44,7 @@ export const VirtualApp: FC<VirtualAppProps> = (props) => {
       callBack: OnFavoriteApp,
     },
   ];
-  const operateAppLoading = useLoading([VappApi.DELETE_VAPP, VappApi.REMOVE_VAPP]);
+  const [operateAppLoading, setOperateAppLoading] = useState(false);
 
   // const [redDot, setRedDot] = useState(false);
   const [appDetailVisible, setAppDetailVisible] = useState(false);
@@ -105,10 +103,15 @@ export const VirtualApp: FC<VirtualAppProps> = (props) => {
       },
       cancelText: t('application_page.close'),
       onOk: async () => {
-        if (isSystem) {
-          await removeApp(data.id + '', data?.desktop?.id);
-        } else {
-          await deleteApp(data.id + '', data?.desktop?.id);
+        setOperateAppLoading(true);
+        try {
+          if (isSystem) {
+            await removeApp(data.id + '', data?.desktop?.id);
+          } else {
+            await deleteApp(data.id + '', data?.desktop?.id);
+          }
+        } finally {
+          setOperateAppLoading(false);
         }
       },
     });

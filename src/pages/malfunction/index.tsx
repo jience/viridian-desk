@@ -1,13 +1,11 @@
-import { useLoading } from '@/hooks/useLoading';
 import useRequest from '@/hooks/useRequest';
-import { FaultApi, listFault, revokeFault } from '@/services/api/fault';
+import { listFault, revokeFault } from '@/services/api/fault';
 import type { FaultItem, FaultListRequest } from '@/services/api/fault/types';
 import { createFault, listResourceUser } from '@/services/resource';
 import Actions from '@/utils/actions';
 import { hasPermission } from '@/utils/permission';
 import type { TablePaginationConfig } from '@/ui';
 import { Modal } from '@/ui';
-import { isEmpty } from 'lodash-es';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import './index.scss';
@@ -16,11 +14,15 @@ import { MalfunctionPage } from './MalfunctionPage';
 import type { ViewFaultStatus, ViewFaultType } from './types';
 
 const CreatedModal = lazy(() => import('./create'));
+const isRecordEmpty = (value: unknown) =>
+  value === undefined ||
+  value === null ||
+  (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0);
 
 export function Component() {
   const [modal, contextHolder] = Modal.useModal();
   const { formatMessage } = useMessageFormatter();
-  const listFaultLoading = useLoading(FaultApi.LIST_FAULT);
+  const [listFaultLoading, setListFaultLoading] = useState(false);
 
   const [queryParams, setQueryParams] = useState(initQueryParams);
   const [faultList, setFaultList] = useState<FaultItem[]>([]);
@@ -178,7 +180,7 @@ export function Component() {
   const handleCancel = async (row?: FaultItem) => {
     let tips;
     let rows: string[] = [];
-    if (!isEmpty(row)) {
+    if (row && !isRecordEmpty(row)) {
       tips = {
         label: formatMessage({ id: 'CancedFaultMsg' }, { title: row.description }),
         selectedItemIds: [row.id],
@@ -233,13 +235,20 @@ export function Component() {
       ...params,
     };
     const requestSeq = ++listRequestSeqRef.current;
-    const resp = await listFault(req);
-    if (requestSeq !== listRequestSeqRef.current) {
-      return;
+    setListFaultLoading(true);
+    try {
+      const resp = await listFault(req);
+      if (requestSeq !== listRequestSeqRef.current) {
+        return;
+      }
+      setQueryParams(req);
+      setFaultList(resp.data.results || []);
+      setTotal(resp.data.totalCount || 0);
+    } finally {
+      if (requestSeq === listRequestSeqRef.current) {
+        setListFaultLoading(false);
+      }
     }
-    setQueryParams(req);
-    setFaultList(resp.data.results || []);
-    setTotal(resp.data.totalCount || 0);
   };
 
   const resetFaultList = async () => {

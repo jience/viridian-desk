@@ -2,7 +2,6 @@ import { lazy, memo, Suspense, useCallback, useEffect, useMemo, useState } from 
 import { useMessageFormatter } from '@/utils/message-format';
 import { useNavigate } from 'react-router';
 import { Button, Dropdown, Empty, message, Modal, Spin, Tooltip } from '@/ui';
-import { get } from 'lodash-es';
 import Deskpool from '@/components/Deskpoolsvg';
 import useRequest from '@/hooks/useRequest';
 import { detachVolume } from '@/services/resource';
@@ -378,7 +377,7 @@ export function DeskPage() {
         action: (type: any, desktop: any) => {
           switch (type) {
             case 'mount': {
-              const dataDisk = get(desktop, 'disks', []).filter(
+              const dataDisk = (desktop?.disks ?? []).filter(
                 (disk: any) => disk.isSystem == false,
               ).length;
               if (dataDisk >= 2 && desktop?.os?.includes('Windows Server 2000')) {

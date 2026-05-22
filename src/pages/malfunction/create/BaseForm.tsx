@@ -12,7 +12,7 @@ import {
   DatePicker,
   Form,
 } from '@/ui';
-import { isEmpty } from 'lodash-es';
+import { isEmptyValue } from '@/utils/value';
 // other
 
 /**
@@ -170,7 +170,7 @@ const BaseForm = (props: any, ref: any) => {
   // 表单项获取是否隐藏的条件判断方法
   const getHiddenActive = (itemFeature: any) => {
     let impactHiddenRes = itemFeature.impactHiddenAndOr;
-    if (itemFeature.impactHidden && !isEmpty(itemFeature.impactHidden)) {
+    if (itemFeature.impactHidden && !isEmptyValue(itemFeature.impactHidden)) {
       itemFeature.impactHidden.forEach((impactItem: any) => {
         if (itemFeature.impactHiddenAndOr) {
           impactHiddenRes =
@@ -187,7 +187,7 @@ const BaseForm = (props: any, ref: any) => {
   // 表单项获取是否有props属性值变化
   const getImpactProps = (itemFeature: any) => {
     const impactProps = itemFeature.impactProps;
-    if (!isEmpty(impactProps)) {
+    if (!isEmptyValue(impactProps)) {
       impactProps.forEach((impact: any) => {
         itemFeature.comProps[impact.propKey] = impact.impactAction(formValuesCopy[impact.key]);
       });

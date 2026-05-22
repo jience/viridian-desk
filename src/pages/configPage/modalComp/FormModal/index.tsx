@@ -3,7 +3,7 @@ import { useMessageFormatter } from '@/utils/message-format';
 import './index.scss';
 import ConfigurationForm from '@/components/ConfigurationForm';
 import { Modal } from '@/ui';
-import { isEmpty } from 'lodash-es';
+import { isEmptyValue } from '@/utils/value';
 
 export interface modelProps {
   title: string;
@@ -88,7 +88,7 @@ const FormModal = (props: any) => {
   }, [mointerEnterFunc, onKeyupEnter]);
 
   const allDisabled = useMemo(() => {
-    if (isEmpty(formFeatures)) {
+    if (isEmptyValue(formFeatures)) {
       return true;
     } else {
       return formFeatures.every((item: any) => item.comProps.disabled);

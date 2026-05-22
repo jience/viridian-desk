@@ -2,10 +2,9 @@ import React, { useRef, useState } from 'react';
 import { Button, Input } from '@/ui';
 import { useMessageFormatter } from '@/utils/message-format';
 import { SearchOutlined, DeleteOutlined } from '@/ui/icons';
-import { Scrollbars } from 'react-custom-scrollbars';
 import { Tag } from '@/ui';
 import './index.scss';
-import { cloneDeep, isArray, isEmpty, isFunction, isNil } from 'lodash-es';
+import { clonePlainValue, isEmptyValue, isNilValue } from '@/utils/value';
 
 export interface SearchBarProps {
   /**
@@ -80,7 +79,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const { formatMessage } = useMessageFormatter();
 
   const handleDelete = () => {
-    const target = cloneDeep(params);
+    const target = clonePlainValue(params);
     Object.keys(target)
       .filter((item) => !untreatedParamKeys.includes(item))
       .map((item) => {
@@ -98,23 +97,23 @@ const SearchBar: React.FC<SearchBarProps> = ({
       return;
     }
 
-    if (isEmpty(searchOption)) {
+    if (isEmptyValue(searchOption)) {
       return;
     }
-    const target = cloneDeep(params);
+    const target = clonePlainValue(params);
     target[searchOption.key] = searchValue?.trim();
     if (onChange) onChange('search', target);
     setSearchValue('');
   };
 
   const handleCloseTag = (removeKey = '') => {
-    const target = cloneDeep(params);
+    const target = clonePlainValue(params);
     target[removeKey] = '';
     if (onChange) onChange('delete', target);
   };
 
   const renderParams = (item: any) => {
-    if (isArray(item)) {
+    if (Array.isArray(item)) {
       return item.join('/');
     }
     return `${item}`;
@@ -125,10 +124,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const tags = Object.keys(params)
       .filter((item) => {
         // 撇除pagination、sort参数。他们不需要展示
-        return !untreatedParamKeys.includes(item) && !isNil(params[item]) && params[item] !== '';
+        return !untreatedParamKeys.includes(item) && !isNilValue(params[item]) && params[item] !== '';
       })
       .map((item, _index) => {
-        const result = isEmpty(paramsAlias[item]?.value)
+        const result = isEmptyValue(paramsAlias[item]?.value)
           ? renderParams(params[item])
           : `${paramsAlias[item]?.value}`;
         return (
@@ -139,7 +138,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             onClose={() => handleCloseTag(item)}
           >
             <span className="tag-title">
-              {isEmpty(paramsAlias[item]?.title) ? `${item}` : `${paramsAlias[item]?.title}`}
+              {isEmptyValue(paramsAlias[item]?.title) ? `${item}` : `${paramsAlias[item]?.title}`}
             </span>
             <span className="tag-value" title={result}>
               {result}
@@ -149,10 +148,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
       });
 
     return (
-      <Scrollbars autoHeight className="vd-search-bar-tags-scroll">
+      <div className="vd-search-bar-tags-scroll">
         <div className="vd-search-bar-tag-container">
           {tags}
-          {!disabled && !isEmpty(tags) ? (
+          {!disabled && !isEmptyValue(tags) ? (
             <DeleteOutlined
               // type="icon-delete"
               className="vd-search-bar-tag-delete"
@@ -160,19 +159,19 @@ const SearchBar: React.FC<SearchBarProps> = ({
             />
           ) : null}
         </div>
-      </Scrollbars>
+      </div>
     );
   };
 
   const renderSlot = () => {
-    if (!isFunction(slot)) {
+    if (typeof slot !== 'function') {
       return;
     }
     return <div className="vd-search-bar-slot-container">{slot()}</div>;
   };
 
   const renderSlotLeft = () => {
-    if (!isFunction(slotLeft)) {
+    if (typeof slotLeft !== 'function') {
       return;
     }
     return <div className="vd-search-bar-slot-left-container">{slotLeft()}</div>;
@@ -205,7 +204,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
   const renderSearch = () => {
     return (
-      !isEmpty(searchOption) && (
+      !isEmptyValue(searchOption) && (
         <Input
           placeholder={`${formatMessage({ id: 'PleaseInput' })}${searchOption.title}`}
           suffix={

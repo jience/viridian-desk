@@ -4,8 +4,6 @@ import type { ItemType } from '@/ui';
 import type { ModalFunc } from '@/ui';
 import { Trans, useTranslation } from 'react-i18next';
 import { AppIcon } from './component/AppIcon';
-import { useLoading } from '@/hooks/useLoading';
-import { VappApi } from '@/services/api/vapp';
 import Actions from '@/utils/actions';
 import { hasPermission } from '@/utils/permission';
 import type {
@@ -51,7 +49,7 @@ export const ApplicationPage: FC<ApplicationPageProps> = (props) => {
   const [detailApp, setDetailApp] = useState<ListVappItem | null>(null);
   const [launchingIds, setLaunchingIds] = useState<Set<number>>(() => new Set());
   const launchingIdsRef = useRef<Set<number>>(new Set());
-  const operateAppLoading = useLoading([VappApi.DELETE_VAPP, VappApi.REMOVE_VAPP]);
+  const [operateAppLoading, setOperateAppLoading] = useState(false);
 
   const selectedCategory = useMemo(
     () => props.categories.find((item) => item.value === props.category),
@@ -124,11 +122,16 @@ export const ApplicationPage: FC<ApplicationPageProps> = (props) => {
           mIds: [String(app.id)],
           desktopIds: app.desktop?.id ? [app.desktop.id] : [],
         };
-        if (isSystem) {
-          await props.onRemoveApp(params);
-          return;
+        setOperateAppLoading(true);
+        try {
+          if (isSystem) {
+            await props.onRemoveApp(params);
+            return;
+          }
+          await props.onDeleteApp(params);
+        } finally {
+          setOperateAppLoading(false);
         }
-        await props.onDeleteApp(params);
       },
     });
   };

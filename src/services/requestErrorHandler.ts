@@ -2,7 +2,14 @@ import type { NativeResponse } from '@/native/interfaces/types';
 import { message as uiMessage } from '@/ui/message';
 import { logger } from '@/utils/logger';
 import { t, type Resources } from 'i18next';
-import { isEmpty } from 'lodash-es';
+
+const hasErrorData = (value: unknown) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string') return value.length > 0;
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === 'object') return Object.keys(value).length > 0;
+  return true;
+};
 
 function getLoginErrorTimesExceedErrorMessage(
   { remainingSeconds }: { remainingSeconds: string },
@@ -49,7 +56,7 @@ function handleError(res: NativeResponse<any>) {
       localStorage.removeItem('userName');
       localStorage.removeItem('isLocal');
     }
-    if (!isEmpty(data)) {
+    if (hasErrorData(data)) {
       message = t(errorCode, { ...(data as any) });
       logger.debug('message', message);
     }

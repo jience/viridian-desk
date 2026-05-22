@@ -7,25 +7,49 @@ import { LanguageType, type LanguageType as SupportedLanguage } from '@/native/i
 import { readCachedConfig } from '@/store/feature/config/configCache';
 
 type LocaleNamespace = 'translation' | 'common' | 'assistant';
-type LocaleModule = Promise<{ default: Record<string, unknown> }>;
+type LocaleResource = Record<string, unknown>;
+type LocaleLoader = () => Promise<LocaleResource>;
 
 const localeNamespaces: LocaleNamespace[] = ['translation', 'common', 'assistant'];
-const localeLoaders: Record<SupportedLanguage, Record<LocaleNamespace, () => LocaleModule>> = {
+const translationModules = import.meta.glob<LocaleResource>('../assets/locales/*/*.json', {
+  import: 'default',
+});
+const uiLocaleModules = import.meta.glob<LocaleResource>('../ui/i18n/locales/*/*.json', {
+  import: 'default',
+});
+
+const loadTranslationNamespace = async (language: SupportedLanguage): Promise<LocaleResource> => {
+  const prefix = `../assets/locales/${language}/`;
+  const loaders = Object.entries(translationModules)
+    .filter(([modulePath]) => modulePath.startsWith(prefix))
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([, load]) => load);
+  const chunks = await Promise.all(loaders.map((load) => load()));
+  return Object.assign({}, ...chunks);
+};
+
+const loadUiNamespace = async (
+  language: SupportedLanguage,
+  namespace: Exclude<LocaleNamespace, 'translation'>,
+): Promise<LocaleResource> => {
+  const loader = uiLocaleModules[`../ui/i18n/locales/${language}/${namespace}.json`];
+  return loader ? loader() : {};
+};
+
+const createLocaleLoaders = (
+  language: SupportedLanguage,
+): Record<LocaleNamespace, LocaleLoader> => ({
+  translation: () => loadTranslationNamespace(language),
+  common: () => loadUiNamespace(language, 'common'),
+  assistant: () => loadUiNamespace(language, 'assistant'),
+});
+
+const localeLoaders: Record<SupportedLanguage, Record<LocaleNamespace, LocaleLoader>> = {
   [LanguageType.ZH_CN]: {
-    translation: () => import('@/assets/locales/zh-CN.json'),
-    common: () => import('@/ui/i18n/locales/zh-CN/common.json'),
-    assistant: () => import('@/ui/i18n/locales/zh-CN/assistant.json'),
+    ...createLocaleLoaders(LanguageType.ZH_CN),
   },
-  [LanguageType.ZH_TW]: {
-    translation: () => import('@/assets/locales/zh-TW.json'),
-    common: () => import('@/ui/i18n/locales/zh-TW/common.json'),
-    assistant: () => import('@/ui/i18n/locales/zh-TW/assistant.json'),
-  },
-  [LanguageType.EN_US]: {
-    translation: () => import('@/assets/locales/en-US.json'),
-    common: () => import('@/ui/i18n/locales/en-US/common.json'),
-    assistant: () => import('@/ui/i18n/locales/en-US/assistant.json'),
-  },
+  [LanguageType.ZH_TW]: createLocaleLoaders(LanguageType.ZH_TW),
+  [LanguageType.EN_US]: createLocaleLoaders(LanguageType.EN_US),
 };
 
 const supportedLanguages = Object.values(LanguageType);
@@ -47,7 +71,7 @@ i18next
     resourcesToBackend((language: string, namespace: string) => {
       const lng = isSupportedLanguage(language) ? language : LanguageType.ZH_CN;
       const ns = isLocaleNamespace(namespace) ? namespace : 'translation';
-      return localeLoaders[lng][ns]().then((module) => module.default);
+      return localeLoaders[lng][ns]();
     }),
   )
   .use(initReactI18next)

@@ -90,16 +90,44 @@ const createAppRoutes = ({
 
 let authenticatedClientBootstrapScheduled = false;
 
+const scheduleAfterFirstPaint = (task: () => void) => {
+  window.requestAnimationFrame(() => {
+    window.setTimeout(task, 0);
+  });
+};
+
+const scheduleWhenIdle = (task: () => void) => {
+  const requestIdle =
+    window.requestIdleCallback ??
+    ((callback: IdleRequestCallback) => window.setTimeout(() => callback({} as IdleDeadline), 180));
+  requestIdle(() => task(), { timeout: 1200 });
+};
+
 const preAuthConfigLoader = () => {
   authenticatedClientBootstrapScheduled = false;
   appStore.dispatch(setNetwork(navigator.onLine));
-  window.setTimeout(() => {
-    void appStore.dispatch(fetchConfigInfo());
-    void appStore.dispatch(fetchGatewayList());
-    void appStore.dispatch(fetchClientOnlineStatus());
-  }, 0);
+  schedulePreAuthClientBootstrap();
   return null;
 };
+
+function schedulePreAuthClientBootstrap() {
+  scheduleAfterFirstPaint(() => {
+    const state = appStore.getState();
+    if (!state.config.client_id) {
+      void appStore.dispatch(fetchConfigInfo());
+    }
+    if (!state.gateway.gatewayList.length) {
+      void appStore.dispatch(fetchGatewayList());
+    }
+  });
+
+  scheduleWhenIdle(() => {
+    const state = appStore.getState();
+    if (state.gateway.connected === false) {
+      void appStore.dispatch(fetchClientOnlineStatus());
+    }
+  });
+}
 
 const clientLayoutLoader = () => {
   appStore.dispatch(setNetwork(navigator.onLine));
@@ -111,16 +139,28 @@ function scheduleAuthenticatedClientBootstrap() {
   if (authenticatedClientBootstrapScheduled) return;
   authenticatedClientBootstrapScheduled = true;
 
-  window.setTimeout(() => {
+  scheduleAfterFirstPaint(() => {
     const state = appStore.getState();
     if (!state.terminal) {
       void appStore.dispatch(fetchTerminalInfo());
     }
-    void appStore.dispatch(fetchConfigInfo());
-    void appStore.dispatch(fetchGatewayList());
-    void appStore.dispatch(fetchClientOnlineStatus());
-    void appStore.dispatch(fetchClientInfo());
-  }, 0);
+    if (!state.gateway.gatewayList.length) {
+      void appStore.dispatch(fetchGatewayList());
+    }
+    if (state.gateway.connected === false) {
+      void appStore.dispatch(fetchClientOnlineStatus());
+    }
+  });
+
+  scheduleWhenIdle(() => {
+    const state = appStore.getState();
+    if (!state.config.client_id) {
+      void appStore.dispatch(fetchConfigInfo());
+    }
+    if (!state.client) {
+      void appStore.dispatch(fetchClientInfo());
+    }
+  });
 }
 
 const rootRoutes: RouteObject[] = [

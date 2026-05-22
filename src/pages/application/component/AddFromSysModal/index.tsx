@@ -2,8 +2,7 @@ import { Button, Input, message, Modal, Space, Table } from '@/ui';
 import { useEffect, useState, type FC } from 'react';
 import './index.scss';
 // import * as AppAjax from '@/services/application';
-import { useLoading } from '@/hooks/useLoading';
-import { addVapp, listVapp, VappApi } from '@/services/api/vapp';
+import { addVapp, listVapp } from '@/services/api/vapp';
 import type { ListVappItem, ListVappReq, VappCategory } from '@/services/api/vapp/types';
 import { ReloadOutlined } from '@/ui/icons';
 import type { ColumnsType, TableProps } from '@/ui';
@@ -19,8 +18,8 @@ export interface AddFromSysModalProps {
 export const AddFromSysModal: FC<AddFromSysModalProps> = (props) => {
   const { visible, setVisible, OnRefresh } = props;
   const { t } = useTranslation();
-  const listVappLoading = useLoading(VappApi.LIST_VAPP);
-  const addVappLoading = useLoading(VappApi.ADD_VAPP);
+  const [listVappLoading, setListVappLoading] = useState(false);
+  const [addVappLoading, setAddVappLoading] = useState(false);
 
   const [appList, setAppList] = useState<ListVappItem[]>([]);
   const [checked, setChecked] = useState([]);
@@ -36,12 +35,17 @@ export const AddFromSysModal: FC<AddFromSysModalProps> = (props) => {
   const { appModeList, appCategoryList } = useInitData();
 
   const addVappToFavorite = async (mIds: string[]) => {
-    await addVapp({
-      mIds,
-    });
-    message.success(t('application_page.add_vapp_success'));
-    OnRefresh();
-    cancelModal();
+    setAddVappLoading(true);
+    try {
+      await addVapp({
+        mIds,
+      });
+      message.success(t('application_page.add_vapp_success'));
+      await Promise.resolve(OnRefresh());
+      cancelModal();
+    } finally {
+      setAddVappLoading(false);
+    }
   };
 
   const getListVapp = async (req?: Partial<ListVappReq>) => {
@@ -50,10 +54,15 @@ export const AddFromSysModal: FC<AddFromSysModalProps> = (props) => {
       ...req,
     };
     setChecked([]);
-    const res = await listVapp(requestParams);
-    setParams(requestParams);
-    setAppList(res.data.results || []);
-    setTotalPage(res.data.totalCount);
+    setListVappLoading(true);
+    try {
+      const res = await listVapp(requestParams);
+      setParams(requestParams);
+      setAppList(res.data.results || []);
+      setTotalPage(res.data.totalCount);
+    } finally {
+      setListVappLoading(false);
+    }
   };
 
   useEffect(() => {

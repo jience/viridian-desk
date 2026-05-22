@@ -39,6 +39,13 @@
 
   .vd-search-bar-tags-scroll {
     flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   .vd-search-bar-tag-container {

@@ -23,7 +23,7 @@ import IPv6Cidr from '@/components/IPv6-cidr';
 import IPv6 from '@/components/IPv6';
 import { IntegerStep, DecimalStep } from '@/components/SliderWithInputNumber';
 import FormTable from '@/components/FormTable';
-import { isEmpty } from 'lodash-es';
+import { isEmptyValue } from '@/utils/value';
 
 /**
  * formFeatures demo
@@ -283,7 +283,7 @@ const ConfigurationForm = (props: any, ref: any) => {
   // 表单项获取是否隐藏的条件判断方法
   const getHiddenActive = (itemFeature: any) => {
     let impactHiddenRes = itemFeature.impactHiddenAndOr;
-    if (itemFeature.impactHidden && !isEmpty(itemFeature.impactHidden)) {
+    if (itemFeature.impactHidden && !isEmptyValue(itemFeature.impactHidden)) {
       itemFeature.impactHidden.forEach((impactItem: any) => {
         if (itemFeature.impactHiddenAndOr) {
           if (impactItem.key) {
@@ -306,7 +306,7 @@ const ConfigurationForm = (props: any, ref: any) => {
     if (impactHiddenRes && itemFeature.impactHiddenResetField) {
       form.resetFields([itemFeature.key]); // 存在条件隐藏逻辑的组件，计算隐藏逻辑为true时重置自身的表单值
 
-      if (!isEmpty(itemFeature.combinationComs)) {
+      if (!isEmptyValue(itemFeature.combinationComs)) {
         itemFeature.combinationComs.forEach((subItems: any) => {
           form.resetFields([subItems.key]); // 存在条件隐藏逻辑的组件，计算隐藏逻辑为true时重置自身的表单项的组合表单子项值
         });
@@ -319,9 +319,9 @@ const ConfigurationForm = (props: any, ref: any) => {
   // 表单项获取是否有props属性值变化
   const getImpactProps = (itemFeature: any) => {
     const impactProps = itemFeature.impactProps;
-    if (!isEmpty(impactProps)) {
+    if (!isEmptyValue(impactProps)) {
       impactProps.forEach((impact: any) => {
-        if (!isEmpty(impact.keys)) {
+        if (!isEmptyValue(impact.keys)) {
           const impactActionParams: {
             [key: string]: any;
           } = {};
