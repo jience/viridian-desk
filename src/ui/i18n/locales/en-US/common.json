@@ -14,7 +14,7 @@
   "navigation.application": "Application",
   "navigation.peripheral": "Peripheral",
   "navigation.approval": "Approval",
-  "navigation.desktopIssues": "Desktop Issues",
+  "navigation.desktopIssues": "Work Orders",
   "navigation.empty": "No Resources",
   "emptyPage.eyebrow": "Access limited",
   "emptyPage.title": "No available features for this account",

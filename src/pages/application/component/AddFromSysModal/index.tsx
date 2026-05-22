@@ -132,7 +132,7 @@ export const AddFromSysModal: FC<AddFromSysModalProps> = (props) => {
 
   const renderFooter = () => {
     return (
-      <div className="add-vapp-footer">
+      <div className="vdui-modal-footer add-vapp-footer">
         <Trans
           t={t}
           i18nKey="application_page.vapp_selected"

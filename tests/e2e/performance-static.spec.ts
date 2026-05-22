@@ -897,7 +897,13 @@ test('keeps sidebar user popover dismissible', () => {
 test('keeps shared action controls visually consistent', () => {
   const deskDetailSource = source('src/pages/deskDetail/DeskDetailPage.tsx');
   const deskDetailStyles = source('src/pages/deskDetail/DeskDetailPage.scss');
+  const malfunctionCreateSource = source('src/pages/malfunction/create/index.tsx');
+  const uiStyles = source('src/ui/styles.scss');
+  const commonZh = source('src/ui/i18n/locales/zh-CN/common.json');
   const addFavoriteSource = source('src/pages/application/component/AddFromSysModal/index.tsx');
+  const diagnosisModalSource = source(
+    'src/pages/configPage/subPages/advancedSetting/Diagnosis/DiagnosisModal/index.tsx',
+  );
   const approvalStyles = source('src/pages/approval/ApprovalPage.scss');
   const malfunctionStyles = source('src/pages/malfunction/MalfunctionPage.scss');
   const malfunctionSource = source('src/pages/malfunction/index.tsx');
@@ -909,10 +915,22 @@ test('keeps shared action controls visually consistent', () => {
   expect(deskDetailStyles).toContain('min-height: 34px;');
   expect(deskDetailStyles).toContain('border-radius: 7px;');
   expect(deskDetailStyles).toContain('background: var(--detail-primary-bg);');
+  expect(deskDetailStyles).toContain('> span {\n      color: inherit;');
+  expect(deskDetailStyles).toContain('font-size: inherit;');
+  expect(deskDetailStyles).toContain('font-weight: inherit;');
+
+  expect(commonZh).toContain('"navigation.desktopIssues": "工单"');
+  expect(malfunctionCreateSource).toContain("okText={formatMessage({ id: 'Create' })}");
+  expect(uiStyles).toContain('.vdui-modal-footer {\n  padding: 0 22px 18px;');
+  expect(uiStyles).toContain('min-width: 86px;');
+  expect(uiStyles).toContain('.vdui-btn:not(.vdui-btn-primary)');
+  expect(uiStyles).toContain('.vdui-modal-footer .vdui-btn-primary');
 
   expect(addFavoriteSource).not.toContain('ReloadOutlined');
+  expect(addFavoriteSource).toContain('className="vdui-modal-footer add-vapp-footer"');
   expect(addFavoriteSource).toContain('iconfont icon-refresh');
   expect(addFavoriteSource).toContain('loading={listVappLoading}');
+  expect(diagnosisModalSource).toContain('className="vdui-modal-footer diagnosis-modal-footer"');
 
   for (const pageStyles of [approvalStyles, malfunctionStyles]) {
     expect(pageStyles).toContain('.vdui-pagination-item {\n      border-color: transparent;');

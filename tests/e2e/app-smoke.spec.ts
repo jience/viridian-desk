@@ -344,7 +344,7 @@ const appRouteSmokeCases = [
   { path: '/app/application', title: '应用 - Viridian Desk', selector: '.application-page' },
   { path: '/app/peripheral', title: '外设 - Viridian Desk', selector: '.peripheralSetting' },
   { path: '/app/approval', title: '流程 - Viridian Desk', selector: '.approval-page' },
-  { path: '/app/malfunction', title: '桌面问题 - Viridian Desk', selector: '.malfunction-page' },
+  { path: '/app/malfunction', title: '工单 - Viridian Desk', selector: '.malfunction-page' },
 ];
 
 for (const appRoute of appRouteSmokeCases) {
