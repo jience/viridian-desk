@@ -39,14 +39,7 @@
   box-shadow: none !important;
 }
 
-:where(
-  .auth-page,
-  .app-layout,
-  .vd-app-shell__main,
-  .desk-card,
-  .desk-pool,
-  .application-card
-) {
+:where(.auth-page, .app-layout, .vd-app-shell__main, .desk-card, .desk-pool, .application-card) {
   background-image: none !important;
 }
 
@@ -58,4 +51,46 @@
   .sidebar__button:hover
 ) {
   transform: none !important;
+}
+
+:where(
+  input:focus,
+  input:focus-visible,
+  textarea:focus,
+  textarea:focus-visible,
+  .auth-page__input-shell:focus-within,
+  .vdui-input-affix-wrapper:focus-within,
+  .vdui-input:focus,
+  .vdui-input:focus-visible,
+  .vdui-input-textarea:focus,
+  .vdui-select:focus,
+  .vdui-select:focus-visible,
+  .vdui-select:focus-within,
+  .vd-input:focus,
+  .vd-input:focus-visible
+) {
+  outline: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  background-image: none !important;
+}
+
+:where(
+  .vdui-input-affix-wrapper:focus-within,
+  .vdui-input:focus,
+  .vdui-input:focus-visible,
+  .vdui-input-textarea:focus,
+  .vdui-select:focus,
+  .vdui-select:focus-visible,
+  .vdui-select:focus-within,
+  .vd-input:focus,
+  .vd-input:focus-visible
+) {
+  border-color: var(--vd-color-accent, #69d99a) !important;
+}
+
+:where(.auth-page__input-shell:focus-within) {
+  border-color: var(--auth-accent, #69d99a) !important;
+  background: var(--auth-panel-strong, transparent) !important;
 }

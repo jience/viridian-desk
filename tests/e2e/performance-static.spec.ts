@@ -1592,6 +1592,29 @@ test('uses low-power rendering defaults without runtime device tier detection', 
   expect(lowPowerStyles).toContain('animation: none !important');
 });
 
+test('keeps editable focus cheap and native text helpers disabled on low-power devices', () => {
+  const mainSource = source('src/main.tsx');
+  const editableDefaultsPath = 'src/utils/setupLowPowerEditableDefaults.ts';
+  const lowPowerStyles = source('src/styles/low-power-defaults.scss');
+
+  expect(existsSync(join(process.cwd(), editableDefaultsPath)), editableDefaultsPath).toBe(true);
+
+  const editableDefaultsSource = source(editableDefaultsPath);
+
+  expect(mainSource).toContain('setupLowPowerEditableDefaults');
+  expect(editableDefaultsSource).toContain("setAttribute('spellcheck', 'false')");
+  expect(editableDefaultsSource).toContain("setAttribute('autocorrect', 'off')");
+  expect(editableDefaultsSource).toContain("setAttribute('autocapitalize', 'none')");
+  expect(editableDefaultsSource).toContain('MutationObserver');
+  expect(lowPowerStyles).toContain('.auth-page__input-shell:focus-within');
+  expect(lowPowerStyles).toContain('.vdui-input-affix-wrapper:focus-within');
+  expect(lowPowerStyles).toContain('.vdui-input-textarea:focus');
+  expect(lowPowerStyles).toContain('outline: 0 !important');
+  expect(lowPowerStyles).toContain('box-shadow: none !important');
+  expect(lowPowerStyles).toContain('filter: none !important');
+  expect(lowPowerStyles).toContain('background-image: none !important');
+});
+
 test('fails the production budget when legacy font formats are emitted', () => {
   const budgetSource = source('scripts/check-build-budget.js');
 
