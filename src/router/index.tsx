@@ -90,6 +90,19 @@ const createAppRoutes = ({
 
 let authenticatedClientBootstrapScheduled = false;
 
+const scheduleAfterFirstPaint = (task: () => void) => {
+  window.requestAnimationFrame(() => {
+    window.setTimeout(task, 0);
+  });
+};
+
+const scheduleWhenIdle = (task: () => void) => {
+  const requestIdle =
+    window.requestIdleCallback ??
+    ((callback: IdleRequestCallback) => window.setTimeout(() => callback({} as IdleDeadline), 180));
+  requestIdle(() => task(), { timeout: 1200 });
+};
+
 const preAuthConfigLoader = () => {
   authenticatedClientBootstrapScheduled = false;
   appStore.dispatch(setNetwork(navigator.onLine));
@@ -98,20 +111,6 @@ const preAuthConfigLoader = () => {
 };
 
 function schedulePreAuthClientBootstrap() {
-  const scheduleAfterFirstPaint = (task: () => void) => {
-    window.requestAnimationFrame(() => {
-      window.setTimeout(task, 0);
-    });
-  };
-
-  const scheduleWhenIdle = (task: () => void) => {
-    const requestIdle =
-      window.requestIdleCallback ??
-      ((callback: IdleRequestCallback) =>
-        window.setTimeout(() => callback({} as IdleDeadline), 180));
-    requestIdle(() => task(), { timeout: 1200 });
-  };
-
   scheduleAfterFirstPaint(() => {
     const state = appStore.getState();
     if (!state.config.client_id) {
@@ -139,20 +138,6 @@ const clientLayoutLoader = () => {
 function scheduleAuthenticatedClientBootstrap() {
   if (authenticatedClientBootstrapScheduled) return;
   authenticatedClientBootstrapScheduled = true;
-
-  const scheduleAfterFirstPaint = (task: () => void) => {
-    window.requestAnimationFrame(() => {
-      window.setTimeout(task, 0);
-    });
-  };
-
-  const scheduleWhenIdle = (task: () => void) => {
-    const requestIdle =
-      window.requestIdleCallback ??
-      ((callback: IdleRequestCallback) =>
-        window.setTimeout(() => callback({} as IdleDeadline), 180));
-    requestIdle(() => task(), { timeout: 1200 });
-  };
 
   scheduleAfterFirstPaint(() => {
     const state = appStore.getState();

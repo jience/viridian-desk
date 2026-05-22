@@ -22,6 +22,13 @@ const locale = (language: 'zh-CN' | 'zh-TW' | 'en-US') => {
     );
 };
 
+const collectSourceFiles = (dir: string): string[] =>
+  readdirSync(join(process.cwd(), dir), { withFileTypes: true }).flatMap((entry) => {
+    const child = `${dir}/${entry.name}`;
+    if (entry.isDirectory()) return collectSourceFiles(child);
+    return /\.(ts|tsx|js|jsx)$/.test(child) ? [child] : [];
+  });
+
 test('keeps low-frequency modal components lazy-loaded', () => {
   expect(source('src/pages/approval/index.tsx')).not.toContain(
     "import Create from './component/create'",
@@ -310,7 +317,9 @@ test('removes deprecated non-local login copy and auth types from the client', (
   for (const language of ['zh-CN', 'zh-TW', 'en-US'] as const) {
     const currentLocale = locale(language);
     for (const removedLocaleKey of removedLocaleKeys) {
-      expect(currentLocale, `${language}:${removedLocaleKey}`).not.toHaveProperty(removedLocaleKey);
+      expect(currentLocale, `${language}:${removedLocaleKey}`).not.toHaveProperty(
+        removedLocaleKey,
+      );
     }
     expect(currentLocale, `${language}:LocalAuthLogin`).toHaveProperty('LocalAuthLogin');
   }
@@ -415,7 +424,8 @@ test('starts saved config loading without blocking the lightweight login route',
   expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
   expect(preAuthLoaderBlock).not.toContain('await ');
   expect(preAuthLoaderBlock).not.toContain('Promise.all');
-  expect(preAuthLoaderBlock).toContain('window.setTimeout');
+  expect(preAuthLoaderBlock).toContain('scheduleAfterFirstPaint');
+  expect(preAuthLoaderBlock).toContain('scheduleWhenIdle');
   expect(preAuthLoaderBlock).toContain('return null');
   expect(configInitSource).toContain('readCachedConfig');
   expect(configSliceSource).toContain('writeCachedConfig');
@@ -435,7 +445,7 @@ test('starts saved gateway selection loading without blocking the lightweight lo
   expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
   expect(preAuthLoaderBlock).not.toContain('await ');
   expect(preAuthLoaderBlock).not.toContain('Promise.all');
-  expect(preAuthLoaderBlock).toContain('window.setTimeout');
+  expect(preAuthLoaderBlock).toContain('scheduleAfterFirstPaint');
 });
 
 test('starts gateway online status loading without blocking the lightweight login route', () => {
@@ -456,7 +466,7 @@ test('starts gateway online status loading without blocking the lightweight logi
   expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
   expect(preAuthLoaderBlock).not.toContain('await ');
   expect(preAuthLoaderBlock).not.toContain('Promise.all');
-  expect(preAuthLoaderBlock).toContain('window.setTimeout');
+  expect(preAuthLoaderBlock).toContain('scheduleWhenIdle');
   expect(clientLayoutLoaderBlock).toContain('fetchClientOnlineStatus');
   expect(clientLayoutSource).not.toContain('dispatch(fetchClientOnlineStatus())');
 });
@@ -903,8 +913,8 @@ test('stages authenticated bootstrap work after first paint on low-power devices
 
   expect(bootstrapBlock).toContain('scheduleAfterFirstPaint');
   expect(bootstrapBlock).toContain('scheduleWhenIdle');
-  expect(bootstrapBlock).toContain('window.requestAnimationFrame');
-  expect(bootstrapBlock).toContain('window.requestIdleCallback');
+  expect(routerSource).toContain('window.requestAnimationFrame');
+  expect(routerSource).toContain('window.requestIdleCallback');
   expect(bootstrapBlock.indexOf('fetchGatewayList')).toBeLessThan(
     bootstrapBlock.indexOf('fetchConfigInfo'),
   );
@@ -1312,11 +1322,7 @@ test('removes custom scrollbar and lodash runtimes from the frontend bundle', ()
   const packageJson = source('package.json');
   const viteConfig = source('vite.config.ts');
   const searchableSources = [
-    ...readdirSync(join(process.cwd(), 'src'), { recursive: true, withFileTypes: true })
-      .filter((entry) => entry.isFile())
-      .map((entry) => join(entry.parentPath, entry.name).replace(`${process.cwd()}/`, ''))
-      .filter((path) => /\.(ts|tsx|js|jsx)$/.test(path))
-      .map((path) => source(path)),
+    ...collectSourceFiles('src').map((path) => source(path)),
     viteConfig,
     packageJson,
   ].join('\n');
@@ -1456,7 +1462,8 @@ test('stages login route bootstrap after first paint and avoids duplicate authen
   expect(routerSource).toContain('schedulePreAuthClientBootstrap');
   expect(preAuthLoaderBlock).toContain('scheduleAfterFirstPaint');
   expect(preAuthLoaderBlock).toContain('scheduleWhenIdle');
-  expect(preAuthLoaderBlock).toContain('window.requestAnimationFrame');
+  expect(routerSource).toContain('window.requestAnimationFrame');
+  expect(routerSource).toContain('window.requestIdleCallback');
   expect(preAuthLoaderBlock).toContain('fetchConfigInfo');
   expect(preAuthLoaderBlock).toContain('fetchGatewayList');
   expect(preAuthLoaderBlock).toContain('fetchClientOnlineStatus');
