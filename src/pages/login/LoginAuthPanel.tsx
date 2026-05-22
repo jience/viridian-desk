@@ -1,5 +1,6 @@
 import { useAppSelector } from '@/store';
 import { selectConnected, selectNetwork } from '@/store/feature/gateway';
+import { LeanInput } from '@/ui/lean-input';
 import { useMessageFormatter } from '@/utils/message-format';
 import { Eye, EyeOff, Lock, User } from 'lucide-react';
 import { memo, type FormEvent, useCallback, useRef, useState } from 'react';
@@ -16,8 +17,9 @@ const readLoginForm = (formData: FormData): LoginFormType => ({
 const LoginAuthPanelComponent = () => {
   const { formatMessage } = useMessageFormatter();
   const formRef = useRef<HTMLFormElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
+  const passwordToggleRef = useRef<HTMLButtonElement>(null);
   const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});
-  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const connected = useAppSelector(selectConnected);
   const network = useAppSelector(selectNetwork);
@@ -64,6 +66,17 @@ const LoginAuthPanelComponent = () => {
     if (field instanceof HTMLElement) field.focus();
   };
 
+  const handleTogglePasswordVisibility = useCallback(() => {
+    const input = passwordInputRef.current;
+    const button = passwordToggleRef.current;
+    if (!input || !button) return;
+
+    const nextVisible = input.type === 'password';
+    input.type = nextVisible ? 'text' : 'password';
+    button.dataset.passwordVisible = String(nextVisible);
+    button.setAttribute('aria-pressed', String(nextVisible));
+  }, []);
+
   const handleSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -104,9 +117,10 @@ const LoginAuthPanelComponent = () => {
               <span className="auth-page__label">{usernameLabel}</span>
               <span className="auth-page__input-shell">
                 <User className="form-prefix-icon" aria-hidden="true" />
-                <input
+                <LeanInput
                   autoComplete="username"
                   className="auth-page__input"
+                  inputMode="text"
                   maxLength={60}
                   name="loginName"
                   placeholder={usernamePlaceholder}
@@ -125,27 +139,31 @@ const LoginAuthPanelComponent = () => {
               <span className="auth-page__label">{passwordLabel}</span>
               <span className="auth-page__input-shell">
                 <Lock className="form-prefix-icon" aria-hidden="true" />
-                <input
+                <LeanInput
+                  ref={passwordInputRef}
                   autoComplete="current-password"
                   className="auth-page__input"
                   name="password"
                   placeholder={passwordPlaceholder}
-                  type={passwordVisible ? 'text' : 'password'}
+                  type="password"
                   aria-invalid={fieldErrors.password ? 'true' : undefined}
                   aria-describedby={fieldErrors.password ? 'login-password-error' : undefined}
                 />
                 <button
+                  ref={passwordToggleRef}
                   className="auth-page__password-toggle"
                   type="button"
                   tabIndex={-1}
-                  onClick={() => setPasswordVisible((visible) => !visible)}
+                  data-password-visible="false"
+                  aria-pressed="false"
+                  onClick={handleTogglePasswordVisibility}
                   aria-label={passwordLabel}
                 >
-                  {passwordVisible ? (
-                    <EyeOff className="auth-page__password-toggle-icon" aria-hidden="true" />
-                  ) : (
-                    <Eye className="auth-page__password-toggle-icon" aria-hidden="true" />
-                  )}
+                  <Eye className="auth-page__password-toggle-icon" aria-hidden="true" />
+                  <EyeOff
+                    className="auth-page__password-toggle-icon auth-page__password-toggle-icon--visible"
+                    aria-hidden="true"
+                  />
                 </button>
               </span>
               {fieldErrors.password && (

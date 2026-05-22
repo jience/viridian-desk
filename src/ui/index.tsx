@@ -19,6 +19,7 @@ import {
   type ReactNode,
 } from 'react';
 import { cn } from '@/ui/lib/cn';
+import { LeanInput, LeanTextarea } from './lean-input';
 import './styles.scss';
 import { message } from './message';
 export { message } from './message';
@@ -768,7 +769,7 @@ const InputBase = forwardRef<HTMLInputElement, InputProps>(
   ) => (
     <span className={cn('vdui-input-affix-wrapper', className)}>
       {prefix}
-      <input
+      <LeanInput
         ref={ref}
         className="vdui-input"
         onKeyDown={(event) => {
@@ -808,7 +809,7 @@ InputBase.TextArea = forwardRef<HTMLTextAreaElement, any>(
         : { defaultValue: textAreaDefaultValue };
 
     return (
-      <textarea
+      <LeanTextarea
         ref={ref}
         className={cn('vdui-input vdui-input-textarea', className)}
         rows={rows ?? minRows}

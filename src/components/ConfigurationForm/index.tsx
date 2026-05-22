@@ -25,6 +25,11 @@ import { IntegerStep, DecimalStep } from '@/components/SliderWithInputNumber';
 import FormTable from '@/components/FormTable';
 import { isEmptyValue } from '@/utils/value';
 
+const deferredTextComTypes = new Set(['input', 'input.password', 'input.textArea']);
+
+const getItemLiveValue = (itemFeature: any) =>
+  itemFeature?.itemProps?.liveValue ?? !deferredTextComTypes.has(itemFeature?.comType);
+
 /**
  * formFeatures demo
     {
@@ -412,6 +417,7 @@ const ConfigurationForm = (props: any, ref: any) => {
                           hidden={getHiddenActive(itemFeature)}
                           valuePropName={coms.valuePropName}
                           htmlFor={coms.canLabelClick} // htmlFor 用作将 <label> 元素绑定到第一个具有与 for 属性值相同的 id 的可标记元素, 将该属性置空就取消了id绑定, 此处绑定的是name属性值
+                          liveValue={getItemLiveValue(coms)}
                           {...coms.itemProps}
                         >
                           {chooseItemCom(coms.comType, {
@@ -455,6 +461,7 @@ const ConfigurationForm = (props: any, ref: any) => {
                     rules={getHiddenActive(itemFeature) ? [] : itemFeature.rules}
                     valuePropName={itemFeature.valuePropName}
                     className="noStyle-form-item"
+                    liveValue={getItemLiveValue(itemFeature)}
                     {...itemFeature.itemProps}
                   >
                     {chooseItemCom(itemFeature.comType, {
@@ -488,6 +495,7 @@ const ConfigurationForm = (props: any, ref: any) => {
                     valuePropName={itemFeature.valuePropName}
                     rules={getHiddenActive(itemFeature) ? [] : itemFeature.rules}
                     className="noStyle-form-item-line"
+                    liveValue={getItemLiveValue(itemFeature)}
                     {...itemFeature.itemProps}
                   >
                     {chooseItemCom(itemFeature.comType, {

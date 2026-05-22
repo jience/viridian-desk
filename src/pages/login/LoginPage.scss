@@ -312,7 +312,11 @@
   border-radius: 18px;
   padding: clamp(26px, 2.8vw, 34px);
   background:
-    linear-gradient(152deg, color-mix(in srgb, var(--auth-panel-strong) 88%, transparent), transparent 145%),
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--auth-panel-strong) 88%, transparent),
+      transparent 145%
+    ),
     var(--auth-panel);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
@@ -336,8 +340,7 @@
 :root.dark .auth-page__card,
 :root[data-ui-theme='dark'] .auth-page__card {
   background:
-    linear-gradient(152deg, rgba(24, 34, 35, 0.9), rgba(6, 13, 15, 0.84)),
-    var(--auth-panel);
+    linear-gradient(152deg, rgba(24, 34, 35, 0.9), rgba(6, 13, 15, 0.84)), var(--auth-panel);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
     0 34px 86px rgba(0, 0, 0, 0.38),
@@ -442,6 +445,20 @@
     width: 17px;
     height: 17px;
     flex: 0 0 auto;
+  }
+
+  .auth-page__password-toggle-icon--visible {
+    display: none;
+  }
+
+  &[data-password-visible='true'] {
+    .auth-page__password-toggle-icon {
+      display: none;
+    }
+
+    .auth-page__password-toggle-icon--visible {
+      display: block;
+    }
   }
 }
 

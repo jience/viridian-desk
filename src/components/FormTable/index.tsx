@@ -9,6 +9,8 @@ import cx from 'classnames';
 import './index.scss';
 const { ConfigContext } = ConfigProvider;
 
+const deferredInlineEditTypes = new Set(['input', 'input.password', 'input.textArea']);
+
 const FormTable = (props: any) => {
   const {
     value = '',
@@ -121,20 +123,39 @@ const FormTable = (props: any) => {
     comProps: any,
   ) => {
     // inputType: 'input'、'input.password'、'input.number'、'switch'、'input.ipv4'、'input.ipv4Cidr'、'input.ipv6Cidr'
+    const commitInlineEdit = (val: any) => {
+      const changeDataSource = dataSource.map((data: any) => {
+        if (data.id == rowId) {
+          return {
+            ...data,
+            [editKey]: val,
+          };
+        }
+        return data;
+      });
+      setDataSource(changeDataSource);
+      onChange?.(changeDataSource);
+    };
+
+    if (deferredInlineEditTypes.has(inputType)) {
+      return comList[inputType]({
+        ...comProps,
+        defaultValue: defaultValue,
+        onBlur: (event: any) => {
+          commitInlineEdit(event?.target ? event.target.value : event);
+          comProps?.onBlur?.(event);
+        },
+      });
+    }
+
     return comList[inputType]({
+      ...comProps,
       value: defaultValue,
       defaultValue: defaultValue,
       onChange: (val: any) => {
-        const changeDataSource = dataSource.map((data: any) => {
-          if (data.id == rowId) {
-            data[editKey] = val;
-          }
-          return data;
-        });
-        setDataSource(changeDataSource);
-        onChange?.(changeDataSource);
+        commitInlineEdit(val);
+        comProps?.onChange?.(val);
       },
-      ...comProps,
     });
   };
 

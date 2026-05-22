@@ -44,6 +44,16 @@
 }
 
 :where(
+  .auth-page__input-shell,
+  .vdui-input-affix-wrapper,
+  .vdui-form-item-control,
+  .vdui-lean-input,
+  .vdui-input-textarea
+) {
+  contain: layout paint style;
+}
+
+:where(
   .desk-card:hover,
   .desk-pool:hover,
   .application-card:hover,

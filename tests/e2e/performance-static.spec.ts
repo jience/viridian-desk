@@ -1615,6 +1615,43 @@ test('keeps editable focus cheap and native text helpers disabled on low-power d
   expect(lowPowerStyles).toContain('background-image: none !important');
 });
 
+test('routes high-frequency text inputs through the low-power lean input path', () => {
+  const leanInputPath = 'src/ui/lean-input.tsx';
+  const uiSource = source('src/ui/index.tsx');
+  const loginSource = source('src/pages/login/LoginAuthPanel.tsx');
+  const configurationFormSource = source('src/components/ConfigurationForm/index.tsx');
+  const formTableSource = source('src/components/FormTable/index.tsx');
+  const lowPowerStyles = source('src/styles/low-power-defaults.scss');
+
+  expect(existsSync(join(process.cwd(), leanInputPath)), leanInputPath).toBe(true);
+
+  const leanInputSource = source(leanInputPath);
+
+  expect(leanInputSource).toContain('LeanInput');
+  expect(leanInputSource).toContain('LeanTextarea');
+  expect(leanInputSource).toContain('memo(');
+  expect(leanInputSource).toContain('forwardRef');
+  expect(leanInputSource).toContain('spellCheck={false}');
+  expect(leanInputSource).toContain('autoCorrect="off"');
+  expect(leanInputSource).toContain('autoCapitalize="none"');
+  expect(leanInputSource).toContain('data-lean-input');
+  expect(uiSource).toContain("from './lean-input'");
+  expect(uiSource).toContain('<LeanInput');
+  expect(uiSource).toContain('<LeanTextarea');
+  expect(loginSource).toContain('@/ui/lean-input');
+  expect(loginSource).toContain('<LeanInput');
+  expect(loginSource).not.toContain('setPasswordVisible');
+  expect(configurationFormSource).toContain('deferredTextComTypes');
+  expect(configurationFormSource).toContain('getItemLiveValue');
+  expect(configurationFormSource).toContain('liveValue={getItemLiveValue');
+  expect(formTableSource).toContain('deferredInlineEditTypes');
+  expect(formTableSource).toContain('commitInlineEdit');
+  expect(formTableSource).toContain('onBlur');
+  expect(formTableSource).toContain('defaultValue: defaultValue');
+  expect(lowPowerStyles).toContain('contain: layout paint style');
+  expect(lowPowerStyles).toContain('.vdui-lean-input');
+});
+
 test('fails the production budget when legacy font formats are emitted', () => {
   const budgetSource = source('scripts/check-build-budget.js');
 
