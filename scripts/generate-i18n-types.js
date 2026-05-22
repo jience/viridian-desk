@@ -9,8 +9,27 @@ function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, relativePath), 'utf-8'));
 }
 
+function collectLocaleResource(language) {
+  const localeDir = path.join(__dirname, `../src/assets/locales/${language}`);
+
+  if (!fs.existsSync(localeDir)) {
+    return readJson(`../src/assets/locales/${language}.json`);
+  }
+
+  return fs
+    .readdirSync(localeDir)
+    .filter((fileName) => fileName.endsWith('.json'))
+    .sort()
+    .reduce((resource, fileName) => {
+      return {
+        ...resource,
+        ...readJson(`../src/assets/locales/${language}/${fileName}`),
+      };
+    }, {});
+}
+
 // 读取中文语言文件作为基准
-const zhCN = readJson('../src/assets/locales/zh-CN.json');
+const zhCN = collectLocaleResource('zh-CN');
 const redesignResources = {
   common: readJson('../src/ui/i18n/locales/zh-CN/common.json'),
   assistant: readJson('../src/ui/i18n/locales/zh-CN/assistant.json'),

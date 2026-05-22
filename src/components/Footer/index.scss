@@ -42,10 +42,10 @@
     border-color 180ms ease,
     transform 180ms ease;
 
-  .iconfont {
-    display: flex;
-    font-size: 16px;
-    line-height: 1;
+  svg {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
   }
 
   &:hover,
@@ -84,8 +84,10 @@
   border: 1px solid color-mix(in srgb, var(--develop-mode-color) 16%, transparent);
   border-radius: 10px;
 
-  .iconfont {
-    font-size: 12px;
+  svg {
+    width: 13px;
+    height: 13px;
+    flex: 0 0 auto;
   }
 }
 

@@ -32,13 +32,10 @@
     background 160ms ease,
     color 160ms ease;
 
-  i {
-    font-size: 15px;
-    line-height: 1;
-  }
-
-  .icon-minus {
-    font-size: 19px;
+  svg {
+    width: 15px;
+    height: 15px;
+    stroke-width: 1.9;
   }
 
   &:hover,

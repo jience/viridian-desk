@@ -30,7 +30,6 @@ export const listVapp = async (data: ListVappReq) => {
   const res = await request<ListVappResp>(VappApi.LIST_VAPP, {
     method: 'POST',
     body: data,
-    trackLoading: true,
   });
   if (res.data.results?.length) {
     res.data.results = await Promise.all(
@@ -47,7 +46,6 @@ export const addVapp = async (data: AddVappReq) => {
   return request(VappApi.ADD_VAPP, {
     method: 'POST',
     body: data,
-    trackLoading: true,
   });
 };
 
@@ -55,7 +53,6 @@ export const deleteVapp = async (data: DeleteVappReq) => {
   return request(VappApi.DELETE_VAPP, {
     method: 'POST',
     body: data,
-    trackLoading: true,
   });
 };
 
@@ -63,7 +60,6 @@ export const removeVapp = async (data: RemoveVappReq) => {
   return request(VappApi.REMOVE_VAPP, {
     method: 'POST',
     body: data,
-    trackLoading: true,
   });
 };
 
@@ -71,7 +67,6 @@ export const listVappIcon = async (data: ListVappIconReq) => {
   const res = await request<ListVappIconResp>(VappApi.LIST_VAPP_ICON, {
     method: 'POST',
     body: data,
-    trackLoading: true,
   });
   const ip = getStoreState()?.gateway.autoGateway?.address;
   res.data = await Promise.all(
@@ -87,6 +82,5 @@ export const createVapp = async (data: CreateVappReq) => {
   return request(VappApi.CREATE_VAPP, {
     method: 'POST',
     body: data,
-    trackLoading: true,
   });
 };

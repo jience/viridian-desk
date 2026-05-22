@@ -5,7 +5,7 @@ import Regex from '@/utils/regex';
 import { createSnapshot } from '@/services/resource';
 import useRequest from '@/hooks/useRequest';
 import './createSnap.scss';
-import { isEmpty } from 'lodash-es';
+import { isEmptyValue } from '@/utils/value';
 
 const useCreateSnap = (props: any) => {
   const { visible = false, setVisible, desktopId, desktopDiskList, refreshList } = props;
@@ -79,7 +79,7 @@ const useCreateSnap = (props: any) => {
       {
         label: intl.formatMessage({ id: 'AllDisks' }),
         value: 'includDataDisk',
-        disabled: isEmpty(dataDisks),
+        disabled: isEmptyValue(dataDisks),
       },
     ];
   }, [dataDisks, intl]);

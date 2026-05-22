@@ -6,7 +6,7 @@ import { clearEmpty } from '@/utils/utils';
 import { Divider } from '@/ui';
 import { useMessageFormatter } from '@/utils/message-format';
 import ActionAuth from '@/utils/actionAuth';
-import { map, isEmpty, get, cloneDeep, isFunction, slice } from 'lodash-es';
+import { clonePlainValue, getPathValue, isEmptyValue } from '@/utils/value';
 const AuthDropdown = ActionAuth(Dropdown);
 const AuthButton = ActionAuth(Button);
 
@@ -161,7 +161,7 @@ const TableCommon = ({
 
   useEffect(() => {
     if (columns.length) {
-      setFinalColumns(map(handleAppendDefaultRender(columns), (col) => col));
+      setFinalColumns(handleAppendDefaultRender(columns).map((col) => col));
     }
   }, [columns]);
 
@@ -174,7 +174,7 @@ const TableCommon = ({
           [curr.key]: curr.title,
         };
       },
-      isEmpty(searchOption) ? {} : { [searchOption.key]: searchOption.title },
+      isEmptyValue(searchOption) ? {} : { [searchOption.key]: searchOption.title },
     );
 
     const filterOptions = columns
@@ -182,43 +182,47 @@ const TableCommon = ({
       .reduce((prev, curr) => {
         return {
           ...prev,
-          [curr.key]: get(curr, 'filter.options', []),
+          [curr.key]: getPathValue(curr, 'filter.options', []),
         };
       }, {});
-    const target = cloneDeep(params);
+    const target = clonePlainValue(params);
     return Object.keys(target).reduce((prev, item) => {
-      const options = get(filterOptions, item, []);
+      const options = getPathValue(filterOptions, item, []);
       const col = columns.find((c) => c.key === item);
-      if (get(col, 'filter.type') === 'Cascader') {
+      if (getPathValue(col, 'filter.type') === 'Cascader') {
         const firstItem = options.find((v) => v.value === params[item][0]);
         let secondItem = '';
         let thirdItem = '';
         if (params[item].length > 1) {
-          secondItem = get(firstItem, 'children', []).find((v) => v.value === params[item][1]);
+          secondItem = getPathValue(firstItem, 'children', []).find(
+            (v) => v.value === params[item][1],
+          );
           if (params[item].length > 2) {
-            thirdItem = get(secondItem, 'children', []).find((v) => v.value === params[item][2]);
+            thirdItem = getPathValue(secondItem, 'children', []).find(
+              (v) => v.value === params[item][2],
+            );
           }
         }
         return {
           ...prev,
           [item]: {
             title: intl[item] || '',
-            value: `${get(firstItem, 'label', '')}${secondItem ? '/' : ''}${get(
+            value: `${getPathValue(firstItem, 'label', '')}${secondItem ? '/' : ''}${getPathValue(
               secondItem,
               'label',
               '',
-            )}${thirdItem ? '/' : ''}${get(thirdItem, 'label', '')}`,
+            )}${thirdItem ? '/' : ''}${getPathValue(thirdItem, 'label', '')}`,
           },
         };
       }
-      if (get(col, 'filter.type') === 'Checkbox') {
+      if (getPathValue(col, 'filter.type') === 'Checkbox') {
         return {
           ...prev,
           [item]: {
             title: intl[item] || '',
             value: params[item]
               .map((ch) =>
-                get(
+                getPathValue(
                   options.find((o) => o.value === ch),
                   'title',
                   '',
@@ -232,7 +236,7 @@ const TableCommon = ({
         ...prev,
         [item]: {
           title: intl[item] || '',
-          value: get(
+          value: getPathValue(
             options.find((v) => params[item] === v.value),
             'title',
             '',
@@ -290,7 +294,7 @@ const TableCommon = ({
       key: col.key,
       hide: !checkedValues.includes(col.key),
     }));
-    if (isFunction(onColumnChange)) {
+    if (typeof onColumnChange === 'function') {
       onColumnChange(tc);
     }
   };
@@ -301,9 +305,9 @@ const TableCommon = ({
 
   // 批量操作
   const renderBatchActions = () => {
-    const result = batchRowOperateButtons.filter(({ actions = [] }) => isEmpty(actions));
-    const before = result.length > 6 ? slice(result, 0, 5) : slice(result, 0, 6);
-    const after = result.length > 6 ? slice(result, 5) : [];
+    const result = batchRowOperateButtons.filter(({ actions = [] }) => isEmptyValue(actions));
+    const before = result.length > 6 ? result.slice(0, 5) : result.slice(0, 6);
+    const after = result.length > 6 ? result.slice(5) : [];
 
     const menu = (
       <Menu
@@ -339,7 +343,7 @@ const TableCommon = ({
             {index !== before.length - 1 ? <Divider type="vertical" /> : null}
           </>
         ))}
-        {!isEmpty(after) && (
+        {!isEmptyValue(after) && (
           <>
             <Divider type="vertical" />
             <Dropdown menu={menu} trigger={['click']}>

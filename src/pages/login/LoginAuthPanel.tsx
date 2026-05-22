@@ -1,6 +1,7 @@
 import { useAppSelector } from '@/store';
 import { selectConnected, selectNetwork } from '@/store/feature/gateway';
 import { useMessageFormatter } from '@/utils/message-format';
+import { Eye, EyeOff, Lock, User } from 'lucide-react';
 import { memo, type FormEvent, useCallback, useRef, useState } from 'react';
 import { useLoginHandler } from './hooks/useLoginHandler';
 import type { LoginFormType } from './types';
@@ -102,7 +103,7 @@ const LoginAuthPanelComponent = () => {
             <label className="auth-page__field">
               <span className="auth-page__label">{usernameLabel}</span>
               <span className="auth-page__input-shell">
-                <i className="iconfont icon-user form-prefix-icon" aria-hidden="true" />
+                <User className="form-prefix-icon" aria-hidden="true" />
                 <input
                   autoComplete="username"
                   className="auth-page__input"
@@ -123,7 +124,7 @@ const LoginAuthPanelComponent = () => {
             <label className="auth-page__field">
               <span className="auth-page__label">{passwordLabel}</span>
               <span className="auth-page__input-shell">
-                <i className="iconfont icon-lock form-prefix-icon" aria-hidden="true" />
+                <Lock className="form-prefix-icon" aria-hidden="true" />
                 <input
                   autoComplete="current-password"
                   className="auth-page__input"
@@ -140,10 +141,11 @@ const LoginAuthPanelComponent = () => {
                   onClick={() => setPasswordVisible((visible) => !visible)}
                   aria-label={passwordLabel}
                 >
-                  <i
-                    className={`iconfont ${passwordVisible ? 'icon-visible' : 'icon-invisible'}`}
-                    aria-hidden="true"
-                  />
+                  {passwordVisible ? (
+                    <EyeOff className="auth-page__password-toggle-icon" aria-hidden="true" />
+                  ) : (
+                    <Eye className="auth-page__password-toggle-icon" aria-hidden="true" />
+                  )}
                 </button>
               </span>
               {fieldErrors.password && (

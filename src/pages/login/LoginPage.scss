@@ -224,16 +224,12 @@
   background: color-mix(in srgb, var(--auth-accent) 14%, transparent);
   color: var(--auth-accent-strong);
 
-  .iconfont {
-    font-size: 17px;
-    line-height: 1;
+  svg,
+  .auth-page__feature-lucide {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
   }
-}
-
-.auth-page__feature-lucide {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 auto;
 }
 
 .auth-page__feature-copy {
@@ -403,9 +399,10 @@
   }
 
   .form-prefix-icon {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
     color: color-mix(in srgb, var(--auth-muted) 86%, transparent);
-    font-size: 18px;
-    line-height: 1;
   }
 }
 
@@ -441,9 +438,10 @@
     outline: 0;
   }
 
-  .iconfont {
-    font-size: 17px;
-    line-height: 1;
+  .auth-page__password-toggle-icon {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 auto;
   }
 }
 

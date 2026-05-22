@@ -2,7 +2,7 @@ import useRequest from '@/hooks/useRequest';
 import { listResourceUser, listVolume } from '@/services/resource';
 import { EmptyText } from '@/utils/constant';
 import { transRam } from '@/utils/utils';
-import { get, isEmpty } from 'lodash-es';
+import { getPathValue, isEmptyValue } from '@/utils/value';
 import { useState } from 'react';
 
 const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
@@ -22,7 +22,7 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
     manual: true,
     onSuccess: (res: any) => {
       const currentDeskInfo = res?.results.find((val: any) => val.id === id) || {};
-      if (isEmpty(currentDeskInfo)) {
+      if (isEmptyValue(currentDeskInfo)) {
         navigate('/app/desk');
       }
       const disks: any = currentDeskInfo?.disks;
@@ -58,8 +58,12 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
   };
 
   const transGpu = (item: any) => {
-    if (!isEmpty(item?.gpus) || !isEmpty(item?.vgpus)) {
-      return ' | GPU：' + (get(item, 'gpus.length', 0) + (isEmpty(item?.vgpus) ? 0 : 1)) + ' 颗';
+    if (!isEmptyValue(item?.gpus) || !isEmptyValue(item?.vgpus)) {
+      return (
+        ' | GPU：' +
+        (getPathValue<number>(item, 'gpus.length', 0) + (isEmptyValue(item?.vgpus) ? 0 : 1)) +
+        ' 颗'
+      );
     }
   };
   function transCpu(cpu: any) {
@@ -147,7 +151,7 @@ const useDeskDetail = ({ id, formatMessage, navigate }: any) => {
       case 'common':
         return [...otherDisks];
       case 'system_1common':
-        if (!isEmpty(otherDisks)) {
+        if (!isEmptyValue(otherDisks)) {
           otherDisks[0].showMore = true;
           otherDisks[0].showMoreAction = () => setShowAllDiskList(true);
           return [...systemDisk, ...[otherDisks[0]]];

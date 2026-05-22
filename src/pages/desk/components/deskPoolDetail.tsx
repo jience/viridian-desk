@@ -3,7 +3,7 @@ import Deskpool from '@/components/Deskpoolsvg';
 import { EmptyText } from '@/utils/constant';
 import { transRam } from '@/utils/utils';
 import './index.scss';
-import { get, isEmpty } from 'lodash-es';
+import { getPathValue, isEmptyValue } from '@/utils/value';
 
 const DeskPoolDetail = (props: any) => {
   const { item, transIcon, setCheckDeskPoolItem, formatMessage, visible, setVisible } = props;
@@ -49,8 +49,12 @@ const DeskPoolDetail = (props: any) => {
     );
   };
   const transGpu = (item: any) => {
-    if (!isEmpty(item?.gpus) || !isEmpty(item?.vgpu)) {
-      return ' | GPU：' + (get(item, 'gpus.length', 0) + (isEmpty(item?.vgpu) ? 0 : 1)) + ' 颗';
+    if (!isEmptyValue(item?.gpus) || !isEmptyValue(item?.vgpu)) {
+      return (
+        ' | GPU：' +
+        (getPathValue<number>(item, 'gpus.length', 0) + (isEmptyValue(item?.vgpu) ? 0 : 1)) +
+        ' 颗'
+      );
     }
   };
   const config = [

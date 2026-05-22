@@ -4,9 +4,7 @@ import type { ItemType } from '@/ui/fast';
 import type { ModalFunc } from '@/ui/fast';
 import { Trans, useTranslation } from 'react-i18next';
 import { AppIcon } from './component/AppIcon';
-import { useLoading } from '@/hooks/useLoading';
 import { useProgressiveItems } from '@/hooks/useProgressiveItems';
-import { VappApi } from '@/services/api/vapp';
 import Actions from '@/utils/actions';
 import { hasPermission } from '@/utils/permission';
 import type {
@@ -52,7 +50,7 @@ export const ApplicationPage: FC<ApplicationPageProps> = (props) => {
   const [detailApp, setDetailApp] = useState<ListVappItem | null>(null);
   const [launchingIds, setLaunchingIds] = useState<Set<number>>(() => new Set());
   const launchingIdsRef = useRef<Set<number>>(new Set());
-  const operateAppLoading = useLoading([VappApi.DELETE_VAPP, VappApi.REMOVE_VAPP]);
+  const [operateAppLoading, setOperateAppLoading] = useState(false);
   const visibleApps = useProgressiveItems(props.dataSource, {
     initialCount: 24,
     chunkSize: 24,
@@ -129,11 +127,16 @@ export const ApplicationPage: FC<ApplicationPageProps> = (props) => {
           mIds: [String(app.id)],
           desktopIds: app.desktop?.id ? [app.desktop.id] : [],
         };
-        if (isSystem) {
-          await props.onRemoveApp(params);
-          return;
+        setOperateAppLoading(true);
+        try {
+          if (isSystem) {
+            await props.onRemoveApp(params);
+            return;
+          }
+          await props.onDeleteApp(params);
+        } finally {
+          setOperateAppLoading(false);
         }
-        await props.onDeleteApp(params);
       },
     });
   };

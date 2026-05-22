@@ -1,8 +1,26 @@
 import { expect, test } from '@playwright/test';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const source = (path: string) => readFileSync(join(process.cwd(), path), 'utf8');
+const readJson = (path: string) => JSON.parse(source(path));
+const locale = (language: 'zh-CN' | 'zh-TW' | 'en-US') => {
+  const legacyPath = `src/assets/locales/${language}.json`;
+  if (existsSync(join(process.cwd(), legacyPath))) {
+    return readJson(legacyPath);
+  }
+
+  return readdirSync(join(process.cwd(), `src/assets/locales/${language}`))
+    .filter((file) => file.endsWith('.json'))
+    .sort()
+    .reduce(
+      (acc, file) => ({
+        ...acc,
+        ...readJson(`src/assets/locales/${language}/${file}`),
+      }),
+      {} as Record<string, string>,
+    );
+};
 
 test('keeps low-frequency modal components lazy-loaded', () => {
   expect(source('src/pages/approval/index.tsx')).not.toContain(
@@ -132,9 +150,9 @@ test('uses theme-specific brand artwork on the login brand panel', () => {
 test('keeps login hero copy aligned with the visual reference', () => {
   const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
   const loginStyles = source('src/pages/login/LoginPage.scss');
-  const zhCNLocale = JSON.parse(source('src/assets/locales/zh-CN.json'));
-  const zhTWLocale = JSON.parse(source('src/assets/locales/zh-TW.json'));
-  const enUSLocale = JSON.parse(source('src/assets/locales/en-US.json'));
+  const zhCNLocale = locale('zh-CN');
+  const zhTWLocale = locale('zh-TW');
+  const enUSLocale = locale('en-US');
 
   expect(loginBrandPanelSource).toContain('auth-page__hero-title-accent');
   expect(loginBrandPanelSource).toContain('auth-page__hero-rule');
@@ -153,19 +171,21 @@ test('keeps login hero copy aligned with the visual reference', () => {
 test('uses static product capability cards on the login brand panel', () => {
   const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
   const loginStyles = source('src/pages/login/LoginPage.scss');
-  const zhCNLocale = JSON.parse(source('src/assets/locales/zh-CN.json'));
-  const zhTWLocale = JSON.parse(source('src/assets/locales/zh-TW.json'));
-  const enUSLocale = JSON.parse(source('src/assets/locales/en-US.json'));
+  const zhCNLocale = locale('zh-CN');
+  const zhTWLocale = locale('zh-TW');
+  const enUSLocale = locale('en-US');
 
   expect(loginBrandPanelSource).toContain('LOGIN_FEATURE_CARDS');
   expect(loginBrandPanelSource).toContain('LoginFeatureSecureTitle');
   expect(loginBrandPanelSource).toContain('LoginFeatureWorkspaceTitle');
   expect(loginBrandPanelSource).toContain('LoginFeatureAssistantTitle');
-  expect(loginBrandPanelSource).toContain('icon-lock-o');
-  expect(loginBrandPanelSource).toContain('icon-desktop');
-  expect(loginBrandPanelSource).toContain("import { Bot } from 'lucide-react';");
-  expect(loginBrandPanelSource).toContain("iconType: 'lucide'");
+  expect(loginBrandPanelSource).toContain("import { Bot, Monitor, ShieldCheck } from 'lucide-react';");
+  expect(loginBrandPanelSource).toContain('Icon: ShieldCheck');
+  expect(loginBrandPanelSource).toContain('Icon: Monitor');
   expect(loginBrandPanelSource).toContain('Icon: Bot');
+  expect(loginBrandPanelSource).not.toContain("iconType: 'iconfont'");
+  expect(loginBrandPanelSource).not.toContain('icon-lock-o');
+  expect(loginBrandPanelSource).not.toContain('icon-desktop');
   expect(loginBrandPanelSource).not.toContain("icon: 'robot'");
   expect(loginBrandPanelSource).not.toContain('icon-c_question-s');
   expect(loginBrandPanelSource).not.toContain('useAppSelector');
@@ -287,18 +307,12 @@ test('removes deprecated non-local login copy and auth types from the client', (
     'error_code.NisUpdateDatabaseError',
     'error_code.NisUserLoginPermissionError',
   ];
-  const localePaths = [
-    'src/assets/locales/zh-CN.json',
-    'src/assets/locales/zh-TW.json',
-    'src/assets/locales/en-US.json',
-  ];
-
-  for (const localePath of localePaths) {
-    const locale = JSON.parse(source(localePath));
+  for (const language of ['zh-CN', 'zh-TW', 'en-US'] as const) {
+    const currentLocale = locale(language);
     for (const removedLocaleKey of removedLocaleKeys) {
-      expect(locale, `${localePath}:${removedLocaleKey}`).not.toHaveProperty(removedLocaleKey);
+      expect(currentLocale, `${language}:${removedLocaleKey}`).not.toHaveProperty(removedLocaleKey);
     }
-    expect(locale, `${localePath}:LocalAuthLogin`).toHaveProperty('LocalAuthLogin');
+    expect(currentLocale, `${language}:LocalAuthLogin`).toHaveProperty('LocalAuthLogin');
   }
 
   const appSliceSource = source('src/store/feature/app/appSlice.ts');
@@ -542,17 +556,20 @@ test('shows restrained icons on login feature cards', () => {
   const loginPageStyles = source('src/pages/login/LoginPage.scss');
 
   expect(loginBrandPanelSource).toContain('auth-page__feature-icon');
-  expect(loginBrandPanelSource).toContain('icon-lock-o');
-  expect(loginBrandPanelSource).toContain('icon-desktop');
-  expect(loginBrandPanelSource).toContain("import { Bot } from 'lucide-react';");
+  expect(loginBrandPanelSource).toContain("import { Bot, Monitor, ShieldCheck } from 'lucide-react';");
+  expect(loginBrandPanelSource).toContain('Icon: ShieldCheck');
+  expect(loginBrandPanelSource).toContain('Icon: Monitor');
   expect(loginBrandPanelSource).toContain('Icon: Bot');
+  expect(loginBrandPanelSource).not.toContain('icon-lock-o');
+  expect(loginBrandPanelSource).not.toContain('icon-desktop');
   expect(loginBrandPanelSource).not.toContain("icon: 'robot'");
   expect(loginBrandPanelSource).not.toContain('icon-c_question-s');
   expect(loginPageStyles).toContain('.auth-page__feature-icon');
   expect(loginPageStyles).toContain('.auth-page__feature-lucide');
   expect(loginPageStyles).not.toContain('.auth-page__robot-icon');
   expect(loginPageStyles).toContain('.auth-page__feature-tag');
-  expect(loginPageStyles).toContain('font-size: 17px');
+  expect(loginPageStyles).toContain('width: 18px');
+  expect(loginPageStyles).toContain('height: 18px');
 });
 
 test('keeps the login shell cheap to repaint on low-power devices', () => {
@@ -801,11 +818,9 @@ test('removes authenticated message notification feature from the client', () =>
   const appTypesSource = source('src/store/feature/app/types.ts');
   const publicServiceSource = source('src/services/public.ts');
   const resourceServiceSource = source('src/services/resource.ts');
-  const localeSources = [
-    source('src/assets/locales/zh-CN.json'),
-    source('src/assets/locales/zh-TW.json'),
-    source('src/assets/locales/en-US.json'),
-  ].join('\n');
+  const localeSources = [locale('zh-CN'), locale('zh-TW'), locale('en-US')]
+    .map((resource) => JSON.stringify(resource))
+    .join('\n');
   const removedPaths = [
     'src/components/MessageCenter',
     'src/services/api/msg',
@@ -921,8 +936,8 @@ test('splits vendor chunks by exact package name to avoid production init cycles
   expect(viteConfig).toContain('function getNodePackageName');
   expect(viteConfig).toContain("packageName === 'react-i18next'");
   expect(viteConfig).toContain("return 'vendor-icons'");
-  expect(viteConfig).toContain("return 'vendor-scrollbars'");
   expect(viteConfig).toContain("return 'vendor-state'");
+  expect(viteConfig).not.toContain("return 'vendor-scrollbars'");
   expect(viteConfig).not.toContain("return 'vendor-react'");
   expect(viteConfig).not.toContain("id.includes('/react')");
   expect(viteConfig).not.toContain("id.includes('/react-i18next')");
@@ -1056,8 +1071,8 @@ test('removes login history and operation record features from the client', () =
   expect(sourceFiles).not.toContain('loginHistory');
   expect(sourceFiles).not.toContain('clearLoginHistory');
   expect(sourceFiles).not.toContain('showEasyLog');
-  expect(source('src/assets/locales/zh-CN.json')).not.toContain('"EasyLog"');
-  expect(source('src/assets/locales/zh-CN.json')).not.toContain('login_page.clear_account');
+  expect(locale('zh-CN')).not.toHaveProperty('EasyLog');
+  expect(locale('zh-CN')).not.toHaveProperty('login_page.clear_account');
 });
 
 test('build script always enables the Tauri production frontend protocol', () => {
@@ -1156,17 +1171,19 @@ test('loads the Tauri HTTP plugin only when a request is executed', () => {
   }
 });
 
-test('tracks global request loading only for explicitly opted-in APIs', () => {
+test('keeps request execution independent from global loading state', () => {
   const requestSource = source('src/utils/request/index.ts');
   const vappSource = source('src/services/api/vapp/index.ts');
   const faultSource = source('src/services/api/fault/index.ts');
+  const storeSource = source('src/store/index.ts');
 
-  expect(requestSource).toContain('trackLoading?: boolean');
-  expect(requestSource).toContain('const shouldTrackLoading = opt?.trackLoading === true');
-  expect(requestSource).toContain('if (shouldTrackLoading) {');
-  expect(requestSource).not.toContain(") => {\n  globalEmitter.emit('api/startLoading', api);");
-  expect(vappSource).toContain('trackLoading: true');
-  expect(faultSource).toContain('trackLoading: true');
+  expect(requestSource).not.toContain('trackLoading');
+  expect(requestSource).not.toContain("api/startLoading");
+  expect(requestSource).not.toContain("api/stopLoading");
+  expect(storeSource).not.toContain('startLoading');
+  expect(storeSource).not.toContain('stopLoading');
+  expect(vappSource).not.toContain('trackLoading');
+  expect(faultSource).not.toContain('trackLoading');
 });
 
 test('loads low-frequency Tauri shell APIs only when their methods are used', () => {
@@ -1291,23 +1308,113 @@ test('keeps high-traffic authenticated pages off the full ui bundle', () => {
   expect(fastUiSource).not.toContain('InputBase');
 });
 
-test('keeps request and global loading hot paths lodash-free', () => {
+test('removes custom scrollbar and lodash runtimes from the frontend bundle', () => {
+  const packageJson = source('package.json');
+  const viteConfig = source('vite.config.ts');
+  const searchableSources = [
+    ...readdirSync(join(process.cwd(), 'src'), { recursive: true, withFileTypes: true })
+      .filter((entry) => entry.isFile())
+      .map((entry) => join(entry.parentPath, entry.name).replace(`${process.cwd()}/`, ''))
+      .filter((path) => /\.(ts|tsx|js|jsx)$/.test(path))
+      .map((path) => source(path)),
+    viteConfig,
+    packageJson,
+  ].join('\n');
+
+  expect(packageJson).not.toContain('react-custom-scrollbars');
+  expect(packageJson).not.toContain('@types/react-custom-scrollbars');
+  expect(packageJson).not.toContain('"lodash-es"');
+  expect(packageJson).not.toContain('@types/lodash-es');
+  expect(viteConfig).not.toContain('vendor-scrollbars');
+  expect(searchableSources).not.toContain('react-custom-scrollbars');
+  expect(searchableSources).not.toContain("from 'lodash-es'");
+});
+
+test('removes request-backed global loading subscriptions from list and modal flows', () => {
+  const storeSource = source('src/store/index.ts');
+  const requestSource = source('src/utils/request/index.ts');
+  const vappSource = source('src/services/api/vapp/index.ts');
+  const faultSource = source('src/services/api/fault/index.ts');
+  const appIndexSource = source('src/pages/application/index.tsx');
+  const appPageSource = source('src/pages/application/ApplicationPage.tsx');
+  const addFromSysSource = source('src/pages/application/component/AddFromSysModal/index.tsx');
+  const addFromSelfSource = source('src/pages/application/component/AddFromSelfModal/index.tsx');
+  const malfunctionSource = source('src/pages/malfunction/index.tsx');
+
+  expect(existsSync(join(process.cwd(), 'src/hooks/useLoading.ts'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/store/feature/loading'))).toBe(false);
+  expect(storeSource).not.toContain('loadingReducer');
+  expect(storeSource).not.toContain("api/startLoading");
+  expect(storeSource).not.toContain("api/stopLoading");
+  expect(requestSource).not.toContain('trackLoading');
+  expect(requestSource).not.toContain("globalEmitter.emit('api/startLoading'");
+  expect(vappSource).not.toContain('trackLoading');
+  expect(faultSource).not.toContain('trackLoading');
+
+  for (const sourceText of [
+    appIndexSource,
+    appPageSource,
+    addFromSysSource,
+    addFromSelfSource,
+    malfunctionSource,
+  ]) {
+    expect(sourceText).not.toContain('useLoading');
+    expect(sourceText).toMatch(/useState\(false\)/);
+  }
+});
+
+test('splits translation locales into named chunks instead of monolithic json files', () => {
+  const i18nSource = source('src/utils/i18n.ts');
+  const generatorSource = source('scripts/generate-i18n-types.js');
+
+  for (const language of ['zh-CN', 'zh-TW', 'en-US'] as const) {
+    expect(existsSync(join(process.cwd(), `src/assets/locales/${language}.json`))).toBe(false);
+    for (const chunk of ['core', 'error', 'login', 'settings', 'workspace']) {
+      expect(
+        existsSync(join(process.cwd(), `src/assets/locales/${language}/${chunk}.json`)),
+        `${language}/${chunk}.json`,
+      ).toBe(true);
+    }
+    expect(Object.keys(locale(language)).length).toBeGreaterThan(1200);
+  }
+
+  expect(i18nSource).toContain('import.meta.glob');
+  expect(i18nSource).toContain('loadTranslationNamespace');
+  expect(generatorSource).toContain('collectLocaleResource');
+  expect(generatorSource).not.toContain("readJson('../src/assets/locales/zh-CN.json')");
+});
+
+test('keeps the login startup path off the main iconfont', () => {
+  const globalStyles = source('src/styles/index.scss');
+  const loginSources = [
+    source('src/pages/login/LoginAuthPanel.tsx'),
+    source('src/pages/login/LoginBrandPanel.tsx'),
+    source('src/pages/login/LoginPage.tsx'),
+    source('src/components/ControlWindow/index.tsx'),
+    source('src/components/Footer/index.tsx'),
+  ].join('\n');
+  const appLayoutSource = source('src/layouts/AppLayout/index.tsx');
+  const settingsPageSource = source('src/pages/configPage/SettingsPage.tsx');
+
+  expect(globalStyles).not.toContain("@use '@/assets/iconfont/iconfont.css'");
+  expect(loginSources).not.toContain('iconfont');
+  expect(loginSources).toContain('lucide-react');
+  expect(appLayoutSource).toContain("import '@/assets/iconfont/iconfont.css'");
+  expect(settingsPageSource).toContain("import '@/assets/iconfont/iconfont.css'");
+});
+
+test('keeps request hot paths lodash-free', () => {
   const hotPathSources = [
     'src/utils/request/index.ts',
     'src/native/tauri/api/request.ts',
     'src/services/requestErrorHandler.ts',
-    'src/store/feature/loading/loadingSlice.ts',
   ];
 
   for (const path of hotPathSources) {
     expect(source(path), path).not.toContain("from 'lodash-es'");
   }
 
-  const loadingSliceSource = source('src/store/feature/loading/loadingSlice.ts');
-  expect(loadingSliceSource).not.toContain('createEntityAdapter');
-  expect(loadingSliceSource).not.toContain('matchPath');
-  expect(loadingSliceSource).toContain('state.byKey[action.payload]');
-  expect(loadingSliceSource).toContain('key.some((loadingKey) => isLoading(state, loadingKey))');
+  expect(source('src/utils/request/index.ts')).not.toContain('isEmpty');
 });
 
 test('progressively renders large authenticated card collections', () => {

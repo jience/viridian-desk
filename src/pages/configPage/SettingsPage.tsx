@@ -2,6 +2,7 @@ import '@/styles/design-system.css';
 import { Button } from '@/ui/components/button';
 import { DocumentTitle } from '@/ui/shell/document-title';
 import { PreLoginSettingsShell } from '@/ui/shell/pre-login-settings-shell';
+import '@/assets/iconfont/iconfont.css';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';

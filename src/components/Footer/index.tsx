@@ -8,6 +8,7 @@ import { selectDeveloperMode, selectIntegration } from '@/store/feature/config';
 import { useTranslation } from 'react-i18next';
 import { bridge } from '@/native';
 import { cn } from '@/ui/lib/cn';
+import { Network, Power, Settings, Wrench } from 'lucide-react';
 
 const isThinFromEnv = import.meta.env.TAURI_IS_THIN_CLIENT === 'true';
 
@@ -51,7 +52,7 @@ const Footer: FC<FooterProps> = ({ rightSlot }) => {
       {
         key: 'network',
         label: t('login_page.network'),
-        icon: <i className="iconfont icon-net" />,
+        icon: <Network aria-hidden="true" />,
         onClick: () => {
           void bridge.cmd.openNetworkSettings();
         },
@@ -60,7 +61,7 @@ const Footer: FC<FooterProps> = ({ rightSlot }) => {
       {
         key: 'setting',
         label: t('login_page.setting'),
-        icon: <i className="iconfont icon-setting" />,
+        icon: <Settings aria-hidden="true" />,
         onClick: () => {
           void navigate('/configPage/serverSetting');
         },
@@ -68,7 +69,7 @@ const Footer: FC<FooterProps> = ({ rightSlot }) => {
       {
         key: 'shutdown',
         label: t('login_page.shutdown'),
-        icon: <i className="iconfont icon-power-off-filled" />,
+        icon: <Power aria-hidden="true" />,
         onClick: () => {
           void shutdown();
         },
@@ -101,7 +102,7 @@ const Footer: FC<FooterProps> = ({ rightSlot }) => {
           })}
           {developerMode && (
             <div className="login-footer__developer" role="status">
-              <i className="iconfont icon-ConfigMap" />
+              <Wrench aria-hidden="true" />
               <span>{t('login_page.developer_mode_enabled')}</span>
             </div>
           )}

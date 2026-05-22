@@ -1,6 +1,5 @@
-import { useLoading } from '@/hooks/useLoading';
 import useRequest from '@/hooks/useRequest';
-import { FaultApi, listFault, revokeFault } from '@/services/api/fault';
+import { listFault, revokeFault } from '@/services/api/fault';
 import type { FaultItem, FaultListRequest } from '@/services/api/fault/types';
 import { createFault, listResourceUser } from '@/services/resource';
 import Actions from '@/utils/actions';
@@ -23,7 +22,7 @@ const isRecordEmpty = (value: unknown) =>
 export function Component() {
   const [modal, contextHolder] = Modal.useModal();
   const { formatMessage } = useMessageFormatter();
-  const listFaultLoading = useLoading(FaultApi.LIST_FAULT);
+  const [listFaultLoading, setListFaultLoading] = useState(false);
 
   const [queryParams, setQueryParams] = useState(initQueryParams);
   const [faultList, setFaultList] = useState<FaultItem[]>([]);
@@ -236,13 +235,20 @@ export function Component() {
       ...params,
     };
     const requestSeq = ++listRequestSeqRef.current;
-    const resp = await listFault(req);
-    if (requestSeq !== listRequestSeqRef.current) {
-      return;
+    setListFaultLoading(true);
+    try {
+      const resp = await listFault(req);
+      if (requestSeq !== listRequestSeqRef.current) {
+        return;
+      }
+      setQueryParams(req);
+      setFaultList(resp.data.results || []);
+      setTotal(resp.data.totalCount || 0);
+    } finally {
+      if (requestSeq === listRequestSeqRef.current) {
+        setListFaultLoading(false);
+      }
     }
-    setQueryParams(req);
-    setFaultList(resp.data.results || []);
-    setTotal(resp.data.totalCount || 0);
   };
 
   const resetFaultList = async () => {

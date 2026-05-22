@@ -1,6 +1,6 @@
 import { useUiTheme } from '@/ui/theme/use-ui-theme';
 import { useMessageFormatter } from '@/utils/message-format';
-import { Bot } from 'lucide-react';
+import { Bot, Monitor, ShieldCheck } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import brandLogoDark from '@/assets/images/viridian_logo_with_text_dark.svg';
@@ -8,8 +8,7 @@ import brandLogoLight from '@/assets/images/viridian_logo_with_text_light.svg';
 
 const LOGIN_FEATURE_CARDS = [
   {
-    iconType: 'iconfont',
-    icon: 'icon-lock-o',
+    Icon: ShieldCheck,
     title: 'LoginFeatureSecureTitle',
     titleDefault: '安全接入',
     description: 'LoginFeatureSecureDescription',
@@ -18,8 +17,7 @@ const LOGIN_FEATURE_CARDS = [
     tagDefault: 'TLS 保护',
   },
   {
-    iconType: 'iconfont',
-    icon: 'icon-desktop',
+    Icon: Monitor,
     title: 'LoginFeatureWorkspaceTitle',
     titleDefault: '统一工作空间',
     description: 'LoginFeatureWorkspaceDescription',
@@ -28,7 +26,6 @@ const LOGIN_FEATURE_CARDS = [
     tagDefault: '桌面 + 应用',
   },
   {
-    iconType: 'lucide',
     Icon: Bot,
     title: 'LoginFeatureAssistantTitle',
     titleDefault: '智能辅助',
@@ -70,20 +67,13 @@ const LoginBrandPanelComponent = () => {
 
         <div className="auth-page__status-grid">
           {LOGIN_FEATURE_CARDS.map((feature) => {
-            const icon =
-              feature.iconType === 'lucide' ? (
-                <feature.Icon className="auth-page__feature-lucide" strokeWidth={2.1} />
-              ) : (
-                <i className={`iconfont ${feature.icon}`} />
-              );
-
             return (
               <article
                 className="auth-page__status-card auth-page__feature-card"
                 key={feature.title}
               >
                 <span className="auth-page__feature-icon" aria-hidden="true">
-                  {icon}
+                  <feature.Icon className="auth-page__feature-lucide" strokeWidth={2.1} />
                 </span>
                 <div className="auth-page__feature-copy">
                   <strong>

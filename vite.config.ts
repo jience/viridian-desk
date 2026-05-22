@@ -71,9 +71,6 @@ export default defineConfig({
           if (packageName === 'lucide-react' || packageName === 'lucide') {
             return 'vendor-icons';
           }
-          if (packageName === 'react-custom-scrollbars') {
-            return 'vendor-scrollbars';
-          }
           if (
             packageName === '@reduxjs/toolkit' ||
             packageName === 'react-redux' ||

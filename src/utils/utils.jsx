@@ -1,5 +1,5 @@
 import { Gi, Ki, Mi, Pi, Ti } from '@/utils/constant';
-import { isEmpty } from 'lodash-es';
+import { isEmptyValue } from '@/utils/value';
 import i18next from 'i18next';
 
 /**
@@ -184,7 +184,7 @@ export const appModeList = [
 export const clearEmpty = (obj) => {
   return Object.entries(obj)
     .filter(([key, val]) => {
-      return val !== null && val !== undefined && val !== '' && !isEmpty(val);
+      return val !== null && val !== undefined && val !== '' && !isEmptyValue(val);
     })
     .reduce(
       (prev, [key, val]) => ({

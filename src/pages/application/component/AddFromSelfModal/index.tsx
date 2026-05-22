@@ -10,8 +10,7 @@ import type { DefaultOptionType } from '@/ui';
 import { listResourceUser } from '@/services/api/desktop';
 import IconChoose from './IconChoose';
 import type { CreateVappReq } from '@/services/api/vapp/types';
-import { createVapp, VappApi } from '@/services/api/vapp';
-import { useLoading } from '@/hooks/useLoading';
+import { createVapp } from '@/services/api/vapp';
 import { LanguageType } from '@/native/interfaces/config';
 
 export interface AddFromSelfModalProps {
@@ -24,7 +23,7 @@ export const AddFromSelfModal = (props: any) => {
   const { visible, setVisible } = props;
   const [form] = Form.useForm<CreateVappReq>();
   const [desktopList, setDesktopList] = useState<DefaultOptionType[]>([]);
-  const createVappLoading = useLoading(VappApi.CREATE_VAPP);
+  const [createVappLoading, setCreateVappLoading] = useState(false);
   const { appCategoryList } = useInitData();
   const { t } = useTranslation();
   const language = useAppSelector(selectLanguage);
@@ -54,10 +53,15 @@ export const AddFromSelfModal = (props: any) => {
 
   const submitForm = async () => {
     const res = await form.validateFields();
-    await createVapp(res);
-    message.success(t('application_page.publish_vapp_success'));
-    props.OnRefresh();
-    setVisible(false);
+    setCreateVappLoading(true);
+    try {
+      await createVapp(res);
+      message.success(t('application_page.publish_vapp_success'));
+      await Promise.resolve(props.OnRefresh());
+      setVisible(false);
+    } finally {
+      setCreateVappLoading(false);
+    }
   };
 
   useEffect(() => {
