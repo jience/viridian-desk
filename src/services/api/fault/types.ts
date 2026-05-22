@@ -63,8 +63,6 @@ export type FaultListResponse = ApiResponse<ApiPageResponse<FaultItem>>;
 export type FaultListRequest = {
   sortKey?: keyof FaultItem;
   sortOrder?: 'Asc' | 'Desc';
-  /** 当前用户 */
-  userId?: string;
   /** 状态 */
   status?: FaultStatus | '';
   /** 故障类型 */
