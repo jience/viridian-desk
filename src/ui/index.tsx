@@ -547,6 +547,7 @@ interface FormProps extends Omit<HTMLAttributes<HTMLFormElement>, 'onChange'> {
   layout?: 'horizontal' | 'vertical' | 'inline';
   colon?: boolean;
   labelCol?: AnyRecord;
+  labelAlign?: 'left' | 'right';
   wrapperCol?: AnyRecord;
   requiredMark?: boolean;
 }
@@ -595,6 +596,16 @@ function FormItem({
         ? { [valuePropName]: fieldValue ?? (valuePropName === 'checked' ? false : '') }
         : { defaultValue: fieldValue ?? '' }
       : {};
+  const conflictingValueProps =
+    key && form
+      ? shouldWriteLiveValue
+        ? valuePropName === 'checked'
+          ? { defaultChecked: undefined }
+          : valuePropName === 'value'
+            ? { defaultValue: undefined }
+            : {}
+        : { [valuePropName]: undefined }
+      : {};
 
   const child =
     key && form && isValidElement(children)
@@ -602,6 +613,7 @@ function FormItem({
           id: (children as ReactElement<any>).props.id ?? fieldId,
           'aria-invalid': hasError || undefined,
           'aria-describedby': hasError ? errorId : undefined,
+          ...conflictingValueProps,
           ...valueProps,
           onChange: (...args: any[]) => {
             const event = args[0];
@@ -663,6 +675,7 @@ export const Form = Object.assign(
     onValuesChange: _onValuesChange,
     colon: _colon,
     labelCol: _labelCol,
+    labelAlign: _labelAlign,
     wrapperCol: _wrapperCol,
     requiredMark: _requiredMark,
     ...props

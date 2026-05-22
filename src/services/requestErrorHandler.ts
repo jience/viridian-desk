@@ -28,7 +28,7 @@ function getLoginErrorTimesExceedErrorMessage(
       });
     }
     if (seconds && !minute) {
-      return t('error_code.LoginErrorTimesExceed', { sec: minute });
+      return t('error_code.LoginErrorTimesExceed', { sec: seconds });
     }
     return t('error_code.LoginErrorTimesExceed_MIN_SEC', {
       min: minute,

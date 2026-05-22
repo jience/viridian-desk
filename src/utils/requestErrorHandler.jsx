@@ -1,23 +1,33 @@
-import { formatI18NKey } from '@/utils/utils';
+import { t } from 'i18next';
+import { message as uiMessage } from '@/ui/message';
 import { logger } from '@/utils/logger';
 
-function getLoginErrorTimesExceedErrorMessage(
-  errorMessage,
-  { remainingSeconds },
-) {
+const hasErrorDetail = (value) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string' || Array.isArray(value)) return value.length > 0;
+  if (typeof value === 'object') return Object.keys(value).length > 0;
+  return true;
+};
+
+function getLoginErrorTimesExceedErrorMessage(errorMessageKey, { remainingSeconds }) {
   // 处理remainingSeconds
   const intRemainingSeconds = parseInt(remainingSeconds);
-  let remainingTime;
   if (!isNaN(intRemainingSeconds)) {
     const minute = Math.floor(intRemainingSeconds / 60);
-    const seconds = remainingSeconds % 60;
-    if (minute) {
-      remainingTime = `${minute}分`;
+    const seconds = intRemainingSeconds % 60;
+    if (minute && seconds) {
+      return t('error_code.LoginErrorTimesExceed_MIN_SEC', {
+        min: minute,
+        sec: seconds,
+      });
     }
-    if (seconds) {
-      remainingTime = minute ? `${remainingTime}${seconds}秒` : `${seconds}秒`;
+    if (seconds && !minute) {
+      return t(errorMessageKey, { sec: seconds });
     }
-    return formatI18NKey(errorMessage, { remainingTime });
+    return t('error_code.LoginErrorTimesExceed_MIN_SEC', {
+      min: minute,
+      sec: seconds,
+    });
   }
 }
 /**
@@ -29,8 +39,9 @@ function handleError(res) {
 
   const { errorCode = '', errorDetail = {}, httpStatus } = res;
   if (errorCode) {
+    const errorMessageKey = `error_code.${errorCode}`;
     // 默认初始翻译
-    message = formatI18NKey(res.errorCode);
+    message = t(errorMessageKey, { defaultValue: res.errorMessage || errorCode });
 
     // 用户未登录
     if (errorCode === 'MustLoggedError') {
@@ -38,35 +49,32 @@ function handleError(res) {
       localStorage.removeItem('userName');
       localStorage.removeItem('isLocal');
     }
-    if (!isEmpty(errorDetail)) {
-      message = formatI18NKey(errorCode, { ...errorDetail });
+    if (hasErrorDetail(errorDetail)) {
+      message = t(errorMessageKey, { ...errorDetail, defaultValue: res.errorMessage || errorCode });
       logger.debug('message', message);
     }
 
     // 登录密码错误次数特殊翻译
     if (errorCode === 'LoginErrorTimesExceed') {
-      let errorMessage = formatI18NKey('LoginErrorTimesExceed');
-
       if (res?.errorDetail) {
-        message = getLoginErrorTimesExceedErrorMessage(
-          errorMessage,
-          res?.errorDetail,
-        );
+        message = getLoginErrorTimesExceedErrorMessage(errorMessageKey, res?.errorDetail);
       }
     }
 
     // 用户密码不正确错误次数
     if (errorCode === 'UserNamePasswordNotMatch') {
       let errorMessage = res?.data?.remainLoginCount
-        ? formatI18NKey(formatI18NKey('NamePasswordNotMatchWithCount'), {
+        ? t('error_code.NamePasswordNotMatchWithCount', {
             remainLoginCount: res?.errorDetail?.remainLoginCount,
           })
-        : formatI18NKey(errorCode);
+        : t(errorMessageKey, { defaultValue: res.errorMessage || errorCode });
       message = errorMessage;
     }
-  } else if (httpStatus) message = formatI18NKey(httpStatus);
+  } else if (httpStatus) {
+    message = t(`error_code.${httpStatus}`, { defaultValue: res?.errorMessage || httpStatus });
+  }
   // 抛错
-  message.error(message || res?.errorMessage);
+  uiMessage.error(message || res?.errorMessage);
 }
 
 export default handleError;
