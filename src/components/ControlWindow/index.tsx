@@ -4,6 +4,7 @@ import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
 import { bridge } from '@/native';
 import { type FC } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
+import { Minus, X } from 'lucide-react';
 import './index.scss';
 
 export interface ControlWindowProps {
@@ -40,7 +41,7 @@ const ControlWindow: FC<ControlWindowProps> = (props) => {
           type="button"
           onClick={miniWindow}
         >
-          <i className="iconfont icon-minus" />
+          <Minus aria-hidden="true" />
         </button>
       )}
 
@@ -50,7 +51,7 @@ const ControlWindow: FC<ControlWindowProps> = (props) => {
         type="button"
         onClick={closeWindow}
       >
-        <i className="iconfont icon-error" />
+        <X aria-hidden="true" />
       </button>
     </div>
   ) : null;

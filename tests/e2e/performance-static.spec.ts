@@ -95,7 +95,7 @@ test('keeps the login page local-account only', () => {
   expect(loginPageSource).not.toContain('selectSmsResetPasswordSwitch');
   expect(loginPageSource).not.toContain('selectCurrentLoginType');
   expect(loginPageSource).not.toContain('isLocalPhoneLogin');
-  expect(loginAuthPanelSource).toContain('UsernamePwd');
+  expect(loginAuthPanelSource).toContain('<form');
 
   expect(loginHandlerSource).toContain('authType: LoginAuthType.LOCAL');
   expect(loginHandlerSource).not.toContain('selectCurrentLoginType');
@@ -114,15 +114,14 @@ test('keeps the login page local-account only', () => {
 
 test('keeps the login auth panel aligned with the console reference', () => {
   const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
-  const usernamePwdSource = source('src/pages/login/UsernamePwd/index.tsx');
   const loginStyles = source('src/pages/login/LoginPage.scss');
 
   expect(loginAuthPanelSource).toContain('LoginPanelTitle');
   expect(loginAuthPanelSource).toContain('LoginPanelSubtitle');
   expect(loginAuthPanelSource).toContain('LocalAuthLogin');
   expect(loginAuthPanelSource).toContain('auth-page__mode-divider');
-  expect(usernamePwdSource).toContain("label={t('login_page.username_label')}");
-  expect(usernamePwdSource).toContain("label={t('login_page.password_label')}");
+  expect(loginAuthPanelSource).toContain("formatMessage({ id: 'login_page.username_label' })");
+  expect(loginAuthPanelSource).toContain("formatMessage({ id: 'login_page.password_label' })");
   expect(loginStyles).toContain('grid-template-columns: minmax(0, 0.56fr) minmax(390px, 0.44fr);');
   expect(loginStyles).toContain('width: min(100%, 410px);');
   expect(loginStyles).toContain('min-height: 54px;');
@@ -187,11 +186,13 @@ test('uses static product capability cards on the login brand panel', () => {
   expect(loginBrandPanelSource).toContain('LoginFeatureSecureTitle');
   expect(loginBrandPanelSource).toContain('LoginFeatureWorkspaceTitle');
   expect(loginBrandPanelSource).toContain('LoginFeatureAssistantTitle');
-  expect(loginBrandPanelSource).toContain('icon-lock-o');
-  expect(loginBrandPanelSource).toContain('icon-desktop');
-  expect(loginBrandPanelSource).toContain("import { Bot } from 'lucide-react';");
-  expect(loginBrandPanelSource).toContain("iconType: 'lucide'");
+  expect(loginBrandPanelSource).toContain("import { Bot, Monitor, ShieldCheck } from 'lucide-react';");
+  expect(loginBrandPanelSource).toContain('Icon: ShieldCheck');
+  expect(loginBrandPanelSource).toContain('Icon: Monitor');
   expect(loginBrandPanelSource).toContain('Icon: Bot');
+  expect(loginBrandPanelSource).not.toContain("iconType: 'iconfont'");
+  expect(loginBrandPanelSource).not.toContain('icon-lock-o');
+  expect(loginBrandPanelSource).not.toContain('icon-desktop');
   expect(loginBrandPanelSource).not.toContain("icon: 'robot'");
   expect(loginBrandPanelSource).not.toContain('icon-c_question-s');
   expect(loginBrandPanelSource).not.toContain('useAppSelector');
@@ -565,17 +566,20 @@ test('shows restrained icons on login feature cards', () => {
   const loginPageStyles = source('src/pages/login/LoginPage.scss');
 
   expect(loginBrandPanelSource).toContain('auth-page__feature-icon');
-  expect(loginBrandPanelSource).toContain('icon-lock-o');
-  expect(loginBrandPanelSource).toContain('icon-desktop');
-  expect(loginBrandPanelSource).toContain("import { Bot } from 'lucide-react';");
+  expect(loginBrandPanelSource).toContain("import { Bot, Monitor, ShieldCheck } from 'lucide-react';");
+  expect(loginBrandPanelSource).toContain('Icon: ShieldCheck');
+  expect(loginBrandPanelSource).toContain('Icon: Monitor');
   expect(loginBrandPanelSource).toContain('Icon: Bot');
+  expect(loginBrandPanelSource).not.toContain('icon-lock-o');
+  expect(loginBrandPanelSource).not.toContain('icon-desktop');
   expect(loginBrandPanelSource).not.toContain("icon: 'robot'");
   expect(loginBrandPanelSource).not.toContain('icon-c_question-s');
   expect(loginPageStyles).toContain('.auth-page__feature-icon');
   expect(loginPageStyles).toContain('.auth-page__feature-lucide');
   expect(loginPageStyles).not.toContain('.auth-page__robot-icon');
   expect(loginPageStyles).toContain('.auth-page__feature-tag');
-  expect(loginPageStyles).toContain('font-size: 17px');
+  expect(loginPageStyles).toContain('width: 18px');
+  expect(loginPageStyles).toContain('height: 18px');
 });
 
 test('keeps the login shell cheap to repaint on low-power devices', () => {
@@ -596,7 +600,7 @@ test('keeps login input focus styles cheap to repaint while typing', () => {
   );
   expect(loginStyles).not.toContain('outline-offset: 1px');
   expect(loginStyles).toContain(
-    'border-color: color-mix(in srgb, var(--auth-accent) 42%, transparent) !important;',
+    'border-color: color-mix(in srgb, var(--auth-accent) 42%, transparent);',
   );
 });
 
@@ -612,8 +616,11 @@ test('keeps modal and login input focus rings single-layered', () => {
     uiStyles.indexOf('\n.vdui-input,', inputAffixWrapperStart),
   );
 
-  expect(loginStyles).toContain('.vdui-input-affix-wrapper .vdui-input:focus');
-  expect(loginStyles).toContain('outline: 0 !important');
+  expect(loginStyles).toContain('.auth-page__input-shell');
+  expect(loginStyles).toContain('&:focus-within');
+  expect(loginStyles).toContain('.auth-page__input');
+  expect(loginStyles).toContain('outline: 0;');
+  expect(loginStyles).not.toContain('.vdui-input-affix-wrapper .vdui-input:focus');
   expect(publishAppModalStyles).not.toContain('.vdui-input');
   expect(publishAppModalStyles).not.toContain('.vdui-select');
   expect(publishAppModalStyles).not.toContain('--app-modal-accent');
@@ -640,33 +647,55 @@ test('notifies only changed form fields while typing', () => {
 
 test('allows login text fields to avoid controlled React value writes while typing', () => {
   const uiSource = source('src/ui/index.tsx');
-  const usernamePasswordSource = source('src/pages/login/UsernamePwd/index.tsx');
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
 
   expect(uiSource).toContain('liveValue?: boolean');
   expect(uiSource).toContain('_setFieldValueSilently');
   expect(uiSource).toContain('defaultValue');
-  expect(usernamePasswordSource).toContain('liveValue={false}');
+  expect(loginAuthPanelSource).toContain('useRef<HTMLFormElement');
+  expect(loginAuthPanelSource).toContain('new FormData(formRef.current)');
+  expect(loginAuthPanelSource).toContain('name="loginName"');
+  expect(loginAuthPanelSource).toContain('name="password"');
+  expect(loginAuthPanelSource).not.toContain('value={');
+  expect(loginAuthPanelSource).not.toContain('Form.useForm');
+  expect(loginAuthPanelSource).not.toContain('validateFields');
+  expect(loginAuthPanelSource).not.toContain('UsernamePwd');
+  expect(existsSync(join(process.cwd(), 'src/pages/login/UsernamePwd')), 'UsernamePwd').toBe(
+    false,
+  );
 });
 
 test('keeps login key handling off the per-character DOM query path', () => {
   const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
 
-  expect(loginAuthPanelSource).toContain("if (event.key !== 'Enter') return;");
+  expect(loginAuthPanelSource).toContain('onSubmit={handleSubmit}');
+  expect(loginAuthPanelSource).not.toContain("document.addEventListener('keydown'");
+  expect(loginAuthPanelSource).not.toContain('closest(');
 });
 
 test('keeps login enter repeat guard out of React state updates', () => {
-  const enterGuardSource = source('src/pages/login/UsernamePwd/usePreventEnterKeyLongPress.ts');
+  const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
 
-  expect(enterGuardSource).toContain('useRef');
-  expect(enterGuardSource).not.toContain('useState');
-  expect(enterGuardSource).not.toContain('setIsEnterPressed');
+  expect(loginHandlerSource).toContain('submitLockRef');
+  expect(loginHandlerSource).toContain('useRef(false)');
+  expect(loginHandlerSource).not.toContain('setIsEnterPressed');
 });
 
 test('keeps the login form branch out of gateway status updates', () => {
   const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
 
-  expect(loginAuthPanelSource).toContain('<UsernamePwd formIns={form} />');
+  expect(loginAuthPanelSource).toContain('<form');
   expect(loginAuthPanelSource).not.toContain('LoginFormItems');
+});
+
+test('keeps the login submit path free of shared button runtime dependencies', () => {
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
+
+  expect(loginAuthPanelSource).not.toContain("@/ui/components/button");
+  expect(loginAuthPanelSource).not.toContain('<Button');
+  expect(loginAuthPanelSource).toContain('<button');
+  expect(loginAuthPanelSource).toContain('type="submit"');
+  expect(loginAuthPanelSource).toContain('className="auth-page__submit"');
 });
 
 test('reuses prepared terminal info after login before permission route selection', () => {
@@ -706,8 +735,12 @@ test('avoids duplicate terminal bootstrap after login success', () => {
   expect(successHandlerSource).not.toContain('fetchTerminalInfo');
 });
 
-test('keeps the local username password form memoized away from parent shell renders', () => {
-  expect(source('src/pages/login/UsernamePwd/index.tsx')).toContain('memo(');
+test('keeps the local username password form native and isolated from parent shell renders', () => {
+  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
+
+  expect(loginAuthPanelSource).toContain('memo(');
+  expect(loginAuthPanelSource).toContain('useRef<HTMLFormElement');
+  expect(loginAuthPanelSource).not.toContain("import { Form");
 });
 
 test('keeps the login page shell split away from live auth and gateway state', () => {
@@ -725,7 +758,8 @@ test('keeps the login page shell split away from live auth and gateway state', (
 
   expect(loginBrandPanelSource).toContain('memo(');
   expect(loginAuthPanelSource).toContain('memo(');
-  expect(loginAuthPanelSource).toContain('<UsernamePwd formIns={form} />');
+  expect(loginAuthPanelSource).toContain('<form');
+  expect(loginAuthPanelSource).not.toContain('Form.useForm');
 });
 
 test('loads the assistant panel only when the user opens it', () => {
@@ -871,6 +905,27 @@ test('keeps authenticated client bootstrap centralized outside ClientLayout rend
   expect(existsSync(join(process.cwd(), sharedStatePath)), sharedStatePath).toBe(false);
 });
 
+test('stages authenticated bootstrap work after first paint on low-power devices', () => {
+  const routerSource = source('src/router/index.tsx');
+  const bootstrapStart = routerSource.indexOf('function scheduleAuthenticatedClientBootstrap()');
+  const bootstrapEnd = routerSource.indexOf('const rootRoutes', bootstrapStart);
+  const bootstrapBlock = routerSource.slice(bootstrapStart, bootstrapEnd);
+
+  expect(bootstrapBlock).toContain('scheduleAfterFirstPaint');
+  expect(bootstrapBlock).toContain('scheduleWhenIdle');
+  expect(routerSource).toContain('window.requestAnimationFrame');
+  expect(routerSource).toContain('window.requestIdleCallback');
+  expect(bootstrapBlock.indexOf('fetchGatewayList')).toBeLessThan(
+    bootstrapBlock.indexOf('fetchConfigInfo'),
+  );
+  expect(bootstrapBlock.indexOf('fetchClientOnlineStatus')).toBeLessThan(
+    bootstrapBlock.indexOf('fetchClientInfo'),
+  );
+  expect(bootstrapBlock).not.toContain(
+    'void appStore.dispatch(fetchConfigInfo());\n    void appStore.dispatch(fetchGatewayList());',
+  );
+});
+
 test('does not statically bundle every locale at startup', () => {
   const i18nSource = source('src/utils/i18n.ts');
 
@@ -896,153 +951,6 @@ test('splits vendor chunks by exact package name to avoid production init cycles
   expect(viteConfig).not.toContain("return 'vendor-react'");
   expect(viteConfig).not.toContain("id.includes('/react')");
   expect(viteConfig).not.toContain("id.includes('/react-i18next')");
-});
-
-test('removes custom scrollbar and lodash runtimes from the frontend bundle', () => {
-  const packageJson = source('package.json');
-  const viteConfig = source('vite.config.ts');
-  const searchableSources = [
-    ...collectSourceFiles('src').map((path) => source(path)),
-    viteConfig,
-    packageJson,
-  ].join('\n');
-
-  expect(packageJson).not.toContain('react-custom-scrollbars');
-  expect(packageJson).not.toContain('@types/react-custom-scrollbars');
-  expect(packageJson).not.toContain('"lodash-es"');
-  expect(packageJson).not.toContain('@types/lodash-es');
-  expect(viteConfig).not.toContain('vendor-scrollbars');
-  expect(searchableSources).not.toContain('react-custom-scrollbars');
-  expect(searchableSources).not.toContain("from 'lodash-es'");
-});
-
-test('removes request-backed global loading subscriptions from list and modal flows', () => {
-  const storeSource = source('src/store/index.ts');
-  const mittTypesSource = source('src/utils/mitt/types.ts');
-  const requestSource = source('src/utils/request/index.ts');
-  const vappSource = source('src/services/api/vapp/index.ts');
-  const faultSource = source('src/services/api/fault/index.ts');
-  const appIndexSource = source('src/pages/application/index.tsx');
-  const appPageSource = source('src/pages/application/ApplicationPage.tsx');
-  const virtualAppSource = source('src/pages/application/component/VirtualApp/index.tsx');
-  const addFromSysSource = source('src/pages/application/component/AddFromSysModal/index.tsx');
-  const addFromSelfSource = source('src/pages/application/component/AddFromSelfModal/index.tsx');
-  const malfunctionSource = source('src/pages/malfunction/index.tsx');
-
-  expect(existsSync(join(process.cwd(), 'src/hooks/useLoading.ts'))).toBe(false);
-  expect(existsSync(join(process.cwd(), 'src/store/feature/loading'))).toBe(false);
-  expect(storeSource).not.toContain('loadingReducer');
-  expect(storeSource).not.toContain("api/startLoading");
-  expect(storeSource).not.toContain("api/stopLoading");
-  expect(mittTypesSource).not.toContain("api/startLoading");
-  expect(mittTypesSource).not.toContain("api/stopLoading");
-  expect(requestSource).not.toContain('trackLoading');
-  expect(requestSource).not.toContain("globalEmitter.emit('api/startLoading'");
-  expect(vappSource).not.toContain('trackLoading');
-  expect(faultSource).not.toContain('trackLoading');
-
-  for (const sourceText of [
-    appIndexSource,
-    appPageSource,
-    virtualAppSource,
-    addFromSysSource,
-    addFromSelfSource,
-    malfunctionSource,
-  ]) {
-    expect(sourceText).not.toContain('useLoading');
-    expect(sourceText).toMatch(/useState\(false\)/);
-  }
-
-  expect(appPageSource).toContain("from '@/ui'");
-  expect(appPageSource).not.toContain("@/ui/fast");
-  expect(malfunctionSource).toContain("from '@/ui'");
-  expect(malfunctionSource).not.toContain("@/ui/fast");
-});
-
-test('splits translation locales into named chunks instead of monolithic json files', () => {
-  const i18nSource = source('src/utils/i18n.ts');
-  const generatorSource = source('scripts/generate-i18n-types.js');
-
-  for (const language of ['zh-CN', 'zh-TW', 'en-US'] as const) {
-    expect(existsSync(join(process.cwd(), `src/assets/locales/${language}.json`))).toBe(false);
-    for (const chunk of ['core', 'error', 'login', 'settings', 'workspace']) {
-      expect(
-        existsSync(join(process.cwd(), `src/assets/locales/${language}/${chunk}.json`)),
-        `${language}/${chunk}.json`,
-      ).toBe(true);
-    }
-    expect(Object.keys(locale(language)).length).toBeGreaterThan(1200);
-  }
-
-  expect(i18nSource).toContain('import.meta.glob');
-  expect(i18nSource).toContain('loadTranslationNamespace');
-  expect(generatorSource).toContain('collectLocaleResource');
-  expect(generatorSource).not.toContain("readJson('../src/assets/locales/zh-CN.json')");
-});
-
-test('keeps low-power visual degradation out of main', () => {
-  const globalStyles = source('src/styles/index.scss');
-  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
-  const controlWindowSource = source('src/components/ControlWindow/index.tsx');
-  const footerSource = source('src/components/Footer/index.tsx');
-
-  expect(globalStyles).not.toContain('low-power-defaults');
-  expect(globalStyles).not.toContain('performance-tier');
-  expect(existsSync(join(process.cwd(), 'src/styles/low-power-defaults.scss'))).toBe(false);
-  expect(existsSync(join(process.cwd(), 'src/styles/performance-tier.scss'))).toBe(false);
-  expect(existsSync(join(process.cwd(), 'src/utils/performanceTier.ts'))).toBe(false);
-  expect(existsSync(join(process.cwd(), 'src/ui/fast.tsx'))).toBe(false);
-  expect(loginBrandPanelSource).toContain('icon-lock-o');
-  expect(loginBrandPanelSource).toContain('icon-desktop');
-  expect(loginBrandPanelSource).toContain("import { Bot } from 'lucide-react';");
-  expect(controlWindowSource).toContain('icon-minus');
-  expect(controlWindowSource).toContain('icon-error');
-  expect(footerSource).toContain('iconfont icon-net');
-  expect(footerSource).toContain('iconfont icon-setting');
-  expect(footerSource).not.toContain('@lucide/react');
-});
-
-test('keeps request hot paths lodash-free', () => {
-  const hotPathSources = [
-    'src/utils/request/index.ts',
-    'src/native/tauri/api/request.ts',
-    'src/services/requestErrorHandler.ts',
-    'src/pages/desk/DeskPage.tsx',
-  ];
-
-  for (const path of hotPathSources) {
-    expect(source(path), path).not.toContain("from 'lodash-es'");
-  }
-
-  expect(source('src/utils/request/index.ts')).not.toContain('isEmpty');
-});
-
-test('stages login route bootstrap after first paint without low-power visual defaults', () => {
-  const routerSource = source('src/router/index.tsx');
-  const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
-  const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
-  const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
-  const bootstrapStart = routerSource.indexOf('function scheduleAuthenticatedClientBootstrap()');
-  const bootstrapEnd = routerSource.indexOf('const rootRoutes', bootstrapStart);
-  const bootstrapBlock = routerSource.slice(bootstrapStart, bootstrapEnd);
-
-  expect(routerSource).toContain('schedulePreAuthClientBootstrap');
-  expect(routerSource).toContain('scheduleAfterFirstPaint');
-  expect(routerSource).toContain('scheduleWhenIdle');
-  expect(routerSource).toContain('window.requestAnimationFrame');
-  expect(routerSource).toContain('window.requestIdleCallback');
-  expect(preAuthLoaderBlock).toContain('scheduleAfterFirstPaint');
-  expect(preAuthLoaderBlock).toContain('scheduleWhenIdle');
-  expect(preAuthLoaderBlock).toContain('fetchConfigInfo');
-  expect(preAuthLoaderBlock).toContain('fetchGatewayList');
-  expect(preAuthLoaderBlock).toContain('fetchClientOnlineStatus');
-  expect(preAuthLoaderBlock).not.toContain('window.setTimeout(() => {');
-
-  expect(bootstrapBlock).toContain('if (!state.gateway.gatewayList.length)');
-  expect(bootstrapBlock).toContain('if (state.gateway.connected === false)');
-  expect(bootstrapBlock).toContain('if (!state.config.client_id)');
-  expect(bootstrapBlock).toContain('if (!state.client)');
-  expect(source('src/styles/index.scss')).not.toContain('low-power-defaults');
 });
 
 test('keeps route design-system styles out of the global stylesheet', () => {
@@ -1165,7 +1073,7 @@ test('removes login history and operation record features from the client', () =
   const sourceFiles = [
     source('src/native/interfaces/index.ts'),
     source('src/store/feature/app/appSlice.ts'),
-    source('src/pages/login/UsernamePwd/index.tsx'),
+    source('src/pages/login/LoginAuthPanel.tsx'),
     source('src/components/Sidebar/index.tsx'),
   ].join('\n');
 
@@ -1226,7 +1134,29 @@ test('defers non-critical hardware acceleration probing until after first render
 
   expect(setupViewIndex).toBeGreaterThan(-1);
   expect(setupEnvLogIndex).toBeGreaterThan(setupViewIndex);
+  expect(mainSource).not.toContain('applyInitialPerformanceTier');
+  expect(mainSource).not.toContain('performanceTier');
   expect(mainSource).not.toContain('  setupEnvLog();\n\n  setupServices();');
+});
+
+test('uses low-power rendering defaults without runtime device tier detection', () => {
+  const mainSource = source('src/main.tsx');
+  const globalStyles = source('src/styles/index.scss');
+  const lowPowerStyles = source('src/styles/low-power-defaults.scss');
+
+  expect(existsSync(join(process.cwd(), 'src/utils/performanceTier.ts'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/styles/performance-tier.scss'))).toBe(false);
+  expect(mainSource).not.toContain('dataset.performanceTier');
+  expect(mainSource).not.toContain('TAURI_ARCH');
+  expect(mainSource).not.toContain('hardwareConcurrency');
+  expect(globalStyles).toContain("@use '@/styles/low-power-defaults.scss';");
+  expect(globalStyles).not.toContain("@use '@/styles/performance-tier.scss';");
+  expect(lowPowerStyles).not.toContain('data-performance-tier');
+  expect(lowPowerStyles).toContain('backdrop-filter: none !important');
+  expect(lowPowerStyles).toContain('filter: none !important');
+  expect(lowPowerStyles).toContain('box-shadow: none !important');
+  expect(lowPowerStyles).toContain('transition-duration: 0ms !important');
+  expect(lowPowerStyles).toContain('animation: none !important');
 });
 
 test('fails the production budget when legacy font formats are emitted', () => {
@@ -1249,6 +1179,21 @@ test('loads the Tauri HTTP plugin only when a request is executed', () => {
     expect(requestSource).not.toContain('import { fetch');
     expect(requestSource).toContain("import('@tauri-apps/plugin-http')");
   }
+});
+
+test('keeps request execution independent from global loading state', () => {
+  const requestSource = source('src/utils/request/index.ts');
+  const vappSource = source('src/services/api/vapp/index.ts');
+  const faultSource = source('src/services/api/fault/index.ts');
+  const storeSource = source('src/store/index.ts');
+
+  expect(requestSource).not.toContain('trackLoading');
+  expect(requestSource).not.toContain("api/startLoading");
+  expect(requestSource).not.toContain("api/stopLoading");
+  expect(storeSource).not.toContain('startLoading');
+  expect(storeSource).not.toContain('stopLoading');
+  expect(vappSource).not.toContain('trackLoading');
+  expect(faultSource).not.toContain('trackLoading');
 });
 
 test('loads low-frequency Tauri shell APIs only when their methods are used', () => {
@@ -1347,4 +1292,185 @@ test('loads password crypto only when login work needs it', () => {
   expect(loginSuccessSource).toContain("import('@/utils/passwordCrypto')");
   expect(apiModuleSource).not.toContain("from '@/utils/utils'");
   expect(apiModuleSource).toContain("from '@/utils/passwordCrypto'");
+});
+
+test('keeps high-traffic authenticated pages off the full ui bundle', () => {
+  const highTrafficSources = [
+    'src/pages/desk/DeskPage.tsx',
+    'src/pages/desk/useDeskHooks.tsx',
+    'src/pages/application/index.tsx',
+    'src/pages/application/ApplicationPage.tsx',
+    'src/pages/approval/ApprovalPage.tsx',
+    'src/pages/malfunction/index.tsx',
+    'src/pages/malfunction/MalfunctionPage.tsx',
+  ];
+
+  for (const path of highTrafficSources) {
+    const fileSource = source(path);
+    expect(fileSource, path).not.toMatch(/from ['"]@\/ui['"]/);
+  }
+
+  const fastUiSource = source('src/ui/fast.tsx');
+  expect(fastUiSource).toContain('export function Table');
+  expect(fastUiSource).toContain('export const Modal');
+  expect(fastUiSource).not.toContain('export const Form');
+  expect(fastUiSource).not.toContain('createForm');
+  expect(fastUiSource).not.toContain('InputBase');
+});
+
+test('removes custom scrollbar and lodash runtimes from the frontend bundle', () => {
+  const packageJson = source('package.json');
+  const viteConfig = source('vite.config.ts');
+  const searchableSources = [
+    ...collectSourceFiles('src').map((path) => source(path)),
+    viteConfig,
+    packageJson,
+  ].join('\n');
+
+  expect(packageJson).not.toContain('react-custom-scrollbars');
+  expect(packageJson).not.toContain('@types/react-custom-scrollbars');
+  expect(packageJson).not.toContain('"lodash-es"');
+  expect(packageJson).not.toContain('@types/lodash-es');
+  expect(viteConfig).not.toContain('vendor-scrollbars');
+  expect(searchableSources).not.toContain('react-custom-scrollbars');
+  expect(searchableSources).not.toContain("from 'lodash-es'");
+});
+
+test('removes request-backed global loading subscriptions from list and modal flows', () => {
+  const storeSource = source('src/store/index.ts');
+  const requestSource = source('src/utils/request/index.ts');
+  const vappSource = source('src/services/api/vapp/index.ts');
+  const faultSource = source('src/services/api/fault/index.ts');
+  const appIndexSource = source('src/pages/application/index.tsx');
+  const appPageSource = source('src/pages/application/ApplicationPage.tsx');
+  const addFromSysSource = source('src/pages/application/component/AddFromSysModal/index.tsx');
+  const addFromSelfSource = source('src/pages/application/component/AddFromSelfModal/index.tsx');
+  const malfunctionSource = source('src/pages/malfunction/index.tsx');
+
+  expect(existsSync(join(process.cwd(), 'src/hooks/useLoading.ts'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/store/feature/loading'))).toBe(false);
+  expect(storeSource).not.toContain('loadingReducer');
+  expect(storeSource).not.toContain("api/startLoading");
+  expect(storeSource).not.toContain("api/stopLoading");
+  expect(requestSource).not.toContain('trackLoading');
+  expect(requestSource).not.toContain("globalEmitter.emit('api/startLoading'");
+  expect(vappSource).not.toContain('trackLoading');
+  expect(faultSource).not.toContain('trackLoading');
+
+  for (const sourceText of [
+    appIndexSource,
+    appPageSource,
+    addFromSysSource,
+    addFromSelfSource,
+    malfunctionSource,
+  ]) {
+    expect(sourceText).not.toContain('useLoading');
+    expect(sourceText).toMatch(/useState\(false\)/);
+  }
+});
+
+test('splits translation locales into named chunks instead of monolithic json files', () => {
+  const i18nSource = source('src/utils/i18n.ts');
+  const generatorSource = source('scripts/generate-i18n-types.js');
+
+  for (const language of ['zh-CN', 'zh-TW', 'en-US'] as const) {
+    expect(existsSync(join(process.cwd(), `src/assets/locales/${language}.json`))).toBe(false);
+    for (const chunk of ['core', 'error', 'login', 'settings', 'workspace']) {
+      expect(
+        existsSync(join(process.cwd(), `src/assets/locales/${language}/${chunk}.json`)),
+        `${language}/${chunk}.json`,
+      ).toBe(true);
+    }
+    expect(Object.keys(locale(language)).length).toBeGreaterThan(1200);
+  }
+
+  expect(i18nSource).toContain('import.meta.glob');
+  expect(i18nSource).toContain('loadTranslationNamespace');
+  expect(generatorSource).toContain('collectLocaleResource');
+  expect(generatorSource).not.toContain("readJson('../src/assets/locales/zh-CN.json')");
+});
+
+test('keeps the login startup path off the main iconfont', () => {
+  const globalStyles = source('src/styles/index.scss');
+  const loginSources = [
+    source('src/pages/login/LoginAuthPanel.tsx'),
+    source('src/pages/login/LoginBrandPanel.tsx'),
+    source('src/pages/login/LoginPage.tsx'),
+    source('src/components/ControlWindow/index.tsx'),
+    source('src/components/Footer/index.tsx'),
+  ].join('\n');
+  const appLayoutSource = source('src/layouts/AppLayout/index.tsx');
+  const settingsPageSource = source('src/pages/configPage/SettingsPage.tsx');
+
+  expect(globalStyles).not.toContain("@use '@/assets/iconfont/iconfont.css'");
+  expect(loginSources).not.toContain('iconfont');
+  expect(loginSources).toContain('lucide-react');
+  expect(appLayoutSource).toContain("import '@/assets/iconfont/iconfont.css'");
+  expect(settingsPageSource).toContain("import '@/assets/iconfont/iconfont.css'");
+});
+
+test('keeps request hot paths lodash-free', () => {
+  const hotPathSources = [
+    'src/utils/request/index.ts',
+    'src/native/tauri/api/request.ts',
+    'src/services/requestErrorHandler.ts',
+  ];
+
+  for (const path of hotPathSources) {
+    expect(source(path), path).not.toContain("from 'lodash-es'");
+  }
+
+  expect(source('src/utils/request/index.ts')).not.toContain('isEmpty');
+});
+
+test('progressively renders large authenticated card collections', () => {
+  const progressiveHookSource = source('src/hooks/useProgressiveItems.ts');
+  const deskPageSource = source('src/pages/desk/DeskPage.tsx');
+  const applicationPageSource = source('src/pages/application/ApplicationPage.tsx');
+  const deskStyles = source('src/pages/desk/DeskPage.scss');
+  const applicationStyles = source('src/pages/application/ApplicationPage.scss');
+
+  expect(progressiveHookSource).toContain('useProgressiveItems');
+  expect(progressiveHookSource).not.toContain('resolvePerformanceTier');
+  expect(progressiveHookSource).not.toContain('performanceTier');
+  expect(progressiveHookSource).toContain('requestIdleCallback');
+  expect(progressiveHookSource).toContain('initialCount');
+  expect(progressiveHookSource).toContain('chunkSize');
+
+  expect(deskPageSource).toContain('useProgressiveItems');
+  expect(deskPageSource).toContain('visibleDesktopCardItems');
+  expect(deskPageSource).toContain('visibleDeskPoolCardItems');
+  expect(applicationPageSource).toContain('useProgressiveItems');
+  expect(applicationPageSource).toContain('visibleApps');
+
+  for (const styleSource of [deskStyles, applicationStyles]) {
+    expect(styleSource).toContain('content-visibility: auto');
+    expect(styleSource).toContain('contain: layout paint style');
+    expect(styleSource).toContain('contain-intrinsic-size');
+  }
+});
+
+test('stages login route bootstrap after first paint and avoids duplicate authenticated requests', () => {
+  const routerSource = source('src/router/index.tsx');
+  const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
+  const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
+  const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
+  const bootstrapStart = routerSource.indexOf('function scheduleAuthenticatedClientBootstrap()');
+  const bootstrapEnd = routerSource.indexOf('const rootRoutes', bootstrapStart);
+  const bootstrapBlock = routerSource.slice(bootstrapStart, bootstrapEnd);
+
+  expect(routerSource).toContain('schedulePreAuthClientBootstrap');
+  expect(preAuthLoaderBlock).toContain('scheduleAfterFirstPaint');
+  expect(preAuthLoaderBlock).toContain('scheduleWhenIdle');
+  expect(routerSource).toContain('window.requestAnimationFrame');
+  expect(routerSource).toContain('window.requestIdleCallback');
+  expect(preAuthLoaderBlock).toContain('fetchConfigInfo');
+  expect(preAuthLoaderBlock).toContain('fetchGatewayList');
+  expect(preAuthLoaderBlock).toContain('fetchClientOnlineStatus');
+  expect(preAuthLoaderBlock).not.toContain('window.setTimeout(() => {');
+
+  expect(bootstrapBlock).toContain('if (!state.gateway.gatewayList.length)');
+  expect(bootstrapBlock).toContain('if (state.gateway.connected === false)');
+  expect(bootstrapBlock).toContain('if (!state.config.client_id)');
+  expect(bootstrapBlock).toContain('if (!state.client)');
 });

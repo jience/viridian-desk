@@ -1,0 +1,61 @@
+:root {
+  --vd-shadow-window: none;
+  --vd-shadow-rail: none;
+  --vd-shadow-assistant: none;
+  --vd-shadow-assistant-floating: none;
+}
+
+*,
+*::before,
+*::after {
+  transition-duration: 0ms !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
+
+:where(
+  .auth-page,
+  .auth-page__card,
+  .auth-page__feature,
+  .auth-page__footer-bar,
+  .login-gateway-dock,
+  .control-window-content,
+  .vd-app-shell__rail,
+  .vd-app-shell__assistant,
+  .app-layout__workspace,
+  .vdui-modal-content,
+  .vdui-select-dropdown,
+  .vdui-dropdown,
+  .vdui-popover-inner-content,
+  .desk-card,
+  .desk-pool,
+  .application-card,
+  .integrated-card,
+  .setting-item,
+  .download-modal
+) {
+  filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+:where(
+  .auth-page,
+  .app-layout,
+  .vd-app-shell__main,
+  .desk-card,
+  .desk-pool,
+  .application-card
+) {
+  background-image: none !important;
+}
+
+:where(
+  .desk-card:hover,
+  .desk-pool:hover,
+  .application-card:hover,
+  .login-footer__action:hover,
+  .sidebar__button:hover
+) {
+  transform: none !important;
+}

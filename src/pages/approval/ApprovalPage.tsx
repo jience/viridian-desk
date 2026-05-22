@@ -1,7 +1,7 @@
-import { Button, Dropdown, Empty, Select, Space, Table, Tooltip } from '@/ui';
-import type { TablePaginationConfig } from '@/ui';
-import type { ColumnsType } from '@/ui';
-import type { ItemType } from '@/ui';
+import { Button, Dropdown, Empty, Select, Space, Table, Tooltip } from '@/ui/fast';
+import type { TablePaginationConfig } from '@/ui/fast';
+import type { ColumnsType } from '@/ui/fast';
+import type { ItemType } from '@/ui/fast';
 import type { Key, ReactNode } from 'react';
 import type { MessageFormatterShape } from '@/utils/message-format';
 import {

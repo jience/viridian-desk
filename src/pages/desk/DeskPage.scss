@@ -105,6 +105,9 @@
 .desk-pool {
   position: relative;
   min-height: 286px;
+  content-visibility: auto;
+  contain: layout paint style;
+  contain-intrinsic-size: 286px 320px;
   padding: 22px;
   border: 1px solid var(--desk-page-border);
   border-radius: 8px;

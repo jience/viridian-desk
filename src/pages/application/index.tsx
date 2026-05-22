@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { message } from '@/ui';
+import { message } from '@/ui/message';
 import { useInitData } from './initData';
 import { useTranslation } from 'react-i18next';
 import { deleteVapp, listVapp, removeVapp } from '@/services/api/vapp';

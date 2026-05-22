@@ -5,6 +5,7 @@ import Sidebar from '@/components/Sidebar';
 import { AppShell, type AssistantState } from '@/ui/shell/app-shell';
 import { DocumentTitle } from '@/ui/shell/document-title';
 import '@/styles/design-system.css';
+import '@/assets/iconfont/iconfont.css';
 import './index.scss';
 
 const AssistantPanel = lazy(() =>

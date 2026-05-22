@@ -29,64 +29,8 @@
   }
 
   .vd-auth-form {
-    :where(.vdui-form-item) {
-      margin-bottom: 20px;
-    }
-
-    :where(.vdui-form-item-label > label) {
-      color: var(--auth-muted);
-      font-size: 13px;
-      font-weight: 560;
-      line-height: 1.3;
-    }
-
-    :where(.vdui-input, .vdui-input-affix-wrapper, .vdui-select) {
-      min-height: 54px;
-      border-color: var(--auth-border) !important;
-      border-radius: 8px !important;
-      color: var(--auth-text);
-      background: color-mix(in srgb, var(--auth-panel-strong) 64%, transparent) !important;
-      outline: 0;
-      box-shadow: none;
-      transition:
-        border-color 180ms ease,
-        background-color 180ms ease;
-    }
-
-    :where(
-      .vdui-input-affix-wrapper:focus-within,
-      .vdui-input:focus,
-      .vdui-select-focused,
-      .vdui-select:focus-within
-    ) {
-      border-color: color-mix(in srgb, var(--auth-accent) 42%, transparent) !important;
-      background: color-mix(in srgb, var(--auth-panel-strong) 76%, transparent) !important;
-      box-shadow: none !important;
-    }
-
-    :where(.vdui-input::placeholder) {
-      color: color-mix(in srgb, var(--auth-muted) 76%, transparent);
-    }
-
-    :where(.vdui-input-affix-wrapper .vdui-input) {
-      height: 100%;
-      min-height: auto;
-      font-size: 14px;
-      border: 0 !important;
-      background: transparent !important;
-      outline: 0 !important;
-      box-shadow: none !important;
-    }
-
-    :where(.vdui-input-affix-wrapper .vdui-input:focus) {
-      outline: 0 !important;
-      box-shadow: none !important;
-    }
-
-    :where(.form-prefix-icon) {
-      color: color-mix(in srgb, var(--auth-muted) 86%, transparent);
-      font-size: 18px;
-    }
+    display: grid;
+    gap: 18px;
   }
 
   .login-footer {
@@ -280,16 +224,12 @@
   background: color-mix(in srgb, var(--auth-accent) 14%, transparent);
   color: var(--auth-accent-strong);
 
-  .iconfont {
-    font-size: 17px;
-    line-height: 1;
+  svg,
+  .auth-page__feature-lucide {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
   }
-}
-
-.auth-page__feature-lucide {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 auto;
 }
 
 .auth-page__feature-copy {
@@ -426,6 +366,91 @@
     font-size: 14px;
     line-height: 1.5;
   }
+}
+
+.auth-page__field {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+}
+
+.auth-page__label {
+  color: var(--auth-muted);
+  font-size: 13px;
+  font-weight: 560;
+  line-height: 1.3;
+}
+
+.auth-page__input-shell {
+  display: grid;
+  min-height: 54px;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--auth-border);
+  border-radius: 8px;
+  padding: 0 14px 0 16px;
+  color: var(--auth-text);
+  background: color-mix(in srgb, var(--auth-panel-strong) 64%, transparent);
+
+  &:focus-within {
+    border-color: color-mix(in srgb, var(--auth-accent) 42%, transparent);
+    background: color-mix(in srgb, var(--auth-panel-strong) 76%, transparent);
+  }
+
+  .form-prefix-icon {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    color: color-mix(in srgb, var(--auth-muted) 86%, transparent);
+  }
+}
+
+.auth-page__input {
+  width: 100%;
+  min-width: 0;
+  height: 52px;
+  border: 0;
+  color: var(--auth-text);
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  outline: 0;
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--auth-muted) 76%, transparent);
+  }
+}
+
+.auth-page__password-toggle {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 0;
+  color: color-mix(in srgb, var(--auth-muted) 88%, transparent);
+  background: transparent;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--auth-accent-strong);
+    outline: 0;
+  }
+
+  .auth-page__password-toggle-icon {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 auto;
+  }
+}
+
+.auth-page__field-error {
+  min-height: 16px;
+  color: var(--auth-danger);
+  font-size: 12px;
+  font-weight: 560;
+  line-height: 1.3;
 }
 
 .auth-page__submit {
