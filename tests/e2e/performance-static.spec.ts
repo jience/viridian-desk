@@ -978,6 +978,21 @@ test('filters form layout-only props before rendering the native form element', 
   expect(formComponentSource).toMatch(/labelAlign: _labelAlign[\s\S]*\.{3}props/);
 });
 
+test('keeps textarea native value props mutually exclusive', () => {
+  const uiSource = source('src/ui/index.tsx');
+  const textAreaStart = uiSource.indexOf('InputBase.TextArea = forwardRef');
+  const textAreaEnd = uiSource.indexOf('\nInputBase.Search', textAreaStart);
+  const textAreaSource = uiSource.slice(textAreaStart, textAreaEnd);
+
+  expect(textAreaSource).toContain('value: textAreaValue');
+  expect(textAreaSource).toContain('defaultValue: textAreaDefaultValue');
+  expect(textAreaSource).toContain('nativeValueProps');
+  expect(textAreaSource).toMatch(
+    /textAreaValue !== undefined[\s\S]*\? \{ value: textAreaValue \}[\s\S]*: \{ defaultValue: textAreaDefaultValue \}/,
+  );
+  expect(textAreaSource).toMatch(/\.{3}nativeValueProps[\s\S]*\.{3}props/);
+});
+
 test('allows login text fields to avoid controlled React value writes while typing', () => {
   const uiSource = source('src/ui/index.tsx');
   const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');

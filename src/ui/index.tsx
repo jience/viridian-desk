@@ -789,14 +789,30 @@ InputBase.Password = forwardRef<HTMLInputElement, InputProps>((props, ref) => (
   <InputBase ref={ref} type="password" {...props} />
 ));
 InputBase.TextArea = forwardRef<HTMLTextAreaElement, any>(
-  ({ className, autoSize, showCount: _showCount, rows, ...props }, ref) => {
+  (
+    {
+      className,
+      autoSize,
+      showCount: _showCount,
+      rows,
+      value: textAreaValue,
+      defaultValue: textAreaDefaultValue,
+      ...props
+    },
+    ref,
+  ) => {
     const minRows = typeof autoSize === 'object' ? autoSize.minRows : undefined;
+    const nativeValueProps =
+      textAreaValue !== undefined
+        ? { value: textAreaValue }
+        : { defaultValue: textAreaDefaultValue };
 
     return (
       <textarea
         ref={ref}
         className={cn('vdui-input vdui-input-textarea', className)}
         rows={rows ?? minRows}
+        {...nativeValueProps}
         {...props}
       />
     );
