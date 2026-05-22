@@ -4,6 +4,8 @@ const ignoredConsoleFragments = [
   'WwLogin had destroyed',
   'Download the React DevTools',
   'dynamic import will not move module into another chunk',
+  '[Services Error] getGatewayServer',
+  '[Services Error] getClientOnlineStatus',
 ];
 
 test.beforeEach(async ({ page }) => {
@@ -21,24 +23,31 @@ test.beforeEach(async ({ page }) => {
   });
 
   await page.addInitScript(() => {
+    const smokeConfig = {
+      gateway: [
+        {
+          uuid: 'smoke-gateway',
+          name: 'Smoke Gateway',
+          address: 'gateway.local',
+          port: 443,
+          isPublic: true,
+          auto: true,
+        },
+      ],
+      language: 'zh-CN',
+      theme: 'dark',
+      client_id: 'smoke-client',
+      client_name: 'Smoke Client',
+    };
+    const cachedConfig = {
+      language: smokeConfig.language,
+      theme: smokeConfig.theme,
+      client_id: smokeConfig.client_id,
+      client_name: smokeConfig.client_name,
+    };
     localStorage.setItem('ui-theme', 'dark');
-    localStorage.setItem(
-      'viridian.web.config',
-      JSON.stringify({
-        gateway: [
-          {
-            uuid: 'smoke-gateway',
-            name: 'Smoke Gateway',
-            address: 'gateway.local',
-            port: 443,
-            isPublic: true,
-            auto: true,
-          },
-        ],
-        language: 'zh-CN',
-        theme: 'dark',
-      }),
-    );
+    localStorage.setItem('viridian.web.config', JSON.stringify(smokeConfig));
+    localStorage.setItem('viridian-desk:config', JSON.stringify(cachedConfig));
   });
 
   await page.exposeFunction('__assertNoConsoleErrors', () => {
@@ -64,17 +73,34 @@ test('keeps login layout scaled to the desktop viewport', async ({ page }) => {
   const rootFontSize = await page.evaluate(() =>
     Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
   );
+  const logoBox = await page.locator('.auth-page__brand-logo').boundingBox();
   const heroBox = await page.locator('.auth-page__hero h1').boundingBox();
+  const heroRuleBox = await page.locator('.auth-page__hero-rule').boundingBox();
+  const statusGridBox = await page.locator('.auth-page__status-grid').boundingBox();
+  const brandZoneBox = await page.locator('.auth-page__brand-zone').boundingBox();
   const cardBox = await page.locator('.auth-page__card').boundingBox();
 
-  if (!heroBox || !cardBox) {
+  if (!logoBox || !heroBox || !heroRuleBox || !statusGridBox || !brandZoneBox || !cardBox) {
     throw new Error('Login layout was not measurable');
   }
+
+  const logoToHeroGap = heroBox.y - (logoBox.y + logoBox.height);
+  const heroToRuleGap = heroRuleBox.y - (heroBox.y + heroBox.height);
+  const ruleToCardsGap = statusGridBox.y - (heroRuleBox.y + heroRuleBox.height);
+  const cardBottomGap =
+    brandZoneBox.y + brandZoneBox.height - (statusGridBox.y + statusGridBox.height);
 
   expect(rootFontSize).toBeGreaterThan(80);
   expect(heroBox.width).toBeGreaterThan(500);
   expect(cardBox.width).toBeGreaterThan(360);
   expect(cardBox.x).toBeGreaterThan(heroBox.x + heroBox.width);
+  expect(logoToHeroGap).toBeLessThanOrEqual(96);
+  expect(heroToRuleGap).toBeLessThanOrEqual(28);
+  expect(ruleToCardsGap).toBeLessThanOrEqual(84);
+  expect(cardBottomGap).toBeLessThanOrEqual(104);
+  expect(statusGridBox.y + statusGridBox.height).toBeLessThanOrEqual(
+    brandZoneBox.y + brandZoneBox.height,
+  );
   await expect(page.locator('.auth-page')).toBeInViewport();
 
   await page.evaluate(() => window.__assertNoConsoleErrors());
@@ -92,8 +118,49 @@ test('keeps login hero and feature cards separated in fullscreen desktop height'
     throw new Error('Login brand layout was not measurable');
   }
 
-  expect(statusGridBox.y).toBeGreaterThanOrEqual(heroRuleBox.y + heroRuleBox.height + 24);
-  expect(statusGridBox.y + statusGridBox.height).toBeLessThanOrEqual(brandZoneBox.y + brandZoneBox.height);
+  const cardBottomGap =
+    brandZoneBox.y + brandZoneBox.height - (statusGridBox.y + statusGridBox.height);
+
+  expect(statusGridBox.y).toBeGreaterThan(heroRuleBox.y + heroRuleBox.height);
+  expect(cardBottomGap).toBeLessThanOrEqual(96);
+  expect(statusGridBox.y + statusGridBox.height).toBeLessThanOrEqual(
+    brandZoneBox.y + brandZoneBox.height,
+  );
+});
+
+test('keeps English fullscreen login brand content visible', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 768 });
+  await page.addInitScript(() => {
+    const config = JSON.parse(localStorage.getItem('viridian.web.config') || '{}');
+    const englishConfig = {
+      ...config,
+      language: 'en-US',
+    };
+    const englishCachedConfig = {
+      language: englishConfig.language,
+      theme: englishConfig.theme,
+      client_id: englishConfig.client_id,
+      client_name: englishConfig.client_name,
+    };
+    localStorage.setItem('viridian.web.config', JSON.stringify(englishConfig));
+    localStorage.setItem('viridian-desk:config', JSON.stringify(englishCachedConfig));
+  });
+  await page.goto('/login');
+
+  const brandZoneBox = await page.locator('.auth-page__brand-zone').boundingBox();
+  const logoBox = await page.locator('.auth-page__brand-logo').boundingBox();
+  const statusGridBox = await page.locator('.auth-page__status-grid').boundingBox();
+  const footerBox = await page.locator('.auth-page__footer-bar').boundingBox();
+
+  if (!brandZoneBox || !logoBox || !statusGridBox || !footerBox) {
+    throw new Error('English login brand layout was not measurable');
+  }
+
+  expect(logoBox.y - brandZoneBox.y).toBeLessThanOrEqual(72);
+  expect(statusGridBox.y + statusGridBox.height).toBeLessThanOrEqual(
+    brandZoneBox.y + brandZoneBox.height,
+  );
+  expect(statusGridBox.y + statusGridBox.height).toBeLessThanOrEqual(footerBox.y - 8);
 });
 
 test('renders pre-login settings route', async ({ page }) => {

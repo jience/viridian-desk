@@ -510,10 +510,11 @@
   position: absolute;
   top: 14px;
   right: 14px;
-  display: inline-grid;
+  display: inline-flex;
   width: 32px;
   height: 32px;
-  place-items: center;
+  align-items: center;
+  justify-content: center;
   border: 0;
   border-radius: 10px;
   padding: 0;
@@ -529,7 +530,9 @@
 
   &::before,
   &::after {
-    grid-area: 1 / 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
     width: 13px;
     height: 1.6px;
     border-radius: 999px;
@@ -538,11 +541,15 @@
   }
 
   &::before {
-    transform: rotate(45deg);
+    transform: translate(-50%, -50%) rotate(45deg);
   }
 
   &::after {
-    transform: rotate(-45deg);
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  > span {
+    display: none;
   }
 
   &:hover,
@@ -550,7 +557,7 @@
     color: var(--vd-color-accent, #69d99a);
     background: color-mix(in srgb, var(--vd-color-accent, #69d99a) 10%, transparent);
     outline: 0;
-    transform: translateY(-1px);
+    transform: none;
   }
 
   &:active {

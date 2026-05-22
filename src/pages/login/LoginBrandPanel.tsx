@@ -67,42 +67,39 @@ const LoginBrandPanelComponent = () => {
           </span>
         </h1>
         <div className="auth-page__hero-rule" aria-hidden="true" />
+      </div>
 
-        <div className="auth-page__status-grid">
-          {LOGIN_FEATURE_CARDS.map((feature) => {
-            const icon =
-              feature.iconType === 'lucide' ? (
-                <feature.Icon className="auth-page__feature-lucide" strokeWidth={2.1} />
-              ) : (
-                <i className={`iconfont ${feature.icon}`} />
-              );
-
-            return (
-              <article
-                className="auth-page__status-card auth-page__feature-card"
-                key={feature.title}
-              >
-                <span className="auth-page__feature-icon" aria-hidden="true">
-                  {icon}
-                </span>
-                <div className="auth-page__feature-copy">
-                  <strong>
-                    {formatMessage({ id: feature.title, defaultMessage: feature.titleDefault })}
-                  </strong>
-                  <small>
-                    {formatMessage({
-                      id: feature.description,
-                      defaultMessage: feature.descriptionDefault,
-                    })}
-                  </small>
-                </div>
-                <span className="auth-page__feature-tag">
-                  {formatMessage({ id: feature.tag, defaultMessage: feature.tagDefault })}
-                </span>
-              </article>
+      <div className="auth-page__status-grid">
+        {LOGIN_FEATURE_CARDS.map((feature) => {
+          const icon =
+            feature.iconType === 'lucide' ? (
+              <feature.Icon className="auth-page__feature-lucide" strokeWidth={2.1} />
+            ) : (
+              <i className={`iconfont ${feature.icon}`} />
             );
-          })}
-        </div>
+
+          return (
+            <article className="auth-page__status-card auth-page__feature-card" key={feature.title}>
+              <span className="auth-page__feature-icon" aria-hidden="true">
+                {icon}
+              </span>
+              <div className="auth-page__feature-copy">
+                <strong>
+                  {formatMessage({ id: feature.title, defaultMessage: feature.titleDefault })}
+                </strong>
+                <small>
+                  {formatMessage({
+                    id: feature.description,
+                    defaultMessage: feature.descriptionDefault,
+                  })}
+                </small>
+              </div>
+              <span className="auth-page__feature-tag">
+                {formatMessage({ id: feature.tag, defaultMessage: feature.tagDefault })}
+              </span>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
