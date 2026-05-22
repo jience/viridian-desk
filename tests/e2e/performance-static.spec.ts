@@ -899,7 +899,9 @@ test('keeps shared action controls visually consistent', () => {
   const deskDetailStyles = source('src/pages/deskDetail/DeskDetailPage.scss');
   const malfunctionCreateSource = source('src/pages/malfunction/create/index.tsx');
   const uiStyles = source('src/ui/styles.scss');
+  const uiSource = source('src/ui/index.tsx');
   const commonZh = source('src/ui/i18n/locales/zh-CN/common.json');
+  const publishAppStyles = source('src/pages/application/component/AddFromSelfModal/index.scss');
   const addFavoriteSource = source('src/pages/application/component/AddFromSysModal/index.tsx');
   const diagnosisModalSource = source(
     'src/pages/configPage/subPages/advancedSetting/Diagnosis/DiagnosisModal/index.tsx',
@@ -925,6 +927,13 @@ test('keeps shared action controls visually consistent', () => {
   expect(uiStyles).toContain('min-width: 86px;');
   expect(uiStyles).toContain('.vdui-btn:not(.vdui-btn-primary)');
   expect(uiStyles).toContain('.vdui-modal-footer .vdui-btn-primary');
+  expect(uiStyles).toContain('--vdui-modal-primary-bg:');
+  expect(uiStyles).toContain('--vdui-switch-checked-bg: #3f9f68;');
+  expect(uiStyles).toContain('background: var(--vdui-switch-checked-bg, #4d7c3f);');
+  expect(uiSource).not.toContain('selectedLabel ?? props.placeholder');
+  expect(uiSource).toContain('selectedValues.length > 0 ? (');
+  expect(publishAppStyles).toContain('.vdui-modal-body {');
+  expect(publishAppStyles).toContain('overflow-y: auto;');
 
   expect(addFavoriteSource).not.toContain('ReloadOutlined');
   expect(addFavoriteSource).toContain('className="vdui-modal-footer add-vapp-footer"');
