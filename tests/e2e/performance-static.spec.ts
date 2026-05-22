@@ -902,6 +902,7 @@ test('keeps shared action controls visually consistent', () => {
   const malfunctionStyles = source('src/pages/malfunction/MalfunctionPage.scss');
   const malfunctionSource = source('src/pages/malfunction/index.tsx');
   const faultTypesSource = source('src/services/api/fault/types.ts');
+  const requestSource = source('src/utils/request/index.ts');
 
   expect(deskDetailSource).toContain('className="desk-detail-page__create-button"');
   expect(deskDetailStyles).toContain('&__create-button');
@@ -921,9 +922,10 @@ test('keeps shared action controls visually consistent', () => {
 
   expect(malfunctionSource).toContain('selectCurrentUser');
   expect(malfunctionSource).toContain('const currentUser = useAppSelector(selectCurrentUser);');
-  expect(malfunctionSource).toContain('userId: currentUser?.userId');
   expect(malfunctionSource).toContain('if (!currentUser?.userId)');
-  expect(faultTypesSource).toContain('userId?: string;');
+  expect(malfunctionSource).not.toContain('userId: currentUser?.userId');
+  expect(faultTypesSource).not.toContain('userId?: string;');
+  expect(requestSource).toContain("h['VisitorId'] = userId");
 });
 
 test('keeps authenticated client bootstrap centralized outside ClientLayout render effects', () => {

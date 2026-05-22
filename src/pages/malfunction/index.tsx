@@ -233,7 +233,6 @@ export function Component() {
       sortOrder: queryParams.sortOrder,
       pageNumber: queryParams.pageNumber,
       pageSize: queryParams.pageSize,
-      userId: currentUser?.userId,
       faultType: curFaultType === 'all' ? '' : curFaultType,
       status: curFaultStatus === 'all' ? '' : curFaultStatus,
       ...params,
