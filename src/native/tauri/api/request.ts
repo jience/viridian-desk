@@ -1,12 +1,20 @@
 import type { ApiResponse } from '@/native/interfaces/api';
 import { getStoreState, handleStoreUnauthorized } from '@/store/runtime-access';
 import type { ClientOptions } from '@tauri-apps/plugin-http';
-import { isEmpty } from 'lodash-es';
 
 type FetchOpt = RequestInit & ClientOptions;
 export interface RequestOptions<B = any> extends Omit<FetchOpt, 'body'> {
   body?: B;
 }
+
+const shouldEncodeJsonBody = (body: unknown) => {
+  if (body === null || body === undefined || body instanceof FormData) return false;
+  if (typeof Blob !== 'undefined' && body instanceof Blob) return false;
+  if (typeof ArrayBuffer !== 'undefined' && body instanceof ArrayBuffer) return false;
+  if (Array.isArray(body)) return body.length > 0;
+  if (typeof body === 'object') return Object.keys(body).length > 0;
+  return false;
+};
 
 /**
  * 请求前的处理
@@ -30,7 +38,7 @@ const beforeRequest = async (config?: RequestOptions): Promise<FetchOpt> => {
     h['Content-Type'] = 'multipart/form-data';
   }
   // 如果body是对象
-  if (typeof resConfig?.body === 'object' && !isEmpty(resConfig.body)) {
+  if (shouldEncodeJsonBody(resConfig?.body)) {
     h['Content-Type'] = 'application/json';
     // 如果是对象，且不是FormData类型，则转换为JSON字符串
     resConfig.body = JSON.stringify(resConfig.body);

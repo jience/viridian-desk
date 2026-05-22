@@ -1,10 +1,11 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FC } from 'react';
-import { Button, Dropdown, Empty, Modal, Spin, Tooltip } from '@/ui';
-import type { ItemType } from '@/ui';
-import type { ModalFunc } from '@/ui';
+import { Button, Dropdown, Empty, Modal, Spin, Tooltip } from '@/ui/fast';
+import type { ItemType } from '@/ui/fast';
+import type { ModalFunc } from '@/ui/fast';
 import { Trans, useTranslation } from 'react-i18next';
 import { AppIcon } from './component/AppIcon';
 import { useLoading } from '@/hooks/useLoading';
+import { useProgressiveItems } from '@/hooks/useProgressiveItems';
 import { VappApi } from '@/services/api/vapp';
 import Actions from '@/utils/actions';
 import { hasPermission } from '@/utils/permission';
@@ -15,7 +16,7 @@ import type {
   VappCategory,
 } from '@/services/api/vapp/types';
 import type { ConnectVappReq } from '@/services/invoke/vapp/types';
-import type { DefaultOptionType } from '@/ui';
+import type { DefaultOptionType } from '@/ui/fast';
 import './ApplicationPage.scss';
 
 const AppDetailModal = lazy(() =>
@@ -52,6 +53,10 @@ export const ApplicationPage: FC<ApplicationPageProps> = (props) => {
   const [launchingIds, setLaunchingIds] = useState<Set<number>>(() => new Set());
   const launchingIdsRef = useRef<Set<number>>(new Set());
   const operateAppLoading = useLoading([VappApi.DELETE_VAPP, VappApi.REMOVE_VAPP]);
+  const visibleApps = useProgressiveItems(props.dataSource, {
+    initialCount: 24,
+    chunkSize: 24,
+  });
 
   const selectedCategory = useMemo(
     () => props.categories.find((item) => item.value === props.category),
@@ -217,7 +222,7 @@ export const ApplicationPage: FC<ApplicationPageProps> = (props) => {
           </section>
         ) : (
           <section className="application-page__grid">
-            {props.dataSource.map((app) => {
+            {visibleApps.map((app) => {
               const isLaunching = launchingIds.has(app.id);
 
               return (

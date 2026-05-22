@@ -1104,36 +1104,34 @@ test('keeps removed legacy static assets out of the source tree', () => {
 
 test('defers non-critical hardware acceleration probing until after first render', () => {
   const mainSource = source('src/main.tsx');
-  const tierSetupIndex = mainSource.indexOf('applyInitialPerformanceTier();');
   const setupViewIndex = mainSource.indexOf('setupView();');
   const setupEnvLogIndex = mainSource.indexOf('scheduleHardwareAccelerationLog();');
 
-  expect(tierSetupIndex).toBeGreaterThan(-1);
-  expect(tierSetupIndex).toBeLessThan(setupViewIndex);
   expect(setupViewIndex).toBeGreaterThan(-1);
   expect(setupEnvLogIndex).toBeGreaterThan(setupViewIndex);
+  expect(mainSource).not.toContain('applyInitialPerformanceTier');
+  expect(mainSource).not.toContain('performanceTier');
   expect(mainSource).not.toContain('  setupEnvLog();\n\n  setupServices();');
 });
 
-test('enables a low-performance rendering tier for RK-class devices', () => {
+test('uses low-power rendering defaults without runtime device tier detection', () => {
   const mainSource = source('src/main.tsx');
-  const performanceTierSource = source('src/utils/performanceTier.ts');
   const globalStyles = source('src/styles/index.scss');
-  const performanceStyles = source('src/styles/performance-tier.scss');
+  const lowPowerStyles = source('src/styles/low-power-defaults.scss');
 
-  expect(mainSource).toContain("import { applyInitialPerformanceTier } from '@/utils/performanceTier'");
-  expect(mainSource).toContain('applyInitialPerformanceTier();');
-  expect(performanceTierSource).toContain("dataset.performanceTier");
-  expect(performanceTierSource).toContain('TAURI_ARCH');
-  expect(performanceTierSource).toContain('hardwareConcurrency');
-  expect(performanceTierSource).toContain('aarch64');
-  expect(globalStyles).toContain("@use '@/styles/performance-tier.scss';");
-  expect(performanceStyles).toContain(":root[data-performance-tier='low']");
-  expect(performanceStyles).toContain('backdrop-filter: none !important');
-  expect(performanceStyles).toContain('filter: none !important');
-  expect(performanceStyles).toContain('box-shadow: none !important');
-  expect(performanceStyles).toContain('transition-duration: 0ms !important');
-  expect(performanceStyles).toContain('animation: none !important');
+  expect(existsSync(join(process.cwd(), 'src/utils/performanceTier.ts'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/styles/performance-tier.scss'))).toBe(false);
+  expect(mainSource).not.toContain('dataset.performanceTier');
+  expect(mainSource).not.toContain('TAURI_ARCH');
+  expect(mainSource).not.toContain('hardwareConcurrency');
+  expect(globalStyles).toContain("@use '@/styles/low-power-defaults.scss';");
+  expect(globalStyles).not.toContain("@use '@/styles/performance-tier.scss';");
+  expect(lowPowerStyles).not.toContain('data-performance-tier');
+  expect(lowPowerStyles).toContain('backdrop-filter: none !important');
+  expect(lowPowerStyles).toContain('filter: none !important');
+  expect(lowPowerStyles).toContain('box-shadow: none !important');
+  expect(lowPowerStyles).toContain('transition-duration: 0ms !important');
+  expect(lowPowerStyles).toContain('animation: none !important');
 });
 
 test('fails the production budget when legacy font formats are emitted', () => {
@@ -1267,4 +1265,98 @@ test('loads password crypto only when login work needs it', () => {
   expect(loginSuccessSource).toContain("import('@/utils/passwordCrypto')");
   expect(apiModuleSource).not.toContain("from '@/utils/utils'");
   expect(apiModuleSource).toContain("from '@/utils/passwordCrypto'");
+});
+
+test('keeps high-traffic authenticated pages off the full ui bundle', () => {
+  const highTrafficSources = [
+    'src/pages/desk/DeskPage.tsx',
+    'src/pages/desk/useDeskHooks.tsx',
+    'src/pages/application/index.tsx',
+    'src/pages/application/ApplicationPage.tsx',
+    'src/pages/approval/ApprovalPage.tsx',
+    'src/pages/malfunction/index.tsx',
+    'src/pages/malfunction/MalfunctionPage.tsx',
+  ];
+
+  for (const path of highTrafficSources) {
+    const fileSource = source(path);
+    expect(fileSource, path).not.toMatch(/from ['"]@\/ui['"]/);
+  }
+
+  const fastUiSource = source('src/ui/fast.tsx');
+  expect(fastUiSource).toContain('export function Table');
+  expect(fastUiSource).toContain('export const Modal');
+  expect(fastUiSource).not.toContain('export const Form');
+  expect(fastUiSource).not.toContain('createForm');
+  expect(fastUiSource).not.toContain('InputBase');
+});
+
+test('keeps request and global loading hot paths lodash-free', () => {
+  const hotPathSources = [
+    'src/utils/request/index.ts',
+    'src/native/tauri/api/request.ts',
+    'src/services/requestErrorHandler.ts',
+    'src/store/feature/loading/loadingSlice.ts',
+  ];
+
+  for (const path of hotPathSources) {
+    expect(source(path), path).not.toContain("from 'lodash-es'");
+  }
+
+  const loadingSliceSource = source('src/store/feature/loading/loadingSlice.ts');
+  expect(loadingSliceSource).not.toContain('createEntityAdapter');
+  expect(loadingSliceSource).not.toContain('matchPath');
+  expect(loadingSliceSource).toContain('state.byKey[action.payload]');
+  expect(loadingSliceSource).toContain('key.some((loadingKey) => isLoading(state, loadingKey))');
+});
+
+test('progressively renders large authenticated card collections', () => {
+  const progressiveHookSource = source('src/hooks/useProgressiveItems.ts');
+  const deskPageSource = source('src/pages/desk/DeskPage.tsx');
+  const applicationPageSource = source('src/pages/application/ApplicationPage.tsx');
+  const deskStyles = source('src/pages/desk/DeskPage.scss');
+  const applicationStyles = source('src/pages/application/ApplicationPage.scss');
+
+  expect(progressiveHookSource).toContain('useProgressiveItems');
+  expect(progressiveHookSource).not.toContain('resolvePerformanceTier');
+  expect(progressiveHookSource).not.toContain('performanceTier');
+  expect(progressiveHookSource).toContain('requestIdleCallback');
+  expect(progressiveHookSource).toContain('initialCount');
+  expect(progressiveHookSource).toContain('chunkSize');
+
+  expect(deskPageSource).toContain('useProgressiveItems');
+  expect(deskPageSource).toContain('visibleDesktopCardItems');
+  expect(deskPageSource).toContain('visibleDeskPoolCardItems');
+  expect(applicationPageSource).toContain('useProgressiveItems');
+  expect(applicationPageSource).toContain('visibleApps');
+
+  for (const styleSource of [deskStyles, applicationStyles]) {
+    expect(styleSource).toContain('content-visibility: auto');
+    expect(styleSource).toContain('contain: layout paint style');
+    expect(styleSource).toContain('contain-intrinsic-size');
+  }
+});
+
+test('stages login route bootstrap after first paint and avoids duplicate authenticated requests', () => {
+  const routerSource = source('src/router/index.tsx');
+  const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
+  const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
+  const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
+  const bootstrapStart = routerSource.indexOf('function scheduleAuthenticatedClientBootstrap()');
+  const bootstrapEnd = routerSource.indexOf('const rootRoutes', bootstrapStart);
+  const bootstrapBlock = routerSource.slice(bootstrapStart, bootstrapEnd);
+
+  expect(routerSource).toContain('schedulePreAuthClientBootstrap');
+  expect(preAuthLoaderBlock).toContain('scheduleAfterFirstPaint');
+  expect(preAuthLoaderBlock).toContain('scheduleWhenIdle');
+  expect(preAuthLoaderBlock).toContain('window.requestAnimationFrame');
+  expect(preAuthLoaderBlock).toContain('fetchConfigInfo');
+  expect(preAuthLoaderBlock).toContain('fetchGatewayList');
+  expect(preAuthLoaderBlock).toContain('fetchClientOnlineStatus');
+  expect(preAuthLoaderBlock).not.toContain('window.setTimeout(() => {');
+
+  expect(bootstrapBlock).toContain('if (!state.gateway.gatewayList.length)');
+  expect(bootstrapBlock).toContain('if (state.gateway.connected === false)');
+  expect(bootstrapBlock).toContain('if (!state.config.client_id)');
+  expect(bootstrapBlock).toContain('if (!state.client)');
 });

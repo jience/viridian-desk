@@ -1,10 +1,11 @@
 import { lazy, memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import { useNavigate } from 'react-router';
-import { Button, Dropdown, Empty, message, Modal, Spin, Tooltip } from '@/ui';
-import { get } from 'lodash-es';
+import { Button, Dropdown, Empty, Modal, Spin, Tooltip } from '@/ui/fast';
+import { message } from '@/ui/message';
 import Deskpool from '@/components/Deskpoolsvg';
 import useRequest from '@/hooks/useRequest';
+import { useProgressiveItems } from '@/hooks/useProgressiveItems';
 import { detachVolume } from '@/services/resource';
 import { bridge } from '@/native';
 import { useAppSelector } from '@/store';
@@ -378,7 +379,7 @@ export function DeskPage() {
         action: (type: any, desktop: any) => {
           switch (type) {
             case 'mount': {
-              const dataDisk = get(desktop, 'disks', []).filter(
+              const dataDisk = (desktop?.disks ?? []).filter(
                 (disk: any) => disk.isSystem == false,
               ).length;
               if (dataDisk >= 2 && desktop?.os?.includes('Windows Server 2000')) {
@@ -535,6 +536,14 @@ export function DeskPage() {
       })),
     [deskPoolData, getPoolMetaLine],
   );
+  const visibleDesktopCardItems = useProgressiveItems(desktopCardItems, {
+    initialCount: 18,
+    chunkSize: 18,
+  });
+  const visibleDeskPoolCardItems = useProgressiveItems(deskPoolCardItems, {
+    initialCount: 12,
+    chunkSize: 12,
+  });
 
   return (
     <main className="desk-page">
@@ -561,7 +570,7 @@ export function DeskPage() {
           {!!deskData?.length && (
             <section className="desk-page__section desk-page__section--desktops">
               <div className="desk-page__grid">
-                {desktopCardItems.map((card) => (
+                {visibleDesktopCardItems.map((card) => (
                   <DesktopCard
                     key={card.key}
                     item={card.item}
@@ -581,7 +590,7 @@ export function DeskPage() {
           {!!deskPoolData?.length && (
             <section className="desk-page__section desk-page__section--pools">
               <div className="desk-page__pool-grid">
-                {deskPoolCardItems.map((card) => (
+                {visibleDeskPoolCardItems.map((card) => (
                   <DeskPoolCard
                     key={card.key}
                     item={card.item}

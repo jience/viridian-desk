@@ -5,9 +5,8 @@ import type { FaultItem, FaultListRequest } from '@/services/api/fault/types';
 import { createFault, listResourceUser } from '@/services/resource';
 import Actions from '@/utils/actions';
 import { hasPermission } from '@/utils/permission';
-import type { TablePaginationConfig } from '@/ui';
-import { Modal } from '@/ui';
-import { isEmpty } from 'lodash-es';
+import type { TablePaginationConfig } from '@/ui/fast';
+import { Modal } from '@/ui/fast';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import './index.scss';
@@ -16,6 +15,10 @@ import { MalfunctionPage } from './MalfunctionPage';
 import type { ViewFaultStatus, ViewFaultType } from './types';
 
 const CreatedModal = lazy(() => import('./create'));
+const isRecordEmpty = (value: unknown) =>
+  value === undefined ||
+  value === null ||
+  (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0);
 
 export function Component() {
   const [modal, contextHolder] = Modal.useModal();
@@ -178,7 +181,7 @@ export function Component() {
   const handleCancel = async (row?: FaultItem) => {
     let tips;
     let rows: string[] = [];
-    if (!isEmpty(row)) {
+    if (row && !isRecordEmpty(row)) {
       tips = {
         label: formatMessage({ id: 'CancedFaultMsg' }, { title: row.description }),
         selectedItemIds: [row.id],

@@ -264,6 +264,9 @@
 .application-card {
   position: relative;
   min-height: 174px;
+  content-visibility: auto;
+  contain: layout paint style;
+  contain-intrinsic-size: 174px 236px;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto auto;
   gap: 10px;

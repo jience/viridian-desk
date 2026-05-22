@@ -10,8 +10,9 @@ import { DESK_STATUS, getStatus } from '@/utils/constant';
 import { formatI18NKey } from '@/utils/utils';
 import { logger } from '@/utils/logger';
 import { bridge } from '@/native';
-import type { MenuProps } from '@/ui';
-import { message, Modal, Tag, Tooltip } from '@/ui';
+import type { MenuProps } from '@/ui/fast';
+import { Modal, Tag, Tooltip } from '@/ui/fast';
+import { message } from '@/ui/message';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import {

@@ -1,6 +1,5 @@
-import { createEntityAdapter } from '@reduxjs/toolkit';
-import type { RequestItem } from './types';
+import type { LoadingState } from './types';
 
-export const loadingAdapter = createEntityAdapter<RequestItem>();
-
-export const initState = loadingAdapter.getInitialState({});
+export const initState: LoadingState = {
+  byKey: {},
+};

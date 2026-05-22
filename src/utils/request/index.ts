@@ -1,5 +1,4 @@
 import type { ClientOptions } from '@tauri-apps/plugin-http';
-import { isEmpty } from 'lodash-es';
 import { globalEmitter } from '../mitt';
 import { isApiErrResponse, type ApiResponse } from './types';
 import { logger } from '@/utils/logger';
@@ -11,6 +10,15 @@ export interface RequestOptions<B = any> extends Omit<FetchOpt, 'body'> {
   body?: B;
   trackLoading?: boolean;
 }
+
+const shouldEncodeJsonBody = (body: unknown) => {
+  if (body === null || body === undefined || body instanceof FormData) return false;
+  if (typeof Blob !== 'undefined' && body instanceof Blob) return false;
+  if (typeof ArrayBuffer !== 'undefined' && body instanceof ArrayBuffer) return false;
+  if (Array.isArray(body)) return body.length > 0;
+  if (typeof body === 'object') return Object.keys(body).length > 0;
+  return false;
+};
 
 /**
  * @author ALEX
@@ -53,7 +61,7 @@ const beforeRequest = (config?: RequestOptions): FetchOpt => {
     h['Content-Type'] = 'multipart/form-data';
   }
   // 如果body是对象
-  if (typeof resConfig?.body === 'object' && !isEmpty(resConfig.body)) {
+  if (shouldEncodeJsonBody(resConfig?.body)) {
     h['Content-Type'] = 'application/json';
     // 如果是对象，且不是FormData类型，则转换为JSON字符串
     resConfig.body = JSON.stringify(resConfig.body);

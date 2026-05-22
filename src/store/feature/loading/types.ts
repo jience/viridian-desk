@@ -1,4 +1,3 @@
-export interface RequestItem {
-  id: string;
-  loadingNumber: number;
+export interface LoadingState {
+  byKey: Record<string, number>;
 }
