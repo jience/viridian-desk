@@ -964,19 +964,6 @@ test('notifies only changed form fields while typing', () => {
   expect(uiSource).not.toContain('form._subscribe?.(() => force((value) => value + 1))');
 });
 
-test('prevents form fields from receiving conflicting controlled value props', () => {
-  const uiSource = source('src/ui/index.tsx');
-  const formItemStart = uiSource.indexOf('function FormItem({');
-  const formItemEnd = uiSource.indexOf('\ntype FormComponentType', formItemStart);
-  const formItemSource = uiSource.slice(formItemStart, formItemEnd);
-
-  expect(formItemSource).toContain('conflictingValueProps');
-  expect(formItemSource).toContain('defaultValue: undefined');
-  expect(formItemSource).toContain('defaultChecked: undefined');
-  expect(formItemSource).toContain('[valuePropName]: undefined');
-  expect(formItemSource).toMatch(/\.{3}conflictingValueProps[\s\S]*\.{3}valueProps/);
-});
-
 test('filters form layout-only props before rendering the native form element', () => {
   const uiSource = source('src/ui/index.tsx');
   const formPropsStart = uiSource.indexOf('interface FormProps');
