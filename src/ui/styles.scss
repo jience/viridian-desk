@@ -1,12 +1,28 @@
 :root {
   --vdui-control-focus-outline: rgba(77, 124, 63, 0.22);
   --vdui-control-error-outline: rgba(207, 79, 69, 0.2);
+  --vdui-modal-primary-border: rgba(77, 124, 63, 0.5);
+  --vdui-modal-primary-bg:
+    linear-gradient(180deg, rgba(91, 146, 75, 0.96), rgba(67, 113, 55, 0.98)),
+    #4d7c3f;
+  --vdui-modal-primary-hover-bg:
+    linear-gradient(180deg, rgba(101, 159, 84, 0.98), rgba(73, 124, 60, 1)),
+    #568b46;
+  --vdui-switch-checked-bg: #4d7c3f;
 }
 
 :root.dark,
 :root[data-ui-theme='dark'] {
   --vdui-control-focus-outline: rgba(105, 217, 154, 0.22);
   --vdui-control-error-outline: rgba(240, 107, 99, 0.22);
+  --vdui-modal-primary-border: rgba(110, 204, 148, 0.38);
+  --vdui-modal-primary-bg:
+    linear-gradient(180deg, rgba(62, 145, 94, 0.82), rgba(43, 104, 72, 0.9)),
+    #2f7a52;
+  --vdui-modal-primary-hover-bg:
+    linear-gradient(180deg, rgba(72, 166, 108, 0.88), rgba(50, 121, 82, 0.94)),
+    #388a5d;
+  --vdui-switch-checked-bg: #3f9f68;
 }
 
 .vdui-btn {
@@ -599,10 +615,12 @@
 
 .vdui-modal-footer .vdui-btn-primary {
   min-width: 86px;
+  border-color: var(--vdui-modal-primary-border);
   border-radius: 7px;
   color: #ffffff;
   font-size: 13px;
   font-weight: 550;
+  background: var(--vdui-modal-primary-bg);
 
   > span {
     color: inherit;
@@ -613,15 +631,9 @@
 
   &:not(:disabled):hover,
   &:not(:disabled):focus-visible {
-    border-color: color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 72%, #10261a);
+    border-color: var(--vdui-modal-primary-border);
     color: #ffffff;
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 68%, #183623),
-        color-mix(in srgb, var(--vd-color-accent, #4d7c3f) 48%, #10261a)
-      ),
-      var(--vd-color-accent, #4d7c3f);
+    background: var(--vdui-modal-primary-hover-bg);
   }
 }
 
@@ -849,6 +861,7 @@
   border-radius: 999px;
   background: rgba(148, 163, 184, 0.34);
   cursor: pointer;
+  transition: background-color 160ms ease;
 
   span {
     width: 16px;
@@ -861,7 +874,7 @@
 }
 
 .vdui-switch-checked {
-  background: var(--vd-color-accent, #69d99a);
+  background: var(--vdui-switch-checked-bg, #4d7c3f);
 
   span {
     transform: translateX(16px);

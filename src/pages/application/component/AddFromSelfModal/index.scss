@@ -6,6 +6,9 @@
   width: 500px !important;
 
   .vdui-modal-content {
+    display: flex;
+    max-height: inherit;
+    flex-direction: column;
     overflow: hidden;
     border: 1px solid var(--app-modal-border);
     border-radius: 10px;
@@ -14,8 +17,15 @@
     backdrop-filter: blur(16px);
   }
 
+  .vdui-modal-body {
+    min-height: 0;
+    max-height: min(560px, calc(100vh - 176px));
+    overflow-y: auto;
+  }
+
   .vdui-modal-header,
   .vdui-modal-footer {
+    flex: 0 0 auto;
     background: transparent;
   }
 

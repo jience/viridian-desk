@@ -948,8 +948,9 @@ export const Select = Object.assign(
           }
         }}
       >
-        <span className="vdui-select-selection-item">{selectedLabel ?? props.placeholder}</span>
-        {props.placeholder && selectedValues.length === 0 ? (
+        {selectedValues.length > 0 ? (
+          <span className="vdui-select-selection-item">{selectedLabel}</span>
+        ) : props.placeholder ? (
           <span className="vdui-select-placeholder">{props.placeholder}</span>
         ) : null}
         {props.suffixIcon === null ? null : (
