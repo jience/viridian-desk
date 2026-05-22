@@ -786,9 +786,20 @@ InputBase.displayName = 'Input';
 InputBase.Password = forwardRef<HTMLInputElement, InputProps>((props, ref) => (
   <InputBase ref={ref} type="password" {...props} />
 ));
-InputBase.TextArea = forwardRef<HTMLTextAreaElement, any>(({ className, ...props }, ref) => (
-  <textarea ref={ref} className={cn('vdui-input vdui-input-textarea', className)} {...props} />
-));
+InputBase.TextArea = forwardRef<HTMLTextAreaElement, any>(
+  ({ className, autoSize, showCount: _showCount, rows, ...props }, ref) => {
+    const minRows = typeof autoSize === 'object' ? autoSize.minRows : undefined;
+
+    return (
+      <textarea
+        ref={ref}
+        className={cn('vdui-input vdui-input-textarea', className)}
+        rows={rows ?? minRows}
+        {...props}
+      />
+    );
+  },
+);
 InputBase.Search = forwardRef<HTMLInputElement, InputProps>(({ className, ...props }, ref) => (
   <InputBase
     ref={ref}
