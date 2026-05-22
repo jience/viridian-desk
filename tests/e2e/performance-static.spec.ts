@@ -897,6 +897,7 @@ test('keeps sidebar user popover dismissible', () => {
 test('keeps shared action controls visually consistent', () => {
   const deskDetailSource = source('src/pages/deskDetail/DeskDetailPage.tsx');
   const deskDetailStyles = source('src/pages/deskDetail/DeskDetailPage.scss');
+  const createFaultBaseFormSource = source('src/pages/malfunction/create/BaseForm.tsx');
   const malfunctionCreateSource = source('src/pages/malfunction/create/index.tsx');
   const uiStyles = source('src/ui/styles.scss');
   const uiSource = source('src/ui/index.tsx');
@@ -932,6 +933,10 @@ test('keeps shared action controls visually consistent', () => {
   expect(uiStyles).toContain('background: var(--vdui-switch-checked-bg, #4d7c3f);');
   expect(uiSource).not.toContain('selectedLabel ?? props.placeholder');
   expect(uiSource).toContain('selectedValues.length > 0 ? (');
+  expect(uiSource).toContain('showCount: _showCount');
+  expect(uiSource).toContain("rows={rows ?? minRows}");
+  expect(createFaultBaseFormSource).toContain('const { key, ...resProps } = props;');
+  expect(createFaultBaseFormSource).toContain('<Select key={key} {...resProps} />');
   expect(publishAppStyles).toContain('.vdui-modal-body {');
   expect(publishAppStyles).toContain('overflow-y: auto;');
 

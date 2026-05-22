@@ -60,6 +60,10 @@ const BaseForm = (props: any, ref: any) => {
    * @description props
    */
   const { labelType, formFeatures, defaultFormValues, initialValues } = props;
+  const withElementKey = (props: any, render: (key: any, props: any) => any) => {
+    const { key, ...resProps } = props;
+    return render(key, resProps);
+  };
 
   /**
    * @author QL
@@ -68,18 +72,28 @@ const BaseForm = (props: any, ref: any) => {
    * @description useState & memo & static state
    */
   const comList: { [key: string]: any } = {
-    input: (props: any) => <Input {...props} />,
-    'input.password': (props: any) => <Input.Password {...props} />,
-    'input.textArea': (props: any) => <Input.TextArea {...props} />,
-    inputNumber: (props: any) => <InputNumber {...props} />,
-    switch: (props: any) => <Switch {...props} />,
-    select: (props: any) => <Select {...props} />,
-    'picker.date': (props: any) => <DatePicker {...props} />,
-    'picker.time': (props: any) => <DatePicker.TimePicker {...props} />,
-    'checkbox.group': (props: any) => <Checkbox.Group {...props} />,
-    'radio.group': (props: any) => <Radio.Group {...props} />,
+    input: (props: any) => withElementKey(props, (key, resProps) => <Input key={key} {...resProps} />),
+    'input.password': (props: any) =>
+      withElementKey(props, (key, resProps) => <Input.Password key={key} {...resProps} />),
+    'input.textArea': (props: any) =>
+      withElementKey(props, (key, resProps) => <Input.TextArea key={key} {...resProps} />),
+    inputNumber: (props: any) =>
+      withElementKey(props, (key, resProps) => <InputNumber key={key} {...resProps} />),
+    switch: (props: any) =>
+      withElementKey(props, (key, resProps) => <Switch key={key} {...resProps} />),
+    select: (props: any) =>
+      withElementKey(props, (key, resProps) => <Select key={key} {...resProps} />),
+    'picker.date': (props: any) =>
+      withElementKey(props, (key, resProps) => <DatePicker key={key} {...resProps} />),
+    'picker.time': (props: any) =>
+      withElementKey(props, (key, resProps) => <DatePicker.TimePicker key={key} {...resProps} />),
+    'checkbox.group': (props: any) =>
+      withElementKey(props, (key, resProps) => <Checkbox.Group key={key} {...resProps} />),
+    'radio.group': (props: any) =>
+      withElementKey(props, (key, resProps) => <Radio.Group key={key} {...resProps} />),
 
-    button: (props: any) => <Button {...props} />,
+    button: (props: any) =>
+      withElementKey(props, (key, resProps) => <Button key={key} {...resProps} />),
   };
 
   const [formValuesCopy, setFormValuesCopy] = useState(defaultFormValues);
