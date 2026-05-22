@@ -186,6 +186,7 @@ export function DeskDetailPage() {
                   </div>
                   <AuthCreateButton
                     actions={[Actions.TerminalRWSnapshotCreateOrDelete]}
+                    className="desk-detail-page__create-button"
                     disabled={createDisabled}
                     icon={<i className="iconfont icon-add" />}
                     type="primary"

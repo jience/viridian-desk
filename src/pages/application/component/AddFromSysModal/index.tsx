@@ -4,7 +4,6 @@ import './index.scss';
 // import * as AppAjax from '@/services/application';
 import { addVapp, listVapp } from '@/services/api/vapp';
 import type { ListVappItem, ListVappReq, VappCategory } from '@/services/api/vapp/types';
-import { ReloadOutlined } from '@/ui/icons';
 import type { ColumnsType, TableProps } from '@/ui';
 import { Trans, useTranslation } from 'react-i18next';
 import { useInitData } from '../../initData';
@@ -181,7 +180,13 @@ export const AddFromSysModal: FC<AddFromSysModalProps> = (props) => {
       centered={true}
     >
       <Space className="search-bar" size={8}>
-        <Button icon={<ReloadOutlined spin={listVappLoading} />} onClick={() => getListVapp()} />
+        <Button
+          icon={<i className="iconfont icon-refresh" />}
+          loading={listVappLoading}
+          aria-label={t('application_page.refresh')}
+          title={t('application_page.refresh')}
+          onClick={() => getListVapp()}
+        />
         <Input.Search
           className="search-input"
           placeholder={t('application_page.vapp_name_placeholder')}

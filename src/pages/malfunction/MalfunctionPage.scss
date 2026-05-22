@@ -338,7 +338,6 @@
     margin: 12px 16px;
     color: var(--malfunction-page-muted);
 
-    .vdui-pagination-item,
     .vdui-pagination-prev .vdui-pagination-item-link,
     .vdui-pagination-next .vdui-pagination-item-link {
       border-color: var(--malfunction-page-border);
@@ -346,14 +345,20 @@
       background: var(--malfunction-page-pagination-bg);
     }
 
+    .vdui-pagination-item {
+      border-color: transparent;
+      color: var(--malfunction-page-muted);
+      background: transparent;
+    }
+
     .vdui-pagination-item a {
       color: inherit;
     }
 
     .vdui-pagination-item-active {
-      border-color: var(--malfunction-page-accent);
+      border-color: transparent;
       color: var(--malfunction-page-accent-strong);
-      background: var(--malfunction-page-pagination-active-bg);
+      background: transparent;
     }
   }
 

@@ -2,6 +2,8 @@ import useRequest from '@/hooks/useRequest';
 import { listFault, revokeFault } from '@/services/api/fault';
 import type { FaultItem, FaultListRequest } from '@/services/api/fault/types';
 import { createFault, listResourceUser } from '@/services/resource';
+import { useAppSelector } from '@/store';
+import { selectCurrentUser } from '@/store/feature/app';
 import Actions from '@/utils/actions';
 import { hasPermission } from '@/utils/permission';
 import type { TablePaginationConfig } from '@/ui/fast';
@@ -22,6 +24,7 @@ const isRecordEmpty = (value: unknown) =>
 export function Component() {
   const [modal, contextHolder] = Modal.useModal();
   const { formatMessage } = useMessageFormatter();
+  const currentUser = useAppSelector(selectCurrentUser);
   const [listFaultLoading, setListFaultLoading] = useState(false);
 
   const [queryParams, setQueryParams] = useState(initQueryParams);
@@ -230,6 +233,7 @@ export function Component() {
       sortOrder: queryParams.sortOrder,
       pageNumber: queryParams.pageNumber,
       pageSize: queryParams.pageSize,
+      userId: currentUser?.userId,
       faultType: curFaultType === 'all' ? '' : curFaultType,
       status: curFaultStatus === 'all' ? '' : curFaultStatus,
       ...params,
@@ -279,8 +283,12 @@ export function Component() {
   };
 
   useEffect(() => {
+    if (!currentUser?.userId) {
+      return;
+    }
+
     resetFaultList();
-  }, []);
+  }, [currentUser?.userId]);
 
   useEffect(() => {
     return () => {
