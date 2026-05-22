@@ -21,7 +21,7 @@ const useCreateSnap = (props: any) => {
       setVisible(false);
       refreshList();
       if (res.errorCode) {
-        message.error(formatMessage({ id: res.errorCode }));
+        message.error(formatMessage({ id: `error_code.${res.errorCode}` }));
       }
     },
   });

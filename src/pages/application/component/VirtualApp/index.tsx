@@ -132,28 +132,6 @@ export const VirtualApp: FC<VirtualAppProps> = (props) => {
     await props.OnVappItemClick(opt).finally(() => {
       setEnterAppLoading(false);
     });
-    // if (getNetworkClass() == 'success') {
-    //   setGlobalLoading(true);
-    //   setGlobalLoadingText(intl.formatMessage({ id: 'ALP_VIRTUAL_APPLICATION_CONNECTING' }));
-    // } else {
-    // window.messageWarn({
-    //   content: intl.formatMessage({ id: 'DLP_NETWORK_UNAVAILABLE' }),
-    // });
-    // return false;
-    // }
-    // window.ipcRenderer.send(AppAjax.EnterVapp, {
-    //   mId: id,
-    // });
-    // AppAjax.enterVappRes({
-    //   success: () => {
-    //     setGlobalLoading(false);
-    //     setGlobalLoadingText('');
-    //   },
-    //   error: () => {
-    //     setGlobalLoading(false);
-    //     setGlobalLoadingText('');
-    //   },
-    // });
   };
 
   const renderAppList = () => {

@@ -547,6 +547,7 @@ interface FormProps extends Omit<HTMLAttributes<HTMLFormElement>, 'onChange'> {
   layout?: 'horizontal' | 'vertical' | 'inline';
   colon?: boolean;
   labelCol?: AnyRecord;
+  labelAlign?: 'left' | 'right';
   wrapperCol?: AnyRecord;
   requiredMark?: boolean;
 }
@@ -663,6 +664,7 @@ export const Form = Object.assign(
     onValuesChange: _onValuesChange,
     colon: _colon,
     labelCol: _labelCol,
+    labelAlign: _labelAlign,
     wrapperCol: _wrapperCol,
     requiredMark: _requiredMark,
     ...props

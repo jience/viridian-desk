@@ -4,6 +4,16 @@ import { join } from 'node:path';
 
 const source = (path: string) => readFileSync(join(process.cwd(), path), 'utf8');
 const readJson = (path: string) => JSON.parse(source(path));
+const localeLanguages = ['zh-CN', 'zh-TW', 'en-US'] as const;
+const assetLocaleFiles = [
+  'core.json',
+  'error.json',
+  'login.json',
+  'settings.json',
+  'workspace.json',
+];
+const stripComments = (content: string) =>
+  content.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
 const locale = (language: 'zh-CN' | 'zh-TW' | 'en-US') => {
   const legacyPath = `src/assets/locales/${language}.json`;
   if (existsSync(join(process.cwd(), legacyPath))) {
@@ -22,12 +32,285 @@ const locale = (language: 'zh-CN' | 'zh-TW' | 'en-US') => {
     );
 };
 
+const uiLocale = (language: 'zh-CN' | 'zh-TW' | 'en-US', namespace: 'common' | 'assistant') =>
+  readJson(`src/ui/i18n/locales/${language}/${namespace}.json`);
+
 const collectSourceFiles = (dir: string): string[] =>
   readdirSync(join(process.cwd(), dir), { withFileTypes: true }).flatMap((entry) => {
     const child = `${dir}/${entry.name}`;
     if (entry.isDirectory()) return collectSourceFiles(child);
     return /\.(ts|tsx|js|jsx)$/.test(child) ? [child] : [];
   });
+
+const collectStaticTranslationKeys = () => {
+  const keys = new Set<string>();
+  const patterns = [
+    /formatMessage\(\{\s*id:\s*['"`]([^'"`$]+)['"`]/g,
+    /intl\.formatMessage\(\{\s*id:\s*['"`]([^'"`$]+)['"`]/g,
+    /formatI18NKey\(\s*['"`]([^'"`$]+)['"`]/g,
+    /\bt\(\s*['"]([^'"]+)['"]/g,
+    /i18nKey="([^"]+)"/g,
+  ];
+
+  for (const file of collectSourceFiles('src')) {
+    const content = stripComments(source(file));
+    for (const pattern of patterns) {
+      let match: RegExpExecArray | null;
+      while ((match = pattern.exec(content))) {
+        keys.add(match[1]);
+      }
+    }
+  }
+
+  return [...keys].sort();
+};
+
+const dynamicTranslationKeys = [
+  'Attached',
+  'Error',
+  'EXCLUSIVE',
+  'LoginFeatureAssistantDescription',
+  'LoginFeatureAssistantTag',
+  'LoginFeatureAssistantTitle',
+  'LoginFeatureSecureDescription',
+  'LoginFeatureSecureTag',
+  'LoginFeatureSecureTitle',
+  'LoginFeatureWorkspaceDescription',
+  'LoginFeatureWorkspaceTag',
+  'LoginFeatureWorkspaceTitle',
+  'RESTORE',
+  'SHARE',
+  'SUCCESS_DESKTOP_CANCEL_AUTO',
+  'SUCCESS_DESKTOP_SET_AUTO',
+  'Updating',
+  'config_page.about.client_type',
+  'config_page.about.client_version',
+  'config_page.about.product',
+  'config_page.about.product_description',
+  'config_page.about.sku',
+  'config_page.about.version_info',
+  'config_page.about.version_info_description',
+  'config_page.advanced_setting.developer_mode_description',
+  'config_page.advanced_setting.developer_tools',
+  'config_page.advanced_setting.developer_tools_description',
+  'config_page.advanced_setting.diagnosis_description',
+  'config_page.advanced_setting.network_info_description',
+  'config_page.advanced_setting.operations',
+  'config_page.advanced_setting.operations_description',
+  'config_page.advanced_setting.support_tools',
+  'config_page.advanced_setting.support_tools_description',
+  'config_page.common_setting.appearance_language',
+  'config_page.common_setting.appearance_language_description',
+  'config_page.common_setting.preferences',
+  'config_page.common_setting.preferences_description',
+  'config_page.common_setting.startup_display',
+  'config_page.common_setting.startup_display_description',
+  'config_page.server_setting.available_gateway',
+  'config_page.server_setting.current_gateway',
+  'config_page.server_setting.empty_description',
+  'config_page.server_setting.empty_title',
+  'config_page.server_setting.eyebrow',
+  'config_page.server_setting.gateway_count',
+  'config_page.server_setting.gateway_count_helper',
+  'config_page.server_setting.gateway_list',
+  'config_page.server_setting.gateway_list_description',
+  'config_page.server_setting.network_available',
+  'config_page.server_setting.network_limited',
+  'config_page.server_setting.network_state',
+  'config_page.server_setting.network_state_helper',
+  'config_page.server_setting.no_current_gateway',
+  'config_page.server_setting.not_configured',
+  'config_page.server_setting.private_network',
+  'config_page.server_setting.workbench_description',
+  'config_page.server_setting.workbench_title',
+  'desktop_status.creating',
+  'desktop_status.error',
+  'desktop_status.paused',
+  'desktop_status.rollingback',
+  'desktop_status.snapshotcreating',
+  'desktop_status.snapshotdeleting',
+  'desktop_status.start',
+  'desktop_status.stop',
+  'desktop_status.stopretain',
+  'desktop_status.unknown',
+] as const;
+
+const uiLocaleUsedKeys = {
+  common: [
+    'actions.close',
+    'appName',
+    'emptyPage.backToLogin',
+    'emptyPage.description',
+    'emptyPage.eyebrow',
+    'emptyPage.title',
+    'errorBoundary.description',
+    'errorBoundary.eyebrow',
+    'errorBoundary.reload',
+    'errorBoundary.title',
+    'navigation.application',
+    'navigation.approval',
+    'navigation.desktop',
+    'navigation.desktopIssues',
+    'navigation.detail',
+    'navigation.empty',
+    'navigation.peripheral',
+    'status.online',
+    'user.personalInformation',
+    'user.preferences',
+    'user.signOut',
+  ],
+  assistant: ['quick.connectionHelp', 'quick.openLogs', 'quick.reportFault', 'subtitle', 'title'],
+} as const;
+
+const usedTranslationKeySet = () =>
+  new Set([...collectStaticTranslationKeys(), ...dynamicTranslationKeys]);
+
+const keysOf = (resource: Record<string, unknown>) => Object.keys(resource).sort();
+
+const untranslatedIdentifierAllowlist = new Set([
+  'ABOUT',
+  'ACTION',
+  'ADD',
+  'ADDRESS',
+  'CANCEL',
+  'CLOSE',
+  'DEFAULT',
+  'DELETE',
+  'DETACH',
+  'DETAIL',
+  'EMAIL',
+  'MINIMIZE',
+  'NAME',
+  'PHONE',
+  'REALNAME',
+  'REFRESH',
+  'RESTART',
+  'SAVE',
+  'Server',
+  'Terminal',
+  'USERNAME',
+  'DHCP',
+  'PID',
+  'VID',
+  'VPN',
+]);
+
+const looksLikeUntranslatedIdentifier = (key: string, value: string) => {
+  if (untranslatedIdentifierAllowlist.has(key)) return false;
+  if (!/[A-Za-z0-9]/.test(value)) return false;
+  if (/\s|<[^>]+>/.test(value)) return false;
+  if (value !== key && !/[a-z][A-Z]|_|\.|:/.test(value)) return false;
+  return /[a-z][A-Z]|_|\.|:/.test(value) || /^[A-Z0-9_]{4,}$/.test(value);
+};
+
+test('keeps English locale keys aligned with the primary locale', () => {
+  const pairs = [
+    ['translation', locale('zh-CN'), locale('en-US')],
+    ['common', uiLocale('zh-CN', 'common'), uiLocale('en-US', 'common')],
+    ['assistant', uiLocale('zh-CN', 'assistant'), uiLocale('en-US', 'assistant')],
+  ] as const;
+
+  for (const [namespace, zhCN, enUS] of pairs) {
+    const missingKeys = Object.keys(zhCN)
+      .filter((key) => !(key in enUS))
+      .sort();
+    expect(missingKeys, namespace).toEqual([]);
+  }
+});
+
+test('keeps statically referenced English locale copy translated', () => {
+  const enUSLocale = {
+    ...locale('en-US'),
+    ...uiLocale('en-US', 'common'),
+    ...uiLocale('en-US', 'assistant'),
+  };
+  const keys = collectStaticTranslationKeys();
+  const missingKeys = keys.filter((key) => !(key in enUSLocale));
+  const untranslatedKeys = keys.filter((key) => {
+    const value = enUSLocale[key];
+    return typeof value === 'string' && looksLikeUntranslatedIdentifier(key, value);
+  });
+
+  expect(missingKeys).toEqual([]);
+  expect(untranslatedKeys).toEqual([]);
+});
+
+test('keeps locale resources aligned and trimmed to used keys', () => {
+  const usedKeys = usedTranslationKeySet();
+
+  for (const language of localeLanguages) {
+    const assetKeyOwners = new Map<string, string[]>();
+
+    for (const file of assetLocaleFiles) {
+      const resource = readJson(`src/assets/locales/${language}/${file}`);
+      const unusedKeys = keysOf(resource).filter(
+        (key) => file !== 'error.json' && !usedKeys.has(key),
+      );
+
+      for (const key of keysOf(resource)) {
+        assetKeyOwners.set(key, [...(assetKeyOwners.get(key) ?? []), file]);
+      }
+
+      expect(unusedKeys, `${language}/${file}`).toEqual([]);
+    }
+
+    const duplicatedAssetKeys = [...assetKeyOwners.entries()]
+      .filter(([, owners]) => owners.length > 1)
+      .map(([key, owners]) => `${key}: ${owners.join(', ')}`)
+      .sort();
+
+    expect(duplicatedAssetKeys, `${language} duplicated asset locale keys`).toEqual([]);
+
+    for (const namespace of ['common', 'assistant'] as const) {
+      const resource = uiLocale(language, namespace);
+      const allowedKeys = new Set<string>(uiLocaleUsedKeys[namespace]);
+      const unusedKeys = keysOf(resource).filter((key) => !allowedKeys.has(key));
+      expect(unusedKeys, `${language}/${namespace}`).toEqual([]);
+    }
+  }
+});
+
+test('keeps locale file key sets aligned across supported languages', () => {
+  for (const file of assetLocaleFiles) {
+    const primaryKeys = keysOf(readJson(`src/assets/locales/zh-CN/${file}`));
+    for (const language of ['zh-TW', 'en-US'] as const) {
+      expect(
+        keysOf(readJson(`src/assets/locales/${language}/${file}`)),
+        `${language}/${file}`,
+      ).toEqual(primaryKeys);
+    }
+  }
+
+  for (const namespace of ['common', 'assistant'] as const) {
+    const primaryKeys = keysOf(uiLocale('zh-CN', namespace));
+    for (const language of ['zh-TW', 'en-US'] as const) {
+      expect(keysOf(uiLocale(language, namespace)), `${language}/${namespace}`).toEqual(
+        primaryKeys,
+      );
+    }
+  }
+});
+
+test('keeps runtime API error translations on the error_code namespace', () => {
+  const legacyRequestErrorHandler = source('src/utils/requestErrorHandler.jsx');
+  const nativeRequestErrorHandler = source('src/services/requestErrorHandler.ts');
+  const createSnapSource = source('src/pages/deskDetail/createSnap.tsx');
+
+  expect(legacyRequestErrorHandler).toContain('`error_code.${errorCode}`');
+  expect(legacyRequestErrorHandler).toContain('`error_code.${httpStatus}`');
+  expect(legacyRequestErrorHandler).toContain('return t(errorMessageKey, { sec: seconds });');
+  expect(legacyRequestErrorHandler).not.toContain('formatI18NKey(errorCode');
+  expect(legacyRequestErrorHandler).not.toContain('formatI18NKey(res.errorCode');
+  expect(nativeRequestErrorHandler).toContain('`error_code.${res.code}`');
+  expect(nativeRequestErrorHandler).toContain(
+    "t('error_code.LoginErrorTimesExceed', { sec: seconds })",
+  );
+  expect(nativeRequestErrorHandler).not.toContain(
+    "t('error_code.LoginErrorTimesExceed', { sec: minute })",
+  );
+  expect(createSnapSource).toContain('`error_code.${res.errorCode}`');
+  expect(createSnapSource).not.toContain('id: res.errorCode');
+});
 
 test('keeps low-frequency modal components lazy-loaded', () => {
   expect(source('src/pages/approval/index.tsx')).not.toContain(
@@ -139,8 +422,8 @@ test('uses theme-specific brand artwork on the login brand panel', () => {
 
   expect(loginBrandPanelSource).toContain('viridian_logo_with_text_dark.svg');
   expect(loginBrandPanelSource).toContain('viridian_logo_with_text_light.svg');
-  expect(loginBrandPanelSource).toContain("@/assets/images/viridian_logo_with_text_dark.svg");
-  expect(loginBrandPanelSource).toContain("@/assets/images/viridian_logo_with_text_light.svg");
+  expect(loginBrandPanelSource).toContain('@/assets/images/viridian_logo_with_text_dark.svg');
+  expect(loginBrandPanelSource).toContain('@/assets/images/viridian_logo_with_text_light.svg');
   expect(loginBrandPanelSource).not.toContain('../../../docs/images');
   expect(loginBrandPanelSource).toContain('useUiTheme');
   expect(loginBrandPanelSource).toContain("resolvedTheme === 'dark'");
@@ -324,9 +607,7 @@ test('removes deprecated non-local login copy and auth types from the client', (
   for (const language of ['zh-CN', 'zh-TW', 'en-US'] as const) {
     const currentLocale = locale(language);
     for (const removedLocaleKey of removedLocaleKeys) {
-      expect(currentLocale, `${language}:${removedLocaleKey}`).not.toHaveProperty(
-        removedLocaleKey,
-      );
+      expect(currentLocale, `${language}:${removedLocaleKey}`).not.toHaveProperty(removedLocaleKey);
     }
     expect(currentLocale, `${language}:LocalAuthLogin`).toHaveProperty('LocalAuthLogin');
   }
@@ -464,7 +745,10 @@ test('starts gateway online status loading without blocking the lightweight logi
   const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
   const clientLayoutLoaderStart = routerSource.indexOf('const clientLayoutLoader');
   const clientLayoutLoaderEnd = routerSource.indexOf('const rootRoutes', clientLayoutLoaderStart);
-  const clientLayoutLoaderBlock = routerSource.slice(clientLayoutLoaderStart, clientLayoutLoaderEnd);
+  const clientLayoutLoaderBlock = routerSource.slice(
+    clientLayoutLoaderStart,
+    clientLayoutLoaderEnd,
+  );
 
   expect(gatewaySource).toContain('fetchClientOnlineStatus');
   expect(gatewaySource).toContain('bridge.cmd.getClientOnlineStatus()');
@@ -487,8 +771,10 @@ test('keeps network status synced before authenticated layout loads', () => {
   expect(appSource).toContain("window.addEventListener('online', handleNetworkChange)");
   expect(appSource).toContain("window.addEventListener('offline', handleNetworkChange)");
   expect(clientLayoutSource).not.toContain('useInitState');
-  expect(existsSync(join(process.cwd(), clientLayoutNetworkHookPath)), clientLayoutNetworkHookPath)
-    .toBe(false);
+  expect(
+    existsSync(join(process.cwd(), clientLayoutNetworkHookPath)),
+    clientLayoutNetworkHookPath,
+  ).toBe(false);
 });
 
 test('keeps thin-client footer actions correct before terminal info loads', () => {
@@ -563,7 +849,7 @@ test('keeps the final server action menu from being clipped', () => {
   );
   expect(serverSettingStyles).toContain('.vd-settings-group__content');
   expect(serverSettingStyles).toContain('overflow: visible');
-  expect(uiSource).toContain("`vdui-dropdown--${placement}`");
+  expect(uiSource).toContain('`vdui-dropdown--${placement}`');
   expect(uiStyles).toContain('.vdui-dropdown--topRight');
   expect(uiStyles).toContain('bottom: calc(100% + 8px)');
 });
@@ -665,6 +951,33 @@ test('notifies only changed form fields while typing', () => {
   expect(uiSource).toContain('notifyField');
   expect(uiSource).toContain('_subscribeField');
   expect(uiSource).not.toContain('form._subscribe?.(() => force((value) => value + 1))');
+});
+
+test('prevents form fields from receiving conflicting controlled value props', () => {
+  const uiSource = source('src/ui/index.tsx');
+  const formItemStart = uiSource.indexOf('function FormItem({');
+  const formItemEnd = uiSource.indexOf('\ntype FormComponentType', formItemStart);
+  const formItemSource = uiSource.slice(formItemStart, formItemEnd);
+
+  expect(formItemSource).toContain('conflictingValueProps');
+  expect(formItemSource).toContain('defaultValue: undefined');
+  expect(formItemSource).toContain('defaultChecked: undefined');
+  expect(formItemSource).toContain('[valuePropName]: undefined');
+  expect(formItemSource).toMatch(/\.{3}conflictingValueProps[\s\S]*\.{3}valueProps/);
+});
+
+test('filters form layout-only props before rendering the native form element', () => {
+  const uiSource = source('src/ui/index.tsx');
+  const formPropsStart = uiSource.indexOf('interface FormProps');
+  const formPropsEnd = uiSource.indexOf('\ninterface FormItemProps', formPropsStart);
+  const formPropsSource = uiSource.slice(formPropsStart, formPropsEnd);
+  const formComponentStart = uiSource.indexOf('function FormComponent');
+  const formComponentEnd = uiSource.indexOf('\n  } as FormComponentType', formComponentStart);
+  const formComponentSource = uiSource.slice(formComponentStart, formComponentEnd);
+
+  expect(formPropsSource).toContain('labelAlign?:');
+  expect(formComponentSource).toContain('labelAlign: _labelAlign');
+  expect(formComponentSource).toMatch(/labelAlign: _labelAlign[\s\S]*\.{3}props/);
 });
 
 test('allows login text fields to avoid controlled React value writes while typing', () => {
@@ -934,7 +1247,7 @@ test('keeps shared action controls visually consistent', () => {
   expect(uiSource).not.toContain('selectedLabel ?? props.placeholder');
   expect(uiSource).toContain('selectedValues.length > 0 ? (');
   expect(uiSource).toContain('showCount: _showCount');
-  expect(uiSource).toContain("rows={rows ?? minRows}");
+  expect(uiSource).toContain('rows={rows ?? minRows}');
   expect(createFaultBaseFormSource).toContain('const { key, ...resProps } = props;');
   expect(createFaultBaseFormSource).toContain('<Select key={key} {...resProps} />');
   expect(publishAppStyles).toContain('.vdui-modal-body {');
@@ -949,7 +1262,9 @@ test('keeps shared action controls visually consistent', () => {
   for (const pageStyles of [approvalStyles, malfunctionStyles]) {
     expect(pageStyles).toContain('.vdui-pagination-item {\n      border-color: transparent;');
     expect(pageStyles).toContain('background: transparent;');
-    expect(pageStyles).toContain('.vdui-pagination-item-active {\n      border-color: transparent;');
+    expect(pageStyles).toContain(
+      '.vdui-pagination-item-active {\n      border-color: transparent;',
+    );
   }
 
   expect(malfunctionSource).toContain('selectCurrentUser');
@@ -966,7 +1281,10 @@ test('keeps authenticated client bootstrap centralized outside ClientLayout rend
   const sharedStatePath = 'src/layouts/clientLayout/useSharedState';
   const clientLayoutLoaderStart = routerSource.indexOf('const clientLayoutLoader');
   const clientLayoutLoaderEnd = routerSource.indexOf('const rootRoutes', clientLayoutLoaderStart);
-  const clientLayoutLoaderBlock = routerSource.slice(clientLayoutLoaderStart, clientLayoutLoaderEnd);
+  const clientLayoutLoaderBlock = routerSource.slice(
+    clientLayoutLoaderStart,
+    clientLayoutLoaderEnd,
+  );
 
   expect(clientLayoutLoaderBlock).toContain('scheduleAuthenticatedClientBootstrap');
   expect(routerSource).toContain('let authenticatedClientBootstrapScheduled = false');
@@ -1043,10 +1361,10 @@ test('removes request-backed global loading subscriptions from list and modal fl
   expect(existsSync(join(process.cwd(), 'src/hooks/useLoading.ts'))).toBe(false);
   expect(existsSync(join(process.cwd(), 'src/store/feature/loading'))).toBe(false);
   expect(storeSource).not.toContain('loadingReducer');
-  expect(storeSource).not.toContain("api/startLoading");
-  expect(storeSource).not.toContain("api/stopLoading");
-  expect(mittTypesSource).not.toContain("api/startLoading");
-  expect(mittTypesSource).not.toContain("api/stopLoading");
+  expect(storeSource).not.toContain('api/startLoading');
+  expect(storeSource).not.toContain('api/stopLoading');
+  expect(mittTypesSource).not.toContain('api/startLoading');
+  expect(mittTypesSource).not.toContain('api/stopLoading');
   expect(requestSource).not.toContain('trackLoading');
   expect(requestSource).not.toContain("globalEmitter.emit('api/startLoading'");
   expect(vappSource).not.toContain('trackLoading');
@@ -1065,9 +1383,9 @@ test('removes request-backed global loading subscriptions from list and modal fl
   }
 
   expect(appPageSource).toContain("from '@/ui'");
-  expect(appPageSource).not.toContain("@/ui/fast");
+  expect(appPageSource).not.toContain('@/ui/fast');
   expect(malfunctionSource).toContain("from '@/ui'");
-  expect(malfunctionSource).not.toContain("@/ui/fast");
+  expect(malfunctionSource).not.toContain('@/ui/fast');
 });
 
 test('splits translation locales into named chunks instead of monolithic json files', () => {
@@ -1082,7 +1400,11 @@ test('splits translation locales into named chunks instead of monolithic json fi
         `${language}/${chunk}.json`,
       ).toBe(true);
     }
-    expect(Object.keys(locale(language)).length).toBeGreaterThan(1200);
+    const resource = locale(language);
+    expect(Object.hasOwn(resource, 'LOGIN')).toBe(true);
+    expect(Object.hasOwn(resource, 'error_code.InternalError')).toBe(true);
+    expect(Object.hasOwn(resource, 'config_page.common_setting.theme')).toBe(true);
+    expect(Object.hasOwn(resource, 'application_page.workbench_title')).toBe(true);
   }
 
   expect(i18nSource).toContain('import.meta.glob');
