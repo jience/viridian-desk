@@ -147,7 +147,9 @@ test('uses theme-specific brand artwork on the login brand panel', () => {
   expect(loginBrandPanelSource).not.toContain("import loginLogo from '@/assets/images/logo.svg'");
   expect(loginBrandPanelSource).not.toContain('auth-page__brand-mark');
   expect(loginStyles).toContain('.auth-page__brand-logo');
-  expect(loginStyles).toContain('padding: 86px 18px 28px 54px;');
+  expect(loginStyles).toContain(
+    'padding: clamp(42px, 5.8vh, 58px) 18px clamp(20px, 3vh, 28px) 54px;',
+  );
   expect(loginStyles).toContain('width: clamp(420px, 42vw, 620px);');
   expect(loginStyles).not.toContain('.auth-page__brand-mark');
   expect(loginStyles).not.toContain('.auth-page__brand-name');
@@ -166,7 +168,8 @@ test('keeps login hero copy aligned with the visual reference', () => {
   expect(loginBrandPanelSource).not.toContain('统一访问桌面');
   expect(loginStyles).toContain('.auth-page__hero-title-accent');
   expect(loginStyles).toContain('.auth-page__hero-rule');
-  expect(loginStyles).toContain('padding-top: clamp(20px, 2.8vh, 34px);');
+  expect(loginStyles).toContain('align-content: start;');
+  expect(loginStyles).toContain('margin-top: clamp(12px, 1.8vh, 20px);');
   expect(zhCNLocale.LoginHeroTitle).toBe('安全连接，');
   expect(zhCNLocale.LoginSubTitle).toBe('高效访问工作空间');
   expect(zhTWLocale.LoginHeroTitle).toBe('安全連接，');
@@ -199,11 +202,16 @@ test('uses static product capability cards on the login brand panel', () => {
   expect(loginBrandPanelSource).not.toContain('selectAutoGateway');
   expect(loginBrandPanelSource).not.toContain('selectConnected');
   expect(loginBrandPanelSource).not.toContain('selectNetwork');
+  expect(loginStyles).toContain('align-content: center;');
   expect(loginStyles).toContain('grid-template-rows: auto auto auto;');
-  expect(loginStyles).toContain('align-content: space-between;');
-  expect(loginStyles).toContain('row-gap: clamp(24px, 4.8vh, 56px);');
-  expect(loginStyles).not.toContain('grid-template-rows: auto auto minmax(0, 1fr);');
-  expect(loginStyles).not.toContain('align-self: end;');
+  expect(loginStyles).toContain('row-gap: clamp(42px, 5.8vh, 56px);');
+  expect(loginStyles).toContain('grid-template-rows: auto auto;');
+  expect(loginStyles).toContain('margin-top: clamp(12px, 1.8vh, 20px);');
+  expect(loginStyles).toContain('margin-top: 0;');
+  expect(loginStyles).toContain('@media (min-width: 981px) and (max-height: 780px)');
+  expect(loginStyles).toContain('row-gap: clamp(30px, 4.2vh, 38px);');
+  expect(loginStyles).not.toContain('align-content: space-between;');
+  expect(loginStyles).not.toContain('grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);');
   expect(loginStyles).not.toContain('margin-top: clamp(50px, 7vh, 84px);');
   expect(loginStyles).toContain('.auth-page__feature-icon');
   expect(loginStyles).toContain('.auth-page__feature-lucide');
@@ -627,6 +635,27 @@ test('keeps modal and login input focus rings single-layered', () => {
   expect(publishAppModalStyles).not.toContain('--app-modal-surface-subtle');
   expect(inputAffixWrapperBlock).not.toContain('&:hover');
   expect(inputAffixWrapperBlock).toContain('&:focus-within');
+});
+
+test('keeps modal close button icon centered during hover', () => {
+  const uiStyles = source('src/ui/styles.scss');
+  const closeButtonStart = uiStyles.indexOf('.vdui-modal-close {');
+  const closeButtonBlock = uiStyles.slice(
+    closeButtonStart,
+    uiStyles.indexOf('\n.vdui-modal-body', closeButtonStart),
+  );
+
+  expect(closeButtonStart).toBeGreaterThanOrEqual(0);
+  expect(closeButtonBlock).toContain('display: inline-flex;');
+  expect(closeButtonBlock).toContain('align-items: center;');
+  expect(closeButtonBlock).toContain('justify-content: center;');
+  expect(closeButtonBlock).toContain('position: absolute;');
+  expect(closeButtonBlock).toContain('top: 50%;');
+  expect(closeButtonBlock).toContain('left: 50%;');
+  expect(closeButtonBlock).toContain('transform: translate(-50%, -50%) rotate(45deg);');
+  expect(closeButtonBlock).toContain('transform: translate(-50%, -50%) rotate(-45deg);');
+  expect(closeButtonBlock).toContain('transform: none;');
+  expect(closeButtonBlock).not.toContain('transform: translateY(-1px);');
 });
 
 test('keeps the main Tauri window opaque for low-power Linux compositors', () => {
