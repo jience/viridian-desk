@@ -711,8 +711,8 @@ test('starts saved config loading without blocking the lightweight login route',
 
   expect(preAuthLoaderStart).toBeGreaterThanOrEqual(0);
   expect(preAuthLoaderEnd).toBeGreaterThan(preAuthLoaderStart);
+  expect(preAuthLoaderBlock).toContain('fetchTerminalInfo');
   expect(preAuthLoaderBlock).toContain('fetchConfigInfo');
-  expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
   expect(preAuthLoaderBlock).not.toContain('await ');
   expect(preAuthLoaderBlock).not.toContain('Promise.all');
   expect(preAuthLoaderBlock).toContain('scheduleAfterFirstPaint');
@@ -733,7 +733,7 @@ test('starts saved gateway selection loading without blocking the lightweight lo
 
   expect(routerSource).toContain('fetchGatewayList');
   expect(preAuthLoaderBlock).toContain('fetchGatewayList');
-  expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
+  expect(preAuthLoaderBlock).toContain('fetchTerminalInfo');
   expect(preAuthLoaderBlock).not.toContain('await ');
   expect(preAuthLoaderBlock).not.toContain('Promise.all');
   expect(preAuthLoaderBlock).toContain('scheduleAfterFirstPaint');
@@ -757,7 +757,7 @@ test('starts gateway online status loading without blocking the lightweight logi
   expect(gatewaySource).toContain('bridge.cmd.getClientOnlineStatus()');
   expect(gatewaySource).toContain('state.connected = action.payload');
   expect(preAuthLoaderBlock).toContain('fetchClientOnlineStatus');
-  expect(preAuthLoaderBlock).not.toContain('fetchTerminalInfo');
+  expect(preAuthLoaderBlock).toContain('fetchTerminalInfo');
   expect(preAuthLoaderBlock).not.toContain('await ');
   expect(preAuthLoaderBlock).not.toContain('Promise.all');
   expect(preAuthLoaderBlock).toContain('scheduleWhenIdle');
@@ -1982,6 +1982,7 @@ test('stages login route bootstrap after first paint and avoids duplicate authen
   expect(routerSource).toContain('window.requestAnimationFrame');
   expect(routerSource).toContain('window.requestIdleCallback');
   expect(preAuthLoaderBlock).toContain('fetchConfigInfo');
+  expect(preAuthLoaderBlock).toContain('fetchTerminalInfo');
   expect(preAuthLoaderBlock).toContain('fetchGatewayList');
   expect(preAuthLoaderBlock).toContain('fetchClientOnlineStatus');
   expect(preAuthLoaderBlock).not.toContain('window.setTimeout(() => {');
