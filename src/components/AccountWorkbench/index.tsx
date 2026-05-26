@@ -526,7 +526,7 @@ export function AccountWorkbench({
                   />
                 </Form.Item>
               </Form>
-              <div className="account-workbench__footer">
+              <div className="account-workbench__footer vdui-modal-footer">
                 {!forcePasswordChange && (
                   <Button type="default" onClick={() => setView('overview')}>
                     {intl.formatMessage({ id: 'CANCEL' })}
@@ -600,7 +600,7 @@ export function AccountWorkbench({
                   </Button>
                 </div>
               </Form>
-              <div className="account-workbench__footer">
+              <div className="account-workbench__footer vdui-modal-footer">
                 <Button type="default" onClick={() => setView('overview')}>
                   {intl.formatMessage({ id: 'CANCEL' })}
                 </Button>

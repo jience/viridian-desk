@@ -1347,6 +1347,7 @@ test('keeps account controls inside the left-bottom workbench', () => {
   expect(workbenchSource).not.toContain("'profile'");
   expect(workbenchSource).not.toContain('view_profile');
   expect(workbenchSource).not.toContain('profile_title');
+  expect(workbenchSource).toContain('className="account-workbench__footer vdui-modal-footer"');
   expect(workbenchSource).toContain('LoginUserType.LOCAL');
   expect(workbenchSource).toContain('LEGACY_PASSWORD_PREFIX');
   expect(workbenchSource).toContain(
@@ -1359,6 +1360,8 @@ test('keeps account controls inside the left-bottom workbench', () => {
   expect(workbenchStyles).toContain('width: min(380px, calc(100vw - 78px));');
   expect(workbenchStyles).toContain('max-height: min(620px, calc(100vh - 24px));');
   expect(workbenchStyles).toContain('.account-workbench__danger');
+  expect(workbenchStyles).toContain('.account-workbench__footer.vdui-modal-footer');
+  expect(workbenchStyles).toContain('padding: 0;');
   expect(workbenchStyles).not.toContain('position: fixed;');
   expect(zhCNCore).toContain('"account.workbench.title": "账户工作台"');
   expect(zhTWCore).toContain('"account.workbench.title": "賬戶工作台"');
