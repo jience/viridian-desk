@@ -353,6 +353,10 @@
   gap: 8px;
 }
 
+.account-workbench__footer.vdui-modal-footer {
+  padding: 0;
+}
+
 @media (max-height: 640px) {
   .account-workbench__panel {
     bottom: -44px;
