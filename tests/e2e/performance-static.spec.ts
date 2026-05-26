@@ -589,6 +589,50 @@ test('keeps shared form and modal typography readable', () => {
   expect(snapStyles).toContain('.vdui-input-affix-wrapper:focus-within');
 });
 
+test('keeps system prompt surfaces visually unified', () => {
+  const confirmPath = 'src/ui/confirm.tsx';
+  const hasConfirmModule = existsSync(join(process.cwd(), confirmPath));
+  const confirmSource = hasConfirmModule ? source(confirmPath) : '';
+  const messageSource = source('src/ui/message.ts');
+  const messageStyles = source('src/ui/message.scss');
+  const uiStyles = source('src/ui/styles.scss');
+  const uiSource = source('src/ui/index.tsx');
+  const fastPath = 'src/ui/fast.tsx';
+  const hasFastModule = existsSync(join(process.cwd(), fastPath));
+  const fastSource = hasFastModule ? source(fastPath) : '';
+
+  expect(hasConfirmModule, confirmPath).toBe(true);
+  expect(uiSource).not.toContain('window.confirm');
+  expect(uiSource).toContain("import { showConfirm } from './confirm'");
+  if (hasFastModule) {
+    expect(fastSource).not.toContain('window.confirm');
+    expect(fastSource).toContain("import { showConfirm } from './confirm'");
+  }
+  expect(confirmSource).toContain("import('react-dom/client')");
+  expect(confirmSource).toContain('role="alertdialog"');
+  expect(confirmSource).toContain('className="vdui-modal-footer vdui-confirm-modal__footer"');
+  expect(confirmSource).toContain('aria-live="polite"');
+
+  expect(messageSource).toContain("container.setAttribute('role'");
+  expect(messageSource).toContain("container.setAttribute('aria-live'");
+  expect(messageSource).toContain("icon.className = 'vd-toast__icon'");
+  expect(messageSource).toContain("contentNode.className = 'vd-toast__content'");
+  expect(messageSource).toContain('--vd-toast-index');
+  expect(messageStyles).toContain('.vd-toast__icon');
+  expect(messageStyles).toContain('grid-template-columns: 28px minmax(0, 1fr);');
+  expect(messageStyles).toContain('--vd-toast-accent');
+  expect(messageStyles).toContain('animation: vdToastEnter');
+  for (const type of ['success', 'error', 'warning', 'info', 'loading']) {
+    expect(messageStyles).toContain(`.vd-toast--${type}`);
+  }
+
+  expect(uiStyles).toContain('--vdui-feedback-bg');
+  expect(uiStyles).toContain('--vdui-feedback-border');
+  expect(uiStyles).toContain('--vdui-feedback-shadow');
+  expect(uiStyles).toContain('.vdui-confirm-modal');
+  expect(uiStyles).toContain('.vdui-confirm-modal__icon');
+});
+
 test('removes deprecated non-local login copy and auth types from the client', () => {
   const removedLocaleKeys = [
     'OtherLoginTip',

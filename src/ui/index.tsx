@@ -19,6 +19,7 @@ import {
   type ReactNode,
 } from 'react';
 import { cn } from '@/ui/lib/cn';
+import { showConfirm } from './confirm';
 import './styles.scss';
 import { message } from './message';
 export { message } from './message';
@@ -210,14 +211,6 @@ export interface ModalProps {
   [key: string]: any;
 }
 
-const runConfirm = async (props: ModalProps) => {
-  const title = typeof props.title === 'string' ? props.title : 'Confirm';
-  const content = typeof props.content === 'string' ? `\n${props.content}` : '';
-  const confirmed = window.confirm(`${title}${content}`);
-  if (confirmed) await props.onOk?.(() => {});
-  return confirmed;
-};
-
 const focusableSelector = [
   'a[href]',
   'button:not([disabled])',
@@ -349,17 +342,15 @@ export const Modal = Object.assign(
   },
   {
     confirm: (props: ModalProps) => {
-      runConfirm(props);
-      return { destroy: () => {}, update: () => {} };
+      return showConfirm(props);
     },
-    info: (props: ModalProps) => Modal.confirm(props),
-    success: (props: ModalProps) => Modal.confirm(props),
-    error: (props: ModalProps) => Modal.confirm(props),
-    warning: (props: ModalProps) => Modal.confirm(props),
+    info: (props: ModalProps) => showConfirm({ ...props, variant: 'info' }),
+    success: (props: ModalProps) => showConfirm({ ...props, variant: 'success' }),
+    error: (props: ModalProps) => showConfirm({ ...props, variant: 'error' }),
+    warning: (props: ModalProps) => showConfirm({ ...props, variant: 'warning' }),
     useModal: () => {
       const confirm = (props: ModalProps) => {
-        runConfirm(props);
-        return { destroy: () => {}, update: (_props?: ModalProps) => {} };
+        return showConfirm(props);
       };
       return [
         {
@@ -1707,8 +1698,7 @@ export const App = Object.assign(({ children }: any) => <>{children}</>, {
     message,
     modal: {
       confirm: (props: ModalProps) => {
-        runConfirm(props);
-        return { destroy: () => {}, update: (_props?: ModalProps) => {} };
+        return showConfirm(props);
       },
     },
   }),
