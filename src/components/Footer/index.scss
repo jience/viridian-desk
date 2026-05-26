@@ -71,24 +71,6 @@
   border-color: color-mix(in srgb, var(--vd-color-danger) 42%, transparent);
 }
 
-.login-footer__developer {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 30px;
-  padding: 0 12px;
-  color: var(--develop-mode-color);
-  font-size: 12px;
-  line-height: 1;
-  background: var(--develop-mode-bac-color);
-  border: 1px solid color-mix(in srgb, var(--develop-mode-color) 16%, transparent);
-  border-radius: 10px;
-
-  .iconfont {
-    font-size: 12px;
-  }
-}
-
 .login-footer__side {
   justify-content: flex-end;
 }

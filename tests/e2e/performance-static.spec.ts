@@ -842,6 +842,41 @@ test('keeps login window controls local to the lightweight login route', () => {
   expect(loginPageStyles).toContain('.auth-page__controls');
 });
 
+test('surfaces developer mode as a global desktop state', () => {
+  const overlayPath = 'src/components/DeveloperModeOverlay/index.tsx';
+  const overlayStylePath = 'src/components/DeveloperModeOverlay/index.scss';
+  const appSource = source('src/App.tsx');
+  const footerSource = source('src/components/Footer/index.tsx');
+  const overlaySource = source(overlayPath);
+  const overlayStyles = source(overlayStylePath);
+  const zhCNLogin = source('src/assets/locales/zh-CN/login.json');
+  const zhTWLogin = source('src/assets/locales/zh-TW/login.json');
+  const enUSLogin = source('src/assets/locales/en-US/login.json');
+
+  expect(existsSync(join(process.cwd(), overlayPath)), overlayPath).toBe(true);
+  expect(existsSync(join(process.cwd(), overlayStylePath)), overlayStylePath).toBe(true);
+  expect(appSource).toContain("import { DeveloperModeOverlay } from '@/components/DeveloperModeOverlay'");
+  expect(appSource).toContain('<DeveloperModeOverlay />');
+  expect(overlaySource).toContain('selectDeveloperMode');
+  expect(overlaySource).toContain('developer-mode-overlay__strip');
+  expect(overlaySource).toContain('developer-mode-overlay__badge');
+  expect(overlaySource).toContain('developer-mode-overlay__toast');
+  expect(overlaySource).toContain('developer-mode-overlay__watermark');
+  expect(overlaySource).toContain("t('login_page.developer_mode_enabled')");
+  expect(overlaySource).toContain("t('login_page.developer_mode_badge')");
+  expect(overlaySource).toContain("t('login_page.developer_mode_toast_description')");
+  expect(overlayStyles).toContain('position: fixed;');
+  expect(overlayStyles).toContain('height: 4px;');
+  expect(overlayStyles).toContain('--developer-mode-accent: #f6b84b;');
+  expect(overlayStyles).toContain('pointer-events: none;');
+  expect(overlayStyles).toContain('DEV MODE');
+  expect(footerSource).not.toContain('login-footer__developer');
+  expect(footerSource).not.toContain('selectDeveloperMode');
+  expect(zhCNLogin).toContain('"login_page.developer_mode_badge": "开发者模式"');
+  expect(zhTWLogin).toContain('"login_page.developer_mode_badge": "開發者模式"');
+  expect(enUSLogin).toContain('"login_page.developer_mode_badge": "Developer Mode"');
+});
+
 test('keeps viewport rem scaling available before authenticated layout loads', () => {
   const viewportScalePath = 'src/utils/setupViewportScale.ts';
   const appSource = source('src/App.tsx');
