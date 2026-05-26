@@ -4,11 +4,11 @@ import { Tooltip, Modal } from '@/ui';
 import './index.scss';
 import { useAppSelector } from '@/store';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
-import { selectDeveloperMode, selectIntegration } from '@/store/feature/config';
+import { selectIntegration } from '@/store/feature/config';
 import { useTranslation } from 'react-i18next';
 import { bridge } from '@/native';
 import { cn } from '@/ui/lib/cn';
-import { Network, Power, Settings, Wrench } from 'lucide-react';
+import { Network, Power, Settings } from 'lucide-react';
 
 const isThinFromEnv = import.meta.env.TAURI_IS_THIN_CLIENT === 'true';
 
@@ -32,8 +32,6 @@ const Footer: FC<FooterProps> = ({ rightSlot }) => {
 
   const isThin = useAppSelector(selectIsThin);
   const resolvedIsThin = isThin ?? isThinFromEnv;
-
-  const developerMode = useAppSelector(selectDeveloperMode);
 
   const isIntegratedMode = useAppSelector(selectIntegration);
 
@@ -100,12 +98,6 @@ const Footer: FC<FooterProps> = ({ rightSlot }) => {
               </Tooltip>
             );
           })}
-          {developerMode && (
-            <div className="login-footer__developer" role="status">
-              <Wrench aria-hidden="true" />
-              <span>{t('login_page.developer_mode_enabled')}</span>
-            </div>
-          )}
         </div>
         {rightSlot && <div className="login-footer__side">{rightSlot}</div>}
       </div>

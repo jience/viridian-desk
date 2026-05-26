@@ -8,6 +8,7 @@ import { RouteFallback } from '@/ui/shell/route-fallback';
 import { setupViewportScale } from '@/utils/setupViewportScale';
 import { useAppDispatch } from '@/store';
 import { setNetwork } from '@/store/feature/gateway';
+import { DeveloperModeOverlay } from '@/components/DeveloperModeOverlay';
 
 const IS_THIN_CLIENT = import.meta.env.TAURI_IS_THIN_CLIENT === 'true';
 
@@ -49,6 +50,7 @@ function App() {
 
   return (
     <UiThemeProvider>
+      <DeveloperModeOverlay />
       <ErrorBoundary>
         <Suspense fallback={<RouteFallback />}>
           <RouterProvider router={router} />
