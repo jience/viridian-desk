@@ -546,6 +546,52 @@ test('keeps form control focus styles compositor-safe', () => {
   }
 });
 
+test('keeps shared form and modal typography readable', () => {
+  const uiStyles = source('src/ui/styles.scss');
+  const snapStyles = source('src/pages/deskDetail/createSnap.scss');
+  const downloadModalStyles = source('src/components/DownloadModal/index.scss');
+  const buttonBlock = uiStyles.slice(
+    uiStyles.indexOf('.vdui-btn {'),
+    uiStyles.indexOf('\n.vdui-btn-primary', uiStyles.indexOf('.vdui-btn {')),
+  );
+  const controlBlock = uiStyles.slice(
+    uiStyles.indexOf('.vdui-input-affix-wrapper,\n.vdui-input,\n.vdui-select {'),
+    uiStyles.indexOf('\n.vdui-input-affix-wrapper {'),
+  );
+  const modalBodyBlock = uiStyles.slice(
+    uiStyles.indexOf('.vdui-modal-body {'),
+    uiStyles.indexOf('\n.vdui-modal-footer', uiStyles.indexOf('.vdui-modal-body {')),
+  );
+  const modalFooterBlock = uiStyles.slice(
+    uiStyles.indexOf('.vdui-modal-footer {'),
+    uiStyles.indexOf(
+      '\n.vdui-modal-footer .vdui-btn-primary',
+      uiStyles.indexOf('.vdui-modal-footer {'),
+    ),
+  );
+
+  expect(buttonBlock).toContain('font-size: 14px;');
+  expect(buttonBlock).toContain('line-height: 1.2;');
+  expect(uiStyles).toContain('.vdui-btn-small {\n  min-height: 28px;');
+  expect(uiStyles).not.toContain(
+    '.vdui-btn-small {\n  min-height: 28px;\n  padding: 0 10px;\n  font-size: 12px;',
+  );
+  expect(controlBlock).toContain('font-size: 14px;');
+  expect(controlBlock).toContain('line-height: 1.35;');
+  expect(uiStyles).toContain('.vdui-input::placeholder');
+  expect(uiStyles).toContain('font-size: inherit;');
+  expect(uiStyles).toContain('.vdui-select-placeholder {\n  color:');
+  expect(uiStyles).toMatch(/\.vdui-select-placeholder \{[\s\S]*font-size:\s*inherit;/);
+  expect(modalBodyBlock).toContain('font-size: 14px;');
+  expect(modalBodyBlock).toContain('line-height: 1.6;');
+  expect(modalFooterBlock).toContain('font-size: 14px;');
+  expect(uiStyles).toMatch(/\.vdui-modal-footer \.vdui-btn-primary \{[\s\S]*font-size:\s*14px;/);
+  expect(downloadModalStyles).toMatch(/\.update-msg \{[\s\S]*font-size:\s*14px;/);
+  expect(downloadModalStyles).toMatch(/\.update-msg \{[\s\S]*line-height:\s*1\.6;/);
+  expect(snapStyles).not.toContain('outline: 2px solid var(--desk-detail-modal-accent-soft);');
+  expect(snapStyles).toContain('.vdui-input-affix-wrapper:focus-within');
+});
+
 test('removes deprecated non-local login copy and auth types from the client', () => {
   const removedLocaleKeys = [
     'OtherLoginTip',

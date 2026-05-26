@@ -58,10 +58,9 @@
   .vdui-input:hover,
   .vdui-input:focus,
   .vdui-input-affix-wrapper:hover,
-  .vdui-input-affix-wrapper-focused {
+  .vdui-input-affix-wrapper:focus-within {
     border-color: var(--desk-detail-modal-accent-border);
-    outline: 2px solid var(--desk-detail-modal-accent-soft);
-    outline-offset: -2px;
+    outline: 0;
     box-shadow: none;
   }
 
