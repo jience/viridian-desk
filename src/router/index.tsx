@@ -113,6 +113,9 @@ const preAuthConfigLoader = () => {
 function schedulePreAuthClientBootstrap() {
   scheduleAfterFirstPaint(() => {
     const state = appStore.getState();
+    if (!state.terminal) {
+      void appStore.dispatch(fetchTerminalInfo());
+    }
     if (!state.config.client_id) {
       void appStore.dispatch(fetchConfigInfo());
     }
