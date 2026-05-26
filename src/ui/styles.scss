@@ -36,7 +36,8 @@
   gap: 8px;
   color: var(--vd-color-text, inherit);
   font: inherit;
-  line-height: 1;
+  font-size: 14px;
+  line-height: 1.2;
   background: var(--vd-color-surface, rgba(255, 255, 255, 0.06));
   cursor: pointer;
   transition:
@@ -75,12 +76,13 @@
 .vdui-btn-small {
   min-height: 28px;
   padding: 0 10px;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .vdui-btn-large {
   min-height: 40px;
   padding: 0 18px;
+  font-size: 15px;
 }
 
 .vdui-btn-circle {
@@ -123,7 +125,8 @@
   border-radius: 8px;
   color: var(--vd-color-text, inherit);
   font: inherit;
-  line-height: 1;
+  font-size: 14px;
+  line-height: 1.35;
   background: var(--vd-color-surface, rgba(255, 255, 255, 0.06));
   transition:
     border-color 180ms ease,
@@ -152,6 +155,7 @@
 
     &::placeholder {
       color: var(--vd-color-muted, rgba(148, 163, 184, 0.7));
+      font-size: inherit;
     }
   }
 
@@ -167,6 +171,11 @@
 .vdui-select {
   padding: 0 10px;
   outline: 0;
+}
+
+.vdui-input::placeholder {
+  color: var(--vd-color-muted, rgba(148, 163, 184, 0.7));
+  font-size: inherit;
 }
 
 .vdui-select {
@@ -212,6 +221,7 @@
 
 .vdui-select-placeholder {
   color: var(--vd-color-muted, rgba(148, 163, 184, 0.78));
+  font-size: inherit;
 }
 
 .vdui-select-arrow {
@@ -583,6 +593,8 @@
 
 .vdui-modal-body {
   padding: 20px 22px;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .vdui-modal-footer {
@@ -595,7 +607,7 @@
     min-width: 86px;
     min-height: 34px;
     border-radius: 7px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 550;
   }
 
@@ -618,7 +630,7 @@
   border-color: var(--vdui-modal-primary-border);
   border-radius: 7px;
   color: #ffffff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 550;
   background: var(--vdui-modal-primary-bg);
 
