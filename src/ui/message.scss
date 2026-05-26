@@ -1,24 +1,101 @@
 .vd-toast {
   position: fixed;
-  top: 22px;
+  top: calc(18px + (var(--vd-toast-index, 0) * 58px));
   left: 50%;
   z-index: 3000;
-  min-width: 180px;
-  max-width: min(420px, calc(100vw - 32px));
-  padding: 10px 14px;
-  border: 1px solid var(--vd-color-border, rgba(148, 163, 184, 0.2));
-  border-radius: 8px;
-  color: var(--vd-color-text, #f2f7f2);
-  text-align: center;
-  background: var(--vd-color-panel, #121a16);
-  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.26);
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  min-width: 220px;
+  max-width: min(460px, calc(100vw - 32px));
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 13px 9px 10px;
+  border: 1px solid var(--vdui-feedback-border, var(--vd-color-border, rgba(148, 163, 184, 0.2)));
+  border-radius: 10px;
+  color: var(--vdui-feedback-text, var(--vd-color-text, #f2f7f2));
+  background: var(--vdui-feedback-bg, var(--vd-color-panel, #121a16));
+  box-shadow: var(--vdui-feedback-shadow, 0 18px 52px rgba(0, 0, 0, 0.26));
+  --vd-toast-accent: var(--vdui-feedback-info, #2f6690);
   transform: translateX(-50%);
+  animation: vdToastEnter 180ms ease-out;
   transition:
     opacity 180ms ease,
     transform 180ms ease;
 }
 
+.vd-toast__icon {
+  position: relative;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--vd-toast-accent);
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1;
+  background: color-mix(in srgb, var(--vd-toast-accent) 14%, transparent);
+}
+
+.vd-toast__content {
+  min-width: 0;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 520;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.vd-toast--success {
+  --vd-toast-accent: var(--vdui-feedback-success, #37b56d);
+}
+
+.vd-toast--error {
+  --vd-toast-accent: var(--vdui-feedback-error, #cf4f45);
+}
+
+.vd-toast--warning {
+  --vd-toast-accent: var(--vdui-feedback-warning, #d89f32);
+}
+
+.vd-toast--info {
+  --vd-toast-accent: var(--vdui-feedback-info, #2f6690);
+}
+
+.vd-toast--loading {
+  --vd-toast-accent: var(--vdui-feedback-info, #2f6690);
+}
+
+.vd-toast--loading .vd-toast__icon::before {
+  width: 14px;
+  height: 14px;
+  border: 2px solid color-mix(in srgb, var(--vd-toast-accent) 24%, transparent);
+  border-top-color: var(--vd-toast-accent);
+  border-radius: 999px;
+  content: '';
+  animation: vdToastSpin 780ms linear infinite;
+}
+
 .vd-toast--leaving {
   opacity: 0;
   transform: translate(-50%, -6px);
+}
+
+@keyframes vdToastEnter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes vdToastSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
