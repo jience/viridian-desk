@@ -858,7 +858,9 @@ test('surfaces developer mode as a global desktop state', () => {
 
   expect(existsSync(join(process.cwd(), overlayPath)), overlayPath).toBe(true);
   expect(existsSync(join(process.cwd(), overlayStylePath)), overlayStylePath).toBe(true);
-  expect(appSource).toContain("import { DeveloperModeOverlay } from '@/components/DeveloperModeOverlay'");
+  expect(appSource).toContain(
+    "import { DeveloperModeOverlay } from '@/components/DeveloperModeOverlay'",
+  );
   expect(appSource).toContain('<DeveloperModeOverlay />');
   expect(overlaySource).toContain('selectDeveloperMode');
   expect(overlaySource).toContain('developer-mode-overlay__strip');
@@ -1290,8 +1292,9 @@ test('removes authenticated message notification feature from the client', () =>
   }
 });
 
-test('loads sidebar user security dialogs only when they are opened', () => {
+test('keeps account workbench code out of the sidebar shell', () => {
   const sidebarSource = source('src/components/Sidebar/index.tsx');
+  const accountWorkbenchSource = source('src/components/AccountWorkbench/index.tsx');
 
   expect(sidebarSource).not.toContain("import ChangePhone from '@/components/ChangePhone'");
   expect(sidebarSource).not.toContain("import ComModal from '@/components/ComModal'");
@@ -1301,29 +1304,65 @@ test('loads sidebar user security dialogs only when they are opened', () => {
   expect(sidebarSource).not.toContain("import useRequest from '@/hooks/useRequest'");
   expect(sidebarSource).not.toContain("import { changePasswordUser } from '@/services/user'");
   expect(sidebarSource).not.toContain("import { Buffer } from 'buffer'");
-  expect(sidebarSource).toContain("import('@/components/ChangePhone')");
-  expect(sidebarSource).toContain("import('@/components/ComModal')");
+  expect(sidebarSource).toContain(
+    "import { AccountWorkbench } from '@/components/AccountWorkbench'",
+  );
+  expect(sidebarSource).toContain('<AccountWorkbench');
+  expect(sidebarSource).toContain('currentUser={currentUser}');
+  expect(sidebarSource).toContain('forcePasswordChange=');
   expect(sidebarSource).toContain("import('@/components/DiffLoginTip')");
-  expect(sidebarSource).toContain("import('@/components/PwdForm')");
-  expect(sidebarSource).toContain("import('@/components/UserInfo')");
-  expect(sidebarSource).toContain("import('@/services/user')");
-  expect(sidebarSource).toContain("import('buffer')");
+  expect(accountWorkbenchSource).toContain('changePasswordUser');
+  expect(accountWorkbenchSource).toContain('updateUserPhone');
+  expect(accountWorkbenchSource).toContain('getPhoneCode');
+  expect(accountWorkbenchSource).toContain("import('buffer')");
 });
 
-test('keeps sidebar user popover dismissible', () => {
+test('keeps account controls inside the left-bottom workbench', () => {
   const uiSource = source('src/ui/index.tsx');
   const sidebarSource = source('src/components/Sidebar/index.tsx');
+  const workbenchPath = 'src/components/AccountWorkbench/index.tsx';
+  const workbenchStylesPath = 'src/components/AccountWorkbench/index.scss';
+  const workbenchSource = source(workbenchPath);
+  const workbenchStyles = source(workbenchStylesPath);
+  const zhCNCore = source('src/assets/locales/zh-CN/core.json');
+  const zhTWCore = source('src/assets/locales/zh-TW/core.json');
+  const enUSCore = source('src/assets/locales/en-US/core.json');
 
   expect(uiSource).toContain('rootRef.current?.contains(target)');
   expect(uiSource).toContain("document.addEventListener('pointerdown', handlePointerDown, true)");
   expect(uiSource).toContain("document.addEventListener('keydown', handleKeyDown)");
   expect(uiSource).toContain("event.key === 'Escape'");
   expect(uiSource).toContain('onOpenChange?.(false)');
-  expect(sidebarSource).toContain('const closeUserMenu = useCallback');
-  expect(sidebarSource).toContain('closeUserMenu();\n            setUserInfoVisible(true);');
-  expect(sidebarSource).toContain('closeUserMenu();\n              modifyPwd();');
-  expect(sidebarSource).toContain('closeUserMenu();\n              setChangePhoneVisible(true);');
-  expect(sidebarSource).toContain('closeUserMenu();\n            logout();');
+  expect(existsSync(join(process.cwd(), workbenchPath)), workbenchPath).toBe(true);
+  expect(existsSync(join(process.cwd(), workbenchStylesPath)), workbenchStylesPath).toBe(true);
+  expect(sidebarSource).not.toContain('<Popover');
+  expect(sidebarSource).not.toContain('userMenus');
+  expect(sidebarSource).not.toContain('setUserInfoVisible');
+  expect(sidebarSource).not.toContain('setChangePhoneVisible');
+  expect(workbenchSource).toContain('account-workbench__panel');
+  expect(workbenchSource).toContain('account-workbench__view');
+  expect(workbenchSource).toContain("setView('password')");
+  expect(workbenchSource).toContain("setView('phone')");
+  expect(workbenchSource).not.toContain("setView('profile')");
+  expect(workbenchSource).not.toContain("'profile'");
+  expect(workbenchSource).not.toContain('view_profile');
+  expect(workbenchSource).not.toContain('profile_title');
+  expect(workbenchSource).toContain('LoginUserType.LOCAL');
+  expect(workbenchSource).toContain('LEGACY_PASSWORD_PREFIX');
+  expect(workbenchSource).toContain(
+    "document.addEventListener('pointerdown', handlePointerDown, true)",
+  );
+  expect(workbenchSource).toContain("document.addEventListener('keydown', handleKeyDown)");
+  expect(workbenchSource).toContain("event.key === 'Escape'");
+  expect(workbenchStyles).toContain('left: 58px;');
+  expect(workbenchStyles).toContain('bottom: 8px;');
+  expect(workbenchStyles).toContain('width: min(380px, calc(100vw - 78px));');
+  expect(workbenchStyles).toContain('max-height: min(620px, calc(100vh - 24px));');
+  expect(workbenchStyles).toContain('.account-workbench__danger');
+  expect(workbenchStyles).not.toContain('position: fixed;');
+  expect(zhCNCore).toContain('"account.workbench.title": "账户工作台"');
+  expect(zhTWCore).toContain('"account.workbench.title": "賬戶工作台"');
+  expect(enUSCore).toContain('"account.workbench.title": "Account workbench"');
 });
 
 test('keeps shared action controls visually consistent', () => {
