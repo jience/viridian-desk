@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Button } from '@/shared/ui/components/button';
+import { Button } from '@/shared/ui/components';
 
 interface AssistantPanelProps {
   collapsed?: boolean;

@@ -1,5 +1,5 @@
 import '@/styles/design-system.css';
-import { Button } from '@/shared/ui/components/button';
+import { Button } from '@/shared/ui/components';
 import { DocumentTitle } from '@/shared/ui/shell/document-title';
 import { PreLoginSettingsShell } from '@/shared/ui/shell/pre-login-settings-shell';
 import '@/assets/iconfont/iconfont.css';
