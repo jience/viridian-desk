@@ -3,6 +3,7 @@ import {
   type InputHTMLAttributes,
   type ReactElement,
   type ReactNode,
+  type TextareaHTMLAttributes,
 } from 'react';
 
 import { cn } from './lib/cn';
@@ -18,16 +19,36 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   variant?: string;
   addonAfter?: ReactNode;
   iconRender?: (visible: boolean) => ReactNode;
-  [key: string]: any;
 }
+
+type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  autoSize?: boolean | { minRows?: number; maxRows?: number };
+  showCount?: boolean;
+};
+
+type InputGroupProps = {
+  children?: ReactNode;
+  className?: string;
+  compact?: boolean;
+};
+
+type InputNumberProps = Omit<InputProps, 'onChange' | 'type'> & {
+  value?: number | string | null;
+  defaultValue?: number | string;
+  onChange?: (value: number | null) => void;
+  precision?: number;
+  controls?: boolean;
+};
 
 type InputComponent = React.ForwardRefExoticComponent<
   InputProps & React.RefAttributes<HTMLInputElement>
 > & {
   Password: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>;
-  TextArea: React.ForwardRefExoticComponent<any>;
+  TextArea: React.ForwardRefExoticComponent<
+    TextAreaProps & React.RefAttributes<HTMLTextAreaElement>
+  >;
   Search: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>;
-  Group: (props: any) => ReactElement;
+  Group: (props: InputGroupProps) => ReactElement;
 };
 
 const InputBase = forwardRef<HTMLInputElement, InputProps>(
@@ -72,7 +93,7 @@ InputBase.displayName = 'Input';
 InputBase.Password = forwardRef<HTMLInputElement, InputProps>((props, ref) => (
   <InputBase ref={ref} type="password" {...props} />
 ));
-InputBase.TextArea = forwardRef<HTMLTextAreaElement, any>(
+InputBase.TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (
     {
       className,
@@ -110,19 +131,19 @@ InputBase.Search = forwardRef<HTMLInputElement, InputProps>(({ className, ...pro
     {...props}
   />
 ));
-InputBase.Group = ({ children, className }: any) => (
+InputBase.Group = ({ children, className }: InputGroupProps) => (
   <span className={cn('vdui-input-group', className)}>{children}</span>
 );
 
 export const Input = InputBase;
 
-export const InputNumber = forwardRef<HTMLInputElement, any>(
+export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(
   ({ onChange, className, ...props }, ref) => (
     <Input
       ref={ref}
       type="number"
       className={cn('vdui-input-number', className)}
-      onChange={(event: any) =>
+      onChange={(event) =>
         onChange?.(event.target.value === '' ? null : Number(event.target.value))
       }
       {...props}

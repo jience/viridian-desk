@@ -6,18 +6,26 @@ import {
   useRef,
   useState,
   type ReactElement,
+  type ChangeEvent,
+  type FocusEvent,
   type ReactNode,
 } from 'react';
 
 import { cn } from './lib/cn';
 import type { DefaultOptionType, SelectProps } from './types';
 
+type OptionElementProps = {
+  value?: unknown;
+  children?: ReactNode;
+  disabled?: boolean;
+};
+
 const readOptions = (options?: DefaultOptionType[], children?: ReactNode): DefaultOptionType[] => {
   if (options) return options;
   const list: DefaultOptionType[] = [];
-  (Array.isArray(children) ? children : [children]).forEach((child: any) => {
+  (Array.isArray(children) ? children : [children]).forEach((child) => {
     if (!isValidElement(child)) return;
-    const props = child.props as any;
+    const props = child.props as OptionElementProps;
     list.push({
       value: props.value ?? child.key,
       key: child.key ?? undefined,
@@ -29,16 +37,16 @@ const readOptions = (options?: DefaultOptionType[], children?: ReactNode): Defau
 };
 
 type SelectComponentType = {
-  <ValueType = any>(props: SelectProps<ValueType>): ReactElement | null;
-  Option: (props: any) => ReactElement;
+  <ValueType = unknown>(props: SelectProps<ValueType>): ReactElement | null;
+  Option: (props: { children?: ReactNode }) => ReactElement;
 };
 
 export const Select = Object.assign(
-  function SelectComponent<ValueType = any>(props: SelectProps<ValueType>) {
+  function SelectComponent<ValueType = unknown>(props: SelectProps<ValueType>) {
     const options = readOptions(props.options, props.children);
     const multiple = props.mode === 'multiple' || props.mode === 'tags';
     const isControlled = props.value !== undefined;
-    const [internalValue, setInternalValue] = useState<any>(
+    const [internalValue, setInternalValue] = useState<unknown>(
       props.defaultValue ?? (multiple ? [] : ''),
     );
     const [open, setOpen] = useState(false);
@@ -71,7 +79,7 @@ export const Select = Object.assign(
       return () => document.removeEventListener('pointerdown', handlePointerDown);
     }, [open]);
 
-    const commitValue = (nextValue: any, option?: DefaultOptionType) => {
+    const commitValue = (nextValue: unknown, option?: DefaultOptionType) => {
       if (!isControlled) setInternalValue(nextValue);
       props.onChange?.(nextValue as ValueType, option);
       props.onSelect?.(nextValue as ValueType, option);
@@ -198,7 +206,7 @@ export const Select = Object.assign(
     );
   } as SelectComponentType,
   {
-    Option: ({ children }: any) => <>{children}</>,
+    Option: ({ children }: { children?: ReactNode }) => <>{children}</>,
   },
 );
 
@@ -207,18 +215,29 @@ export function AutoComplete({ children, options, onSelect, showSearch }: Select
   if (!isValidElement(children)) return null;
   return (
     <>
-      {cloneElement(children as ReactElement<any>, {
+      {cloneElement(
+        children as ReactElement<{
+          list?: string;
+          onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+          onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+        }>,
+        {
         list: datalistId,
-        onChange: (event: any) => {
+        onChange: (event: ChangeEvent<HTMLInputElement>) => {
           const value = event.target.value;
           if (typeof showSearch === 'object') showSearch.onSearch?.(value);
-          (children as ReactElement<any>).props.onChange?.(event);
+          (
+            children as ReactElement<{
+              onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+            }>
+          ).props.onChange?.(event);
         },
-        onBlur: (event: any) => onSelect?.(event.target.value, undefined),
-      })}
+        onBlur: (event: FocusEvent<HTMLInputElement>) => onSelect?.(event.target.value, undefined),
+        },
+      )}
       <datalist id={datalistId}>
         {(options || []).map((option) => (
-          <option key={String(option.key ?? option.value)} value={option.value} />
+          <option key={String(option.key ?? option.value)} value={String(option.value ?? '')} />
         ))}
       </datalist>
     </>

@@ -4,13 +4,35 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type ReactElement,
+  type MouseEvent as ReactMouseEvent,
   type ReactNode,
 } from 'react';
 
-export function Tooltip({ title, children }: any) {
+type TriggerElementProps = {
+  title?: string;
+  onClick?: (event: ReactMouseEvent<HTMLElement>) => void;
+};
+
+export type TooltipProps = {
+  title?: ReactNode;
+  children?: ReactNode;
+  placement?: string;
+  color?: string;
+  arrow?: boolean;
+  trigger?: string | string[];
+  showArrow?: boolean;
+  overlayInnerStyle?: CSSProperties;
+  getPopupContainer?: (node: HTMLElement) => ParentNode | HTMLElement | null;
+  [key: string]: unknown;
+};
+
+export function Tooltip({ title, children }: TooltipProps) {
   return isValidElement(children)
-    ? cloneElement(children, { title: typeof title === 'string' ? title : undefined } as any)
+    ? cloneElement(children as ReactElement<TriggerElementProps>, {
+        title: typeof title === 'string' ? title : undefined,
+      })
     : children;
 }
 
@@ -19,8 +41,8 @@ type PopoverProps = {
   children?: ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  getPopupContainer?: (node: HTMLElement) => any;
-  [key: string]: any;
+  getPopupContainer?: (node: HTMLElement) => ParentNode | HTMLElement | null;
+  [key: string]: unknown;
 };
 
 export function Popover({ content, children, open, onOpenChange }: PopoverProps) {
@@ -60,9 +82,9 @@ export function Popover({ content, children, open, onOpenChange }: PopoverProps)
   return (
     <span ref={rootRef} className="vd-popover vdui-popover">
       {isValidElement(children)
-        ? cloneElement(children as ReactElement<any>, {
-            onClick: (event: any) => {
-              (children as ReactElement<any>).props.onClick?.(event);
+        ? cloneElement(children as ReactElement<TriggerElementProps>, {
+            onClick: (event: ReactMouseEvent<HTMLElement>) => {
+              (children as ReactElement<TriggerElementProps>).props.onClick?.(event);
               const nextOpen = !visible;
               setInternalOpen(nextOpen);
               onOpenChange?.(nextOpen);

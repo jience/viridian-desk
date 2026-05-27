@@ -698,7 +698,7 @@ test('keeps TypeScript escape hatches under tracked frontend budgets', () => {
   const eslintConfig = source('eslint.config.ts');
   const budgets = {
     'src/features': 360,
-    'src/shared/ui': 165,
+    'src/shared/ui': 70,
     'src/native': 0,
     'src/services': 0,
     'src/store': 0,
