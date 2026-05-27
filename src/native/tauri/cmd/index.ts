@@ -1,9 +1,9 @@
-import type { LoginUserInfo } from '@/native/interfaces/api';
 import type {
   ConnectDesktopReq,
   DiagnoseEvent,
   GetLogInfoRes,
   ICmdModule,
+  NativeLoginUserInfo,
   NetProbeItemRender,
   SetLogReq,
 } from '@/native/interfaces/cmd';
@@ -81,7 +81,7 @@ export const cmd_module: ICmdModule = {
     return wrapInvoke<void>(CmdInvoke.SET_LOG, { args: data });
   },
 
-  login: async (userInfo: LoginUserInfo, authToken: string = 'Auth111') => {
+  login: async (userInfo: NativeLoginUserInfo, authToken: string = 'Auth111') => {
     return wrapInvoke<void>(CmdInvoke.LOGIN, { args: { userInfo, authToken } });
   },
 

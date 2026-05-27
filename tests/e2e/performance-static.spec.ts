@@ -1693,7 +1693,7 @@ test('reuses prepared terminal info after login before permission route selectio
   expect(successHandlerSource).not.toContain('.unwrap()');
   expect(successHandlerSource).toContain('isThin');
   expect(loginHandlerSource).toContain('const terminalInfo = await ensureTerminalReady()');
-  expect(loginHandlerSource).toContain('loginSuccessFun(data.data, loginParam, {');
+  expect(loginHandlerSource).toContain('loginSuccessFun(data.data, {');
   expect(loginHandlerSource).toContain('isThin: Boolean(terminalInfo?.isThin)');
 });
 
@@ -2566,14 +2566,18 @@ test('defers Tauri feature modules until their methods are used', () => {
   expect(tauriBridgeSource).toContain("import('./config')");
 });
 
-test('loads password crypto only when login work needs it', () => {
+test('keeps password crypto out of login success persistence', () => {
   const legacyUtilsSource = source('src/utils/utils.tsx');
   const loginSuccessSource = source('src/features/auth/model/use-login-success-handler.ts');
+  const appSliceSource = source('src/store/feature/app/appSlice.ts');
   const apiModuleSource = source('src/native/tauri/api/index.ts');
 
   expect(legacyUtilsSource).not.toContain('crypto-js');
   expect(loginSuccessSource).not.toContain("from '@/utils/utils'");
-  expect(loginSuccessSource).toContain("import('@/utils/passwordCrypto')");
+  expect(loginSuccessSource).not.toContain("import('@/utils/passwordCrypto')");
+  expect(loginSuccessSource).not.toContain('req.password');
+  expect(appSliceSource).toContain('password:');
+  expect(appSliceSource).toContain('return userInfo');
   expect(apiModuleSource).not.toContain("from '@/utils/utils'");
   expect(apiModuleSource).toContain("from '@/utils/passwordCrypto'");
 });

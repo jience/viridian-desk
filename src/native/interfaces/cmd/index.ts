@@ -3,6 +3,10 @@ import type { NativeResponse } from '../types';
 import type { DiagnoseEvent, GetLogInfoRes, NetProbeItemRender, SetLogReq } from './types';
 export * from './types';
 
+export type NativeLoginUserInfo = LoginUserInfo & {
+  password: string;
+};
+
 export interface ConnectDesktopReq {
   desktopId: string;
   desktopIp: string;
@@ -58,7 +62,7 @@ export interface ICmdModule {
   /**
    * 设置登录的用户信息
    */
-  login(userInfo: LoginUserInfo, authToken?: string): Promise<NativeResponse>;
+  login(userInfo: NativeLoginUserInfo, authToken?: string): Promise<NativeResponse>;
   /**
    * 退出登录
    */

@@ -1,5 +1,6 @@
 import { bridge } from '@/native';
 import type { LoginUserInfo } from '@/native/interfaces/api/types';
+import type { NativeLoginUserInfo } from '@/native/interfaces/cmd';
 import type { AppState } from '@/store';
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import { initState } from './initState';
@@ -9,8 +10,12 @@ import { initState } from './initState';
  */
 export const setCurrentUser = createAsyncThunk(
   'app/setCurrentUser',
-  async (userInfo: LoginUserInfo & { password: string }) => {
-    await bridge.cmd.login(userInfo);
+  async (userInfo: LoginUserInfo) => {
+    const nativeUserInfo: NativeLoginUserInfo = {
+      ...userInfo,
+      password: '',
+    };
+    await bridge.cmd.login(nativeUserInfo);
     return userInfo;
   },
 );

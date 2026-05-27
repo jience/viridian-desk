@@ -31,7 +31,7 @@ export const useLoginHandler = () => {
 
       const terminalInfo = await ensureTerminalReady();
       const { data } = await bridge.api.loginUser(loginParam);
-      await loginSuccessFun(data.data, loginParam, {
+      await loginSuccessFun(data.data, {
         isThin: Boolean(terminalInfo?.isThin),
       });
     } finally {

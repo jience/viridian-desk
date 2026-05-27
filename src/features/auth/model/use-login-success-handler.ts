@@ -1,4 +1,4 @@
-import type { LoginUserInfo, LoginUserReq } from '@/native/interfaces/api';
+import type { LoginUserInfo } from '@/native/interfaces/api';
 import { useAppDispatch } from '@/store';
 import { setCurrentUser } from '@/store/feature/app';
 import Actions from '@/utils/actions';
@@ -54,29 +54,8 @@ export const useLoginSuccessHandler = () => {
   };
 
   // 登录成功后回调的处理
-  const loginSuccessFun = async (
-    res: LoginUserInfo,
-    req: LoginUserReq,
-    options: LoginSuccessOptions = {},
-  ) => {
-    // TODO 后面需要去除password字段
-    if (req.password) {
-      const { encryptionPassword } = await import('@/utils/passwordCrypto');
-      const password = encryptionPassword(req.password);
-      await appDispatch(
-        setCurrentUser({
-          ...res,
-          password,
-        }),
-      );
-    } else {
-      await appDispatch(
-        setCurrentUser({
-          ...res,
-          password: '',
-        }),
-      );
-    }
+  const loginSuccessFun = async (res: LoginUserInfo, options: LoginSuccessOptions = {}) => {
+    await appDispatch(setCurrentUser(res));
 
     if (res.passwordIsExpireSoon) {
       message.warning('您的密码即将过期，请及时修改密码以确保账户安全!');
