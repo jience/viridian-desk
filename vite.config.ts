@@ -1,7 +1,6 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import svgr from 'vite-plugin-svgr';
 
 const host = process.env.TAURI_DEV_HOST;
 
@@ -19,7 +18,7 @@ function getNodePackageName(id: string) {
 }
 
 export default defineConfig({
-  plugins: [react(), svgr()],
+  plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -59,8 +58,6 @@ export default defineConfig({
           if (
             packageName === 'i18next' ||
             packageName === 'react-i18next' ||
-            packageName === 'react-intl' ||
-            packageName === 'i18next-browser-languagedetector' ||
             packageName === 'i18next-resources-to-backend'
           ) {
             return 'vendor-i18n';
@@ -75,8 +72,6 @@ export default defineConfig({
             packageName === '@reduxjs/toolkit' ||
             packageName === 'react-redux' ||
             packageName === 'redux' ||
-            packageName === 'redux-thunk' ||
-            packageName === 'reselect' ||
             packageName === 'immer'
           ) {
             return 'vendor-state';

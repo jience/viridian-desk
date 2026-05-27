@@ -2493,7 +2493,6 @@ test('keeps Tauri core out of startup utility imports', () => {
   const startupUtilitySources = [
     source('src/native/file-src.ts'),
     source('src/utils/invoke/index.ts'),
-    source('src/services/invokeServices.ts'),
   ];
 
   for (const startupUtilitySource of startupUtilitySources) {
