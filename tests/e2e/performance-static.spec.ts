@@ -42,6 +42,15 @@ const collectSourceFiles = (dir: string): string[] =>
     return /\.(ts|tsx|js|jsx)$/.test(child) ? [child] : [];
   });
 
+const collectTypeScriptSourceFiles = (dir: string): string[] =>
+  collectSourceFiles(dir).filter((file) => /\.(ts|tsx)$/.test(file));
+
+const countExplicitAny = (dir: string) =>
+  collectTypeScriptSourceFiles(dir).reduce((count, file) => {
+    const content = stripComments(source(file));
+    return count + (content.match(/\bany\b/g)?.length ?? 0);
+  }, 0);
+
 const collectStaticTranslationKeys = () => {
   const keys = new Set<string>();
   const patterns = [
@@ -659,6 +668,48 @@ test('keeps shared ui as the canonical component library boundary', () => {
   expect(legacyUiFiles).toEqual([]);
   expect(source('src/app/App.tsx')).toContain("from '@/shared/ui/theme/theme-provider'");
   expect(source('src/app/router/routes.tsx')).toContain("from '@/shared/ui/shell/error-boundary'");
+});
+
+test('keeps shared ui internal modules behind public entrypoints', () => {
+  const internalUiImportPattern =
+    /@\/shared\/ui\/(?:button|input|select|modal|form|table|display|dropdown|overlay|selection|date-picker|config|components\/button)\b/;
+  const allowedComponentEntrypoint = 'src/shared/ui/components/index.ts';
+
+  expect(source(allowedComponentEntrypoint)).toContain(
+    "export { Button, type ButtonProps } from './button'",
+  );
+
+  for (const file of collectSourceFiles('src')) {
+    if (file.startsWith('src/shared/ui/')) continue;
+    expect(stripComments(source(file)), file).not.toMatch(internalUiImportPattern);
+  }
+
+  expect(source('src/features/settings/pages/settings-page.tsx')).toContain(
+    "from '@/shared/ui/components'",
+  );
+  expect(source('src/features/empty/pages/empty-page.tsx')).toContain(
+    "from '@/shared/ui/components'",
+  );
+});
+
+test('keeps TypeScript escape hatches under tracked frontend budgets', () => {
+  const eslintConfig = source('eslint.config.ts');
+  const budgets = {
+    'src/features': 400,
+    'src/shared/ui': 180,
+    'src/native': 30,
+    'src/services': 20,
+    'src/store': 0,
+  };
+
+  expect(eslintConfig).toContain("'@typescript-eslint/ban-ts-comment': 'error'");
+  expect(eslintConfig).toContain("'@typescript-eslint/no-empty-object-type': 'error'");
+  expect(eslintConfig).not.toContain("'@typescript-eslint/ban-ts-comment': 'off'");
+  expect(eslintConfig).not.toContain("'@typescript-eslint/no-empty-object-type': 'off'");
+
+  for (const [dir, maxCount] of Object.entries(budgets)) {
+    expect(countExplicitAny(dir), dir).toBeLessThanOrEqual(maxCount);
+  }
 });
 
 test('keeps shell and account feature components out of the shared component bucket', () => {
