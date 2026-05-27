@@ -1,7 +1,8 @@
 import useRequest from '@/hooks/useRequest';
 import { listFault, revokeFault } from '@/services/api/fault';
 import type { FaultItem, FaultListRequest } from '@/services/api/fault/types';
-import { createFault, listResourceUser } from '@/services/resource';
+import { listResourceUser } from '@/services/api/desktop';
+import { createFault } from '@/services/api/fault';
 import { useAppSelector } from '@/store';
 import { selectCurrentUser } from '@/store/feature/app';
 import Actions from '@/utils/actions';

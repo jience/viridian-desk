@@ -1,12 +1,11 @@
-import { lazy, memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import { useNavigate } from 'react-router';
-import { Button, Dropdown, Empty, Modal, Spin, Tooltip } from '@/shared/ui/fast';
+import { Button, Empty, Modal, Spin } from '@/shared/ui/fast';
 import { message } from '@/shared/ui/message';
-import Deskpool from '@/features/desktop/components/desk-pool-icon';
 import useRequest from '@/hooks/useRequest';
 import { useProgressiveItems } from '@/hooks/useProgressiveItems';
-import { detachVolume } from '@/services/resource';
+import { detachVolume } from '@/services/api/desktop';
 import { bridge } from '@/native';
 import { useAppSelector } from '@/store';
 import { selectFullScreen } from '@/store/feature/config';
@@ -15,165 +14,12 @@ import Actions from '@/utils/actions';
 import { DESK_STATUS, EmptyText, getStatus } from '@/utils/constant';
 import { logger } from '@/utils/logger';
 import { transIcon, transRam } from '@/utils/utils';
-import InUseLoading from '../components/in-use-loading';
+import { DeskPoolCard, DesktopCard } from '../components/desktop-resource-cards';
 import useDeskHooks from '../model/use-desk-hooks';
 import './desktop-page.scss';
 
 const DeskPoolModal = lazy(() => import('../components/desk-pool-detail'));
 const DeskLoading = lazy(() => import('@/features/desktop/components/desk-loading'));
-
-const getPopupContainer = (triggerNode: HTMLElement) => triggerNode.ownerDocument.body;
-
-interface DesktopCardProps {
-  item: any;
-  index: number;
-  connectLabel: string;
-  moreLabel: string;
-  metaLine: string;
-  menu: any;
-  statusInfo: { title: string; type: string };
-  onEnterDesk: (item: any) => void;
-}
-
-const DesktopCard = memo(function DesktopCard({
-  item,
-  index,
-  connectLabel,
-  moreLabel,
-  metaLine,
-  menu,
-  statusInfo,
-  onEnterDesk,
-}: DesktopCardProps) {
-  const isStopped = ['stop', 'stopretain'].includes(item?.status?.toLowerCase());
-
-  return (
-    <article
-      className={`desk-card desk-card--${item?.desktopPool?.type} desk-card-item-${index} ${
-        isStopped ? 'desk-card--disabled' : ''
-      } ${item.isDefault ? 'desk-card--default' : ''}`}
-    >
-      {item.isDefault && <span className="desk-card__default-mark">{menu.defaultLabel}</span>}
-
-      <Dropdown
-        menu={menu.dropdown}
-        placement="bottomRight"
-        trigger={['click']}
-        classNames={{ root: 'desk-more-menu desk-page__more-menu' }}
-        getPopupContainer={getPopupContainer}
-      >
-        <Button
-          className="desk-card__menu"
-          type="text"
-          icon={<i className="iconfont icon-more" />}
-          aria-label={moreLabel}
-          title={moreLabel}
-          onClick={(event) => event.stopPropagation()}
-        />
-      </Dropdown>
-
-      <button className="desk-card__preview" type="button" onClick={() => onEnterDesk(item)}>
-        <div className="desk-card__icon">{transIcon(item.image?.os || item.os)}</div>
-
-        <div className="desk-card__identity">
-          <Tooltip title={item.name}>
-            <h3 className="desk-card__name">
-              <span>{item.name}</span>
-            </h3>
-          </Tooltip>
-          <p className="desk-card__meta-line">{metaLine}</p>
-        </div>
-
-        <div className={`desk-card__status desk-card__status--${statusInfo.type}`}>
-          <span className="desk-card__status-dot" />
-          <span>{statusInfo.title}</span>
-          {item?.sessionStatus == '1' && <InUseLoading />}
-        </div>
-      </button>
-
-      <Button
-        className="desk-card__connect"
-        type="primary"
-        aria-label={connectLabel}
-        title={connectLabel}
-        onClick={() => onEnterDesk(item)}
-      >
-        <span>{connectLabel}</span>
-        <i className="iconfont icon-arrow" />
-      </Button>
-    </article>
-  );
-});
-
-interface DeskPoolCardProps {
-  item: any;
-  detailLabel: string;
-  metaLine: string;
-  poolLabel: string;
-  createLabel: string;
-  onCreate: (item: any) => void;
-  onShowDetail: (id: string) => void;
-}
-
-const DeskPoolCard = memo(function DeskPoolCard({
-  item,
-  detailLabel,
-  metaLine,
-  poolLabel,
-  createLabel,
-  onCreate,
-  onShowDetail,
-}: DeskPoolCardProps) {
-  return (
-    <article className="desk-pool">
-      <Button
-        className="desk-card__menu"
-        type="text"
-        icon={<i className="iconfont icon-info-o" />}
-        aria-label={`${detailLabel}: ${item.name}`}
-        title={detailLabel}
-        onClick={() => onShowDetail(item.id)}
-      />
-
-      <button
-        type="button"
-        className="desk-pool__preview"
-        aria-label={`${detailLabel}: ${item.name}`}
-        onClick={() => onShowDetail(item.id)}
-      >
-        <div className="desk-card__icon desk-card__icon--pool">
-          <Deskpool />
-          {transIcon(item?.os)}
-        </div>
-
-        <div className="desk-card__identity">
-          <Tooltip title={item.name}>
-            <h3 className="desk-pool__name">
-              <span>{item.name}</span>
-            </h3>
-          </Tooltip>
-          <p className="desk-card__meta-line">{metaLine}</p>
-        </div>
-
-        <div className="desk-card__status desk-card__status--success">
-          <span className="desk-card__status-dot" />
-          <span>{poolLabel}</span>
-        </div>
-      </button>
-
-      <Button
-        onClick={(event) => {
-          event.stopPropagation();
-          onCreate(item);
-        }}
-        className="desk-card__connect desk-pool__create"
-      >
-        <span>{createLabel}</span>
-        <i className="iconfont icon-arrow" />
-      </Button>
-    </article>
-  );
-});
 
 export function DeskPage() {
   const { formatMessage } = useMessageFormatter();

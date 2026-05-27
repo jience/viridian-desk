@@ -1,5 +1,5 @@
 import { ConfigProvider, Input } from '@/shared/ui';
-import cx from 'classnames';
+import { cn } from '@/shared/ui/lib/cn';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import './index.scss';
 
@@ -86,13 +86,14 @@ const IPv4 = (props: any) => {
     if (val > 255) {
       val = 255;
     }
-    arrayValue[i] = Number.isNaN(val) ? e.target.value : `${val}`;
-    if (arrayValue.every((item: any) => item?.trim() === '')) {
+    const nextValue = [...arrayValue];
+    nextValue[i] = Number.isNaN(val) ? e.target.value : `${val}`;
+    if (nextValue.every((item) => item?.trim() === '')) {
       setArrayValue(['', '', '', '']);
       onChange?.('');
     } else {
-      setArrayValue(arrayValue.concat());
-      onChange?.(arrayValue.join('.'));
+      setArrayValue(nextValue);
+      onChange?.(nextValue.join('.'));
     }
 
     if (`${val}`.length === 3 && i < 3) {
@@ -103,32 +104,21 @@ const IPv4 = (props: any) => {
   };
 
   // 获取当前的位置
-  const getCursorPosition = (el: any) => {
-    let cursorPos = 0;
-    // @ts-expect-error
-    if (document.selection) {
-      // @ts-expect-error
-      const selectRange = document.selection.createRange();
-      selectRange.moveStart('character', -el.value.length);
-      cursorPos = selectRange.text.length;
-    } else {
-      cursorPos = el.selectionStart;
-    }
-    return cursorPos;
-  };
+  const getCursorPosition = (el: HTMLInputElement) => el.selectionStart ?? 0;
 
   /**
    * 输入事件
    */
-  const handleKeyDown = (e: any, i: number) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, i: number) => {
     /* ArrowLeft = ←, ArrowRight = →, Backspace = backspace, . = . */
     let domId = i;
+    const target = e.currentTarget;
 
     // ←/Backspace
     if (
       ['ArrowLeft', 'Backspace'].includes(e.key) &&
       domId > 0 &&
-      getCursorPosition(e.target) === 0
+      getCursorPosition(target) === 0
     ) {
       e.preventDefault();
       domId = i - 1;
@@ -138,7 +128,7 @@ const IPv4 = (props: any) => {
     if (
       e.key === 'ArrowRight' &&
       domId < 3 &&
-      getCursorPosition(e.target) === e.target.value.length
+      getCursorPosition(target) === target.value.length
     ) {
       e.preventDefault();
       domId = i + 1;
@@ -146,7 +136,7 @@ const IPv4 = (props: any) => {
 
     // .
     if (['.', '。'].includes(e.key) && domId < 3) {
-      if (getCursorPosition(e.target) !== 0) {
+      if (getCursorPosition(target) !== 0) {
         e.preventDefault();
         domId = i + 1;
       } else {
@@ -159,7 +149,7 @@ const IPv4 = (props: any) => {
 
   return (
     <div
-      className={cx(prefixCls, { [`${prefixCls}-disabled`]: disabled }, className)}
+      className={cn(prefixCls, disabled && `${prefixCls}-disabled`, className)}
       ref={eventRef}
       {...restProps}
     >
@@ -184,9 +174,11 @@ const IPv4 = (props: any) => {
 
           return previousValue.concat(currentValue).concat(
             <Input
-              className={cx('ip-split', {
-                'ip-split-disabled': Array.isArray(disabled) ? disabled[currentIndex] : disabled,
-              })}
+              className={cn(
+                'ip-split',
+                (Array.isArray(disabled) ? disabled[currentIndex] : disabled) &&
+                  'ip-split-disabled',
+              )}
               size={size}
               placeholder="."
               disabled

@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { message, Modal } from '@/shared/ui';
-import { cancelWorkflow } from '@/services/resource';
+import { cancelWorkflow } from '@/services/api/approval';
 import useRequest from '@/hooks/useRequest';
 import './workflow-modal.scss';
 

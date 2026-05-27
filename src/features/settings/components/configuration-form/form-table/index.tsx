@@ -5,7 +5,7 @@ import IPv4Cidr from '../ipv4-cidr';
 import IPv4 from '../ipv4';
 import IPv6Cidr from '../ipv6-cidr';
 import IPv6 from '../ipv6';
-import cx from 'classnames';
+import { cn } from '@/shared/ui/lib/cn';
 import './index.scss';
 const { ConfigContext } = ConfigProvider;
 
@@ -260,7 +260,7 @@ const FormTable = (props: any) => {
 
   return (
     <div
-      className={cx(prefixCls, { [`${prefixCls}-disabled`]: disabled }, className)}
+      className={cn(prefixCls, disabled && `${prefixCls}-disabled`, className)}
       ref={eventRef}
       {...restProps}
     >

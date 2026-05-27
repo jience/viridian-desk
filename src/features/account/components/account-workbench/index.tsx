@@ -4,40 +4,16 @@ import { LoginUserType, type LoginUserInfo } from '@/native/interfaces/api';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { logoutCurrentUser } from '@/store/feature/app';
 import { selectConnected, selectNetwork } from '@/store/feature/gateway';
-import { Button, Form, Input, Tooltip, message } from '@/shared/ui';
+import { Form, Tooltip, message } from '@/shared/ui';
 import { cn } from '@/shared/ui/lib/cn';
 import { useMessageFormatter } from '@/utils/message-format';
 import { LEGACY_PASSWORD_PREFIX } from '@/utils/passwordPrefix';
 import Regex from '@/utils/regex';
-import {
-  ArrowLeft,
-  BadgeCheck,
-  ChevronRight,
-  KeyRound,
-  LogOut,
-  Mail,
-  Monitor,
-  Phone,
-  ShieldCheck,
-  Smartphone,
-  UserRound,
-} from 'lucide-react';
-import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
-
-type AccountWorkbenchView = 'overview' | 'password' | 'phone';
-
-type PasswordFields = {
-  oldPassword?: string;
-  newPassword?: string;
-  confirmPassword?: string;
-};
-
-type PhoneFields = {
-  phone?: string;
-  verifyCode?: string;
-};
+import { AccountOverviewView, PasswordView, PhoneView } from './account-workbench-views';
+import type { AccountWorkbenchView, PasswordFields, PhoneFields } from './types';
 
 interface AccountWorkbenchProps {
   currentUser?: LoginUserInfo | null;
@@ -48,55 +24,11 @@ interface AccountWorkbenchProps {
 
 const emptyValue = '--';
 
-const displayValue = (value?: string) => (value ? value : emptyValue);
-const formatPhone = (phone?: string) =>
-  phone && phone.length === 11 ? `${phone.slice(0, 3)}****${phone.slice(-4)}` : '';
-
 const encodePassword = async (value: string) => {
   const { Buffer } = await import('buffer');
   const timestamp = Date.now();
   return Buffer.from(`${LEGACY_PASSWORD_PREFIX}${value}_${timestamp}`).toString('base64');
 };
-
-function AccountFact({ icon, label, value }: { icon: ReactNode; label: string; value: ReactNode }) {
-  return (
-    <div className="account-workbench__fact">
-      <span className="account-workbench__fact-icon">{icon}</span>
-      <span className="account-workbench__fact-label">{label}</span>
-      <strong className="account-workbench__fact-value">{value}</strong>
-    </div>
-  );
-}
-
-function AccountAction({
-  icon,
-  title,
-  description,
-  disabled,
-  onClick,
-}: {
-  icon: ReactNode;
-  title: string;
-  description: string;
-  disabled?: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      className="account-workbench__action"
-      disabled={disabled}
-      type="button"
-      onClick={onClick}
-    >
-      <span className="account-workbench__action-icon">{icon}</span>
-      <span className="account-workbench__action-copy">
-        <strong>{title}</strong>
-        <small>{description}</small>
-      </span>
-      <ChevronRight aria-hidden="true" />
-    </button>
-  );
-}
 
 export function AccountWorkbench({
   currentUser,
@@ -251,7 +183,7 @@ export function AccountWorkbench({
     setPasswordSubmitting(true);
 
     try {
-      const { changePasswordUser } = await import('@/services/user');
+      const { changePasswordUser } = await import('@/services/api/account');
       await changePasswordUser({
         oldPassword: await encodePassword(values.oldPassword || ''),
         newPassword: await encodePassword(values.newPassword || ''),
@@ -271,7 +203,7 @@ export function AccountWorkbench({
 
     setCodeSending(true);
     try {
-      const { getPhoneCode } = await import('@/services/public');
+      const { getPhoneCode } = await import('@/services/api/account');
       await getPhoneCode({ phone: phoneValue });
       setNumber(60);
       setSent(true);
@@ -285,7 +217,7 @@ export function AccountWorkbench({
     setPhoneSubmitting(true);
 
     try {
-      const { updateUserPhone } = await import('@/services/user');
+      const { updateUserPhone } = await import('@/services/api/account');
       await updateUserPhone({
         phone: values.phone,
         smsCaptcha: values.verifyCode,
@@ -336,7 +268,7 @@ export function AccountWorkbench({
     let disposed = false;
     const loadPasswordPolicy = async () => {
       try {
-        const { getTerminalLoginConfig } = await import('@/services/public');
+        const { getTerminalLoginConfig } = await import('@/services/api/session');
         const response = await getTerminalLoginConfig();
         if (!disposed) {
           setStrongPasswordSwitch((response as any)?.terminalStrongPasswordSwitch);
@@ -395,219 +327,48 @@ export function AccountWorkbench({
           role="dialog"
         >
           {view === 'overview' && (
-            <div className="account-workbench__view">
-              <div className="account-workbench__header">
-                <div className="account-workbench__avatar" aria-hidden="true">
-                  <UserRound />
-                </div>
-                <div className="account-workbench__identity">
-                  <h2>{displayName}</h2>
-                  <p>{accountName}</p>
-                </div>
-                <span className="account-workbench__status">
-                  <BadgeCheck aria-hidden="true" />
-                  {t('account.workbench.online')}
-                </span>
-              </div>
-
-              <div className="account-workbench__facts">
-                <AccountFact
-                  icon={<ShieldCheck />}
-                  label={t('account.workbench.login_method')}
-                  value={canModifyLocal ? t('account.workbench.local_user') : emptyValue}
-                />
-                <AccountFact
-                  icon={<Phone />}
-                  label={t('account.workbench.phone')}
-                  value={formatPhone(currentUser?.telephone) || t('account.workbench.not_bound')}
-                />
-                <AccountFact
-                  icon={<Mail />}
-                  label={t('account.workbench.email')}
-                  value={displayValue(currentUser?.email)}
-                />
-                <AccountFact
-                  icon={<Monitor />}
-                  label={t('account.workbench.terminal')}
-                  value={displayValue(terminalName)}
-                />
-              </div>
-
-              <div className="account-workbench__actions">
-                <AccountAction
-                  disabled={!canModifyLocal}
-                  icon={<KeyRound />}
-                  title={t('account.workbench.change_password')}
-                  description={t('account.workbench.change_password_desc')}
-                  onClick={() => setView('password')}
-                />
-                <AccountAction
-                  disabled={!canModifyLocal}
-                  icon={<Smartphone />}
-                  title={t('account.workbench.change_phone')}
-                  description={t('account.workbench.change_phone_desc')}
-                  onClick={() => setView('phone')}
-                />
-              </div>
-
-              <button className="account-workbench__danger" type="button" onClick={logout}>
-                <LogOut aria-hidden="true" />
-                {t('account.workbench.logout')}
-              </button>
-            </div>
+            <AccountOverviewView
+              t={t}
+              currentUser={currentUser}
+              displayName={displayName}
+              accountName={accountName}
+              terminalName={terminalName}
+              canModifyLocal={canModifyLocal}
+              onPassword={() => setView('password')}
+              onPhone={() => setView('phone')}
+              onLogout={logout}
+            />
           )}
 
           {view === 'password' && (
-            <div className="account-workbench__view">
-              {!forcePasswordChange && (
-                <button
-                  className="account-workbench__back"
-                  type="button"
-                  onClick={() => setView('overview')}
-                >
-                  <ArrowLeft aria-hidden="true" />
-                  {t('account.workbench.back')}
-                </button>
-              )}
-              <div className="account-workbench__section-title">
-                <h2>{t('account.workbench.security_title')}</h2>
-                <p>
-                  {forcePasswordChange
-                    ? t('account.workbench.force_password_hint')
-                    : t('account.workbench.password_hint')}
-                </p>
-              </div>
-              <Form
-                className="account-workbench__form"
-                form={passwordForm}
-                layout="vertical"
-                requiredMark={false}
-              >
-                <Form.Item
-                  liveValue={false}
-                  name="oldPassword"
-                  label={intl.formatMessage({ id: 'OLD_PASSWORD' })}
-                  rules={passwordRules.oldPassword}
-                >
-                  <Input.Password
-                    autoComplete="current-password"
-                    placeholder={intl.formatMessage(
-                      { id: 'FORM_ERROR_MSG' },
-                      { name: intl.formatMessage({ id: 'OLD_PASSWORD' }) },
-                    )}
-                  />
-                </Form.Item>
-                <Form.Item
-                  liveValue={false}
-                  name="newPassword"
-                  label={intl.formatMessage({ id: 'NEW_PASSWORD' })}
-                  rules={passwordRules.newPassword}
-                >
-                  <Input.Password
-                    autoComplete="new-password"
-                    placeholder={intl.formatMessage(
-                      { id: 'FORM_ERROR_MSG' },
-                      { name: intl.formatMessage({ id: 'NEW_PASSWORD' }) },
-                    )}
-                  />
-                </Form.Item>
-                <Form.Item
-                  liveValue={false}
-                  name="confirmPassword"
-                  label={intl.formatMessage({ id: 'CONFIRM_PASSWORD' })}
-                  rules={passwordRules.confirmPassword}
-                >
-                  <Input.Password
-                    autoComplete="new-password"
-                    placeholder={intl.formatMessage(
-                      { id: 'FORM_ERROR_MSG' },
-                      { name: intl.formatMessage({ id: 'CONFIRM_PASSWORD' }) },
-                    )}
-                  />
-                </Form.Item>
-              </Form>
-              <div className="account-workbench__footer vdui-modal-footer">
-                {!forcePasswordChange && (
-                  <Button type="default" onClick={() => setView('overview')}>
-                    {intl.formatMessage({ id: 'CANCEL' })}
-                  </Button>
-                )}
-                <Button type="primary" loading={passwordSubmitting} onClick={submitPassword}>
-                  {t('account.workbench.save_password')}
-                </Button>
-              </div>
-            </div>
+            <PasswordView
+              t={t}
+              intl={intl}
+              forcePasswordChange={forcePasswordChange}
+              form={passwordForm}
+              rules={passwordRules}
+              submitting={passwordSubmitting}
+              onBack={() => setView('overview')}
+              onSubmit={submitPassword}
+            />
           )}
 
           {view === 'phone' && (
-            <div className="account-workbench__view">
-              <button
-                className="account-workbench__back"
-                type="button"
-                onClick={() => setView('overview')}
-              >
-                <ArrowLeft aria-hidden="true" />
-                {t('account.workbench.back')}
-              </button>
-              <div className="account-workbench__section-title">
-                <h2>{t('account.workbench.phone_title')}</h2>
-                <p>{t('account.workbench.sms_hint')}</p>
-              </div>
-              <Form
-                className="account-workbench__form"
-                form={phoneForm}
-                layout="vertical"
-                requiredMark={false}
-              >
-                <Form.Item
-                  name="phone"
-                  label={intl.formatMessage({ id: 'UserPhone' })}
-                  rules={phoneRules.phone}
-                >
-                  <Input placeholder={intl.formatMessage({ id: 'ChangePhonePlaceHolder' })} />
-                </Form.Item>
-                <p className="account-workbench__hint">
-                  {intl.formatMessage({ id: 'SendPhoneLable' }, {
-                    phone: formatPhone(phoneValue) || emptyValue,
-                  })}
-                </p>
-                <div className="account-workbench__code-row">
-                  <Form.Item
-                    liveValue={false}
-                    name="verifyCode"
-                    className="account-workbench__code-item"
-                    rules={phoneRules.verifyCode}
-                  >
-                    <Input
-                      inputMode="numeric"
-                      placeholder={intl.formatMessage(
-                        { id: 'FORM_ERROR_MSG' },
-                        { name: intl.formatMessage({ id: 'VERIFY_CODE' }) },
-                      )}
-                    />
-                  </Form.Item>
-                  <Button
-                    className="account-workbench__code-button"
-                    disabled={!canSendCode}
-                    loading={codeSending}
-                    type="default"
-                    onClick={sendPhoneCode}
-                  >
-                    {sent
-                      ? `${number}s ${intl.formatMessage({ id: 'RetryGetCode' })}`
-                      : intl.formatMessage({ id: 'GetVerificationCode' })}
-                  </Button>
-                </div>
-              </Form>
-              <div className="account-workbench__footer vdui-modal-footer">
-                <Button type="default" onClick={() => setView('overview')}>
-                  {intl.formatMessage({ id: 'CANCEL' })}
-                </Button>
-                <Button type="primary" loading={phoneSubmitting} onClick={submitPhone}>
-                  {t('account.workbench.save_phone')}
-                </Button>
-              </div>
-            </div>
+            <PhoneView
+              t={t}
+              intl={intl}
+              form={phoneForm}
+              rules={phoneRules}
+              phoneValue={phoneValue}
+              canSendCode={canSendCode}
+              codeSending={codeSending}
+              phoneSubmitting={phoneSubmitting}
+              sent={sent}
+              countdown={number}
+              onBack={() => setView('overview')}
+              onSendCode={sendPhoneCode}
+              onSubmit={submitPhone}
+            />
           )}
         </section>
       )}

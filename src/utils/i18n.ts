@@ -1,6 +1,5 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import dayjs from 'dayjs';
 import { LanguageType, type LanguageType as SupportedLanguage } from '@/native/interfaces/config';
@@ -66,7 +65,6 @@ const isLocaleNamespace = (namespace?: string): namespace is LocaleNamespace => 
 };
 
 i18next
-  .use(LanguageDetector)
   .use(
     resourcesToBackend((language: string, namespace: string) => {
       const lng = isSupportedLanguage(language) ? language : LanguageType.ZH_CN;

@@ -13,8 +13,6 @@ export default [
       'src-tauri',
       'target',
       'src/assets/js/wwLogin-1.2.7.js',
-      'src/hooks/useRequest.js',
-      'src/utils/constant.js',
     ],
   },
   js.configs.recommended,

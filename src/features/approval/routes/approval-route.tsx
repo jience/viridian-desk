@@ -1,5 +1,5 @@
 import useRequest from '@/hooks/useRequest';
-import { listWorkflow } from '@/services/resource';
+import { listWorkflow } from '@/services/api/approval';
 import { useAppSelector } from '@/store';
 import { selectCurrentUser } from '@/store/feature/app';
 import Actions from '@/utils/actions';

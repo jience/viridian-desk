@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import IconWithTooltip from '../icon-with-tooltip';
 import useRequest from '@/hooks/useRequest';
-import { getWorkflowDetail } from '@/services/resource';
+import { getWorkflowDetail } from '@/services/api/approval';
 import style from './index.module.scss';
 
 export enum WorkflowStatus {

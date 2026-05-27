@@ -38,9 +38,9 @@ export const DESK_STATUS = {
   DELETING: 'Deleting',
 };
 // 获取桌面状态值
-export const getStatus = (status) => {
+export const getStatus = (status: string) => {
   let type = 'success';
-  let stat = status.toLowerCase();
+  const stat = status.toLowerCase();
   const showStatus = [
     'start',
     'error',
