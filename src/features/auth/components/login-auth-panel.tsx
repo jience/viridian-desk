@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/store';
 import { selectConnected, selectNetwork } from '@/store/feature/gateway';
-import { Button } from '@/shared/ui/components/button';
+import { Button } from '@/shared/ui/components';
 import { Form } from '@/shared/ui';
 import { useMessageFormatter } from '@/utils/message-format';
 import { memo, useCallback, useEffect } from 'react';
