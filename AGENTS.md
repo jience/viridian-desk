@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-Viridian Desk is a Tauri 2 desktop app with a React/Vite frontend. Frontend code lives in `src/`: UI in `src/components`, screens in `src/pages`, routing in `src/router`, Redux state in `src/store`, API and Tauri wrappers in `src/services`, helpers in `src/utils`, styles in `src/styles`, and assets/locales in `src/assets` plus shared UI locales in `src/ui/i18n`. Native Rust code is under `src-tauri/src`, grouped by domain (`app`, `config`, `core`, `events`, `plugins`). Tauri configuration, permissions, icons, sidecars, resources, and packaging files stay in `src-tauri/`. Build helpers are in `scripts/`; docs are in `docs/`.
+Viridian Desk is a Tauri 2 desktop app with a React/Vite frontend. Frontend code lives in `src/`: startup, providers, routing, and layouts in `src/app`; thin route exports in `src/pages`; feature implementation in `src/features`; shared widgets in `src/shared/components`; Redux state in `src/store`; API/listener/command wrappers in `src/services`; the Tauri facade in `src/native`; design-system components, shell helpers, theme code, and shared UI locales in `src/shared/ui`; utilities in `src/utils`; styles in `src/styles`; assets and app locales in `src/assets`. Native Rust code is under `src-tauri/src`, grouped by domain (`app`, `config`, `core`, `events`, `plugins`). Tauri config, permissions, icons, sidecars, resources, and packaging files stay in `src-tauri/`. Build helpers are in `scripts/`; docs are in `docs/`.
 
 ## Build, Test, and Development Commands
 
@@ -19,15 +19,15 @@ Use `pnpm`; `pnpm-lock.yaml` is the lockfile.
 
 ## Coding Style & Naming Conventions
 
-EditorConfig enforces LF files, final newlines, trimmed trailing whitespace, 2-space indentation by default, and 4-space indentation for Rust. Prettier uses 2 spaces, single quotes, and `printWidth: 100`; run `pnpm run prettier` before broad formatting changes. Prefer `.ts`/`.tsx`, PascalCase components, camelCase variables/functions, and `_` prefixes for intentionally unused parameters. Rust follows `src-tauri/rustfmt.toml` and snake_case names.
+EditorConfig enforces LF files, final newlines, trimmed trailing whitespace, 2-space indentation by default, and 4-space indentation for Rust. Prettier uses 2 spaces, single quotes, and `printWidth: 100`; run `pnpm run prettier` before broad formatting. Prefer `.ts`/`.tsx`, PascalCase components, camelCase variables/functions, and `_` prefixes for intentionally unused parameters.
 
 ## Testing Guidelines
 
-There is no frontend test script currently configured, so validate frontend changes with `pnpm run lint` and manual checks in `pnpm run tauri dev`. Add Rust integration tests under `src-tauri/tests` and unit tests beside Rust modules when changing native behavior. Name tests after the behavior verified.
+Validate frontend changes with `pnpm run lint`, targeted Playwright/static tests, and manual checks in `pnpm run tauri dev`. Add Rust integration tests under `src-tauri/tests` and unit tests beside Rust modules when changing native behavior. Name tests after the behavior verified.
 
 ## Commit & Pull Request Guidelines
 
-The current history only shows `Initialize project`, so no strict convention is established. Use concise imperative commits such as `Add gateway retry handling` or `Fix login error mapping`. Pull requests should include a summary, test results (`pnpm run lint`, `cargo test`, manual platform checks), linked issues, and screenshots or recordings for UI changes.
+Use concise imperative commits such as `Add gateway retry handling` or `Fix login error mapping`. Pull requests should include a summary, test results (`pnpm run lint`, `cargo test`, manual platform checks), linked issues, and screenshots or recordings for UI changes.
 
 ## Security & Configuration Tips
 

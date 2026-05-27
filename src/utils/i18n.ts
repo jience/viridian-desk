@@ -14,7 +14,7 @@ const localeNamespaces: LocaleNamespace[] = ['translation', 'common', 'assistant
 const translationModules = import.meta.glob<LocaleResource>('../assets/locales/*/*.json', {
   import: 'default',
 });
-const uiLocaleModules = import.meta.glob<LocaleResource>('../ui/i18n/locales/*/*.json', {
+const uiLocaleModules = import.meta.glob<LocaleResource>('../shared/ui/i18n/locales/*/*.json', {
   import: 'default',
 });
 
@@ -32,7 +32,7 @@ const loadUiNamespace = async (
   language: SupportedLanguage,
   namespace: Exclude<LocaleNamespace, 'translation'>,
 ): Promise<LocaleResource> => {
-  const loader = uiLocaleModules[`../ui/i18n/locales/${language}/${namespace}.json`];
+  const loader = uiLocaleModules[`../shared/ui/i18n/locales/${language}/${namespace}.json`];
   return loader ? loader() : {};
 };
 

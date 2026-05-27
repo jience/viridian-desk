@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import { message as uiMessage } from '@/ui/message';
+import { message as uiMessage } from '@/shared/ui/message';
 import { logger } from '@/utils/logger';
 
 const hasErrorDetail = (value) => {

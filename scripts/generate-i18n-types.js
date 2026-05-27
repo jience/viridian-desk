@@ -31,8 +31,8 @@ function collectLocaleResource(language) {
 // 读取中文语言文件作为基准
 const zhCN = collectLocaleResource('zh-CN');
 const redesignResources = {
-  common: readJson('../src/ui/i18n/locales/zh-CN/common.json'),
-  assistant: readJson('../src/ui/i18n/locales/zh-CN/assistant.json'),
+  common: readJson('../src/shared/ui/i18n/locales/zh-CN/common.json'),
+  assistant: readJson('../src/shared/ui/i18n/locales/zh-CN/assistant.json'),
 };
 
 // 生成类型定义
