@@ -3,7 +3,6 @@ import './peripheral-page.scss';
 import { Empty, Tooltip } from '@/shared/ui';
 import IntegratedCard from '../components/integrated-card';
 import { deviceTransLocal } from '@/utils/constant';
-import { _list_usb_devices } from '@/services/invokeServices';
 import { listUsbDevices } from '@/services/invoke/shell';
 import type { ListUsbDevicesResp } from '@/services/invoke/shell/types';
 

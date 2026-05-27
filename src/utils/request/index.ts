@@ -3,7 +3,6 @@ import { globalEmitter } from '../mitt';
 import { isApiErrResponse, type ApiResponse } from './types';
 import { logger } from '@/utils/logger';
 import { getStoreState } from '@/store/runtime-access';
-import { getWebPreviewResponse } from './web-preview';
 
 type FetchOpt = RequestInit & ClientOptions;
 export interface RequestOptions<B = any> extends Omit<FetchOpt, 'body'> {
@@ -114,12 +113,6 @@ export const request = async <RESP = ApiResponse, REQ = any>(
   logHttpRequest(`${opts.method || 'GET'} ${api}`, opts);
 
   try {
-    const webPreviewResponse = getWebPreviewResponse<RESP>(api);
-    if (webPreviewResponse) {
-      logHttpRequest(`${opts.method || 'GET'} web-preview ${api}`, webPreviewResponse);
-      return webPreviewResponse;
-    }
-
     const fetchRes = await fetchHttp(fullApi, opts);
     const resp = await fetchRes.json();
     logHttpRequest(`${opts.method || 'GET'} ${fetchRes.status} ${api}`, resp);
