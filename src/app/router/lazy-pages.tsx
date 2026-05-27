@@ -1,35 +1,64 @@
-import { lazy } from 'react';
+import { lazy, type ComponentType } from 'react';
 
-export const LoginPage = lazy(() => import('@/pages/login'));
-export const SettingsPage = lazy(() => import('@/pages/configPage'));
+const lazyNamedRoute = <T extends Record<string, unknown>>(
+  loader: () => Promise<T>,
+  exportName: keyof T,
+) =>
+  lazy(async () => {
+    const module = await loader();
+    return { default: module[exportName] as ComponentType };
+  });
+
+export const LoginPage = lazyNamedRoute(
+  () => import('@/features/auth/routes/login-route'),
+  'LoginPage',
+);
+export const SettingsPage = lazyNamedRoute(
+  () => import('@/features/settings/routes/settings-route'),
+  'SettingsPage',
+);
 export const ClientLayout = lazy(() => import('@/app/layouts/client-layout'));
 export const AppLayout = lazy(() =>
   import('@/app/layouts/app-layout').then((module) => ({ default: module.AppLayout })),
 );
-export const ServerSetting = lazy(() => import('@/pages/configPage/serverSetting'));
-export const CurrencySetting = lazy(() => import('@/pages/configPage/commonSetting'));
-export const AdvancedSetting = lazy(() => import('@/pages/configPage/advancedSetting'));
-export const About = lazy(() => import('@/pages/configPage/about'));
-export const DeskPage = lazy(() =>
-  import('@/pages/desk').then((module) => ({ default: module.DeskPage })),
+export const ServerSetting = lazyNamedRoute(
+  () => import('@/features/settings/routes/server-setting-route'),
+  'ServerSetting',
 );
-export const DeskDetailPage = lazy(() =>
-  import('@/pages/deskDetail').then((module) => ({
-    default: module.DeskDetailPage,
-  })),
+export const CurrencySetting = lazyNamedRoute(
+  () => import('@/features/settings/routes/common-setting-route'),
+  'CommonSetting',
 );
-export const Application = lazy(() =>
-  import('@/pages/application').then((module) => ({ default: module.Application })),
+export const AdvancedSetting = lazyNamedRoute(
+  () => import('@/features/settings/routes/advanced-setting-route'),
+  'AdvancedSetting',
 );
-export const PeripheralSetting = lazy(() =>
-  import('@/pages/peripheralSetting').then((module) => ({ default: module.Component })),
+export const About = lazyNamedRoute(() => import('@/features/settings/routes/about-route'), 'About');
+export const DeskPage = lazyNamedRoute(
+  () => import('@/features/desktop/routes/desktop-route'),
+  'DeskPage',
 );
-export const Malfunction = lazy(() =>
-  import('@/pages/malfunction').then((module) => ({ default: module.Component })),
+export const DeskDetailPage = lazyNamedRoute(
+  () => import('@/features/desktop/routes/desktop-detail-route'),
+  'DeskDetailPage',
 );
-export const Approval = lazy(() =>
-  import('@/pages/approval').then((module) => ({ default: module.Component })),
+export const Application = lazyNamedRoute(
+  () => import('@/features/application/routes/application-route'),
+  'Application',
 );
-export const EmptyPage = lazy(() =>
-  import('@/pages/empty').then((module) => ({ default: module.EmptyPage })),
+export const PeripheralSetting = lazyNamedRoute(
+  () => import('@/features/peripheral/routes/peripheral-route'),
+  'Component',
+);
+export const Malfunction = lazyNamedRoute(
+  () => import('@/features/malfunction/routes/malfunction-route'),
+  'Component',
+);
+export const Approval = lazyNamedRoute(
+  () => import('@/features/approval/routes/approval-route'),
+  'Component',
+);
+export const EmptyPage = lazyNamedRoute(
+  () => import('@/features/empty/routes/empty-route'),
+  'EmptyPage',
 );
