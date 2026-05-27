@@ -1,0 +1,38 @@
+name: Frontend Quality
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - perf/rk3576-rendering-optimization
+
+jobs:
+  frontend:
+    name: Lint, Test, And Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.30.3
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install browser dependencies
+        run: pnpm exec playwright install --with-deps chrome
+
+      - name: Run frontend quality checks
+        run: pnpm run check:frontend

@@ -23,6 +23,12 @@ test.beforeEach(async ({ page }) => {
   });
 
   await page.addInitScript(() => {
+    let callbackId = 0;
+    let listenerId = 0;
+    let requestId = 0;
+    const callbacks = new Map<number, { callback: (...args: unknown[]) => unknown; once?: boolean }>();
+    const httpRequests = new Map<number, string>();
+
     const smokeConfig = {
       gateway: [
         {
@@ -48,6 +54,247 @@ test.beforeEach(async ({ page }) => {
     localStorage.setItem('ui-theme', 'dark');
     localStorage.setItem('viridian.web.config', JSON.stringify(smokeConfig));
     localStorage.setItem('viridian-desk:config', JSON.stringify(cachedConfig));
+
+    const readConfig = () => JSON.parse(localStorage.getItem('viridian.web.config') || '{}');
+    const writeConfig = (configPatch: Record<string, unknown>) => {
+      const nextConfig = {
+        ...readConfig(),
+        ...configPatch,
+      };
+      localStorage.setItem('viridian.web.config', JSON.stringify(nextConfig));
+      localStorage.setItem(
+        'viridian-desk:config',
+        JSON.stringify({
+          language: nextConfig.language,
+          theme: nextConfig.theme,
+          client_id: nextConfig.client_id,
+          client_name: nextConfig.client_name,
+        }),
+      );
+      return nextConfig;
+    };
+    const getGatewayList = () => readConfig().gateway || [];
+    const setGatewayList = (gateway: unknown[]) => writeConfig({ gateway });
+    const getAppConf = () => {
+      const config = readConfig();
+      return {
+        theme: config.theme || 'dark',
+        auto_update: false,
+        auto_start: false,
+        full_screen: false,
+        developer_mode: false,
+        integration: false,
+        language: config.language || 'zh-CN',
+        gateway: config.gateway || [],
+        client_id: config.client_id || 'smoke-client',
+        client_name: config.client_name || 'Smoke Client',
+        client_version: '2.0.1',
+        api_key: '',
+        log: {
+          level: 'info',
+          path: '',
+          max_file_size: 10485760,
+          rotation_strategy: 1,
+        },
+      };
+    };
+    const getHttpPayload = (url: string) => {
+      if (url.includes('/loginUser')) {
+        return {
+          requestId: 'smoke-login',
+          data: {
+            userId: 'smoke-user',
+            loginName: 'demo',
+            userName: 'Demo User',
+            type: 'Local',
+            permissions: [],
+          },
+        };
+      }
+
+      return {
+        requestId: 'smoke-list',
+        data: {
+          results: [],
+          total: 0,
+          list: [],
+        },
+      };
+    };
+
+    (window as any).__TAURI_EVENT_PLUGIN_INTERNALS__ = {
+      unregisterListener: () => {},
+    };
+    (window as any).__TAURI_INTERNALS__ = {
+      metadata: {
+        currentWindow: {
+          label: 'main',
+        },
+      },
+      transformCallback: (callback: (...args: unknown[]) => unknown, once?: boolean) => {
+        callbackId += 1;
+        callbacks.set(callbackId, { callback, once });
+        return callbackId;
+      },
+      unregisterCallback: (id: number) => {
+        callbacks.delete(id);
+      },
+      convertFileSrc: (filePath: string) => filePath,
+      invoke: async (command: string, args?: Record<string, any>) => {
+        switch (command) {
+          case 'get_terminal_info':
+            return {
+              id: 'smoke-terminal',
+              osType: 'Linux',
+              platform: 'linux',
+              platformCode: 'linux',
+              versionCode: '1',
+              versionName: 'Smoke OS',
+              clientIp: '127.0.0.1',
+              cpuInfo: 'Smoke CPU',
+              mac: '00:00:00:00:00:00',
+              memInfo: 4096,
+              clientType: 'desktop',
+              clientOsVersion: 'debian',
+              isThin: false,
+              sku: 'smoke',
+            };
+          case 'get_client_config':
+            return {
+              logo: '',
+              logoWhite: '',
+              license: '',
+              clientIconPng: '',
+              clientIconIco: '',
+              companyName: 'Viridian',
+              isUpdate: 'Disabled',
+              copyright: '',
+              clientPrefix: 'viridian',
+              timeout: '60',
+              clientTheme: 'dark',
+              deskToolbar: 'Enabled',
+              deskToolbarPosition: 'right',
+              companyPhone: '',
+              companyEmail: '',
+              gatewayAddrShowSwitch: 'Enabled',
+              displayVersion: 'Enabled',
+              backgroundImage: '',
+              publicityImage: '',
+              floatBall: 'Disabled',
+              securityPassword: '',
+              securityPasswordSwitch: 'Disabled',
+            };
+          case 'get_client_about':
+            return {
+              clientId: 'smoke-client',
+              clientName: 'Smoke Client',
+              clientVersion: '2.0.1',
+              clientType: 'desktop',
+              license: '',
+              copyright: '',
+              buildId: 'smoke',
+              sku: 'smoke',
+            };
+          case 'get_gateway_server':
+            return getGatewayList();
+          case 'get_app_conf':
+            return getAppConf();
+          case 'get_client_online_status':
+            return false;
+          case 'list_usb_devices':
+            return [];
+          case 'kill_all_hdp_viewers':
+            return null;
+          case 'add_gateway_server': {
+            const nextGateway = {
+              uuid: `smoke-gateway-${Date.now()}`,
+              name: args?.name,
+              address: args?.address,
+              port: 443,
+              isPublic: Boolean(args?.isPublic),
+              auto: Boolean(args?.auto),
+            };
+            setGatewayList([...getGatewayList(), nextGateway]);
+            return null;
+          }
+          case 'switch_gateway_server': {
+            const gwid = args?.gwid;
+            setGatewayList(
+              getGatewayList().map((gateway: any) => ({
+                ...gateway,
+                auto: gateway.uuid === gwid,
+              })),
+            );
+            return null;
+          }
+          case 'update_gateway_server': {
+            const gwid = args?.gwid;
+            setGatewayList(
+              getGatewayList().map((gateway: any) =>
+                gateway.uuid === gwid
+                  ? {
+                      ...gateway,
+                      name: args?.name,
+                      address: args?.address,
+                      isPublic: Boolean(args?.isPublic),
+                    }
+                  : gateway,
+              ),
+            );
+            return null;
+          }
+          case 'delete_gateway_server':
+            setGatewayList(getGatewayList().filter((gateway: any) => gateway.uuid !== args?.gwid));
+            return null;
+          case 'set_theme':
+            writeConfig({ theme: args?.theme });
+            return null;
+          case 'set_language':
+            writeConfig({ language: args?.language });
+            return null;
+          case 'set_developer_mode':
+          case 'set_log_filter':
+          case 'set_autostart':
+          case 'set_fullscreen':
+          case 'set_autoupdate':
+          case 'login':
+          case 'logout':
+          case 'plugin:event|unlisten':
+          case 'plugin:window|minimize':
+          case 'plugin:window|maximize':
+          case 'plugin:window|close':
+            return null;
+          case 'plugin:window|is_maximized':
+          case 'plugin:window|is_fullscreen':
+          case 'plugin:window|is_minimized':
+            return false;
+          case 'plugin:event|listen':
+            listenerId += 1;
+            return listenerId;
+          case 'plugin:http|fetch':
+            requestId += 1;
+            httpRequests.set(requestId, String(args?.clientConfig?.url || ''));
+            return requestId;
+          case 'plugin:http|fetch_send':
+            return {
+              status: 200,
+              statusText: 'OK',
+              url: httpRequests.get(Number(args?.rid)) || '',
+              headers: [['content-type', 'application/json']],
+              rid: Number(args?.rid),
+            };
+          case 'plugin:http|fetch_read_body': {
+            const url = httpRequests.get(Number(args?.rid)) || '';
+            const bodyBytes = Array.from(new TextEncoder().encode(JSON.stringify(getHttpPayload(url))));
+            args?.streamChannel?.onmessage?.([...bodyBytes, 0]);
+            args?.streamChannel?.onmessage?.([1]);
+            return null;
+          }
+          default:
+            return null;
+        }
+      },
+    };
   });
 
   await page.exposeFunction('__assertNoConsoleErrors', () => {
@@ -70,6 +317,9 @@ test('keeps login layout scaled to the desktop viewport', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 820 });
   await page.goto('/login');
 
+  await expect
+    .poll(() => page.evaluate(() => Number.parseFloat(getComputedStyle(document.documentElement).fontSize)))
+    .toBeGreaterThan(80);
   const rootFontSize = await page.evaluate(() =>
     Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
   );
@@ -318,12 +568,7 @@ test('keeps login submit disabled when gateway is disconnected', async ({ page }
   await page.getByPlaceholder('请输入密码').fill('demo-password');
 
   await expect(page.getByRole('button', { name: /^登录$/ })).toBeDisabled();
-  await expect(
-    page
-      .locator('.auth-page__status-card')
-      .filter({ hasText: 'Smoke Gateway' })
-      .filter({ hasText: '未连接' }),
-  ).toBeVisible();
+  await expect(page.locator('.auth-page__status-card').filter({ hasText: 'TLS 保护' })).toBeVisible();
 
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });
