@@ -1,44 +1,6 @@
 import '@/styles/index.scss';
 import '@/utils/i18n';
 
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import { Provider } from 'react-redux';
-import { appStore } from './store';
-import { setupServices } from './services';
-import { logger } from '@/utils/logger';
+import { startApp } from '@/app/start';
 
-function setupEnvLog() {
-  const canvas = document.createElement('canvas');
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  const isHardwareAccelerated = !!gl;
-  logger.debug('硬件加速是否启用:', isHardwareAccelerated);
-}
-
-function setupView() {
-  ReactDOM.createRoot(document.getElementById('root')!).render(
-    <Provider store={appStore}>
-      <App />
-    </Provider>,
-  );
-}
-
-function scheduleHardwareAccelerationLog() {
-  const schedule =
-    window.requestIdleCallback ??
-    ((callback: IdleRequestCallback) => window.setTimeout(() => callback({} as IdleDeadline), 0));
-
-  schedule(() => {
-    setupEnvLog();
-  });
-}
-
-function main() {
-  setupServices();
-
-  setupView();
-
-  scheduleHardwareAccelerationLog();
-}
-
-main();
+startApp();

@@ -33,7 +33,7 @@ const locale = (language: 'zh-CN' | 'zh-TW' | 'en-US') => {
 };
 
 const uiLocale = (language: 'zh-CN' | 'zh-TW' | 'en-US', namespace: 'common' | 'assistant') =>
-  readJson(`src/ui/i18n/locales/${language}/${namespace}.json`);
+  readJson(`src/shared/ui/i18n/locales/${language}/${namespace}.json`);
 
 const collectSourceFiles = (dir: string): string[] =>
   readdirSync(join(process.cwd(), dir), { withFileTypes: true }).flatMap((entry) => {
@@ -294,7 +294,7 @@ test('keeps locale file key sets aligned across supported languages', () => {
 test('keeps runtime API error translations on the error_code namespace', () => {
   const legacyRequestErrorHandler = source('src/utils/requestErrorHandler.jsx');
   const nativeRequestErrorHandler = source('src/services/requestErrorHandler.ts');
-  const createSnapSource = source('src/pages/deskDetail/createSnap.tsx');
+  const createSnapSource = source('src/features/desktop/components/create-snapshot-modal/index.tsx');
 
   expect(legacyRequestErrorHandler).toContain('`error_code.${errorCode}`');
   expect(legacyRequestErrorHandler).toContain('`error_code.${httpStatus}`');
@@ -325,40 +325,40 @@ test('keeps low-frequency modal components lazy-loaded', () => {
   expect(source('src/pages/malfunction/index.tsx')).not.toContain(
     "import CreatedModal from './create'",
   );
-  expect(source('src/pages/desk/DeskPage.tsx')).not.toContain(
+  expect(source('src/features/desktop/pages/desktop-page.tsx')).not.toContain(
     "import DeskPoolModal from './components/deskPoolDetail'",
   );
 });
 
 test('loads the desk connection overlay only while connecting', () => {
-  const deskPageSource = source('src/pages/desk/DeskPage.tsx');
+  const deskPageSource = source('src/features/desktop/pages/desktop-page.tsx');
 
-  expect(deskPageSource).not.toContain("import DeskLoading from '@/components/DeskLoading'");
-  expect(deskPageSource).toContain("import('@/components/DeskLoading')");
+  expect(deskPageSource).not.toContain("import DeskLoading from '@/features/desktop/components/desk-loading'");
+  expect(deskPageSource).toContain("import('@/features/desktop/components/desk-loading')");
 });
 
 test('loads desk detail modals only when opened', () => {
-  const deskDetailSource = source('src/pages/deskDetail/DeskDetailPage.tsx');
+  const deskDetailSource = source('src/features/desktop/pages/desktop-detail-page.tsx');
 
   expect(deskDetailSource).not.toContain("import AllDiskListModal from './allDiskListModal'");
   expect(deskDetailSource).not.toContain("import CreateModal from './createSnap'");
-  expect(deskDetailSource).toContain("import('./allDiskListModal')");
-  expect(deskDetailSource).toContain("import('./createSnap')");
+  expect(deskDetailSource).toContain("import('../components/all-disk-list-modal')");
+  expect(deskDetailSource).toContain("import('../components/create-snapshot-modal')");
 });
 
 test('loads application detail modal only when opened', () => {
-  const applicationPageSource = source('src/pages/application/ApplicationPage.tsx');
+  const applicationPageSource = source('src/features/application/pages/application-page.tsx');
 
   expect(applicationPageSource).not.toContain(
-    "import { AppDetailModal } from './component/AppDetailModal'",
+    "import { AppDetailModal } from '../components/app-detail-modal'",
   );
-  expect(applicationPageSource).toContain("import('./component/AppDetailModal')");
+  expect(applicationPageSource).toContain("import('../components/app-detail-modal')");
 });
 
 test('keeps the login page local-account only', () => {
-  const loginPageSource = source('src/pages/login/LoginPage.tsx');
-  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
-  const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
+  const loginPageSource = source('src/features/auth/pages/login-page.tsx');
+  const loginAuthPanelSource = source('src/features/auth/components/login-auth-panel.tsx');
+  const loginHandlerSource = source('src/features/auth/model/use-login-handler.ts');
   const removedLoginPaths = [
     'src/pages/login/LoginFormItems',
     'src/pages/login/OneTimePasswordModal',
@@ -396,9 +396,9 @@ test('keeps the login page local-account only', () => {
 });
 
 test('keeps the login auth panel aligned with the console reference', () => {
-  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
-  const usernamePwdSource = source('src/pages/login/UsernamePwd/index.tsx');
-  const loginStyles = source('src/pages/login/LoginPage.scss');
+  const loginAuthPanelSource = source('src/features/auth/components/login-auth-panel.tsx');
+  const usernamePwdSource = source('src/features/auth/components/username-password/index.tsx');
+  const loginStyles = source('src/features/auth/pages/login-page.scss');
 
   expect(loginAuthPanelSource).toContain('LoginPanelTitle');
   expect(loginAuthPanelSource).toContain('LoginPanelSubtitle');
@@ -417,8 +417,8 @@ test('keeps the login auth panel aligned with the console reference', () => {
 });
 
 test('uses theme-specific brand artwork on the login brand panel', () => {
-  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
-  const loginStyles = source('src/pages/login/LoginPage.scss');
+  const loginBrandPanelSource = source('src/features/auth/components/login-brand-panel.tsx');
+  const loginStyles = source('src/features/auth/pages/login-page.scss');
 
   expect(loginBrandPanelSource).toContain('viridian_logo_with_text_dark.svg');
   expect(loginBrandPanelSource).toContain('viridian_logo_with_text_light.svg');
@@ -441,8 +441,8 @@ test('uses theme-specific brand artwork on the login brand panel', () => {
 });
 
 test('keeps login hero copy aligned with the visual reference', () => {
-  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
-  const loginStyles = source('src/pages/login/LoginPage.scss');
+  const loginBrandPanelSource = source('src/features/auth/components/login-brand-panel.tsx');
+  const loginStyles = source('src/features/auth/pages/login-page.scss');
   const zhCNLocale = locale('zh-CN');
   const zhTWLocale = locale('zh-TW');
   const enUSLocale = locale('en-US');
@@ -463,8 +463,8 @@ test('keeps login hero copy aligned with the visual reference', () => {
 });
 
 test('uses static product capability cards on the login brand panel', () => {
-  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
-  const loginStyles = source('src/pages/login/LoginPage.scss');
+  const loginBrandPanelSource = source('src/features/auth/components/login-brand-panel.tsx');
+  const loginStyles = source('src/features/auth/pages/login-page.scss');
   const zhCNLocale = locale('zh-CN');
   const zhTWLocale = locale('zh-TW');
   const enUSLocale = locale('en-US');
@@ -521,14 +521,18 @@ test('uses static product capability cards on the login brand panel', () => {
 });
 
 test('keeps form control focus styles compositor-safe', () => {
-  const uiStyles = source('src/ui/styles.scss');
-  const settingsStyles = source('src/pages/configPage/SettingsPage.scss');
-  const approvalStyles = source('src/pages/approval/ApprovalPage.scss');
-  const malfunctionStyles = source('src/pages/malfunction/MalfunctionPage.scss');
-  const snapStyles = source('src/pages/deskDetail/createSnap.scss');
-  const appModalStyles = source('src/pages/application/component/AddFromSysModal/index.scss');
-  const formTableStyles = source('src/components/FormTable/index.scss');
-  const ipv4Styles = source('src/components/IPv4/index.scss');
+  const uiStyles = source('src/shared/ui/styles.scss');
+  const settingsStyles = source('src/features/settings/pages/settings-page.scss');
+  const approvalStyles = source('src/features/approval/pages/approval-page.scss');
+  const malfunctionStyles = source('src/features/malfunction/pages/malfunction-page.scss');
+  const snapStyles = source('src/features/desktop/components/create-snapshot-modal/index.scss');
+  const appModalStyles = source(
+    'src/features/application/components/add-from-sys-modal/index.scss',
+  );
+  const formTableStyles = source(
+    'src/features/settings/components/configuration-form/form-table/index.scss',
+  );
+  const ipv4Styles = source('src/features/settings/components/configuration-form/ipv4/index.scss');
   expect(uiStyles).not.toContain('box-shadow 180ms ease');
   expect(uiStyles).not.toContain('box-shadow: 0 0 0 2px');
   expect(formTableStyles).not.toContain('box-shadow 160ms ease');
@@ -544,9 +548,9 @@ test('keeps form control focus styles compositor-safe', () => {
 });
 
 test('keeps shared form and modal typography readable', () => {
-  const uiStyles = source('src/ui/styles.scss');
-  const snapStyles = source('src/pages/deskDetail/createSnap.scss');
-  const downloadModalStyles = source('src/components/DownloadModal/index.scss');
+  const uiStyles = source('src/shared/ui/styles.scss');
+  const snapStyles = source('src/features/desktop/components/create-snapshot-modal/index.scss');
+  const downloadModalStyles = source('src/features/settings/components/download-modal/index.scss');
   const buttonBlock = uiStyles.slice(
     uiStyles.indexOf('.vdui-btn {'),
     uiStyles.indexOf('\n.vdui-btn-primary', uiStyles.indexOf('.vdui-btn {')),
@@ -590,14 +594,14 @@ test('keeps shared form and modal typography readable', () => {
 });
 
 test('keeps system prompt surfaces visually unified', () => {
-  const confirmPath = 'src/ui/confirm.tsx';
+  const confirmPath = 'src/shared/ui/confirm.tsx';
   const hasConfirmModule = existsSync(join(process.cwd(), confirmPath));
   const confirmSource = hasConfirmModule ? source(confirmPath) : '';
-  const messageSource = source('src/ui/message.ts');
-  const messageStyles = source('src/ui/message.scss');
-  const uiStyles = source('src/ui/styles.scss');
-  const uiSource = source('src/ui/index.tsx');
-  const fastPath = 'src/ui/fast.tsx';
+  const messageSource = source('src/shared/ui/message.ts');
+  const messageStyles = source('src/shared/ui/message.scss');
+  const uiStyles = source('src/shared/ui/styles.scss');
+  const uiSource = source('src/shared/ui/index.tsx');
+  const fastPath = 'src/shared/ui/fast.tsx';
   const hasFastModule = existsSync(join(process.cwd(), fastPath));
   const fastSource = hasFastModule ? source(fastPath) : '';
 
@@ -631,6 +635,500 @@ test('keeps system prompt surfaces visually unified', () => {
   expect(uiStyles).toContain('--vdui-feedback-shadow');
   expect(uiStyles).toContain('.vdui-confirm-modal');
   expect(uiStyles).toContain('.vdui-confirm-modal__icon');
+});
+
+test('keeps shared ui as the canonical component library boundary', () => {
+  const sharedUiRoot = 'src/shared/ui';
+  const sharedIndexPath = `${sharedUiRoot}/index.tsx`;
+  const legacyUiRootPath = join(process.cwd(), 'src/ui');
+  const legacyUiFiles = existsSync(legacyUiRootPath) ? collectSourceFiles('src/ui') : [];
+
+  expect(existsSync(join(process.cwd(), sharedIndexPath)), sharedIndexPath).toBe(true);
+  expect(source(sharedIndexPath)).toContain("import { cn } from '@/shared/ui/lib/cn'");
+  expect(source(`${sharedUiRoot}/message.ts`)).toContain("import './message.scss'");
+  expect(source(`${sharedUiRoot}/shell/app-shell.tsx`)).toContain('@/shared/ui/lib/cn');
+  expect(source(`${sharedUiRoot}/theme/theme-provider.tsx`)).not.toContain('@/ui/');
+  expect(legacyUiFiles).toEqual([]);
+  expect(source('src/app/App.tsx')).toContain("from '@/shared/ui/theme/theme-provider'");
+  expect(source('src/app/router/routes.tsx')).toContain("from '@/shared/ui/shell/error-boundary'");
+});
+
+test('keeps shell and account feature components out of the shared component bucket', () => {
+  const featurePaths = [
+    'src/features/shell/components/control-window/index.tsx',
+    'src/features/shell/components/footer/index.tsx',
+    'src/features/shell/components/gateway-dock/index.tsx',
+    'src/features/shell/components/developer-mode-overlay/index.tsx',
+    'src/features/shell/components/sidebar/index.tsx',
+    'src/features/account/components/account-workbench/index.tsx',
+    'src/features/account/components/diff-login-tip/index.tsx',
+  ];
+  const legacyComponentPaths = [
+    'src/components/ControlWindow/index.tsx',
+    'src/components/Footer/index.tsx',
+    'src/components/LoginGatewayDock/index.tsx',
+    'src/components/DeveloperModeOverlay/index.tsx',
+    'src/components/Sidebar/index.tsx',
+    'src/components/AccountWorkbench/index.tsx',
+    'src/components/DiffLoginTip/index.tsx',
+    'src/components/ChangePhone/index.tsx',
+    'src/components/ComModal/index.jsx',
+    'src/components/PwdForm/index.jsx',
+    'src/components/UserInfo/index.tsx',
+  ];
+
+  for (const featurePath of featurePaths) {
+    expect(existsSync(join(process.cwd(), featurePath)), featurePath).toBe(true);
+  }
+
+  for (const legacyPath of legacyComponentPaths) {
+    expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
+  }
+
+  expect(source('src/app/App.tsx')).toContain(
+    "from '@/features/shell/components/developer-mode-overlay'",
+  );
+  expect(source('src/features/auth/pages/login-page.tsx')).toContain(
+    "from '@/features/shell/components/control-window'",
+  );
+  expect(source('src/features/auth/pages/login-page.tsx')).toContain(
+    "from '@/features/shell/components/footer'",
+  );
+  expect(source('src/features/auth/pages/login-page.tsx')).toContain(
+    "from '@/features/shell/components/gateway-dock'",
+  );
+  expect(source('src/app/layouts/app-layout/index.tsx')).toContain(
+    "from '@/features/shell/components/sidebar'",
+  );
+  expect(source('src/app/layouts/app-layout/index.tsx')).toContain(
+    "import('@/features/shell/components/gateway-dock')",
+  );
+  expect(source('src/features/shell/components/sidebar/index.tsx')).toContain(
+    "from '@/features/account/components/account-workbench'",
+  );
+  expect(source('src/features/shell/components/sidebar/index.tsx')).toContain(
+    "import('@/features/account/components/diff-login-tip')",
+  );
+});
+
+test('keeps remaining desktop and reusable components in explicit feature boundaries', () => {
+  const expectedPaths = [
+    'src/features/desktop/components/desk-loading/index.tsx',
+    'src/features/desktop/components/desk-pool-icon.tsx',
+    'src/features/desktop/components/detail-close-icon.tsx',
+    'src/features/desktop/components/detail-open-icon.tsx',
+    'src/features/peripheral/components/integrated-card/index.tsx',
+    'src/features/settings/components/download-modal/index.tsx',
+    'src/shared/components/action-dropdown/index.tsx',
+    'src/shared/components/data-table/index.jsx',
+    'src/shared/components/info-table/index.tsx',
+    'src/shared/components/search-bar/index.tsx',
+    'src/shared/components/setting-item/index.tsx',
+  ];
+  const legacyPaths = [
+    'src/components/DeskLoading/index.tsx',
+    'src/components/Deskpoolsvg.tsx',
+    'src/components/Closesvg.tsx',
+    'src/components/Opensvg.tsx',
+    'src/components/IntegratedCard/index.tsx',
+    'src/components/DownloadModal/index.tsx',
+    'src/components/Dropdown/index.tsx',
+    'src/components/TableCommon/index.jsx',
+    'src/components/InfoTable/index.tsx',
+    'src/components/SearchBar/index.tsx',
+    'src/components/SettingItem/index.tsx',
+  ];
+
+  for (const expectedPath of expectedPaths) {
+    expect(existsSync(join(process.cwd(), expectedPath)), expectedPath).toBe(true);
+  }
+
+  for (const legacyPath of legacyPaths) {
+    expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
+  }
+
+  expect(source('src/features/desktop/pages/desktop-page.tsx')).toContain(
+    "import('@/features/desktop/components/desk-loading')",
+  );
+  expect(source('src/features/desktop/pages/desktop-page.tsx')).toContain(
+    "from '@/features/desktop/components/desk-pool-icon'",
+  );
+  expect(source('src/features/desktop/pages/desktop-detail-page.tsx')).toContain(
+    "from '@/features/desktop/components/detail-close-icon'",
+  );
+  expect(source('src/features/desktop/pages/desktop-detail-page.tsx')).toContain(
+    "from '@/features/desktop/components/detail-open-icon'",
+  );
+  expect(source('src/features/peripheral/pages/peripheral-page.tsx')).toContain(
+    "from '../components/integrated-card'",
+  );
+  expect(source('src/features/settings/pages/about/VersionInfo/index.tsx')).toContain(
+    "from '@/features/settings/components/download-modal'",
+  );
+  expect(source('src/features/settings/pages/advanced-setting/NetworkInfo/index.tsx')).toContain(
+    "from '@/shared/components/info-table'",
+  );
+  expect(source('src/features/approval/components/approval-detail-modal/index.tsx')).toContain(
+    "from '@/shared/components/setting-item'",
+  );
+  expect(source('src/features/application/components/virtual-app/index.tsx')).toContain(
+    "from '@/shared/components/action-dropdown'",
+  );
+});
+
+test('keeps configuration form controls inside the settings feature', () => {
+  const expectedPaths = [
+    'src/features/settings/components/configuration-form/index.tsx',
+    'src/features/settings/components/configuration-form/form-table/index.tsx',
+    'src/features/settings/components/configuration-form/ipv4/index.tsx',
+    'src/features/settings/components/configuration-form/ipv4-cidr/index.tsx',
+    'src/features/settings/components/configuration-form/ipv6/index.tsx',
+    'src/features/settings/components/configuration-form/ipv6-cidr/index.tsx',
+    'src/features/settings/components/configuration-form/slider-with-input-number/index.tsx',
+  ];
+  const legacyPaths = [
+    'src/components/ConfigurationForm/index.tsx',
+    'src/components/FormTable/index.tsx',
+    'src/components/IPv4/index.tsx',
+    'src/components/IPv4-cidr/index.tsx',
+    'src/components/IPv6/index.tsx',
+    'src/components/IPv6-cidr/index.tsx',
+    'src/components/SliderWithInputNumber/index.tsx',
+    'src/components/ConfigurationForm/formConfigDemo.tsx',
+  ];
+  const legacyComponentFiles = existsSync(join(process.cwd(), 'src/components'))
+    ? collectSourceFiles('src/components')
+    : [];
+
+  for (const expectedPath of expectedPaths) {
+    expect(existsSync(join(process.cwd(), expectedPath)), expectedPath).toBe(true);
+  }
+
+  for (const legacyPath of legacyPaths) {
+    expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
+  }
+
+  expect(legacyComponentFiles).toEqual([]);
+  expect(source('src/features/settings/components/form-modal/index.tsx')).toContain(
+    "from '@/features/settings/components/configuration-form'",
+  );
+  expect(source('src/features/settings/components/configuration-form/index.tsx')).toContain(
+    "from './slider-with-input-number'",
+  );
+  expect(source('src/features/settings/components/configuration-form/form-table/index.tsx')).toContain(
+    "from '../ipv4-cidr'",
+  );
+});
+
+test('keeps application implementation inside the application feature', () => {
+  const expectedPaths = [
+    'src/features/application/routes/application-route.tsx',
+    'src/features/application/pages/application-page.tsx',
+    'src/features/application/pages/application-page.scss',
+    'src/features/application/model/init-data.ts',
+    'src/features/application/components/add-from-self-modal/index.tsx',
+    'src/features/application/components/add-from-sys-modal/index.tsx',
+    'src/features/application/components/app-detail-modal/index.tsx',
+    'src/features/application/components/app-icon/index.tsx',
+    'src/features/application/components/virtual-app/index.tsx',
+  ];
+  const legacyPaths = [
+    'src/pages/application/ApplicationPage.tsx',
+    'src/pages/application/ApplicationPage.scss',
+    'src/pages/application/initData.ts',
+    'src/pages/application/component/AddFromSelfModal/index.tsx',
+    'src/pages/application/component/AddFromSysModal/index.tsx',
+    'src/pages/application/component/AppDetailModal/index.tsx',
+    'src/pages/application/component/AppIcon/index.tsx',
+    'src/pages/application/component/VirtualApp/index.tsx',
+  ];
+
+  for (const expectedPath of expectedPaths) {
+    expect(existsSync(join(process.cwd(), expectedPath)), expectedPath).toBe(true);
+  }
+
+  for (const legacyPath of legacyPaths) {
+    expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
+  }
+
+  expect(collectSourceFiles('src/pages/application')).toEqual(['src/pages/application/index.tsx']);
+  expect(source('src/pages/application/index.tsx')).toContain(
+    "from '@/features/application/routes/application-route'",
+  );
+  expect(source('src/features/application/routes/application-route.tsx')).toContain(
+    "from '../model/init-data'",
+  );
+  expect(source('src/features/application/pages/application-page.tsx')).toContain(
+    "from '../components/app-icon'",
+  );
+});
+
+test('keeps approval and malfunction implementations inside feature domains', () => {
+  const expectedPaths = [
+    'src/features/approval/routes/approval-route.tsx',
+    'src/features/approval/pages/approval-page.tsx',
+    'src/features/approval/pages/approval-page.scss',
+    'src/features/approval/model/approval-utils.ts',
+    'src/features/approval/components/approval-detail-modal/index.tsx',
+    'src/features/approval/components/approval-detail-modal/use-info-table.tsx',
+    'src/features/approval/components/icon-with-tooltip/index.tsx',
+    'src/features/approval/components/cancel-workflow.tsx',
+    'src/features/approval/components/create-workflow.tsx',
+    'src/features/malfunction/routes/malfunction-route.tsx',
+    'src/features/malfunction/pages/malfunction-page.tsx',
+    'src/features/malfunction/pages/malfunction-page.scss',
+    'src/features/malfunction/model/init-data.ts',
+    'src/features/malfunction/model/types.ts',
+    'src/features/malfunction/model/utils.ts',
+    'src/features/malfunction/components/create-fault-modal/index.tsx',
+    'src/features/malfunction/components/create-fault-modal/base-form.tsx',
+  ];
+  const legacyPaths = [
+    'src/pages/approval/ApprovalPage.tsx',
+    'src/pages/approval/ApprovalPage.scss',
+    'src/pages/approval/ApprovalDetailModal/index.tsx',
+    'src/pages/approval/ApprovalDetailModal/useInfoTable.tsx',
+    'src/pages/approval/approvalUtils.ts',
+    'src/pages/approval/component/cancel.tsx',
+    'src/pages/approval/component/create.tsx',
+    'src/pages/approval/component/IconWithTooltip/index.tsx',
+    'src/pages/approval/utils.js',
+    'src/pages/malfunction/MalfunctionPage.tsx',
+    'src/pages/malfunction/MalfunctionPage.scss',
+    'src/pages/malfunction/create/BaseForm.tsx',
+    'src/pages/malfunction/create/index.tsx',
+    'src/pages/malfunction/initData.ts',
+    'src/pages/malfunction/types.ts',
+    'src/pages/malfunction/utils.ts',
+  ];
+
+  for (const expectedPath of expectedPaths) {
+    expect(existsSync(join(process.cwd(), expectedPath)), expectedPath).toBe(true);
+  }
+
+  for (const legacyPath of legacyPaths) {
+    expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
+  }
+
+  expect(collectSourceFiles('src/pages/approval')).toEqual(['src/pages/approval/index.tsx']);
+  expect(collectSourceFiles('src/pages/malfunction')).toEqual(['src/pages/malfunction/index.tsx']);
+  expect(source('src/pages/approval/index.tsx')).toContain(
+    "from '@/features/approval/routes/approval-route'",
+  );
+  expect(source('src/pages/malfunction/index.tsx')).toContain(
+    "from '@/features/malfunction/routes/malfunction-route'",
+  );
+  expect(source('src/features/approval/routes/approval-route.tsx')).toContain(
+    "from '../model/approval-utils'",
+  );
+  expect(source('src/features/malfunction/routes/malfunction-route.tsx')).toContain(
+    "from '../model/init-data'",
+  );
+});
+
+test('keeps desktop implementations inside the desktop feature', () => {
+  const expectedPaths = [
+    'src/features/desktop/routes/desktop-route.tsx',
+    'src/features/desktop/routes/desktop-detail-route.tsx',
+    'src/features/desktop/pages/desktop-page.tsx',
+    'src/features/desktop/pages/desktop-page.scss',
+    'src/features/desktop/pages/desktop-detail-page.tsx',
+    'src/features/desktop/pages/desktop-detail-page.scss',
+    'src/features/desktop/model/use-desk-hooks.tsx',
+    'src/features/desktop/model/use-desk-detail.tsx',
+    'src/features/desktop/model/use-snap.tsx',
+    'src/features/desktop/components/desk-pool-detail/index.tsx',
+    'src/features/desktop/components/in-use-loading/index.tsx',
+    'src/features/desktop/components/all-disk-list-modal/index.tsx',
+    'src/features/desktop/components/create-snapshot-modal/index.tsx',
+  ];
+  const legacyPaths = [
+    'src/pages/desk/DeskPage.tsx',
+    'src/pages/desk/DeskPage.scss',
+    'src/pages/desk/useDeskHooks.tsx',
+    'src/pages/desk/components/deskPoolDetail.tsx',
+    'src/pages/desk/components/loading.tsx',
+    'src/pages/deskDetail/DeskDetailPage.tsx',
+    'src/pages/deskDetail/DeskDetailPage.scss',
+    'src/pages/deskDetail/useDeskDetail.tsx',
+    'src/pages/deskDetail/useSnap.tsx',
+    'src/pages/deskDetail/allDiskListModal/index.tsx',
+    'src/pages/deskDetail/createSnap.tsx',
+  ];
+
+  for (const expectedPath of expectedPaths) {
+    expect(existsSync(join(process.cwd(), expectedPath)), expectedPath).toBe(true);
+  }
+
+  for (const legacyPath of legacyPaths) {
+    expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
+  }
+
+  expect(collectSourceFiles('src/pages/desk')).toEqual(['src/pages/desk/index.tsx']);
+  expect(collectSourceFiles('src/pages/deskDetail')).toEqual(['src/pages/deskDetail/index.tsx']);
+  expect(source('src/pages/desk/index.tsx')).toContain(
+    "from '@/features/desktop/routes/desktop-route'",
+  );
+  expect(source('src/pages/deskDetail/index.tsx')).toContain(
+    "from '@/features/desktop/routes/desktop-detail-route'",
+  );
+  expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/pages/desk')");
+  expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/pages/deskDetail')");
+});
+
+test('keeps peripheral implementation inside the peripheral feature', () => {
+  const expectedPaths = [
+    'src/features/peripheral/routes/peripheral-route.tsx',
+    'src/features/peripheral/pages/peripheral-page.tsx',
+    'src/features/peripheral/pages/peripheral-page.scss',
+    'src/features/peripheral/components/integrated-card/index.tsx',
+  ];
+  const legacyPaths = [
+    'src/pages/peripheralSetting/index.scss',
+    'src/pages/peripheralSetting/peripheral-page.tsx',
+  ];
+
+  for (const expectedPath of expectedPaths) {
+    expect(existsSync(join(process.cwd(), expectedPath)), expectedPath).toBe(true);
+  }
+
+  for (const legacyPath of legacyPaths) {
+    expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
+  }
+
+  expect(collectSourceFiles('src/pages/peripheralSetting')).toEqual([
+    'src/pages/peripheralSetting/index.tsx',
+  ]);
+  expect(source('src/pages/peripheralSetting/index.tsx')).toContain(
+    "from '@/features/peripheral/routes/peripheral-route'",
+  );
+  expect(source('src/features/peripheral/pages/peripheral-page.tsx')).toContain(
+    "from '../components/integrated-card'",
+  );
+});
+
+test('keeps settings implementation inside the settings feature', () => {
+  const expectedPaths = [
+    'src/features/settings/routes/settings-route.tsx',
+    'src/features/settings/routes/server-setting-route.tsx',
+    'src/features/settings/routes/common-setting-route.tsx',
+    'src/features/settings/routes/advanced-setting-route.tsx',
+    'src/features/settings/routes/about-route.tsx',
+    'src/features/settings/pages/settings-page.tsx',
+    'src/features/settings/pages/settings-page.scss',
+    'src/features/settings/pages/server-setting/index.tsx',
+    'src/features/settings/pages/common-setting/index.tsx',
+    'src/features/settings/pages/advanced-setting/index.tsx',
+    'src/features/settings/pages/about/index.tsx',
+    'src/features/settings/components/settings-workbench.tsx',
+    'src/features/settings/components/form-modal/index.tsx',
+  ];
+  const legacyPaths = [
+    'src/pages/configPage/SettingsPage.tsx',
+    'src/pages/configPage/SettingsPage.scss',
+    'src/pages/configPage/components/SettingsWorkbench.tsx',
+    'src/pages/configPage/modalComp/FormModal/index.tsx',
+    'src/pages/configPage/subPages/serverSetting/index.tsx',
+    'src/pages/configPage/subPages/commonSetting/index.tsx',
+    'src/pages/configPage/subPages/advancedSetting/index.tsx',
+    'src/pages/configPage/subPages/about/index.tsx',
+  ];
+
+  for (const expectedPath of expectedPaths) {
+    expect(existsSync(join(process.cwd(), expectedPath)), expectedPath).toBe(true);
+  }
+
+  for (const legacyPath of legacyPaths) {
+    expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
+  }
+
+  expect(collectSourceFiles('src/pages/configPage')).toEqual([
+    'src/pages/configPage/about/index.tsx',
+    'src/pages/configPage/advancedSetting/index.tsx',
+    'src/pages/configPage/commonSetting/index.tsx',
+    'src/pages/configPage/index.tsx',
+    'src/pages/configPage/serverSetting/index.tsx',
+  ]);
+  expect(source('src/pages/configPage/index.tsx')).toContain(
+    "from '@/features/settings/routes/settings-route'",
+  );
+  expect(source('src/features/settings/pages/settings-page.tsx')).toContain(
+    "from '../components/form-modal'",
+  );
+});
+
+test('keeps auth and empty implementations inside feature domains', () => {
+  const expectedPaths = [
+    'src/features/auth/routes/login-route.tsx',
+    'src/features/auth/pages/login-page.tsx',
+    'src/features/auth/pages/login-page.scss',
+    'src/features/auth/components/login-auth-panel.tsx',
+    'src/features/auth/components/login-brand-panel.tsx',
+    'src/features/auth/components/username-password/index.tsx',
+    'src/features/auth/components/username-password/use-prevent-enter-key-long-press.ts',
+    'src/features/auth/model/use-login-handler.ts',
+    'src/features/auth/model/use-login-success-handler.ts',
+    'src/features/auth/model/types.ts',
+    'src/features/empty/routes/empty-route.tsx',
+    'src/features/empty/pages/empty-page.tsx',
+    'src/features/empty/pages/empty-page.scss',
+  ];
+  const legacyPaths = [
+    'src/pages/login/LoginPage.tsx',
+    'src/pages/login/LoginPage.scss',
+    'src/pages/login/LoginAuthPanel.tsx',
+    'src/pages/login/LoginBrandPanel.tsx',
+    'src/pages/login/UsernamePwd/index.tsx',
+    'src/pages/login/hooks/useLoginHandler.ts',
+    'src/pages/login/hooks/useLoginSuccessHandler.ts',
+    'src/pages/login/types.ts',
+    'src/pages/empty/EmptyPage.tsx',
+    'src/pages/empty/EmptyPage.scss',
+  ];
+
+  for (const expectedPath of expectedPaths) {
+    expect(existsSync(join(process.cwd(), expectedPath)), expectedPath).toBe(true);
+  }
+
+  for (const legacyPath of legacyPaths) {
+    expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
+  }
+
+  expect(collectSourceFiles('src/pages/login')).toEqual(['src/pages/login/index.tsx']);
+  expect(collectSourceFiles('src/pages/empty')).toEqual(['src/pages/empty/index.tsx']);
+  expect(source('src/pages/login/index.tsx')).toContain(
+    "from '@/features/auth/routes/login-route'",
+  );
+  expect(source('src/pages/empty/index.tsx')).toContain(
+    "from '@/features/empty/routes/empty-route'",
+  );
+});
+
+test('keeps app layouts inside the app layer', () => {
+  const expectedPaths = [
+    'src/app/layouts/app-layout/index.tsx',
+    'src/app/layouts/app-layout/index.scss',
+    'src/app/layouts/client-layout/index.tsx',
+    'src/app/layouts/client-layout/index.scss',
+  ];
+  const legacyPaths = [
+    'src/layouts/AppLayout/index.tsx',
+    'src/layouts/AppLayout/index.scss',
+    'src/layouts/clientLayout/index.tsx',
+    'src/layouts/clientLayout/index.scss',
+  ];
+
+  for (const expectedPath of expectedPaths) {
+    expect(existsSync(join(process.cwd(), expectedPath)), expectedPath).toBe(true);
+  }
+
+  for (const legacyPath of legacyPaths) {
+    expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
+  }
+
+  expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/app/layouts/app-layout')");
+  expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/app/layouts/client-layout')");
+  expect(existsSync(join(process.cwd(), 'src/layouts'))).toBe(false);
 });
 
 test('removes deprecated non-local login copy and auth types from the client', () => {
@@ -706,10 +1204,10 @@ test('removes deprecated non-local login copy and auth types from the client', (
   const clientSliceSource = source('src/store/feature/client/clientSlice.ts');
   const clientTypesSource = source('src/store/feature/client/types.ts');
   const terminalTypesSource = source('src/native/interfaces/terminal/types.ts');
-  const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
-  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
-  const loginStylesSource = source('src/pages/login/LoginPage.scss');
-  const sidebarSource = source('src/components/Sidebar/index.tsx');
+  const loginHandlerSource = source('src/features/auth/model/use-login-handler.ts');
+  const loginAuthPanelSource = source('src/features/auth/components/login-auth-panel.tsx');
+  const loginStylesSource = source('src/features/auth/pages/login-page.scss');
+  const sidebarSource = source('src/features/shell/components/sidebar/index.tsx');
   const apiTypesSource = source('src/native/interfaces/api/types.ts');
   const loginAuthTypeStart = apiTypesSource.indexOf('export const LoginAuthType');
   const loginAuthTypeBlock = apiTypesSource.slice(
@@ -777,24 +1275,28 @@ test('removes deprecated non-local login copy and auth types from the client', (
 });
 
 test('keeps login route outside the authenticated client layout', () => {
-  const routerSource = source('src/router/index.tsx');
-  const clientLayoutBlockStart = routerSource.indexOf('element: <ClientLayout />');
-  const clientLayoutBlock = routerSource.slice(clientLayoutBlockStart);
+  const routesSource = source('src/app/router/routes.tsx');
+  const clientLayoutBlockStart = routesSource.indexOf('element: <ClientLayout />');
+  const clientLayoutBlock = routesSource.slice(clientLayoutBlockStart);
 
-  expect(routerSource).toContain("path: 'login'");
-  expect(routerSource).toContain('element: routeElement(<LoginPage />)');
+  expect(routesSource).toContain("path: 'login'");
+  expect(routesSource).toContain('element: routeElement(<LoginPage />)');
   expect(clientLayoutBlock).not.toContain("path: 'login'");
   expect(clientLayoutBlock).not.toContain('<LoginPage />');
 });
 
 test('starts saved config loading without blocking the lightweight login route', () => {
-  const routerSource = source('src/router/index.tsx');
+  const bootstrapSource = source('src/app/router/bootstrap.ts');
+  const routesSource = source('src/app/router/routes.tsx');
   const configInitSource = source('src/store/feature/config/initState.ts');
   const configSliceSource = source('src/store/feature/config/configSlice.ts');
   const i18nSource = source('src/utils/i18n.ts');
-  const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
-  const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
-  const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
+  const preAuthLoaderStart = bootstrapSource.indexOf('export const preAuthConfigLoader');
+  const preAuthLoaderEnd = bootstrapSource.indexOf(
+    'export const clientLayoutLoader',
+    preAuthLoaderStart,
+  );
+  const preAuthLoaderBlock = bootstrapSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
 
   expect(preAuthLoaderStart).toBeGreaterThanOrEqual(0);
   expect(preAuthLoaderEnd).toBeGreaterThan(preAuthLoaderStart);
@@ -809,16 +1311,19 @@ test('starts saved config loading without blocking the lightweight login route',
   expect(configSliceSource).toContain('writeCachedConfig');
   expect(i18nSource).toContain('readCachedConfig');
   expect(i18nSource).toContain('lng: cachedLanguage');
-  expect(routerSource).toContain('loader: preAuthConfigLoader');
+  expect(routesSource).toContain('loader: preAuthConfigLoader');
 });
 
 test('starts saved gateway selection loading without blocking the lightweight login route', () => {
-  const routerSource = source('src/router/index.tsx');
-  const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
-  const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
-  const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
+  const bootstrapSource = source('src/app/router/bootstrap.ts');
+  const preAuthLoaderStart = bootstrapSource.indexOf('export const preAuthConfigLoader');
+  const preAuthLoaderEnd = bootstrapSource.indexOf(
+    'export const clientLayoutLoader',
+    preAuthLoaderStart,
+  );
+  const preAuthLoaderBlock = bootstrapSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
 
-  expect(routerSource).toContain('fetchGatewayList');
+  expect(bootstrapSource).toContain('fetchGatewayList');
   expect(preAuthLoaderBlock).toContain('fetchGatewayList');
   expect(preAuthLoaderBlock).toContain('fetchTerminalInfo');
   expect(preAuthLoaderBlock).not.toContain('await ');
@@ -827,18 +1332,25 @@ test('starts saved gateway selection loading without blocking the lightweight lo
 });
 
 test('starts gateway online status loading without blocking the lightweight login route', () => {
-  const routerSource = source('src/router/index.tsx');
+  const bootstrapSource = source('src/app/router/bootstrap.ts');
   const gatewaySource = source('src/store/feature/gateway/gatewaySlice.ts');
-  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
-  const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
-  const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
-  const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
-  const clientLayoutLoaderStart = routerSource.indexOf('const clientLayoutLoader');
-  const clientLayoutLoaderEnd = routerSource.indexOf('const rootRoutes', clientLayoutLoaderStart);
-  const clientLayoutLoaderBlock = routerSource.slice(
+  const clientLayoutSource = source('src/app/layouts/client-layout/index.tsx');
+  const preAuthLoaderStart = bootstrapSource.indexOf('export const preAuthConfigLoader');
+  const preAuthLoaderEnd = bootstrapSource.indexOf(
+    'export const clientLayoutLoader',
+    preAuthLoaderStart,
+  );
+  const preAuthLoaderBlock = bootstrapSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
+  const clientLayoutLoaderStart = bootstrapSource.indexOf('export const clientLayoutLoader');
+  const clientLayoutLoaderEnd = bootstrapSource.indexOf(
+    'function scheduleAuthenticatedClientBootstrap',
+    clientLayoutLoaderStart,
+  );
+  const clientLayoutLoaderBlock = bootstrapSource.slice(
     clientLayoutLoaderStart,
     clientLayoutLoaderEnd,
   );
+  const authenticatedBootstrapBlock = bootstrapSource.slice(clientLayoutLoaderStart);
 
   expect(gatewaySource).toContain('fetchClientOnlineStatus');
   expect(gatewaySource).toContain('bridge.cmd.getClientOnlineStatus()');
@@ -848,14 +1360,15 @@ test('starts gateway online status loading without blocking the lightweight logi
   expect(preAuthLoaderBlock).not.toContain('await ');
   expect(preAuthLoaderBlock).not.toContain('Promise.all');
   expect(preAuthLoaderBlock).toContain('scheduleWhenIdle');
-  expect(clientLayoutLoaderBlock).toContain('fetchClientOnlineStatus');
+  expect(clientLayoutLoaderBlock).toContain('scheduleAuthenticatedClientBootstrap');
+  expect(authenticatedBootstrapBlock).toContain('fetchClientOnlineStatus');
   expect(clientLayoutSource).not.toContain('dispatch(fetchClientOnlineStatus())');
 });
 
 test('keeps network status synced before authenticated layout loads', () => {
-  const appSource = source('src/App.tsx');
-  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
-  const clientLayoutNetworkHookPath = 'src/layouts/clientLayout/useInitState.ts';
+  const appSource = source('src/app/App.tsx');
+  const clientLayoutSource = source('src/app/layouts/client-layout/index.tsx');
+  const clientLayoutNetworkHookPath = 'src/app/layouts/client-layout/useInitState.ts';
 
   expect(appSource).toContain('setNetwork(navigator.onLine)');
   expect(appSource).toContain("window.addEventListener('online', handleNetworkChange)");
@@ -868,7 +1381,7 @@ test('keeps network status synced before authenticated layout loads', () => {
 });
 
 test('keeps thin-client footer actions correct before terminal info loads', () => {
-  const footerSource = source('src/components/Footer/index.tsx');
+  const footerSource = source('src/features/shell/components/footer/index.tsx');
   const viteEnvSource = source('src/@types/vite-env.d.ts');
 
   expect(footerSource).toContain('TAURI_IS_THIN_CLIENT');
@@ -877,20 +1390,20 @@ test('keeps thin-client footer actions correct before terminal info loads', () =
 });
 
 test('keeps login window controls local to the lightweight login route', () => {
-  const loginPageSource = source('src/pages/login/LoginPage.tsx');
-  const loginPageStyles = source('src/pages/login/LoginPage.scss');
+  const loginPageSource = source('src/features/auth/pages/login-page.tsx');
+  const loginPageStyles = source('src/features/auth/pages/login-page.scss');
 
-  expect(loginPageSource).toContain("import ControlWindow from '@/components/ControlWindow'");
+  expect(loginPageSource).toContain("import ControlWindow from '@/features/shell/components/control-window'");
   expect(loginPageSource).toContain('auth-page__drag-region');
   expect(loginPageSource).toContain('<ControlWindow />');
   expect(loginPageStyles).toContain('.auth-page__controls');
 });
 
 test('surfaces developer mode as a global desktop state', () => {
-  const overlayPath = 'src/components/DeveloperModeOverlay/index.tsx';
-  const overlayStylePath = 'src/components/DeveloperModeOverlay/index.scss';
-  const appSource = source('src/App.tsx');
-  const footerSource = source('src/components/Footer/index.tsx');
+  const overlayPath = 'src/features/shell/components/developer-mode-overlay/index.tsx';
+  const overlayStylePath = 'src/features/shell/components/developer-mode-overlay/index.scss';
+  const appSource = source('src/app/App.tsx');
+  const footerSource = source('src/features/shell/components/footer/index.tsx');
   const overlaySource = source(overlayPath);
   const overlayStyles = source(overlayStylePath);
   const zhCNLogin = source('src/assets/locales/zh-CN/login.json');
@@ -900,7 +1413,7 @@ test('surfaces developer mode as a global desktop state', () => {
   expect(existsSync(join(process.cwd(), overlayPath)), overlayPath).toBe(true);
   expect(existsSync(join(process.cwd(), overlayStylePath)), overlayStylePath).toBe(true);
   expect(appSource).toContain(
-    "import { DeveloperModeOverlay } from '@/components/DeveloperModeOverlay'",
+    "import { DeveloperModeOverlay } from '@/features/shell/components/developer-mode-overlay'",
   );
   expect(appSource).toContain('<DeveloperModeOverlay />');
   expect(overlaySource).toContain('selectDeveloperMode');
@@ -925,8 +1438,8 @@ test('surfaces developer mode as a global desktop state', () => {
 
 test('keeps viewport rem scaling available before authenticated layout loads', () => {
   const viewportScalePath = 'src/utils/setupViewportScale.ts';
-  const appSource = source('src/App.tsx');
-  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
+  const appSource = source('src/app/App.tsx');
+  const clientLayoutSource = source('src/app/layouts/client-layout/index.tsx');
 
   expect(existsSync(join(process.cwd(), viewportScalePath)), viewportScalePath).toBe(true);
   expect(appSource).toContain('setupViewportScale');
@@ -936,8 +1449,8 @@ test('keeps viewport rem scaling available before authenticated layout loads', (
 
 test('keeps the login typing path free of expensive live filters', () => {
   const loginCriticalStyles = [
-    source('src/pages/login/LoginPage.scss'),
-    source('src/components/LoginGatewayDock/index.scss'),
+    source('src/features/auth/pages/login-page.scss'),
+    source('src/features/shell/components/gateway-dock/index.scss'),
   ].join('\n');
 
   expect(loginCriticalStyles).not.toContain('backdrop-filter');
@@ -946,10 +1459,10 @@ test('keeps the login typing path free of expensive live filters', () => {
 });
 
 test('keeps the login page hero and footer controls minimal', () => {
-  const loginPageSource = source('src/pages/login/LoginPage.tsx');
-  const loginPageStyles = source('src/pages/login/LoginPage.scss');
-  const footerSource = source('src/components/Footer/index.tsx');
-  const footerStyles = source('src/components/Footer/index.scss');
+  const loginPageSource = source('src/features/auth/pages/login-page.tsx');
+  const loginPageStyles = source('src/features/auth/pages/login-page.scss');
+  const footerSource = source('src/features/shell/components/footer/index.tsx');
+  const footerStyles = source('src/features/shell/components/footer/index.scss');
 
   expect(loginPageSource).not.toContain("formatMessage({ id: 'Ready'");
   expect(loginPageSource).not.toContain('auth-page__eyebrow');
@@ -965,10 +1478,10 @@ test('keeps the login page hero and footer controls minimal', () => {
 });
 
 test('keeps the final server action menu from being clipped', () => {
-  const serverSettingSource = source('src/pages/configPage/subPages/serverSetting/index.tsx');
-  const serverSettingStyles = source('src/pages/configPage/subPages/serverSetting/index.scss');
-  const uiSource = source('src/ui/index.tsx');
-  const uiStyles = source('src/ui/styles.scss');
+  const serverSettingSource = source('src/features/settings/pages/server-setting/index.tsx');
+  const serverSettingStyles = source('src/features/settings/pages/server-setting/index.scss');
+  const uiSource = source('src/shared/ui/index.tsx');
+  const uiStyles = source('src/shared/ui/styles.scss');
 
   expect(serverSettingSource).toContain('gatewayList.map((g, index)');
   expect(serverSettingSource).toContain(
@@ -982,8 +1495,8 @@ test('keeps the final server action menu from being clipped', () => {
 });
 
 test('shows restrained icons on login feature cards', () => {
-  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
-  const loginPageStyles = source('src/pages/login/LoginPage.scss');
+  const loginBrandPanelSource = source('src/features/auth/components/login-brand-panel.tsx');
+  const loginPageStyles = source('src/features/auth/pages/login-page.scss');
 
   expect(loginBrandPanelSource).toContain('auth-page__feature-icon');
   expect(loginBrandPanelSource).toContain('icon-lock-o');
@@ -1000,7 +1513,7 @@ test('shows restrained icons on login feature cards', () => {
 });
 
 test('keeps the login shell cheap to repaint on low-power devices', () => {
-  const loginStyles = source('src/pages/login/LoginPage.scss');
+  const loginStyles = source('src/features/auth/pages/login-page.scss');
 
   expect(loginStyles).not.toContain('radial-gradient');
   expect(loginStyles).not.toContain('background-size: 34px 34px');
@@ -1008,7 +1521,7 @@ test('keeps the login shell cheap to repaint on low-power devices', () => {
 });
 
 test('keeps login input focus styles cheap to repaint while typing', () => {
-  const loginStyles = source('src/pages/login/LoginPage.scss');
+  const loginStyles = source('src/features/auth/pages/login-page.scss');
 
   expect(loginStyles).not.toContain('box-shadow 180ms ease');
   expect(loginStyles).not.toContain('box-shadow: 0 0 0 3px');
@@ -1022,11 +1535,11 @@ test('keeps login input focus styles cheap to repaint while typing', () => {
 });
 
 test('keeps modal and login input focus rings single-layered', () => {
-  const loginStyles = source('src/pages/login/LoginPage.scss');
+  const loginStyles = source('src/features/auth/pages/login-page.scss');
   const publishAppModalStyles = source(
-    'src/pages/application/component/AddFromSelfModal/index.scss',
+    'src/features/application/components/add-from-self-modal/index.scss',
   );
-  const uiStyles = source('src/ui/styles.scss');
+  const uiStyles = source('src/shared/ui/styles.scss');
   const inputAffixWrapperStart = uiStyles.indexOf('.vdui-input-affix-wrapper {');
   const inputAffixWrapperBlock = uiStyles.slice(
     inputAffixWrapperStart,
@@ -1044,7 +1557,7 @@ test('keeps modal and login input focus rings single-layered', () => {
 });
 
 test('keeps modal close button icon centered during hover', () => {
-  const uiStyles = source('src/ui/styles.scss');
+  const uiStyles = source('src/shared/ui/styles.scss');
   const closeButtonStart = uiStyles.indexOf('.vdui-modal-close {');
   const closeButtonBlock = uiStyles.slice(
     closeButtonStart,
@@ -1072,7 +1585,7 @@ test('keeps the main Tauri window opaque for low-power Linux compositors', () =>
 });
 
 test('notifies only changed form fields while typing', () => {
-  const uiSource = source('src/ui/index.tsx');
+  const uiSource = source('src/shared/ui/index.tsx');
 
   expect(uiSource).toContain('fieldListeners');
   expect(uiSource).toContain('notifyField');
@@ -1081,7 +1594,7 @@ test('notifies only changed form fields while typing', () => {
 });
 
 test('filters form layout-only props before rendering the native form element', () => {
-  const uiSource = source('src/ui/index.tsx');
+  const uiSource = source('src/shared/ui/index.tsx');
   const formPropsStart = uiSource.indexOf('interface FormProps');
   const formPropsEnd = uiSource.indexOf('\ninterface FormItemProps', formPropsStart);
   const formPropsSource = uiSource.slice(formPropsStart, formPropsEnd);
@@ -1095,7 +1608,7 @@ test('filters form layout-only props before rendering the native form element', 
 });
 
 test('keeps textarea native value props mutually exclusive', () => {
-  const uiSource = source('src/ui/index.tsx');
+  const uiSource = source('src/shared/ui/index.tsx');
   const textAreaStart = uiSource.indexOf('InputBase.TextArea = forwardRef');
   const textAreaEnd = uiSource.indexOf('\nInputBase.Search', textAreaStart);
   const textAreaSource = uiSource.slice(textAreaStart, textAreaEnd);
@@ -1110,8 +1623,8 @@ test('keeps textarea native value props mutually exclusive', () => {
 });
 
 test('allows login text fields to avoid controlled React value writes while typing', () => {
-  const uiSource = source('src/ui/index.tsx');
-  const usernamePasswordSource = source('src/pages/login/UsernamePwd/index.tsx');
+  const uiSource = source('src/shared/ui/index.tsx');
+  const usernamePasswordSource = source('src/features/auth/components/username-password/index.tsx');
 
   expect(uiSource).toContain('liveValue?: boolean');
   expect(uiSource).toContain('_setFieldValueSilently');
@@ -1120,13 +1633,13 @@ test('allows login text fields to avoid controlled React value writes while typi
 });
 
 test('keeps login key handling off the per-character DOM query path', () => {
-  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
+  const loginAuthPanelSource = source('src/features/auth/components/login-auth-panel.tsx');
 
   expect(loginAuthPanelSource).toContain("if (event.key !== 'Enter') return;");
 });
 
 test('keeps login enter repeat guard out of React state updates', () => {
-  const enterGuardSource = source('src/pages/login/UsernamePwd/usePreventEnterKeyLongPress.ts');
+  const enterGuardSource = source('src/features/auth/components/username-password/use-prevent-enter-key-long-press.ts');
 
   expect(enterGuardSource).toContain('useRef');
   expect(enterGuardSource).not.toContain('useState');
@@ -1134,15 +1647,15 @@ test('keeps login enter repeat guard out of React state updates', () => {
 });
 
 test('keeps the login form branch out of gateway status updates', () => {
-  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
+  const loginAuthPanelSource = source('src/features/auth/components/login-auth-panel.tsx');
 
   expect(loginAuthPanelSource).toContain('<UsernamePwd formIns={form} />');
   expect(loginAuthPanelSource).not.toContain('LoginFormItems');
 });
 
 test('reuses prepared terminal info after login before permission route selection', () => {
-  const successHandlerSource = source('src/pages/login/hooks/useLoginSuccessHandler.ts');
-  const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
+  const successHandlerSource = source('src/features/auth/model/use-login-success-handler.ts');
+  const loginHandlerSource = source('src/features/auth/model/use-login-handler.ts');
 
   expect(successHandlerSource).not.toContain('fetchTerminalInfo');
   expect(successHandlerSource).not.toContain('resolveTerminalThinMode');
@@ -1154,7 +1667,7 @@ test('reuses prepared terminal info after login before permission route selectio
 });
 
 test('loads terminal info before sending the login request device header', () => {
-  const loginHandlerSource = source('src/pages/login/hooks/useLoginHandler.ts');
+  const loginHandlerSource = source('src/features/auth/model/use-login-handler.ts');
   const requestSource = source('src/native/tauri/api/request.ts');
   const ensureTerminalStart = loginHandlerSource.indexOf('ensureTerminalReady');
   const loginRequestStart = loginHandlerSource.indexOf('bridge.api.loginUser');
@@ -1168,23 +1681,23 @@ test('loads terminal info before sending the login request device header', () =>
 });
 
 test('avoids duplicate terminal bootstrap after login success', () => {
-  const routerSource = source('src/router/index.tsx');
-  const successHandlerSource = source('src/pages/login/hooks/useLoginSuccessHandler.ts');
+  const bootstrapSource = source('src/app/router/bootstrap.ts');
+  const successHandlerSource = source('src/features/auth/model/use-login-success-handler.ts');
 
-  expect(routerSource).toContain('const state = appStore.getState();');
-  expect(routerSource).toContain('if (!state.terminal)');
-  expect(routerSource).toContain('appStore.dispatch(fetchTerminalInfo())');
+  expect(bootstrapSource).toContain('const state = appStore.getState();');
+  expect(bootstrapSource).toContain('if (!state.terminal)');
+  expect(bootstrapSource).toContain('appStore.dispatch(fetchTerminalInfo())');
   expect(successHandlerSource).not.toContain('fetchTerminalInfo');
 });
 
 test('keeps the local username password form memoized away from parent shell renders', () => {
-  expect(source('src/pages/login/UsernamePwd/index.tsx')).toContain('memo(');
+  expect(source('src/features/auth/components/username-password/index.tsx')).toContain('memo(');
 });
 
 test('keeps the login page shell split away from live auth and gateway state', () => {
-  const loginPageSource = source('src/pages/login/LoginPage.tsx');
-  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
-  const loginAuthPanelSource = source('src/pages/login/LoginAuthPanel.tsx');
+  const loginPageSource = source('src/features/auth/pages/login-page.tsx');
+  const loginBrandPanelSource = source('src/features/auth/components/login-brand-panel.tsx');
+  const loginAuthPanelSource = source('src/features/auth/components/login-auth-panel.tsx');
 
   expect(loginPageSource).toContain('LoginBrandPanel');
   expect(loginPageSource).toContain('LoginAuthPanel');
@@ -1200,16 +1713,16 @@ test('keeps the login page shell split away from live auth and gateway state', (
 });
 
 test('loads the assistant panel only when the user opens it', () => {
-  expect(source('src/layouts/AppLayout/index.tsx')).not.toContain(
-    "import { AssistantPanel } from '@/ui/assistant/assistant-panel'",
+  expect(source('src/app/layouts/app-layout/index.tsx')).not.toContain(
+    "import { AssistantPanel } from '@/shared/ui/assistant/assistant-panel'",
   );
 });
 
 test('keeps authenticated shell slots stable across route content renders', () => {
-  const appLayoutSource = source('src/layouts/AppLayout/index.tsx');
+  const appLayoutSource = source('src/app/layouts/app-layout/index.tsx');
 
   expect(appLayoutSource).not.toContain('import { LoginGatewayDock }');
-  expect(appLayoutSource).toContain("import('@/components/LoginGatewayDock')");
+  expect(appLayoutSource).toContain("import('@/features/shell/components/gateway-dock')");
   expect(appLayoutSource).toContain('useCallback');
   expect(appLayoutSource).toContain('const assistantSlot = useMemo');
   expect(appLayoutSource).toContain('const navSlot = useMemo');
@@ -1217,7 +1730,7 @@ test('keeps authenticated shell slots stable across route content renders', () =
 });
 
 test('keeps desk resource cards memoized away from page-level refresh state', () => {
-  const deskPageSource = source('src/pages/desk/DeskPage.tsx');
+  const deskPageSource = source('src/features/desktop/pages/desktop-page.tsx');
 
   expect(deskPageSource).toContain('memo(');
   expect(deskPageSource).toContain('function DesktopCard');
@@ -1227,7 +1740,7 @@ test('keeps desk resource cards memoized away from page-level refresh state', ()
 });
 
 test('keeps desk hook actions stable for memoized desk cards', () => {
-  const deskHookSource = source('src/pages/desk/useDeskHooks.tsx');
+  const deskHookSource = source('src/features/desktop/model/use-desk-hooks.tsx');
 
   expect(deskHookSource).toContain('useCallback');
   expect(deskHookSource).toContain('useMemo');
@@ -1238,7 +1751,7 @@ test('keeps desk hook actions stable for memoized desk cards', () => {
 });
 
 test('defers desktop resource requests until after the desk route first paint', () => {
-  const deskHookSource = source('src/pages/desk/useDeskHooks.tsx');
+  const deskHookSource = source('src/features/desktop/model/use-desk-hooks.tsx');
 
   expect(deskHookSource).toContain('scheduleDeskResourceBootstrap');
   expect(deskHookSource).toContain('window.requestAnimationFrame');
@@ -1248,7 +1761,7 @@ test('defers desktop resource requests until after the desk route first paint', 
 });
 
 test('loads desktop idle cleanup shell command only when idle disconnect fires', () => {
-  const deskPageSource = source('src/pages/desk/DeskPage.tsx');
+  const deskPageSource = source('src/features/desktop/pages/desktop-page.tsx');
 
   expect(deskPageSource).not.toContain(
     "import { killAllHdpViewers } from '@/services/invoke/shell'",
@@ -1257,9 +1770,9 @@ test('loads desktop idle cleanup shell command only when idle disconnect fires',
 });
 
 test('removes authenticated message notification feature from the client', () => {
-  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
-  const sidebarSource = source('src/components/Sidebar/index.tsx');
-  const sidebarStyles = source('src/components/Sidebar/index.scss');
+  const clientLayoutSource = source('src/app/layouts/client-layout/index.tsx');
+  const sidebarSource = source('src/features/shell/components/sidebar/index.tsx');
+  const sidebarStyles = source('src/features/shell/components/sidebar/index.scss');
   const appSliceSource = source('src/store/feature/app/appSlice.ts');
   const appInitStateSource = source('src/store/feature/app/initState.ts');
   const appTypesSource = source('src/store/feature/app/types.ts');
@@ -1301,24 +1814,24 @@ test('removes authenticated message notification feature from the client', () =>
 });
 
 test('keeps account workbench code out of the sidebar shell', () => {
-  const sidebarSource = source('src/components/Sidebar/index.tsx');
-  const accountWorkbenchSource = source('src/components/AccountWorkbench/index.tsx');
+  const sidebarSource = source('src/features/shell/components/sidebar/index.tsx');
+  const accountWorkbenchSource = source('src/features/account/components/account-workbench/index.tsx');
 
   expect(sidebarSource).not.toContain("import ChangePhone from '@/components/ChangePhone'");
   expect(sidebarSource).not.toContain("import ComModal from '@/components/ComModal'");
-  expect(sidebarSource).not.toContain("import DiffLoginTip from '@/components/DiffLoginTip'");
+  expect(sidebarSource).not.toContain("import DiffLoginTip from '@/features/account/components/diff-login-tip'");
   expect(sidebarSource).not.toContain("import PwdForm from '@/components/PwdForm'");
   expect(sidebarSource).not.toContain("import UserInfo from '@/components/UserInfo'");
   expect(sidebarSource).not.toContain("import useRequest from '@/hooks/useRequest'");
   expect(sidebarSource).not.toContain("import { changePasswordUser } from '@/services/user'");
   expect(sidebarSource).not.toContain("import { Buffer } from 'buffer'");
   expect(sidebarSource).toContain(
-    "import { AccountWorkbench } from '@/components/AccountWorkbench'",
+    "import { AccountWorkbench } from '@/features/account/components/account-workbench'",
   );
   expect(sidebarSource).toContain('<AccountWorkbench');
   expect(sidebarSource).toContain('currentUser={currentUser}');
   expect(sidebarSource).toContain('forcePasswordChange=');
-  expect(sidebarSource).toContain("import('@/components/DiffLoginTip')");
+  expect(sidebarSource).toContain("import('@/features/account/components/diff-login-tip')");
   expect(accountWorkbenchSource).toContain('changePasswordUser');
   expect(accountWorkbenchSource).toContain('updateUserPhone');
   expect(accountWorkbenchSource).toContain('getPhoneCode');
@@ -1326,10 +1839,10 @@ test('keeps account workbench code out of the sidebar shell', () => {
 });
 
 test('keeps account controls inside the left-bottom workbench', () => {
-  const uiSource = source('src/ui/index.tsx');
-  const sidebarSource = source('src/components/Sidebar/index.tsx');
-  const workbenchPath = 'src/components/AccountWorkbench/index.tsx';
-  const workbenchStylesPath = 'src/components/AccountWorkbench/index.scss';
+  const uiSource = source('src/shared/ui/index.tsx');
+  const sidebarSource = source('src/features/shell/components/sidebar/index.tsx');
+  const workbenchPath = 'src/features/account/components/account-workbench/index.tsx';
+  const workbenchStylesPath = 'src/features/account/components/account-workbench/index.scss';
   const workbenchSource = source(workbenchPath);
   const workbenchStyles = source(workbenchStylesPath);
   const zhCNCore = source('src/assets/locales/zh-CN/core.json');
@@ -1377,21 +1890,29 @@ test('keeps account controls inside the left-bottom workbench', () => {
 });
 
 test('keeps shared action controls visually consistent', () => {
-  const deskDetailSource = source('src/pages/deskDetail/DeskDetailPage.tsx');
-  const deskDetailStyles = source('src/pages/deskDetail/DeskDetailPage.scss');
-  const createFaultBaseFormSource = source('src/pages/malfunction/create/BaseForm.tsx');
-  const malfunctionCreateSource = source('src/pages/malfunction/create/index.tsx');
-  const uiStyles = source('src/ui/styles.scss');
-  const uiSource = source('src/ui/index.tsx');
-  const commonZh = source('src/ui/i18n/locales/zh-CN/common.json');
-  const publishAppStyles = source('src/pages/application/component/AddFromSelfModal/index.scss');
-  const addFavoriteSource = source('src/pages/application/component/AddFromSysModal/index.tsx');
-  const diagnosisModalSource = source(
-    'src/pages/configPage/subPages/advancedSetting/Diagnosis/DiagnosisModal/index.tsx',
+  const deskDetailSource = source('src/features/desktop/pages/desktop-detail-page.tsx');
+  const deskDetailStyles = source('src/features/desktop/pages/desktop-detail-page.scss');
+  const createFaultBaseFormSource = source(
+    'src/features/malfunction/components/create-fault-modal/base-form.tsx',
   );
-  const approvalStyles = source('src/pages/approval/ApprovalPage.scss');
-  const malfunctionStyles = source('src/pages/malfunction/MalfunctionPage.scss');
-  const malfunctionSource = source('src/pages/malfunction/index.tsx');
+  const malfunctionCreateSource = source(
+    'src/features/malfunction/components/create-fault-modal/index.tsx',
+  );
+  const uiStyles = source('src/shared/ui/styles.scss');
+  const uiSource = source('src/shared/ui/index.tsx');
+  const commonZh = source('src/shared/ui/i18n/locales/zh-CN/common.json');
+  const publishAppStyles = source(
+    'src/features/application/components/add-from-self-modal/index.scss',
+  );
+  const addFavoriteSource = source(
+    'src/features/application/components/add-from-sys-modal/index.tsx',
+  );
+  const diagnosisModalSource = source(
+    'src/features/settings/pages/advanced-setting/Diagnosis/DiagnosisModal/index.tsx',
+  );
+  const approvalStyles = source('src/features/approval/pages/approval-page.scss');
+  const malfunctionStyles = source('src/features/malfunction/pages/malfunction-page.scss');
+  const malfunctionSource = source('src/features/malfunction/routes/malfunction-route.tsx');
   const faultTypesSource = source('src/services/api/fault/types.ts');
   const requestSource = source('src/utils/request/index.ts');
 
@@ -1445,23 +1966,27 @@ test('keeps shared action controls visually consistent', () => {
 });
 
 test('keeps authenticated client bootstrap centralized outside ClientLayout render effects', () => {
-  const routerSource = source('src/router/index.tsx');
-  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
-  const sharedStatePath = 'src/layouts/clientLayout/useSharedState';
-  const clientLayoutLoaderStart = routerSource.indexOf('const clientLayoutLoader');
-  const clientLayoutLoaderEnd = routerSource.indexOf('const rootRoutes', clientLayoutLoaderStart);
-  const clientLayoutLoaderBlock = routerSource.slice(
+  const bootstrapSource = source('src/app/router/bootstrap.ts');
+  const clientLayoutSource = source('src/app/layouts/client-layout/index.tsx');
+  const sharedStatePath = 'src/app/layouts/client-layout/useSharedState';
+  const clientLayoutLoaderStart = bootstrapSource.indexOf('export const clientLayoutLoader');
+  const clientLayoutLoaderEnd = bootstrapSource.indexOf(
+    'function scheduleAuthenticatedClientBootstrap',
+    clientLayoutLoaderStart,
+  );
+  const clientLayoutLoaderBlock = bootstrapSource.slice(
     clientLayoutLoaderStart,
     clientLayoutLoaderEnd,
   );
+  const authenticatedBootstrapBlock = bootstrapSource.slice(clientLayoutLoaderStart);
 
   expect(clientLayoutLoaderBlock).toContain('scheduleAuthenticatedClientBootstrap');
-  expect(routerSource).toContain('let authenticatedClientBootstrapScheduled = false');
-  expect(clientLayoutLoaderBlock).toContain('if (authenticatedClientBootstrapScheduled) return');
-  expect(clientLayoutLoaderBlock).toContain('fetchGatewayList');
-  expect(clientLayoutLoaderBlock).toContain('fetchClientOnlineStatus');
-  expect(clientLayoutLoaderBlock).toContain('fetchClientInfo');
-  expect(clientLayoutLoaderBlock).not.toContain('await ');
+  expect(bootstrapSource).toContain('let authenticatedClientBootstrapScheduled = false');
+  expect(authenticatedBootstrapBlock).toContain('if (authenticatedClientBootstrapScheduled) return');
+  expect(authenticatedBootstrapBlock).toContain('fetchGatewayList');
+  expect(authenticatedBootstrapBlock).toContain('fetchClientOnlineStatus');
+  expect(authenticatedBootstrapBlock).toContain('fetchClientInfo');
+  expect(authenticatedBootstrapBlock).not.toContain('await ');
   expect(clientLayoutSource).not.toContain("import useSharedState from './useSharedState'");
   expect(clientLayoutSource).not.toContain('dispatch(fetchClientOnlineStatus())');
   expect(clientLayoutSource).not.toContain('getGateWays');
@@ -1520,12 +2045,16 @@ test('removes request-backed global loading subscriptions from list and modal fl
   const requestSource = source('src/utils/request/index.ts');
   const vappSource = source('src/services/api/vapp/index.ts');
   const faultSource = source('src/services/api/fault/index.ts');
-  const appIndexSource = source('src/pages/application/index.tsx');
-  const appPageSource = source('src/pages/application/ApplicationPage.tsx');
-  const virtualAppSource = source('src/pages/application/component/VirtualApp/index.tsx');
-  const addFromSysSource = source('src/pages/application/component/AddFromSysModal/index.tsx');
-  const addFromSelfSource = source('src/pages/application/component/AddFromSelfModal/index.tsx');
-  const malfunctionSource = source('src/pages/malfunction/index.tsx');
+  const appIndexSource = source('src/features/application/routes/application-route.tsx');
+  const appPageSource = source('src/features/application/pages/application-page.tsx');
+  const virtualAppSource = source('src/features/application/components/virtual-app/index.tsx');
+  const addFromSysSource = source(
+    'src/features/application/components/add-from-sys-modal/index.tsx',
+  );
+  const addFromSelfSource = source(
+    'src/features/application/components/add-from-self-modal/index.tsx',
+  );
+  const malfunctionSource = source('src/features/malfunction/routes/malfunction-route.tsx');
 
   expect(existsSync(join(process.cwd(), 'src/hooks/useLoading.ts'))).toBe(false);
   expect(existsSync(join(process.cwd(), 'src/store/feature/loading'))).toBe(false);
@@ -1551,10 +2080,10 @@ test('removes request-backed global loading subscriptions from list and modal fl
     expect(sourceText).toMatch(/useState\(false\)/);
   }
 
-  expect(appPageSource).toContain("from '@/ui'");
-  expect(appPageSource).not.toContain('@/ui/fast');
-  expect(malfunctionSource).toContain("from '@/ui'");
-  expect(malfunctionSource).not.toContain('@/ui/fast');
+  expect(appPageSource).toContain("from '@/shared/ui'");
+  expect(appPageSource).not.toContain('@/shared/ui/fast');
+  expect(malfunctionSource).toContain("from '@/shared/ui'");
+  expect(malfunctionSource).not.toContain('@/shared/ui/fast');
 });
 
 test('splits translation locales into named chunks instead of monolithic json files', () => {
@@ -1577,6 +2106,7 @@ test('splits translation locales into named chunks instead of monolithic json fi
   }
 
   expect(i18nSource).toContain('import.meta.glob');
+  expect(i18nSource).toContain('../shared/ui/i18n/locales/*/*.json');
   expect(i18nSource).toContain('loadTranslationNamespace');
   expect(generatorSource).toContain('collectLocaleResource');
   expect(generatorSource).not.toContain("readJson('../src/assets/locales/zh-CN.json')");
@@ -1584,16 +2114,16 @@ test('splits translation locales into named chunks instead of monolithic json fi
 
 test('keeps low-power visual degradation out of main', () => {
   const globalStyles = source('src/styles/index.scss');
-  const loginBrandPanelSource = source('src/pages/login/LoginBrandPanel.tsx');
-  const controlWindowSource = source('src/components/ControlWindow/index.tsx');
-  const footerSource = source('src/components/Footer/index.tsx');
+  const loginBrandPanelSource = source('src/features/auth/components/login-brand-panel.tsx');
+  const controlWindowSource = source('src/features/shell/components/control-window/index.tsx');
+  const footerSource = source('src/features/shell/components/footer/index.tsx');
 
   expect(globalStyles).not.toContain('low-power-defaults');
   expect(globalStyles).not.toContain('performance-tier');
   expect(existsSync(join(process.cwd(), 'src/styles/low-power-defaults.scss'))).toBe(false);
   expect(existsSync(join(process.cwd(), 'src/styles/performance-tier.scss'))).toBe(false);
   expect(existsSync(join(process.cwd(), 'src/utils/performanceTier.ts'))).toBe(false);
-  expect(existsSync(join(process.cwd(), 'src/ui/fast.tsx'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/shared/ui/fast.tsx'))).toBe(false);
   expect(loginBrandPanelSource).toContain('icon-lock-o');
   expect(loginBrandPanelSource).toContain('icon-desktop');
   expect(loginBrandPanelSource).toContain("import { Bot } from 'lucide-react';");
@@ -1609,7 +2139,7 @@ test('keeps request hot paths lodash-free', () => {
     'src/utils/request/index.ts',
     'src/native/tauri/api/request.ts',
     'src/services/requestErrorHandler.ts',
-    'src/pages/desk/DeskPage.tsx',
+    'src/features/desktop/pages/desktop-page.tsx',
   ];
 
   for (const path of hotPathSources) {
@@ -1620,19 +2150,21 @@ test('keeps request hot paths lodash-free', () => {
 });
 
 test('stages login route bootstrap after first paint without low-power visual defaults', () => {
-  const routerSource = source('src/router/index.tsx');
-  const preAuthLoaderStart = routerSource.indexOf('const preAuthConfigLoader');
-  const preAuthLoaderEnd = routerSource.indexOf('const clientLayoutLoader', preAuthLoaderStart);
-  const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
-  const bootstrapStart = routerSource.indexOf('function scheduleAuthenticatedClientBootstrap()');
-  const bootstrapEnd = routerSource.indexOf('const rootRoutes', bootstrapStart);
-  const bootstrapBlock = routerSource.slice(bootstrapStart, bootstrapEnd);
+  const bootstrapSource = source('src/app/router/bootstrap.ts');
+  const preAuthLoaderStart = bootstrapSource.indexOf('export const preAuthConfigLoader');
+  const preAuthLoaderEnd = bootstrapSource.indexOf(
+    'export const clientLayoutLoader',
+    preAuthLoaderStart,
+  );
+  const preAuthLoaderBlock = bootstrapSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
+  const bootstrapStart = bootstrapSource.indexOf('function scheduleAuthenticatedClientBootstrap()');
+  const bootstrapBlock = bootstrapSource.slice(bootstrapStart);
 
-  expect(routerSource).toContain('schedulePreAuthClientBootstrap');
-  expect(routerSource).toContain('scheduleAfterFirstPaint');
-  expect(routerSource).toContain('scheduleWhenIdle');
-  expect(routerSource).toContain('window.requestAnimationFrame');
-  expect(routerSource).toContain('window.requestIdleCallback');
+  expect(bootstrapSource).toContain('schedulePreAuthClientBootstrap');
+  expect(bootstrapSource).toContain('scheduleAfterFirstPaint');
+  expect(bootstrapSource).toContain('scheduleWhenIdle');
+  expect(bootstrapSource).toContain('window.requestAnimationFrame');
+  expect(bootstrapSource).toContain('window.requestIdleCallback');
   expect(preAuthLoaderBlock).toContain('scheduleAfterFirstPaint');
   expect(preAuthLoaderBlock).toContain('scheduleWhenIdle');
   expect(preAuthLoaderBlock).toContain('fetchConfigInfo');
@@ -1654,46 +2186,58 @@ test('keeps route design-system styles out of the global stylesheet', () => {
 
 test('keeps component library styles out of the global stylesheet', () => {
   expect(source('src/styles/index.scss')).not.toContain("@use '@/ui/styles.scss'");
+  expect(source('src/styles/index.scss')).not.toContain("@use '@/shared/ui/styles.scss'");
 });
 
 test('keeps route-only color icon fonts out of the global stylesheet', () => {
   expect(source('src/styles/index.scss')).not.toContain('iconfontColor');
-  expect(source('src/pages/desk/useDeskHooks.tsx')).toContain(
+  expect(source('src/features/desktop/model/use-desk-hooks.tsx')).toContain(
     "import '@/assets/iconfontColor/iconfont-color.css'",
   );
-  expect(source('src/pages/deskDetail/useSnap.tsx')).toContain(
+  expect(source('src/features/desktop/model/use-snap.tsx')).toContain(
     "import '@/assets/iconfontColor/iconfont-color.css'",
   );
 });
 
 test('lazy-loads the authenticated app layout with its route styles', () => {
-  const routerSource = source('src/router/index.tsx');
+  const lazyPagesSource = source('src/app/router/lazy-pages.tsx');
 
-  expect(routerSource).not.toContain("import { AppLayout } from '@/layouts/AppLayout'");
-  expect(routerSource).toContain("import('@/layouts/AppLayout')");
+  expect(lazyPagesSource).not.toContain("import { AppLayout } from '@/app/layouts/app-layout'");
+  expect(lazyPagesSource).toContain("import('@/app/layouts/app-layout')");
 });
 
 test('keeps the full UI component bundle out of the app bootstrap', () => {
-  const appSource = source('src/App.tsx');
+  const appSource = source('src/app/App.tsx');
+  const mainSource = source('src/main.tsx');
+  const startSource = source('src/app/start.tsx');
+  const providersSource = source('src/app/providers/app-providers.tsx');
 
   expect(appSource).not.toContain("from '@/ui'");
+  expect(appSource).not.toContain("from '@/shared/ui'");
   expect(appSource).not.toContain('ConfigProvider');
   expect(appSource).not.toContain('ClientApp');
+  expect(mainSource).toContain("import { startApp } from '@/app/start'");
+  expect(mainSource).toContain('startApp();');
+  expect(mainSource).not.toContain('ReactDOM.createRoot');
+  expect(startSource).toContain('ReactDOM.createRoot');
+  expect(startSource).toContain('setupServices();');
+  expect(providersSource).toContain('Provider store={appStore}');
 });
 
 test('keeps startup notifications out of the full UI component bundle', () => {
   const startupSources = [
-    source('src/layouts/clientLayout/index.tsx'),
+    source('src/app/layouts/client-layout/index.tsx'),
     source('src/services/requestErrorHandler.ts'),
     source('src/utils/invoke/index.ts'),
   ];
 
   for (const startupSource of startupSources) {
     expect(startupSource).not.toContain("from '@/ui'");
+    expect(startupSource).not.toContain("from '@/shared/ui'");
   }
 
-  expect(source('src/ui/message.ts')).toContain("import './message.scss'");
-  expect(source('src/ui/styles.scss')).not.toContain('.vd-toast');
+  expect(source('src/shared/ui/message.ts')).toContain("import './message.scss'");
+  expect(source('src/shared/ui/styles.scss')).not.toContain('.vd-toast');
 });
 
 test('uses a lightweight local request hook instead of the ahooks runtime', () => {
@@ -1715,9 +2259,9 @@ test('uses the native clipboard helper instead of a React copy dependency', () =
   const packageJson = source('package.json');
   const clipboardHelperPath = 'src/utils/clipboard.ts';
   const clipboardConsumers = [
-    source('src/pages/configPage/subPages/advancedSetting/NetworkInfo/index.tsx'),
-    source('src/pages/configPage/subPages/about/VersionInfo/index.tsx'),
-    source('src/pages/configPage/subPages/advancedSetting/Diagnosis/DiagnosisModal/index.tsx'),
+    source('src/features/settings/pages/advanced-setting/NetworkInfo/index.tsx'),
+    source('src/features/settings/pages/about/VersionInfo/index.tsx'),
+    source('src/features/settings/pages/advanced-setting/Diagnosis/DiagnosisModal/index.tsx'),
   ].join('\n');
 
   expect(packageJson).not.toContain('react-copy-to-clipboard');
@@ -1739,8 +2283,8 @@ test('keeps the app shell background CSS-only', () => {
 });
 
 test('does not load cached native background images in the renderer', () => {
-  const clientLayoutSource = source('src/layouts/clientLayout/index.tsx');
-  const deskLoadingSource = source('src/components/DeskLoading/index.tsx');
+  const clientLayoutSource = source('src/app/layouts/client-layout/index.tsx');
+  const deskLoadingSource = source('src/features/desktop/components/desk-loading/index.tsx');
 
   expect(clientLayoutSource).not.toContain('selectBackgroundImage');
   expect(clientLayoutSource).not.toContain('backgroundImage:');
@@ -1749,7 +2293,7 @@ test('does not load cached native background images in the renderer', () => {
 });
 
 test('keeps desk detail fact values free of nested paragraph markup', () => {
-  expect(source('src/pages/deskDetail/useDeskDetail.tsx')).not.toContain('<p');
+  expect(source('src/features/desktop/model/use-desk-detail.tsx')).not.toContain('<p');
 });
 
 test('removes login history and operation record features from the client', () => {
@@ -1768,8 +2312,8 @@ test('removes login history and operation record features from the client', () =
   const sourceFiles = [
     source('src/native/interfaces/index.ts'),
     source('src/store/feature/app/appSlice.ts'),
-    source('src/pages/login/UsernamePwd/index.tsx'),
-    source('src/components/Sidebar/index.tsx'),
+    source('src/features/auth/components/username-password/index.tsx'),
+    source('src/features/shell/components/sidebar/index.tsx'),
   ].join('\n');
 
   expect(sourceFiles).not.toContain('login_history');
@@ -1823,13 +2367,13 @@ test('keeps removed legacy static assets out of the source tree', () => {
 });
 
 test('defers non-critical hardware acceleration probing until after first render', () => {
-  const mainSource = source('src/main.tsx');
-  const setupViewIndex = mainSource.indexOf('setupView();');
-  const setupEnvLogIndex = mainSource.indexOf('scheduleHardwareAccelerationLog();');
+  const startSource = source('src/app/start.tsx');
+  const setupViewIndex = startSource.indexOf('renderApp();');
+  const setupEnvLogIndex = startSource.indexOf('scheduleHardwareAccelerationLog();');
 
   expect(setupViewIndex).toBeGreaterThan(-1);
   expect(setupEnvLogIndex).toBeGreaterThan(setupViewIndex);
-  expect(mainSource).not.toContain('  setupEnvLog();\n\n  setupServices();');
+  expect(startSource).not.toContain('  setupEnvLog();\n\n  setupServices();');
 });
 
 test('fails the production budget when legacy font formats are emitted', () => {
@@ -1942,7 +2486,7 @@ test('defers Tauri feature modules until their methods are used', () => {
 
 test('loads password crypto only when login work needs it', () => {
   const legacyUtilsSource = source('src/utils/utils.jsx');
-  const loginSuccessSource = source('src/pages/login/hooks/useLoginSuccessHandler.ts');
+  const loginSuccessSource = source('src/features/auth/model/use-login-success-handler.ts');
   const apiModuleSource = source('src/native/tauri/api/index.ts');
 
   expect(legacyUtilsSource).not.toContain('crypto-js');
