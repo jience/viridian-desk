@@ -2,12 +2,35 @@ import { t } from 'i18next';
 import { message as uiMessage } from '@/shared/ui/message';
 import { logger } from '@/utils/logger';
 
+type ErrorDetail = Record<string, unknown> & {
+  remainingSeconds?: string | number;
+  remainLoginCount?: string | number;
+};
+
+type ErrorPayload = {
+  errorCode?: string;
+  errorMessage?: string;
+  errorDetail?: unknown;
+  httpStatus?: string | number;
+  data?: unknown;
+};
+
+type DynamicTranslate = (key: string, options?: Record<string, unknown>) => string;
+
 const hasErrorDetail = (value: unknown) => {
   if (value === null || value === undefined) return false;
   if (typeof value === 'string' || Array.isArray(value)) return value.length > 0;
   if (typeof value === 'object') return Object.keys(value).length > 0;
   return true;
 };
+
+const isErrorDetail = (value: unknown): value is ErrorDetail =>
+  typeof value === 'object' &&
+  value !== null &&
+  !Array.isArray(value) &&
+  Object.keys(value).length > 0;
+
+const translateDynamic = t as unknown as DynamicTranslate;
 
 function getLoginErrorTimesExceedErrorMessage(
   errorMessageKey: string,
@@ -25,7 +48,7 @@ function getLoginErrorTimesExceedErrorMessage(
       });
     }
     if (seconds && !minute) {
-      return (t as any)(errorMessageKey, { sec: seconds });
+      return translateDynamic(errorMessageKey, { sec: seconds });
     }
     return t('error_code.LoginErrorTimesExceed_MIN_SEC', {
       min: minute,
@@ -38,14 +61,14 @@ function getLoginErrorTimesExceedErrorMessage(
  * @description 错误方法处理
  * @param {*} res
  */
-function handleError(res: any) {
+function handleError(res: ErrorPayload) {
   let message = '';
 
   const { errorCode = '', errorDetail = {}, httpStatus } = res;
   if (errorCode) {
     const errorMessageKey = `error_code.${errorCode}`;
     // 默认初始翻译
-    message = (t as any)(errorMessageKey, { defaultValue: res.errorMessage || errorCode });
+    message = translateDynamic(errorMessageKey, { defaultValue: res.errorMessage || errorCode });
 
     // 用户未登录
     if (errorCode === 'MustLoggedError') {
@@ -53,8 +76,8 @@ function handleError(res: any) {
       localStorage.removeItem('userName');
       localStorage.removeItem('isLocal');
     }
-    if (hasErrorDetail(errorDetail)) {
-      message = (t as any)(errorMessageKey, {
+    if (hasErrorDetail(errorDetail) && isErrorDetail(errorDetail)) {
+      message = translateDynamic(errorMessageKey, {
         ...errorDetail,
         defaultValue: res.errorMessage || errorCode,
       });
@@ -63,22 +86,25 @@ function handleError(res: any) {
 
     // 登录密码错误次数特殊翻译
     if (errorCode === 'LoginErrorTimesExceed') {
-      if (res?.errorDetail) {
-        message = getLoginErrorTimesExceedErrorMessage(errorMessageKey, res?.errorDetail);
+      if (isErrorDetail(errorDetail)) {
+        message = getLoginErrorTimesExceedErrorMessage(errorMessageKey, errorDetail);
       }
     }
 
     // 用户密码不正确错误次数
     if (errorCode === 'UserNamePasswordNotMatch') {
-      const errorMessage = res?.data?.remainLoginCount
+      const remainLoginCount = isErrorDetail(errorDetail) ? errorDetail.remainLoginCount : undefined;
+      const errorMessage = remainLoginCount
         ? t('error_code.NamePasswordNotMatchWithCount', {
-            remainLoginCount: res?.errorDetail?.remainLoginCount,
+            remainLoginCount,
           })
-        : (t as any)(errorMessageKey, { defaultValue: res.errorMessage || errorCode });
+        : translateDynamic(errorMessageKey, { defaultValue: res.errorMessage || errorCode });
       message = errorMessage;
     }
   } else if (httpStatus) {
-    message = t(`error_code.${httpStatus}`, { defaultValue: res?.errorMessage || httpStatus });
+    message = translateDynamic(`error_code.${httpStatus}`, {
+      defaultValue: res?.errorMessage || httpStatus,
+    });
   }
   // 抛错
   uiMessage.error(message || res?.errorMessage);

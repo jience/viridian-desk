@@ -3,20 +3,12 @@ import { globalEmitter } from '../mitt';
 import { isApiErrResponse, type ApiResponse } from './types';
 import { logger } from '@/utils/logger';
 import { getStoreState } from '@/store/runtime-access';
+import { isFormDataBody, normalizeRequestBody, shouldEncodeJsonBody } from './body';
 
 type FetchOpt = RequestInit & ClientOptions;
-export interface RequestOptions<B = any> extends Omit<FetchOpt, 'body'> {
+export interface RequestOptions<B = unknown> extends Omit<FetchOpt, 'body'> {
   body?: B;
 }
-
-const shouldEncodeJsonBody = (body: unknown) => {
-  if (body === null || body === undefined || body instanceof FormData) return false;
-  if (typeof Blob !== 'undefined' && body instanceof Blob) return false;
-  if (typeof ArrayBuffer !== 'undefined' && body instanceof ArrayBuffer) return false;
-  if (Array.isArray(body)) return body.length > 0;
-  if (typeof body === 'object') return Object.keys(body).length > 0;
-  return false;
-};
 
 /**
  * @author ALEX
@@ -24,7 +16,7 @@ const shouldEncodeJsonBody = (body: unknown) => {
  * @version V..
  * @description 用于处理拦截器抛出的异常信息
  */
-const interceptorErr = async (resp: any) => {
+const interceptorErr = async (resp: unknown) => {
   if (isApiErrResponse(resp)) {
     globalEmitter.emit('api/error', resp);
   }
@@ -41,7 +33,7 @@ const interceptorErr = async (resp: any) => {
  * @description 前置拦截器，处理headers参数，处理请求体参数query，body
  */
 const beforeRequest = (config?: RequestOptions): FetchOpt => {
-  const { headers, ...resConfig } = config || {};
+  const { body, headers, ...resConfig } = config || {};
 
   const newHeaders: HeadersInit = {
     Accept: 'application/json',
@@ -55,14 +47,12 @@ const beforeRequest = (config?: RequestOptions): FetchOpt => {
   if (userId) h['VisitorId'] = userId;
 
   // 如果body是FormData类型
-  if (resConfig?.body instanceof FormData) {
+  if (isFormDataBody(body)) {
     h['Content-Type'] = 'multipart/form-data';
   }
   // 如果body是对象
-  if (shouldEncodeJsonBody(resConfig?.body)) {
+  if (shouldEncodeJsonBody(body)) {
     h['Content-Type'] = 'application/json';
-    // 如果是对象，且不是FormData类型，则转换为JSON字符串
-    resConfig.body = JSON.stringify(resConfig.body);
   }
 
   const resOpt: FetchOpt = {
@@ -72,6 +62,7 @@ const beforeRequest = (config?: RequestOptions): FetchOpt => {
       acceptInvalidHostnames: true,
     },
     headers: newHeaders,
+    body: normalizeRequestBody(body),
     ...resConfig,
   };
 
@@ -102,7 +93,7 @@ const formateApi = (api: string) => {
   return `${import.meta.env.VITE_BASE_DEFAULT_URL}${import.meta.env.VITE_API_PREFIX}${api}`;
 };
 
-export const request = async <RESP = ApiResponse, REQ = any>(
+export const request = async <RESP = ApiResponse, REQ = unknown>(
   api: string,
   opt?: RequestOptions<REQ>,
 ) => {

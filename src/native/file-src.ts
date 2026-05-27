@@ -1,5 +1,7 @@
+import { getTauriInternals } from './tauri-globals';
+
 export function convertNativeFileSrc(path: string) {
-  const tauriInternals = (window as any).__TAURI_INTERNALS__;
+  const tauriInternals = getTauriInternals();
   if (tauriInternals?.convertFileSrc) {
     return tauriInternals.convertFileSrc(path);
   }

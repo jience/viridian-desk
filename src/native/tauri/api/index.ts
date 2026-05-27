@@ -29,7 +29,7 @@ export async function handleRequest<Resp, Req>(
     const res = await request<Resp, Req>(api, { body });
     return success(res);
   } catch (error) {
-    if (isApiErrResponse<any>(error)) {
+    if (isApiErrResponse<unknown>(error)) {
       throw failure(error.errorCode, error.errorMessage, error.data);
     }
     throw failure('UnknownError', (error as Error).message);
