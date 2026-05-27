@@ -2,7 +2,27 @@ import type { ChangeEvent, ReactNode } from 'react';
 
 import { cn } from './lib/cn';
 
-export function Switch({ checked, onChange, className, disabled }: any) {
+type Option<ValueType = string | number | boolean> = {
+  label?: ReactNode;
+  title?: ReactNode;
+  value: ValueType;
+  disabled?: boolean;
+};
+
+export function Switch({
+  checked,
+  onChange,
+  className,
+  disabled,
+  size: _size,
+}: {
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
+  className?: string;
+  disabled?: boolean;
+  size?: string;
+  [key: string]: unknown;
+}) {
   return (
     <button
       type="button"
@@ -42,19 +62,31 @@ export const Checkbox = Object.assign(
     </label>
   ),
   {
-    Group: ({ options, value = [], defaultValue = [], onChange, children }: any) => {
+    Group: ({
+      options,
+      value = [],
+      defaultValue = [],
+      onChange,
+      children,
+    }: {
+      options?: Option[];
+      value?: Array<Option['value']>;
+      defaultValue?: Array<Option['value']>;
+      onChange?: (value: Array<Option['value']>) => void;
+      children?: ReactNode;
+    }) => {
       const current = value.length ? value : defaultValue;
       const opts = options || [];
       return (
         <span className="vdui-checkbox-group">
-          {opts.map((option: any) => (
+          {opts.map((option) => (
             <Checkbox
               key={String(option.value)}
               checked={current.includes(option.value)}
-              onChange={(event: any) => {
+              onChange={(event) => {
                 const next = event.target.checked
                   ? [...current, option.value]
-                  : current.filter((item: any) => item !== option.value);
+                  : current.filter((item) => item !== option.value);
                 onChange?.(next);
               }}
             >
@@ -68,8 +100,30 @@ export const Checkbox = Object.assign(
   },
 );
 
+type RadioChange<ValueType> = {
+  target: {
+    value: ValueType;
+  };
+};
+
 export const Radio = Object.assign(
-  ({ checked, disabled, onChange, children, value, name, optionType }: any) => (
+  ({
+    checked,
+    disabled,
+    onChange,
+    children,
+    value,
+    name,
+    optionType,
+  }: {
+    checked?: boolean;
+    disabled?: boolean;
+    onChange?: (value: unknown) => void;
+    children?: ReactNode;
+    value?: unknown;
+    name?: string;
+    optionType?: 'button' | 'default';
+  }) => (
     <label
       className={cn(
         'vdui-radio-wrapper',
@@ -90,16 +144,32 @@ export const Radio = Object.assign(
     </label>
   ),
   {
-    Group: ({ options = [], value, onChange, children, optionType, className }: any) => (
+    Group: ({
+      options = [],
+      value,
+      onChange,
+      children,
+      optionType,
+      className,
+    }: {
+      options?: Option[];
+      value?: Option['value'];
+      onChange?: (event: RadioChange<Option['value']>) => void;
+      children?: ReactNode;
+      optionType?: 'button' | 'default';
+      className?: string;
+    }) => (
       <span className={cn('vdui-radio-group', className)}>
-        {options.map((option: any) => (
+        {options.map((option) => (
           <Radio
             key={String(option.value)}
             value={option.value}
             checked={value === option.value}
             disabled={option.disabled}
             optionType={optionType}
-            onChange={(nextValue: any) => onChange?.({ target: { value: nextValue } })}
+            onChange={(nextValue) =>
+              onChange?.({ target: { value: nextValue as Option['value'] } })
+            }
           >
             {option.label}
           </Radio>
@@ -110,7 +180,22 @@ export const Radio = Object.assign(
   },
 );
 
-export function Slider({ value, onChange, min = 0, max = 100, step = 1, disabled }: any) {
+export function Slider({
+  value,
+  onChange,
+  min = 0,
+  max = 100,
+  step = 1,
+  disabled,
+}: {
+  value?: number;
+  onChange?: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  disabled?: boolean;
+  [key: string]: unknown;
+}) {
   return (
     <input
       className="vdui-slider"

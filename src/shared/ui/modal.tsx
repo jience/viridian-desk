@@ -1,9 +1,9 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 
-import { Button } from './button';
+import { Button, type ButtonProps } from './button';
 import { showConfirm } from './confirm';
+import type { ConfirmProps } from './confirm';
 import { cn } from './lib/cn';
-import type { AnyRecord } from './types';
 
 export type ModalFunc = (props: ModalProps) => {
   destroy: () => void;
@@ -28,10 +28,10 @@ export interface ModalProps {
   destroyOnClose?: boolean;
   keyboard?: boolean;
   maskClosable?: boolean;
-  okButtonProps?: AnyRecord;
-  cancelButtonProps?: AnyRecord;
+  okButtonProps?: ConfirmProps['okButtonProps'];
+  cancelButtonProps?: ConfirmProps['cancelButtonProps'];
   afterClose?: () => void;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const focusableSelector = [
@@ -108,14 +108,14 @@ export const Modal = Object.assign(
     const footer =
       props.footer === undefined ? (
         <div className="vdui-modal-footer">
-          <Button onClick={props.onCancel} {...props.cancelButtonProps}>
+          <Button onClick={props.onCancel} {...(props.cancelButtonProps as ButtonProps)}>
             {props.cancelText ?? 'Cancel'}
           </Button>
           <Button
             type="primary"
             loading={props.confirmLoading}
             onClick={() => props.onOk?.()}
-            {...props.okButtonProps}
+            {...(props.okButtonProps as ButtonProps)}
           >
             {props.okText ?? 'OK'}
           </Button>

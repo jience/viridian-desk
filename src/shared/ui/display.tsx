@@ -1,6 +1,13 @@
+import type { CSSProperties, ReactNode } from 'react';
 import { cn } from './lib/cn';
 
-function EmptyComponent({ description }: any) {
+type EmptyProps = {
+  description?: ReactNode;
+  className?: string;
+  [key: string]: unknown;
+};
+
+function EmptyComponent({ description }: EmptyProps) {
   return (
     <div className="vdui-empty">
       <div className="vdui-empty-image" />
@@ -13,7 +20,7 @@ export const Empty = Object.assign(EmptyComponent, {
   PRESENTED_IMAGE_SIMPLE: 'simple',
 });
 
-export function Spin({ spinning, children }: any) {
+export function Spin({ spinning, children }: { spinning?: boolean; children?: ReactNode }) {
   return (
     <span className={cn('vdui-spin-nested-loading', spinning && 'is-spinning')}>
       {spinning && <span className="vd-spinner" />}
@@ -22,17 +29,53 @@ export function Spin({ spinning, children }: any) {
   );
 }
 
-export function Tag({ children, color, className }: any) {
+export function Tag({
+  children,
+  color,
+  className,
+}: {
+  children?: ReactNode;
+  color?: string;
+  className?: string;
+  icon?: ReactNode;
+  closable?: boolean;
+  closeIcon?: ReactNode;
+  onClose?: () => void;
+  style?: CSSProperties;
+  [key: string]: unknown;
+}) {
   return (
     <span className={cn('vdui-tag', color && `vdui-tag-${color}`, className)}>{children}</span>
   );
 }
 
-export function Divider({ type = 'horizontal', className }: any) {
+export function Divider({
+  type = 'horizontal',
+  className,
+}: {
+  type?: 'horizontal' | 'vertical';
+  className?: string;
+  dashed?: boolean;
+  [key: string]: unknown;
+}) {
   return <span className={cn('vdui-divider', `vdui-divider-${type}`, className)} />;
 }
 
-function SpaceComponent({ children, className, size = 8, direction = 'horizontal', wrap }: any) {
+type SpaceProps = {
+  children?: ReactNode;
+  className?: string;
+  size?: number | string;
+  direction?: 'horizontal' | 'vertical';
+  wrap?: boolean;
+};
+
+function SpaceComponent({
+  children,
+  className,
+  size = 8,
+  direction = 'horizontal',
+  wrap,
+}: SpaceProps) {
   return (
     <span
       className={cn('vdui-space', `vdui-space-${direction}`, wrap && 'vdui-space-wrap', className)}
@@ -50,12 +93,20 @@ function SpaceComponent({ children, className, size = 8, direction = 'horizontal
 }
 
 export const Space = Object.assign(SpaceComponent, {
-  Compact: ({ children, className }: any) => (
+  Compact: ({ children, className }: { children?: ReactNode; className?: string }) => (
     <span className={cn('vdui-space vdui-space-compact', className)}>{children}</span>
   ),
 });
 
-export function Row({ children, className, gutter }: any) {
+export function Row({
+  children,
+  className,
+  gutter,
+}: {
+  children?: ReactNode;
+  className?: string;
+  gutter?: number | [number, number];
+}) {
   return (
     <div
       className={cn('vdui-row', className)}
@@ -66,7 +117,18 @@ export function Row({ children, className, gutter }: any) {
   );
 }
 
-export function Col({ children, className, span }: any) {
+export function Col({
+  children,
+  className,
+  span,
+  offset: _offset,
+}: {
+  children?: ReactNode;
+  className?: string;
+  span?: number;
+  offset?: number;
+  [key: string]: unknown;
+}) {
   return (
     <div
       className={cn('vdui-col', className)}
@@ -77,7 +139,18 @@ export function Col({ children, className, span }: any) {
   );
 }
 
-export function Progress({ percent = 0, status }: any) {
+export function Progress({
+  percent = 0,
+  status,
+}: {
+  percent?: number;
+  status?: 'success' | 'exception' | 'active' | 'normal' | string;
+  showInfo?: boolean;
+  strokeColor?: string | Record<string, string>;
+  strokeLinecap?: string;
+  size?: string | number;
+  [key: string]: unknown;
+}) {
   return (
     <div className={cn('vdui-progress', status && `vdui-progress-${status}`)}>
       <span className="vdui-progress-bg" style={{ width: `${percent}%` }} />
@@ -85,11 +158,19 @@ export function Progress({ percent = 0, status }: any) {
   );
 }
 
-export function Skeleton(_props: any) {
+export function Skeleton(_props: { className?: string; active?: boolean; [key: string]: unknown }) {
   return <div className="vdui-skeleton" />;
 }
 
-export function Alert({ message: msg, description, type }: any) {
+export function Alert({
+  message: msg,
+  description,
+  type,
+}: {
+  message?: ReactNode;
+  description?: ReactNode;
+  type?: 'success' | 'info' | 'warning' | 'error' | string;
+}) {
   return (
     <div className={cn('vdui-alert', type && `vdui-alert-${type}`)}>
       <strong>{msg}</strong>
@@ -98,6 +179,6 @@ export function Alert({ message: msg, description, type }: any) {
   );
 }
 
-export function QRCode({ value }: any) {
+export function QRCode({ value }: { value?: ReactNode; style?: CSSProperties }) {
   return <div className="vdui-qrcode">{value}</div>;
 }

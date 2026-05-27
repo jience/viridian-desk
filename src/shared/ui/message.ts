@@ -1,6 +1,15 @@
 import './message.scss';
 
-const normalizeContent = (content: any) =>
+type MessageContent =
+  | string
+  | number
+  | null
+  | undefined
+  | {
+      content?: string | number | null;
+    };
+
+const normalizeContent = (content: MessageContent) =>
   typeof content === 'object' && content?.content ? content.content : content;
 
 const toastIcons: Record<string, string> = {
@@ -11,7 +20,7 @@ const toastIcons: Record<string, string> = {
   loading: '',
 };
 
-const toast = (type: string, content: any) => {
+const toast = (type: string, content: MessageContent) => {
   const activeCount = document.querySelectorAll('.vd-toast:not(.vd-toast--leaving)').length;
   const container = document.createElement('div');
   container.className = `vd-toast vd-toast--${type}`;
@@ -40,10 +49,10 @@ const toast = (type: string, content: any) => {
 };
 
 export const message = {
-  success: (content: any) => toast('success', content),
-  error: (content: any) => toast('error', content),
-  warning: (content: any) => toast('warning', content),
-  info: (content: any) => toast('info', content),
-  loading: (content: any) => toast('loading', content),
+  success: (content: MessageContent) => toast('success', content),
+  error: (content: MessageContent) => toast('error', content),
+  warning: (content: MessageContent) => toast('warning', content),
+  info: (content: MessageContent) => toast('info', content),
+  loading: (content: MessageContent) => toast('loading', content),
   destroy: () => document.querySelectorAll('.vd-toast').forEach((node) => node.remove()),
 };

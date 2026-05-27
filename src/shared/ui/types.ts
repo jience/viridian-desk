@@ -1,19 +1,24 @@
-import type { CSSProperties, HTMLAttributes, Key, ReactNode } from 'react';
+import type { CSSProperties, HTMLAttributes, Key, MouseEvent as ReactMouseEvent, ReactNode } from 'react';
 
 export type AnyRecord = Record<string, any>;
+export type UiValue = any;
+export type MenuClickInfo = {
+  key: string | number | undefined;
+  domEvent: ReactMouseEvent<HTMLElement> | KeyboardEvent | MouseEvent;
+};
 
 export type DefaultOptionType = {
   label?: ReactNode;
-  value?: any;
+  value?: UiValue;
   key?: string | number;
   disabled?: boolean;
   children?: DefaultOptionType[];
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export type CheckboxOptionType = DefaultOptionType;
 
-export type SelectProps<ValueType = any> = {
+export type SelectProps<ValueType = UiValue> = {
   value?: ValueType;
   defaultValue?: ValueType;
   options?: DefaultOptionType[];
@@ -26,14 +31,20 @@ export type SelectProps<ValueType = any> = {
   size?: 'small' | 'middle' | 'large';
   className?: string;
   popupClassName?: string;
+  classNames?: {
+    root?: string;
+    popup?: string;
+  };
+  placement?: 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight';
+  suffixIcon?: ReactNode | null;
   style?: CSSProperties;
-  onChange?: (value: ValueType, option?: any) => void;
-  onSelect?: (value: ValueType, option?: any) => void;
-  getPopupContainer?: (node: HTMLElement) => any;
+  onChange?: (value: ValueType, option?: DefaultOptionType) => void;
+  onSelect?: (value: ValueType, option?: DefaultOptionType) => void;
+  getPopupContainer?: (node: HTMLElement) => ParentNode | HTMLElement | null;
   showSearch?: boolean | { onSearch?: (value: string) => void };
   filterOption?: boolean | ((input: string, option?: DefaultOptionType) => boolean);
   maxLength?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export type ItemType = {
@@ -43,16 +54,16 @@ export type ItemType = {
   disabled?: boolean;
   danger?: boolean;
   children?: ItemType[];
-  onClick?: (info?: any) => void;
-  [key: string]: any;
+  onClick?: (info: MenuClickInfo) => void;
+  [key: string]: unknown;
 };
 
 export type MenuProps = {
   items?: ItemType[];
-  onClick?: (info: any) => void;
+  onClick?: (info: MenuClickInfo) => void;
   className?: string;
   children?: ReactNode;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export type TablePaginationConfig = {
@@ -61,7 +72,7 @@ export type TablePaginationConfig = {
   total?: number;
   showSizeChanger?: boolean;
   onChange?: (page: number, pageSize: number) => void;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export type ColumnType<T = AnyRecord> = {
@@ -73,10 +84,10 @@ export type ColumnType<T = AnyRecord> = {
   className?: string;
   fixed?: boolean | 'left' | 'right';
   ellipsis?: boolean;
-  filters?: Array<{ text?: ReactNode; value?: any }>;
+  filters?: Array<{ text?: ReactNode; value?: UiValue }>;
   filterMultiple?: boolean;
-  render?: (value: any, record: T, index: number) => ReactNode;
-  [key: string]: any;
+  render?: (value: UiValue, record: T, index: number) => ReactNode;
+  [key: string]: unknown;
 };
 
 export type ColumnsType<T = AnyRecord> = ColumnType<T>[];
@@ -92,15 +103,16 @@ export type TableProps<T = AnyRecord> = {
     selectedRowKeys?: Key[];
     onChange?: (selectedRowKeys: Key[], selectedRows: T[]) => void;
     getCheckboxProps?: (record: T) => AnyRecord;
-    [key: string]: any;
+    [key: string]: unknown;
   };
-  onChange?: (pagination: TablePaginationConfig, filters: AnyRecord, sorter: any) => void;
+  onChange?: (pagination: TablePaginationConfig, filters: AnyRecord, sorter: UiValue) => void;
   onRow?: (record: T, index?: number) => HTMLAttributes<HTMLTableRowElement>;
   className?: string;
   rowClassName?: string | ((record: T, index: number) => string);
   size?: 'small' | 'middle' | 'large';
   scroll?: AnyRecord;
-  [key: string]: any;
+  locale?: { emptyText?: ReactNode };
+  [key: string]: unknown;
 };
 
 export type ThemeConfig = AnyRecord;

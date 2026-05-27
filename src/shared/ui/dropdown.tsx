@@ -6,15 +6,46 @@ import {
   useState,
   type ReactElement,
   type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
+  type ReactNode,
 } from 'react';
 
 import { cn } from './lib/cn';
 import type { ItemType, MenuProps } from './types';
 
-export function Dropdown({ menu, children, classNames, placement = 'bottomRight' }: any) {
+type DropdownProps = {
+  menu?: MenuProps | ReactNode;
+  children?: ReactNode;
+  classNames?: {
+    root?: string;
+  };
+  placement?:
+    | 'bottomLeft'
+    | 'bottomRight'
+    | 'topLeft'
+    | 'topRight'
+    | 'top'
+    | 'bottom'
+    | 'topCenter'
+    | 'bottomCenter';
+  trigger?: string[];
+  getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
+  [key: string]: unknown;
+};
+
+type TriggerElementProps = {
+  'aria-expanded'?: boolean;
+  'aria-haspopup'?: 'menu';
+  onClick?: (event: ReactMouseEvent<HTMLElement>) => void;
+  onKeyDown?: (event: ReactKeyboardEvent<HTMLElement>) => void;
+};
+
+export function Dropdown({ menu, children, classNames, placement = 'bottomRight' }: DropdownProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLSpanElement>(null);
   const shouldFocusMenuRef = useRef(false);
+  const menuConfig =
+    menu && typeof menu === 'object' && !isValidElement(menu) ? (menu as MenuProps) : undefined;
 
   useEffect(() => {
     if (!open || !shouldFocusMenuRef.current) return;
@@ -59,16 +90,16 @@ export function Dropdown({ menu, children, classNames, placement = 'bottomRight'
   };
 
   const child = isValidElement(children)
-    ? cloneElement(children as ReactElement<any>, {
+    ? cloneElement(children as ReactElement<TriggerElementProps>, {
         'aria-expanded': open,
         'aria-haspopup': 'menu',
-        onClick: (event: any) => {
+        onClick: (event: ReactMouseEvent<HTMLElement>) => {
           event.stopPropagation();
           setOpen((value) => !value);
-          (children as ReactElement<any>).props.onClick?.(event);
+          (children as ReactElement<TriggerElementProps>).props.onClick?.(event);
         },
-        onKeyDown: (event: ReactKeyboardEvent) => {
-          (children as ReactElement<any>).props.onKeyDown?.(event);
+        onKeyDown: (event: ReactKeyboardEvent<HTMLElement>) => {
+          (children as ReactElement<TriggerElementProps>).props.onKeyDown?.(event);
           if (event.defaultPrevented) return;
           if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
@@ -110,11 +141,11 @@ export function Dropdown({ menu, children, classNames, placement = 'bottomRight'
             'vdui-dropdown',
             `vdui-dropdown--${placement}`,
             classNames?.root,
-            menu?.className,
+            menuConfig?.className,
           )}
           role="menu"
         >
-          {(menu?.items || []).map((item: ItemType) => (
+          {(menuConfig?.items || []).map((item: ItemType) => (
             <button
               key={String(item.key)}
               className={cn('vdui-dropdown-menu-item', item.danger && 'is-danger')}
@@ -124,7 +155,7 @@ export function Dropdown({ menu, children, classNames, placement = 'bottomRight'
               onClick={(event) => {
                 const info = { key: item.key, domEvent: event };
                 item.onClick?.(info);
-                menu?.onClick?.(info);
+                menuConfig?.onClick?.(info);
                 setOpen(false);
               }}
               onKeyDown={(event) => {
@@ -183,7 +214,17 @@ export const Menu = Object.assign(
     );
   },
   {
-    Item: ({ children, onClick, disabled, className }: any) => (
+    Item: ({
+      children,
+      onClick,
+      disabled,
+      className,
+    }: {
+      children?: ReactNode;
+      onClick?: (event: ReactMouseEvent<HTMLButtonElement>) => void;
+      disabled?: boolean;
+      className?: string;
+    }) => (
       <button
         className={cn('vdui-menu-item', className)}
         type="button"
