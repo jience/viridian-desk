@@ -449,7 +449,6 @@ const CreateForm = (props: any, _ref: any) => {
   return (
     <Modal
       className="approval_modal_create"
-      destroyOnHidden={true}
       open={visible}
       keyboard={false}
       transitionName="vd-modal-fade"
@@ -464,7 +463,7 @@ const CreateForm = (props: any, _ref: any) => {
       cancelText={formatMessage({ id: 'Cancel' })}
       centered
     >
-      <Form form={formIns} colon={false} labelCol={{ span: 5 }}>
+      <Form form={formIns}>
         <WorkflowTemplateField formatMessage={formatMessage} workflowTempList={workflowTempList} />
         {workflowTempValue == 'createDesktop' ? (
           <DeskPoolField

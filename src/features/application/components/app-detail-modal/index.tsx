@@ -95,7 +95,6 @@ export const AppDetailModal = (props: AppDetailModalProps) => {
       keyboard={false}
       centered={true}
       onCancel={() => setVisible(false)}
-      destroyOnHidden
       className="app-detail"
       footer={null}
     >

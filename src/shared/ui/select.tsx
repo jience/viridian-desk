@@ -1,49 +1,16 @@
-import {
-  cloneElement,
-  isValidElement,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactElement,
-  type ChangeEvent,
-  type FocusEvent,
-  type ReactNode,
-} from 'react';
+import { useEffect, useRef, useState, type ReactElement } from 'react';
 
 import { cn } from './lib/cn';
 import type { DefaultOptionType, SelectProps } from './types';
 
-type OptionElementProps = {
-  value?: unknown;
-  children?: ReactNode;
-  disabled?: boolean;
-};
-
-const readOptions = (options?: DefaultOptionType[], children?: ReactNode): DefaultOptionType[] => {
-  if (options) return options;
-  const list: DefaultOptionType[] = [];
-  (Array.isArray(children) ? children : [children]).forEach((child) => {
-    if (!isValidElement(child)) return;
-    const props = child.props as OptionElementProps;
-    list.push({
-      value: props.value ?? child.key,
-      key: child.key ?? undefined,
-      label: props.children,
-      disabled: props.disabled,
-    });
-  });
-  return list;
-};
-
 type SelectComponentType = {
   <ValueType = unknown>(props: SelectProps<ValueType>): ReactElement | null;
-  Option: (props: { children?: ReactNode }) => ReactElement;
 };
 
-export const Select = Object.assign(
-  function SelectComponent<ValueType = unknown>(props: SelectProps<ValueType>) {
-    const options = readOptions(props.options, props.children);
+export const Select = function SelectComponent<ValueType = unknown>(
+  props: SelectProps<ValueType>,
+) {
+    const options = props.options ?? [];
     const multiple = props.mode === 'multiple' || props.mode === 'tags';
     const isControlled = props.value !== undefined;
     const [internalValue, setInternalValue] = useState<unknown>(
@@ -166,7 +133,6 @@ export const Select = Object.assign(
             className={cn(
               'vdui-select-dropdown',
               props.placement && `vdui-select-dropdown--${props.placement}`,
-              props.popupClassName,
               props.classNames?.popup,
             )}
             role="listbox"
@@ -204,44 +170,4 @@ export const Select = Object.assign(
         )}
       </span>
     );
-  } as SelectComponentType,
-  {
-    Option: ({ children }: { children?: ReactNode }) => <>{children}</>,
-  },
-);
-
-export function AutoComplete({ children, options, onSelect, showSearch }: SelectProps) {
-  const datalistId = useMemo(() => `vd-ac-${Math.random().toString(36).slice(2)}`, []);
-  if (!isValidElement(children)) return null;
-  return (
-    <>
-      {cloneElement(
-        children as ReactElement<{
-          list?: string;
-          onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-          onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
-        }>,
-        {
-        list: datalistId,
-        onChange: (event: ChangeEvent<HTMLInputElement>) => {
-          const value = event.target.value;
-          if (typeof showSearch === 'object') showSearch.onSearch?.(value);
-          (
-            children as ReactElement<{
-              onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-            }>
-          ).props.onChange?.(event);
-        },
-        onBlur: (event: FocusEvent<HTMLInputElement>) => onSelect?.(event.target.value, undefined),
-        },
-      )}
-      <datalist id={datalistId}>
-        {(options || []).map((option) => (
-          <option key={String(option.key ?? option.value)} value={String(option.value ?? '')} />
-        ))}
-      </datalist>
-    </>
-  );
-}
-
-export const TreeSelect = Select;
+  } as SelectComponentType;

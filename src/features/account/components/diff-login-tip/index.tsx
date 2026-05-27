@@ -35,7 +35,6 @@ const DiffLoginTip = (props: any) => {
       onOk={() => submitChangePhone()}
       title={formatMessage({ id: 'DiffLoginTitle' })}
       centered
-      destroyOnHidden
     >
       <div className="diffloginModal">
         <img src={diffLoginImg} alt="" />

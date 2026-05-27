@@ -110,7 +110,6 @@ const AllDiskListModal = (props: any) => {
       centered
       className="AllDiskListModal"
       width={'70%'}
-      destroyOnHidden
     >
       <TableCommon
         onRefresh={() => refreshDiskList()}

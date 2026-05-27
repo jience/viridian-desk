@@ -6,7 +6,7 @@ export { Button, type ButtonProps } from './button';
 export { Modal, type ModalFunc, type ModalProps } from './modal';
 export { Form, type FormInstance } from './form';
 export { Input, InputNumber, type InputProps } from './input';
-export { Select, AutoComplete, TreeSelect } from './select';
+export { Select } from './select';
 export { Dropdown, Menu } from './dropdown';
 export { Tooltip, Popover } from './overlay';
 export { Table } from './table';
@@ -25,7 +25,7 @@ export {
 } from './display';
 export { Checkbox, Radio, Slider, Switch } from './selection';
 export { DatePicker } from './date-picker';
-export { App, ConfigProvider } from './config';
+export { App } from './config';
 export type {
   AnyRecord,
   CheckboxOptionType,

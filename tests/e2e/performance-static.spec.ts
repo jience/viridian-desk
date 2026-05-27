@@ -1626,7 +1626,7 @@ test('notifies only changed form fields while typing', () => {
   expect(formSource).not.toContain('form._subscribe?.(() => force((value) => value + 1))');
 });
 
-test('filters form layout-only props before rendering the native form element', () => {
+test('does not keep ignored AntD form layout props in the shared form API', () => {
   const formSource = source('src/shared/ui/form.tsx');
   const formPropsStart = formSource.indexOf('interface FormProps');
   const formPropsEnd = formSource.indexOf('\ninterface FormItemProps', formPropsStart);
@@ -1635,9 +1635,51 @@ test('filters form layout-only props before rendering the native form element', 
   const formComponentEnd = formSource.indexOf('\n  } as FormComponentType', formComponentStart);
   const formComponentSource = formSource.slice(formComponentStart, formComponentEnd);
 
-  expect(formPropsSource).toContain('labelAlign?:');
-  expect(formComponentSource).toContain('labelAlign: _labelAlign');
-  expect(formComponentSource).toMatch(/labelAlign: _labelAlign[\s\S]*\.{3}props/);
+  for (const propName of ['colon', 'labelCol', 'labelAlign', 'wrapperCol', 'requiredMark']) {
+    expect(formPropsSource).not.toContain(`${propName}?:`);
+    expect(formComponentSource).not.toContain(`${propName}: _${propName}`);
+  }
+});
+
+test('does not keep unused AntD select and config-provider compatibility APIs', () => {
+  const selectTypesSource = source('src/shared/ui/types.ts');
+  const selectSource = source('src/shared/ui/select.tsx');
+  const sharedUiIndexSource = source('src/shared/ui/index.tsx');
+  const configSource = source('src/shared/ui/config.tsx');
+  const selectPropsStart = selectTypesSource.indexOf('export type SelectProps');
+  const selectPropsEnd = selectTypesSource.indexOf('\nexport type ItemType', selectPropsStart);
+  const selectPropsSource = selectTypesSource.slice(selectPropsStart, selectPropsEnd);
+
+  for (const propName of [
+    'allowClear',
+    'getPopupContainer',
+    'popupClassName',
+    'showSearch',
+    'filterOption',
+  ]) {
+    expect(selectTypesSource).not.toContain(`${propName}?:`);
+  }
+
+  expect(selectPropsSource).not.toContain('children?:');
+  expect(selectSource).not.toContain('Option:');
+  expect(selectSource).not.toContain('readOptions');
+  expect(selectSource).not.toContain('props.children');
+  expect(selectSource).not.toContain('export function AutoComplete');
+  expect(selectSource).not.toContain('export const TreeSelect');
+  expect(sharedUiIndexSource).not.toContain('AutoComplete');
+  expect(sharedUiIndexSource).not.toContain('TreeSelect');
+  expect(sharedUiIndexSource).not.toContain('ConfigProvider');
+  expect(configSource).not.toContain('ConfigProvider');
+  expect(configSource).not.toContain('ConfigContext');
+});
+
+test('does not keep legacy AntD modal visibility aliases', () => {
+  const modalSource = source('src/shared/ui/modal.tsx');
+
+  expect(modalSource).not.toContain('visible?:');
+  expect(modalSource).not.toContain('props.visible');
+  expect(modalSource).not.toContain('destroyOnHidden');
+  expect(modalSource).not.toContain('destroyOnClose');
 });
 
 test('keeps textarea native value props mutually exclusive', () => {
@@ -1984,7 +2026,7 @@ test('keeps shared action controls visually consistent', () => {
   expect(uiStyles).toContain('background: var(--vdui-switch-checked-bg, #4d7c3f);');
   expect(selectSource).not.toContain('selectedLabel ?? props.placeholder');
   expect(selectSource).toContain('selectedValues.length > 0 ? (');
-  expect(inputSource).toContain('showCount: _showCount');
+  expect(inputSource).not.toContain('showCount');
   expect(inputSource).toContain('rows={rows ?? minRows}');
   expect(createFaultBaseFormSource).toContain('const { key, ...resProps } = props;');
   expect(createFaultBaseFormSource).toContain('<Select key={key} {...resProps} />');

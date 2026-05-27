@@ -71,7 +71,7 @@ const LoginAuthPanelComponent = () => {
         </div>
 
         <div className="vd-auth-stack">
-          <Form form={form} layout="vertical" className="vd-auth-form" requiredMark={false}>
+          <Form form={form} layout="vertical" className="vd-auth-form">
             <UsernamePwd formIns={form} />
           </Form>
 

@@ -12,7 +12,6 @@ export type ModalFunc = (props: ModalProps) => {
 
 export interface ModalProps {
   open?: boolean;
-  visible?: boolean;
   title?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
@@ -24,8 +23,6 @@ export interface ModalProps {
   width?: number | string;
   centered?: boolean;
   className?: string;
-  destroyOnHidden?: boolean;
-  destroyOnClose?: boolean;
   keyboard?: boolean;
   maskClosable?: boolean;
   okButtonProps?: ConfirmProps['okButtonProps'];
@@ -50,7 +47,7 @@ const getFocusableElements = (container: HTMLElement) =>
 
 export const Modal = Object.assign(
   function ModalComponent(props: ModalProps) {
-    const open = props.open ?? props.visible;
+    const open = props.open;
     const titleId = useId();
     const dialogRef = useRef<HTMLElement>(null);
     const onCancelRef = useRef(props.onCancel);
@@ -103,7 +100,6 @@ export const Modal = Object.assign(
       };
     }, [open]);
 
-    if (!open && (props.destroyOnHidden || props.destroyOnClose)) return null;
     if (!open) return null;
     const footer =
       props.footer === undefined ? (

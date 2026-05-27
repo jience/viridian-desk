@@ -98,7 +98,7 @@ export const EditNetModal: FC<EditNetModalProps> = ({ ref }) => {
       keyboard={false}
       className="edit-net-modal-wrapper"
     >
-      <Form form={form} colon={false} labelCol={{ span: 5 }}>
+      <Form form={form}>
         <Form.Item
           name="dhcpEnabled"
           label="DHCP"

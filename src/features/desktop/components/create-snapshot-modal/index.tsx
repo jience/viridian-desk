@@ -142,7 +142,6 @@ const useCreateSnap = (props: any) => {
       }}
       title={intl.formatMessage({ id: 'CREATE_SNAP' })}
       centered={true}
-      destroyOnHidden={true}
       cancelText={intl.formatMessage({ id: 'Cancel' })}
     >
       <Form layout="vertical" form={formIns}>

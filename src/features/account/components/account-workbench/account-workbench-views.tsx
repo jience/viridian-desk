@@ -190,7 +190,7 @@ export function PasswordView({
             : t('account.workbench.password_hint')}
         </p>
       </div>
-      <Form className="account-workbench__form" form={form} layout="vertical" requiredMark={false}>
+      <Form className="account-workbench__form" form={form} layout="vertical">
         <Form.Item
           liveValue={false}
           name="oldPassword"
@@ -289,7 +289,7 @@ export function PhoneView({
         <h2>{t('account.workbench.phone_title')}</h2>
         <p>{t('account.workbench.sms_hint')}</p>
       </div>
-      <Form className="account-workbench__form" form={form} layout="vertical" requiredMark={false}>
+      <Form className="account-workbench__form" form={form} layout="vertical">
         <Form.Item name="phone" label={intl.formatMessage({ id: 'UserPhone' })} rules={rules.phone}>
           <Input placeholder={intl.formatMessage({ id: 'ChangePhonePlaceHolder' })} />
         </Form.Item>

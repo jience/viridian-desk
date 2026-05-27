@@ -14,7 +14,6 @@ import {
   DatePicker,
   Form,
   Divider,
-  TreeSelect,
 } from '@/shared/ui';
 
 import IPv4Cidr from './ipv4-cidr';
@@ -123,17 +122,8 @@ const ConfigurationForm = (props: any, ref: any) => {
     },
     'select.tree': (props: any) => {
       const { key, ...resProps } = props;
-      return <TreeSelect key={key} {...resProps} />;
+      return <Select key={key} {...resProps} />;
     },
-    'select.customized': (props: any) => {
-      const { key, ...resProps } = props;
-      return (
-        <Select key={key} {...resProps}>
-          {props.customizedOptions}
-        </Select>
-      );
-    },
-
     'checkbox.group': (props: any) => {
       const { key, ...resProps } = props;
       return <Checkbox.Group key={key} {...resProps} />;
@@ -214,55 +204,7 @@ const ConfigurationForm = (props: any, ref: any) => {
     },
   }));
 
-  // 常规含label样式设置
-  const formLayout_right = useMemo(
-    () => ({
-      labelCol: { span: 4 },
-      labelAlign: 'right',
-    }),
-    [],
-  );
-
-  // 常规含label样式设置
-  const formLayout_left = useMemo(
-    () => ({
-      labelCol: { span: 4 },
-      labelAlign: 'left',
-    }),
-    [],
-  );
-
-  // 无label样式设置
-  const formNolabel = useMemo(
-    () => ({
-      labelCol: { span: 0 },
-      layout: 'vertical',
-      labelAlign: 'right',
-    }),
-    [],
-  );
-
-  const defaultModalLayOut = useMemo(
-    () => ({
-      labelCol: { span: 6 },
-      labelAlign: 'left',
-    }),
-    [],
-  );
-
-  // 根据入参赋值表单label预制样式
-  const labelStyle = useMemo<any>(() => {
-    switch (labelType) {
-      case 'left':
-        return formLayout_left;
-      case 'right':
-        return formLayout_right;
-      case 'nolabel':
-        return formNolabel;
-      default:
-        return defaultModalLayOut;
-    }
-  }, [defaultModalLayOut, formLayout_left, formLayout_right, formNolabel, labelType]);
+  const formLayout = labelType === 'nolabel' ? 'vertical' : 'horizontal';
 
   /**
    * @author QL
@@ -354,10 +296,9 @@ const ConfigurationForm = (props: any, ref: any) => {
       <Form
         key="baseFrom"
         form={form}
-        {...labelStyle}
+        layout={formLayout}
         initialValues={initialValues}
         onValuesChange={handleImpact}
-        colon={false} // 取消非request项的label冒号
         onFinish={enterSubmit()}
       >
         {FormFeatures.map((itemFeature: any) => {
