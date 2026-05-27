@@ -1,28 +1,29 @@
 import { forwardRef, useState, useEffect, useMemo, useCallback } from 'react';
-import {
-  Form,
-  Select,
-  Input,
-  InputNumber,
-  Modal,
-  Divider,
-  Row,
-  Col,
-  DatePicker,
-  Tag,
-  message,
-} from '@/shared/ui';
-import { EmptyText, deviceTransLocal } from '@/utils/constant';
+import { Form, Modal, message } from '@/shared/ui';
 import './workflow-modal.scss';
-import Regex from '@/utils/regex';
 import { clearEmpty } from '@/utils/utils';
-import dayjs from 'dayjs';
-import { listDesktopPool, listResourceUser, listAppLib, createWorkflow } from '@/services/resource';
+import { createWorkflow } from '@/services/api/approval';
+import { listAppLib } from '@/services/api/application';
+import { listDesktopPool, listResourceUser } from '@/services/api/desktop';
 import useRequest from '@/hooks/useRequest';
 import { isEmptyValue } from '@/utils/value';
-
-const { Option } = Select;
-const { RangePicker } = DatePicker;
+import {
+  buildCreateWorkflowTemplates,
+  buildWorkflowRequestPayload,
+} from '../model/create-workflow';
+import {
+  AppLibField,
+  CpuMemoryTip,
+  DeskPoolField,
+  DesktopField,
+  DiskCapacityField,
+  DiskField,
+  ExtendCapacityField,
+  ReasonField,
+  SoftwareFields,
+  UsbPeripheralFields,
+  WorkflowTemplateField,
+} from './create-workflow-fields';
 
 const CreateForm = (props: any, _ref: any) => {
   // 常量定义
@@ -37,32 +38,10 @@ const CreateForm = (props: any, _ref: any) => {
   const appLibIdValue = Form.useWatch('appLibId', formIns);
   const peripheralName = Form.useWatch('peripheralName', formIns);
 
-  const workflowTempList = [
-    {
-      id: 'createDesktop',
-      name: formatMessage({ id: 'ApplyForDesk' }),
-    },
-    {
-      id: 'extendDisk',
-      name: formatMessage({ id: 'ResizeDisk' }),
-    },
-    {
-      id: 'addDisk',
-      name: formatMessage({ id: 'ApplyDataDisk' }),
-    },
-    {
-      id: 'resizeDesktop',
-      name: formatMessage({ id: 'ChangeConfig' }),
-    },
-    {
-      id: 'addSoftware',
-      name: formatMessage({ id: 'ApplySoftware' }),
-    },
-    {
-      id: 'applyUsb',
-      name: formatMessage({ id: 'ApplyUSB' }),
-    },
-  ];
+  const workflowTempList = useMemo(
+    () => buildCreateWorkflowTemplates(formatMessage),
+    [formatMessage],
+  );
 
   // 桌面池列表
   const [deskPoolList, setDeskPoolList] = useState([]);
@@ -370,50 +349,6 @@ const CreateForm = (props: any, _ref: any) => {
     return '';
   }, [workflowTempValue, desktopDetail, newCpuNumbersValue, newMemSizeValue, formatMessage]);
 
-  const transfor = (params: any) => {
-    let resource = {};
-    if (params.workflowType === 'createDesktop') {
-      resource = {
-        desktopPoolId: params.desktopPoolId,
-      };
-    } else if (params.workflowType === 'extendDisk') {
-      resource = {
-        desktopId: params.desktopId,
-        diskId: params.diskId,
-        newSize: params.newSize,
-      };
-    } else if (params.workflowType === 'addDisk') {
-      resource = {
-        desktopId: params.desktopId,
-        size: params.size,
-      };
-    } else if (params.workflowType === 'resizeDesktop') {
-      resource = {
-        desktopId: params.desktopId,
-        newCpuNumbers: params.newCpuNumbers,
-        newMemSize: params.newMemSize,
-      };
-    } else if (params.workflowType === 'updateApps') {
-      resource = {
-        desktopId: params.desktopId,
-        appLibId: params.appLibId,
-      };
-    } else if (params.workflowType == 'addSoftware') {
-      resource = {
-        name: params.softName,
-        version: params.softVersion,
-      };
-    } else if (params.workflowType == 'applyUsb') {
-      resource = {
-        ...params.usbresource,
-      };
-    }
-    return {
-      workflowType: params.workflowType,
-      reason: params.reason,
-      resource: resource,
-    };
-  };
   // 创建
   const submitForm = () => {
     if (cpuAndMemErrorTip) {
@@ -469,474 +404,16 @@ const CreateForm = (props: any, _ref: any) => {
           content: formatMessage({ id: 'NotResizeDiskForWin2000' }),
         });
       } else {
-        const realParam = transfor(params);
+        const realParam = buildWorkflowRequestPayload(params);
         createWorkflowRun(clearEmpty(realParam));
       }
     });
-  };
-
-  // 桌面池详情
-  const renderDeskPoolInfo = () => {
-    return (
-      <Form.Item className="basic-form-item" label=" ">
-        <div className="deskpool-info">
-          <div className="item-info">
-            <div className="title">{formatMessage({ id: 'DESK_STANDARD' })}</div>
-            <div className="deskpool-spec">
-              <div>
-                {deskPoolDetial.cpu} {formatMessage({ id: 'DESK_CPU_UNIT' })}{' '}
-                <Divider className="vertical-line" type="vertical" /> {deskPoolDetial.memory} GB
-              </div>
-            </div>
-          </div>
-          <div className="item-info">
-            <div className="title">{formatMessage({ id: 'DESK_IMAGE' })}</div>
-            <div className="deskpool-image" title={deskPoolDetial?.image?.name || EmptyText}>
-              {deskPoolDetial?.image?.name || EmptyText}
-            </div>
-          </div>
-          <div className="item-info">
-            <div className="title">{formatMessage({ id: 'DESK_NETWORK' })}</div>
-            <div className="deskpool-network" title={deskPoolDetial.netWork || EmptyText}>
-              {deskPoolDetial.netWork ? deskPoolDetial.netWork : EmptyText}
-            </div>
-          </div>
-          <div className="item-info">
-            <div className="title">{formatMessage({ id: 'DESK_VOLUME_SYSTEM' })}</div>
-            <div className="deskpool-sys-disk">
-              {deskPoolDetial.systemDisk.length ? deskPoolDetial.systemDisk : EmptyText}
-            </div>
-          </div>
-          <div className="item-info">
-            <div className="title">{formatMessage({ id: 'DESK_VOLUME_COMMON' })}</div>
-            <div className="deskpool-data-disk">
-              {deskPoolDetial.dataDisk.length ? deskPoolDetial.dataDisk : EmptyText}
-            </div>
-          </div>
-        </div>
-      </Form.Item>
-    );
-  };
-  // 桌面池
-  const renderDeskPool = () => {
-    return (
-      <>
-        <Form.Item
-          name="deskPool"
-          label={formatMessage({ id: 'DeskPools' })}
-          className="basic-form-item basic-form-item-deskPools"
-          rules={[
-            {
-              required: true,
-              message: `${formatMessage({
-                id: 'PleaseSelect',
-              })}${formatMessage({ id: 'DeskPools' })}`,
-            },
-          ]}
-        >
-          <Select
-            getPopupContainer={(triggerNode) => triggerNode.parentElement}
-            loading={listDesktopPoolLoading}
-          >
-            {deskPoolList.map((it: any) => (
-              <Option key={it.id}>{it.name}</Option>
-            ))}
-          </Select>
-        </Form.Item>
-        {deskPoolDetial ? renderDeskPoolInfo() : null}
-      </>
-    );
-  };
-
-  // 桌面
-  const renderDeskTop = () => {
-    return (
-      <>
-        <Form.Item
-          name="deskTopId"
-          label={formatMessage({ id: 'DESK' })}
-          className="basic-form-item"
-          rules={[
-            {
-              required: true,
-              message: `${formatMessage({
-                id: 'PleaseSelect',
-              })}${formatMessage({ id: 'DESK' })}`,
-            },
-          ]}
-          tooltip={
-            workflowTempValue == 'resizeDesktop'
-              ? formatMessage({ id: 'Win2000NotForUpdateConfig' })
-              : ''
-          }
-        >
-          <Select getPopupContainer={(node) => node.parentNode} loading={listResourceUserLoading}>
-            {deskTopList.map((it: any) =>
-              it.status === 'Creating' ? '' : <Option key={it.id}>{it.name}</Option>,
-            )}
-          </Select>
-        </Form.Item>
-        {workflowTempValue == 'resizeDesktop' && desktopDetail ? (
-          <>
-            <Form.Item label={formatMessage({ id: 'CurrentCPU' })}>
-              <Input disabled value={desktopDetail?.flavor?.cpu} />
-            </Form.Item>
-            <Form.Item
-              label={formatMessage({ id: 'UpdateCPU' })}
-              name="newCpuNumbers"
-              rules={formRules['newCpuNumbers']}
-            >
-              <InputNumber precision={0} min={1} step={1} max={128} />
-            </Form.Item>
-            <Form.Item label={formatMessage({ id: 'CurrentMemory' })}>
-              <Input disabled value={desktopDetail?.flavor?.memory} />
-            </Form.Item>
-            <Form.Item
-              label={formatMessage({ id: 'UpdateMemory' })}
-              name="newMemSize"
-              rules={formRules['newMemSize']}
-            >
-              <InputNumber precision={0} min={1} step={1} max={512} />
-            </Form.Item>
-          </>
-        ) : null}
-      </>
-    );
-  };
-
-  // 磁盘
-  const renderDisk = () => {
-    return (
-      <>
-        <Form.Item
-          name="diskId"
-          label={formatMessage({ id: 'Disk' })}
-          className="basic-form-item"
-          rules={[
-            {
-              required: true,
-              message: `${formatMessage({
-                id: 'PleaseSelect',
-              })}${formatMessage({ id: 'Disk' })}`,
-            },
-          ]}
-        >
-          <Select getPopupContainer={(node) => node.parentNode}>
-            {diskList.length > 0 &&
-              diskList.map((it: any) => <Option key={it.id}>{it.name}</Option>)}
-          </Select>
-        </Form.Item>
-        {diskDetial ? renderDiskInfo() : null}
-      </>
-    );
-  };
-
-  // 磁盘详情
-  const renderDiskInfo = () => {
-    return (
-      <>
-        <Form.Item label={formatMessage({ id: 'DiskType' })} className="basic-form-item">
-          <Input value={diskDetial?.systemName || ''} disabled />
-        </Form.Item>
-        <Form.Item label="当前配置" className="basic-form-item">
-          <Input value={diskDetial?.size || ''} disabled suffix="GB" />
-        </Form.Item>
-      </>
-    );
-  };
-
-  // 扩容
-  const renderCapacity = () => {
-    return (
-      <Form.Item
-        name="newSize"
-        label={formatMessage({ id: 'DiskCapacity' })}
-        className="basic-form-item"
-        rules={[
-          {
-            required: true,
-          },
-          {
-            validator: (_, value) => {
-              if (
-                value &&
-                value == diskDetial?.size &&
-                (diskDetial?.size == 10240 ||
-                  (diskDetial?.size == 4096 && diskDetial.preAllocation))
-              ) {
-                return Promise.reject(new Error('已达到扩容上限'));
-              }
-              return Promise.resolve();
-            },
-          },
-        ]}
-      >
-        <InputNumber
-          className="approval-form-full-width"
-          precision={0}
-          min={
-            (diskDetial?.size + 1 > diskDetial?.createMaxNum
-              ? diskDetial?.size
-              : diskDetial?.size + 1) || 0
-          }
-          max={diskDetial?.createMaxNum}
-          disabled={diskDetial?.size == 10240}
-          suffix="GB"
-          placeholder={formatMessage(
-            { id: 'FORM_ERROR_MSG' },
-            { name: formatMessage({ id: 'DiskCapacity' }) },
-          )}
-        />
-      </Form.Item>
-    );
-  };
-  // 容量
-  const renderDiskCapacity = () => {
-    return (
-      <Form.Item
-        name="size"
-        label={formatMessage({ id: 'DiskSize' })}
-        className="basic-form-item"
-        rules={[
-          {
-            required: true,
-            message: `请${formatMessage({
-              id: 'Write',
-            })}${formatMessage({ id: 'DiskSize' })}`,
-          },
-        ]}
-      >
-        <InputNumber
-          className="approval-form-full-width"
-          precision={0}
-          min={10}
-          max={10240}
-          suffix="GB"
-          placeholder={formatMessage(
-            { id: 'FORM_ERROR_MSG' },
-            { name: formatMessage({ id: 'DiskSize' }) },
-          )}
-        />
-      </Form.Item>
-    );
-  };
-
-  // 应用库选择
-  const renderAppLib = () => {
-    return (
-      <>
-        <Form.Item
-          name="appLibId"
-          label={formatMessage({ id: 'AppLib' })}
-          className="basic-form-item"
-          rules={[
-            {
-              required: true,
-              message: `${formatMessage({
-                id: 'PleaseSelect',
-              })}${formatMessage({ id: 'AppLib' })}`,
-            },
-          ]}
-        >
-          <Select getPopupContainer={(node) => node.parentNode} loading={listAppLibLoading}>
-            {appLibList.map((it: any) => (
-              <Option key={it.id}>{it.name}</Option>
-            ))}
-          </Select>
-        </Form.Item>
-        {/* 展示选中的应用库详情 */}
-        {appLibDetail && (
-          <Form.Item label={formatMessage({ id: 'AppLibDesc' })}>
-            <div className="appLibDetail-desc">{appLibDetail?.description || '-'}</div>
-          </Form.Item>
-        )}
-      </>
-    );
   };
 
   // 选中的应用库详情
   const appLibDetail = useMemo(() => {
     return appLibList?.find((i: any) => i?.id == appLibIdValue) || null;
   }, [appLibList, appLibIdValue]);
-
-  // 渲染软件申请表单项
-  const renderSoft = () => {
-    return (
-      <>
-        <Form.Item
-          key={'softName'}
-          name={'softName'}
-          label={formatMessage({ id: 'SoftName' })}
-          className="form_soft_right_item"
-          rules={[
-            {
-              required: true,
-              validator: (_rule: any, val: any, callback: any) => {
-                if (!val || val.trim().length < 1) {
-                  callback(`请输入${formatMessage({ id: 'SoftName' })}`);
-                } else if (/^[^\u4e00-\u9fa5a-zA-Z0-9]+$/.test(val)) {
-                  callback(
-                    `输入的${formatMessage({
-                      id: 'SoftName',
-                    })}不能全是特殊符号`,
-                  );
-                } else {
-                  callback();
-                }
-              },
-            },
-          ]}
-          htmlFor={'false'} // htmlFor 用作将 <label> 元素绑定到第一个具有与 for 属性值相同的 id 的可标记元素, 将该属性置空就取消了id绑定, 此处绑定的是name属性值
-        >
-          <Input maxLength={20} placeholder={formatMessage({ id: 'SoftNamePlaceHolder' })} />
-        </Form.Item>
-        <Form.Item
-          key={'softVersion'}
-          name={'softVersion'}
-          label={formatMessage({ id: 'SoftVersion' })}
-          className="form_soft_right_item"
-          htmlFor={'false'} // htmlFor 用作将 <label> 元素绑定到第一个具有与 for 属性值相同的 id 的可标记元素, 将该属性置空就取消了id绑定, 此处绑定的是name属性值
-        >
-          <Input maxLength={20} placeholder={formatMessage({ id: 'SoftVersionPlaceHolder' })} />
-        </Form.Item>
-      </>
-    );
-  };
-
-  const transDeviceType = (typeStr: string) => {
-    return typeStr.split(',').map((val) => {
-      const v = val as keyof typeof deviceTransLocal;
-      return deviceTransLocal[v];
-    });
-  };
-
-  // usb外设详情
-  const renderPeripheralDetail = useMemo(() => {
-    if (peripheralDetail) {
-      return (
-        <Form.Item className="basic-form-item" label=" ">
-          <div className="deskpool-info">
-            <div className="item-info">
-              <div className="title">外设类型</div>
-              <div
-                className="deskpool-network"
-                title={transDeviceType(peripheralDetail['DEVICE_TYPE']).join(',') || EmptyText}
-              >
-                {peripheralDetail['DEVICE_TYPE']
-                  ? transDeviceType(peripheralDetail['DEVICE_TYPE']).join(',')
-                  : EmptyText}
-              </div>
-            </div>
-
-            <div className="item-info">
-              <div className="title">PID</div>
-              <div className="deskpool-network" title={peripheralDetail['PID'] || EmptyText}>
-                {peripheralDetail['PID'] ? peripheralDetail['PID'] : EmptyText}
-              </div>
-            </div>
-
-            <div className="item-info">
-              <div className="title">VID</div>
-              <div className="deskpool-network" title={peripheralDetail['VID'] || EmptyText}>
-                {peripheralDetail['VID'] ? peripheralDetail['VID'] : EmptyText}
-              </div>
-            </div>
-          </div>
-        </Form.Item>
-      );
-    }
-  }, [peripheralDetail]);
-
-  // usb外设使用申请
-  const renderUsbPeripheral = useMemo(() => {
-    return (
-      <>
-        <Form.Item
-          key={'peripheralName'}
-          name={'peripheralName'}
-          label={formatMessage({ id: 'PeripheralName' })}
-          className="form_usb_select"
-          rules={[
-            {
-              required: true,
-              message: `请选择${formatMessage({ id: 'PeripheralName' })}`,
-            },
-          ]}
-          htmlFor={'false'} // htmlFor 用作将 <label> 元素绑定到第一个具有与 for 属性值相同的 id 的可标记元素, 将该属性置空就取消了id绑定, 此处绑定的是name属性值
-        >
-          <Select getPopupContainer={(node) => node.parentNode}>
-            {peripheralList.map((it: any) => (
-              <Option key={`${it['DEVICE_NAME']}|${it['PID']}|${it['VID']}|${it['DEVICE_TYPE']}`}>
-                <div
-                  className="approval-peripheral-option"
-                  title={`${it['DEVICE_NAME']}|${transDeviceType(it['DEVICE_TYPE']).join(',')}`}
-                >
-                  {`${it['DEVICE_NAME']}`}
-                  {transDeviceType(it['DEVICE_TYPE']).map((type: any) => {
-                    return (
-                      <Tag key={type} className="usb-type-tag">
-                        {type}
-                      </Tag>
-                    );
-                  })}
-                </div>
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-        {peripheralDetail ? renderPeripheralDetail : null}
-        <Form.Item
-          name="desktopIds"
-          label={formatMessage({ id: 'DESK' })}
-          className="basic-form-item"
-          rules={[
-            {
-              required: true,
-              message: `${formatMessage({
-                id: 'PleaseSelect',
-              })}${formatMessage({ id: 'DESK' })}`,
-            },
-          ]}
-        >
-          <Select mode="multiple" getPopupContainer={(node) => node.parentNode}>
-            {deskTopList.map((it: any) =>
-              it.status === 'Creating' ? '' : <Option key={it.id}>{it.name}</Option>,
-            )}
-          </Select>
-        </Form.Item>
-
-        <Form.Item
-          key={'applicationDeadline'}
-          name={'applicationDeadline'}
-          label={formatMessage({ id: 'ApplicationDeadline' })}
-          rules={[
-            {
-              required: true,
-              validator: (_rul: any, val: any) =>
-                new Promise((resolve, reject) => {
-                  if (!Array.isArray(val) || isEmptyValue(val)) {
-                    reject(`请选择${formatMessage({ id: 'ApplicationDeadline' })}`);
-                  } else if (dayjs(val[0]).add(3599, 's') > dayjs(val[1])) {
-                    reject('起止时间间隔至少1小时');
-                  }
-
-                  resolve(true);
-                }),
-            },
-          ]}
-        >
-          <RangePicker
-            showTime
-            allowClear={false}
-            format={'YYYY-MM-DD HH:mm'}
-            disabledDate={(current: any) => {
-              return current < dayjs().startOf('minute');
-            }}
-          />
-        </Form.Item>
-      </>
-    );
-  }, [formatMessage, peripheralList, peripheralDetail, renderPeripheralDetail, deskTopList]);
 
   useEffect(() => {
     if (workflowTempValue && visible) {
@@ -988,91 +465,87 @@ const CreateForm = (props: any, _ref: any) => {
       centered
     >
       <Form form={formIns} colon={false} labelCol={{ span: 5 }}>
-        {/* 流程类型 */}
-        <Form.Item
-          name="workflowTemp"
-          label={formatMessage({ id: 'WorkflowTemplate' })}
-          rules={[
-            {
-              required: true,
-              message: `${formatMessage({
-                id: 'PleaseSelect',
-              })}${formatMessage({ id: 'WorkflowTemplate' })}`,
-            },
-          ]}
-        >
-          <Select getPopupContainer={(node) => node.parentNode}>
-            {workflowTempList.map((it: any) => (
-              <Option key={it.id}>{it.name}</Option>
-            ))}
-          </Select>
-        </Form.Item>
-        {/* 桌面池 */}
-        {workflowTempValue == 'createDesktop' ? renderDeskPool() : null}
+        <WorkflowTemplateField formatMessage={formatMessage} workflowTempList={workflowTempList} />
+        {workflowTempValue == 'createDesktop' ? (
+          <DeskPoolField
+            formatMessage={formatMessage}
+            loading={listDesktopPoolLoading}
+            deskPoolList={deskPoolList}
+            deskPoolDetail={deskPoolDetial}
+          />
+        ) : null}
         {workflowTempValue == 'extendDisk' ? (
           <>
-            {renderDeskTop()}
-            {renderDisk()}
-            {diskDetial ? renderCapacity() : null}
+            <DesktopField
+              formatMessage={formatMessage}
+              loading={listResourceUserLoading}
+              workflowTempValue={workflowTempValue}
+              desktopDetail={desktopDetail}
+              deskTopList={deskTopList}
+              formRules={formRules}
+            />
+            <DiskField formatMessage={formatMessage} diskList={diskList} diskDetail={diskDetial} />
+            {diskDetial ? (
+              <ExtendCapacityField formatMessage={formatMessage} diskDetail={diskDetial} />
+            ) : null}
           </>
         ) : null}
         {workflowTempValue == 'addDisk' ? (
           <>
-            {renderDeskTop()}
-            {renderDiskCapacity()}
+            <DesktopField
+              formatMessage={formatMessage}
+              loading={listResourceUserLoading}
+              workflowTempValue={workflowTempValue}
+              desktopDetail={desktopDetail}
+              deskTopList={deskTopList}
+              formRules={formRules}
+            />
+            <DiskCapacityField formatMessage={formatMessage} />
           </>
         ) : null}
-        {/* 修改配置 */}
-        {workflowTempValue == 'resizeDesktop' ? <>{renderDeskTop()}</> : null}
-        {/* 更新软件 */}
+        {workflowTempValue == 'resizeDesktop' ? (
+          <DesktopField
+            formatMessage={formatMessage}
+            loading={listResourceUserLoading}
+            workflowTempValue={workflowTempValue}
+            desktopDetail={desktopDetail}
+            deskTopList={deskTopList}
+            formRules={formRules}
+          />
+        ) : null}
         {workflowTempValue == 'updateApps' ? (
           <>
-            {renderDeskTop()}
-            {renderAppLib()}
+            <DesktopField
+              formatMessage={formatMessage}
+              loading={listResourceUserLoading}
+              workflowTempValue={workflowTempValue}
+              desktopDetail={desktopDetail}
+              deskTopList={deskTopList}
+              formRules={formRules}
+            />
+            <AppLibField
+              formatMessage={formatMessage}
+              loading={listAppLibLoading}
+              appLibList={appLibList}
+              appLibDetail={appLibDetail}
+            />
           </>
         ) : null}
-        {cpuAndMemErrorTip ? (
-          <Row className="cpu-mem-tip">
-            <Col span={19} offset={5}>
-              {cpuAndMemErrorTip}
-            </Col>
-          </Row>
-        ) : null}
-        {/* 软件申请 */}
-        {workflowTempValue == 'addSoftware' ? <>{renderSoft()}</> : null}
-        {/* USB外设申请 */}
-        {workflowTempValue == 'applyUsb' ? <>{renderUsbPeripheral}</> : null}
-        {/* 申请原因 */}
-        <Form.Item
-          name="reason"
-          rules={[
-            {
-              required: [
-                'createDesktop',
-                'extendDisk',
-                'addDisk',
-                'resizeDesktop',
-                'addSoftware',
-              ].includes(workflowTempValue),
-            },
-            {
-              pattern: Regex.isAllParse,
-              message: formatMessage({
-                id: 'allParseIsNotApprove',
-              }),
-            },
-          ]}
-          label={formatMessage({ id: 'ApplyReason' })}
-        >
-          <Input.TextArea
-            defaultValue={''}
-            showCount
-            minLength={0}
-            maxLength={200}
-            autoSize={{ minRows: 2, maxRows: 6 }}
-            disabled={disableAdd}
+        <CpuMemoryTip message={cpuAndMemErrorTip} />
+        {workflowTempValue == 'addSoftware' ? <SoftwareFields formatMessage={formatMessage} /> : null}
+        {workflowTempValue == 'applyUsb' ? (
+          <UsbPeripheralFields
+            formatMessage={formatMessage}
+            peripheralList={peripheralList}
+            peripheralDetail={peripheralDetail}
+            deskTopList={deskTopList}
           />
-        </Form.Item>
+        ) : null}
+        <ReasonField
+          formatMessage={formatMessage}
+          workflowTempValue={workflowTempValue}
+          disabled={disableAdd}
+        />
       </Form>
     </Modal>
   );

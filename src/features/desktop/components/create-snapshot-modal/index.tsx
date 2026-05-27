@@ -2,7 +2,7 @@ import { Form, Input, message, Modal, Radio } from '@/shared/ui';
 import { useEffect, useMemo, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import Regex from '@/utils/regex';
-import { createSnapshot } from '@/services/resource';
+import { createSnapshot } from '@/services/api/desktop';
 import useRequest from '@/hooks/useRequest';
 import './index.scss';
 import { isEmptyValue } from '@/utils/value';

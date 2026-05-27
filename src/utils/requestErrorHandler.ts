@@ -2,16 +2,19 @@ import { t } from 'i18next';
 import { message as uiMessage } from '@/shared/ui/message';
 import { logger } from '@/utils/logger';
 
-const hasErrorDetail = (value) => {
+const hasErrorDetail = (value: unknown) => {
   if (value === null || value === undefined) return false;
   if (typeof value === 'string' || Array.isArray(value)) return value.length > 0;
   if (typeof value === 'object') return Object.keys(value).length > 0;
   return true;
 };
 
-function getLoginErrorTimesExceedErrorMessage(errorMessageKey, { remainingSeconds }) {
+function getLoginErrorTimesExceedErrorMessage(
+  errorMessageKey: string,
+  { remainingSeconds }: { remainingSeconds?: string | number },
+) {
   // 处理remainingSeconds
-  const intRemainingSeconds = parseInt(remainingSeconds);
+  const intRemainingSeconds = parseInt(String(remainingSeconds));
   if (!isNaN(intRemainingSeconds)) {
     const minute = Math.floor(intRemainingSeconds / 60);
     const seconds = intRemainingSeconds % 60;
@@ -22,26 +25,27 @@ function getLoginErrorTimesExceedErrorMessage(errorMessageKey, { remainingSecond
       });
     }
     if (seconds && !minute) {
-      return t(errorMessageKey, { sec: seconds });
+      return (t as any)(errorMessageKey, { sec: seconds });
     }
     return t('error_code.LoginErrorTimesExceed_MIN_SEC', {
       min: minute,
       sec: seconds,
     });
   }
+  return '';
 }
 /**
  * @description 错误方法处理
  * @param {*} res
  */
-function handleError(res) {
+function handleError(res: any) {
   let message = '';
 
   const { errorCode = '', errorDetail = {}, httpStatus } = res;
   if (errorCode) {
     const errorMessageKey = `error_code.${errorCode}`;
     // 默认初始翻译
-    message = t(errorMessageKey, { defaultValue: res.errorMessage || errorCode });
+    message = (t as any)(errorMessageKey, { defaultValue: res.errorMessage || errorCode });
 
     // 用户未登录
     if (errorCode === 'MustLoggedError') {
@@ -50,7 +54,10 @@ function handleError(res) {
       localStorage.removeItem('isLocal');
     }
     if (hasErrorDetail(errorDetail)) {
-      message = t(errorMessageKey, { ...errorDetail, defaultValue: res.errorMessage || errorCode });
+      message = (t as any)(errorMessageKey, {
+        ...errorDetail,
+        defaultValue: res.errorMessage || errorCode,
+      });
       logger.debug('message', message);
     }
 
@@ -63,11 +70,11 @@ function handleError(res) {
 
     // 用户密码不正确错误次数
     if (errorCode === 'UserNamePasswordNotMatch') {
-      let errorMessage = res?.data?.remainLoginCount
+      const errorMessage = res?.data?.remainLoginCount
         ? t('error_code.NamePasswordNotMatchWithCount', {
             remainLoginCount: res?.errorDetail?.remainLoginCount,
           })
-        : t(errorMessageKey, { defaultValue: res.errorMessage || errorCode });
+        : (t as any)(errorMessageKey, { defaultValue: res.errorMessage || errorCode });
       message = errorMessage;
     }
   } else if (httpStatus) {

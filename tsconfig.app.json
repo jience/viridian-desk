@@ -23,7 +23,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "allowJs": true,
+    "allowJs": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
 

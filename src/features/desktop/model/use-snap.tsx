@@ -4,7 +4,7 @@ import type { MenuProps } from '@/shared/ui';
 import { Modal } from '@/shared/ui';
 import { DESK_STATUS } from '@/utils/constant';
 import Actions from '@/utils/actions';
-import { getSnapshot, deleteSnapshot, applySnapshot } from '@/services/resource';
+import { getSnapshot, deleteSnapshot, applySnapshot } from '@/services/api/desktop';
 import useRequest from '@/hooks/useRequest';
 import { authActionShow } from '@/utils/actionAuth';
 

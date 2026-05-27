@@ -7,9 +7,9 @@ import i18next from 'i18next';
  * @description 转义桌面图标
  * @param {*} value
  */
-export function transIcon(value) {
+export function transIcon(value?: string) {
   if (!value) return <i className="iconfont icon-Desktop_defaultOS"></i>;
-  let systemLower = value.toLowerCase();
+  const systemLower = value.toLowerCase();
   if (systemLower.indexOf('windows') > -1) {
     return <i className="iconfont icon-windows"></i>;
   }
@@ -31,7 +31,7 @@ export function transIcon(value) {
   return <i className="iconfont icon-Desktop_defaultOS"></i>;
 }
 
-export function isInteger(obj) {
+export function isInteger(obj: number) {
   return Math.floor(obj) === obj;
 }
 /**
@@ -39,15 +39,15 @@ export function isInteger(obj) {
  * @description 转义内存数据
  * @param {*} ram
  */
-export function transRam(ram) {
-  let floatNumber = Number.parseFloat(ram);
+export function transRam(ram: string | number) {
+  const floatNumber = Number.parseFloat(String(ram));
   if (isNaN(floatNumber)) {
     return {
       num: 0,
       unit: 'GB',
     };
   }
-  let bytes = floatNumber * Gi;
+  const bytes = floatNumber * Gi;
   if (bytes === 0) {
     return {
       num: 0,
@@ -55,7 +55,7 @@ export function transRam(ram) {
     };
   }
   if (bytes < Ki) {
-    let res = Number(bytes.toFixed(2));
+    const res = Number(bytes.toFixed(2));
     if (res > 1) {
       return {
         num: res,
@@ -98,20 +98,20 @@ export function transRam(ram) {
   };
 }
 
-export function getRandomNumberByRange(start, end) {
+export function getRandomNumberByRange(start: number, end: number) {
   return Math.round(Math.random() * (end - start) + start);
 }
 
-export function sum(x, y) {
+export function sum(x: number, y: number) {
   return x + y;
 }
 
-export function square(x) {
+export function square(x: number) {
   return x * x;
 }
 
 // 获取数字以及字符随机码
-export function getRandomCode(len) {
+export function getRandomCode(len?: number) {
   len = len || 32;
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const maxPos = chars.length;
@@ -181,9 +181,9 @@ export const appModeList = [
 ];
 
 // 去除对象中值为[null, undefined，'']的项 不递归
-export const clearEmpty = (obj) => {
+export const clearEmpty = (obj: Record<string, any>) => {
   return Object.entries(obj)
-    .filter(([key, val]) => {
+    .filter(([, val]) => {
       return val !== null && val !== undefined && val !== '' && !isEmptyValue(val);
     })
     .reduce(
@@ -195,7 +195,7 @@ export const clearEmpty = (obj) => {
     );
 };
 
-export const formatTel = (tel) => {
+export const formatTel = (tel?: string) => {
   return tel && tel.length == 11 ? tel.substring(0, 3) + '****' + tel.substr(tel.length - 4) : '';
 };
 
@@ -203,7 +203,7 @@ export const formatTel = (tel) => {
  * 字符串替换占位符，字典方式
  * 如：formatKey('桌面{name}创建成功', {name: '测试机'})
  */
-export const formatKey = (string, data) => {
+export const formatKey = (string: string, data?: Record<string, any>) => {
   if (string) {
     if (data) {
       const keys = Object.keys(data);
@@ -221,7 +221,7 @@ export const formatKey = (string, data) => {
  * 从语言包中找到对应字符串，并替换占位符，字典方式
  * 如：formatI18NKey('MISC_ExternalCreatedSucc', {name: '测试外网名称'})
  */
-export const formatI18NKey = (string, data) => {
+export const formatI18NKey = (string: string, data?: Record<string, any>) => {
   const value = i18next.t(string, {
     defaultValue: string,
     ...(data || {}),

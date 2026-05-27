@@ -1,26 +1,27 @@
+/* eslint-disable react-refresh/only-export-components */
 import { getStoreState } from '@/store/runtime-access';
+import type { ComponentType } from 'react';
 
-export const authActionShow = (actions) => {
+export const authActionShow = (actions: string[] = []) => {
   const permissions = getStoreState()?.app.currentUser?.permissions || [];
-  for (var index in actions) {
-    let validateAction = actions[index];
+  for (const validateAction of actions) {
     if (permissions?.indexOf(validateAction) >= 0) {
       return true;
     }
   }
   return false;
 };
-const ActionAuth = (ComposedComponent, props) => {
-  const Wrapper = (props) => {
-    const { show, scope, options, actions, projectId, emptyContent, ...others } = props;
+const ActionAuth = (ComposedComponent: ComponentType<any>) => {
+  const Wrapper = (props: any) => {
+    const { show, scope: _scope, options, actions, projectId: _projectId, emptyContent, ...others } = props;
     const permissions = getStoreState()?.app.currentUser?.permissions || [];
     let valid = false;
     if (options) {
-      let allowOptions = options.filter((item) => {
-        let subOptions = item.subOptions;
+      const allowOptions = options.filter((item: any) => {
+        const subOptions = item.subOptions;
         if (subOptions && subOptions.length > 0) {
-          let allowSubOptions = subOptions.filter((subitem) => {
-            let subAction = subitem.action;
+          const allowSubOptions = subOptions.filter((subitem: any) => {
+            const subAction = subitem.action;
             if (!subAction) {
               return true;
             }
@@ -36,7 +37,7 @@ const ActionAuth = (ComposedComponent, props) => {
             return false;
           }
         } else {
-          let action = item.action;
+          const action = item.action;
           if (!action) {
             return true;
           }
@@ -50,8 +51,7 @@ const ActionAuth = (ComposedComponent, props) => {
         return <ComposedComponent {...others} options={allowOptions} />;
       }
     } else if (actions) {
-      for (var index in actions) {
-        let validateAction = actions[index];
+      for (const validateAction of actions) {
         if (permissions?.indexOf(validateAction) > -1) {
           valid = true;
           break;

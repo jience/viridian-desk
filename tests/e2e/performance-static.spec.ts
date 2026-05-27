@@ -67,6 +67,11 @@ const collectStaticTranslationKeys = () => {
 
 const dynamicTranslationKeys = [
   'Attached',
+  'ApplySoftware',
+  'ApplyDataDisk',
+  'ApplyForDesk',
+  'ApplyUSB',
+  'ChangeConfig',
   'Error',
   'EXCLUSIVE',
   'LoginFeatureAssistantDescription',
@@ -79,7 +84,9 @@ const dynamicTranslationKeys = [
   'LoginFeatureWorkspaceTag',
   'LoginFeatureWorkspaceTitle',
   'RESTORE',
+  'ResizeDisk',
   'SHARE',
+  'SendPhoneLable',
   'SUCCESS_DESKTOP_CANCEL_AUTO',
   'SUCCESS_DESKTOP_SET_AUTO',
   'Updating',
@@ -292,13 +299,13 @@ test('keeps locale file key sets aligned across supported languages', () => {
 });
 
 test('keeps runtime API error translations on the error_code namespace', () => {
-  const legacyRequestErrorHandler = source('src/utils/requestErrorHandler.jsx');
+  const legacyRequestErrorHandler = source('src/utils/requestErrorHandler.ts');
   const nativeRequestErrorHandler = source('src/services/requestErrorHandler.ts');
   const createSnapSource = source('src/features/desktop/components/create-snapshot-modal/index.tsx');
 
   expect(legacyRequestErrorHandler).toContain('`error_code.${errorCode}`');
   expect(legacyRequestErrorHandler).toContain('`error_code.${httpStatus}`');
-  expect(legacyRequestErrorHandler).toContain('return t(errorMessageKey, { sec: seconds });');
+  expect(legacyRequestErrorHandler).toContain('return (t as any)(errorMessageKey, { sec: seconds });');
   expect(legacyRequestErrorHandler).not.toContain('formatI18NKey(errorCode');
   expect(legacyRequestErrorHandler).not.toContain('formatI18NKey(res.errorCode');
   expect(nativeRequestErrorHandler).toContain('`error_code.${res.code}`');
@@ -600,14 +607,14 @@ test('keeps system prompt surfaces visually unified', () => {
   const messageSource = source('src/shared/ui/message.ts');
   const messageStyles = source('src/shared/ui/message.scss');
   const uiStyles = source('src/shared/ui/styles.scss');
-  const uiSource = source('src/shared/ui/index.tsx');
+  const modalSource = source('src/shared/ui/modal.tsx');
   const fastPath = 'src/shared/ui/fast.tsx';
   const hasFastModule = existsSync(join(process.cwd(), fastPath));
   const fastSource = hasFastModule ? source(fastPath) : '';
 
   expect(hasConfirmModule, confirmPath).toBe(true);
-  expect(uiSource).not.toContain('window.confirm');
-  expect(uiSource).toContain("import { showConfirm } from './confirm'");
+  expect(modalSource).not.toContain('window.confirm');
+  expect(modalSource).toContain("import { showConfirm } from './confirm'");
   if (hasFastModule) {
     expect(fastSource).not.toContain('window.confirm');
     expect(fastSource).toContain("import { showConfirm } from './confirm'");
@@ -644,7 +651,8 @@ test('keeps shared ui as the canonical component library boundary', () => {
   const legacyUiFiles = existsSync(legacyUiRootPath) ? collectSourceFiles('src/ui') : [];
 
   expect(existsSync(join(process.cwd(), sharedIndexPath)), sharedIndexPath).toBe(true);
-  expect(source(sharedIndexPath)).toContain("import { cn } from '@/shared/ui/lib/cn'");
+  expect(source(sharedIndexPath)).toContain("export { Button, type ButtonProps } from './button'");
+  expect(source(`${sharedUiRoot}/button.tsx`)).toContain("import { cn } from '@/shared/ui/lib/cn'");
   expect(source(`${sharedUiRoot}/message.ts`)).toContain("import './message.scss'");
   expect(source(`${sharedUiRoot}/shell/app-shell.tsx`)).toContain('@/shared/ui/lib/cn');
   expect(source(`${sharedUiRoot}/theme/theme-provider.tsx`)).not.toContain('@/ui/');
@@ -713,6 +721,7 @@ test('keeps shell and account feature components out of the shared component buc
 
 test('keeps remaining desktop and reusable components in explicit feature boundaries', () => {
   const expectedPaths = [
+    'src/features/desktop/components/desktop-resource-cards.tsx',
     'src/features/desktop/components/desk-loading/index.tsx',
     'src/features/desktop/components/desk-pool-icon.tsx',
     'src/features/desktop/components/detail-close-icon.tsx',
@@ -720,7 +729,7 @@ test('keeps remaining desktop and reusable components in explicit feature bounda
     'src/features/peripheral/components/integrated-card/index.tsx',
     'src/features/settings/components/download-modal/index.tsx',
     'src/shared/components/action-dropdown/index.tsx',
-    'src/shared/components/data-table/index.jsx',
+    'src/shared/components/data-table/index.tsx',
     'src/shared/components/info-table/index.tsx',
     'src/shared/components/search-bar/index.tsx',
     'src/shared/components/setting-item/index.tsx',
@@ -733,7 +742,7 @@ test('keeps remaining desktop and reusable components in explicit feature bounda
     'src/components/IntegratedCard/index.tsx',
     'src/components/DownloadModal/index.tsx',
     'src/components/Dropdown/index.tsx',
-    'src/components/TableCommon/index.jsx',
+    'src/components/TableCommon/index.tsx',
     'src/components/InfoTable/index.tsx',
     'src/components/SearchBar/index.tsx',
     'src/components/SettingItem/index.tsx',
@@ -750,8 +759,8 @@ test('keeps remaining desktop and reusable components in explicit feature bounda
   expect(source('src/features/desktop/pages/desktop-page.tsx')).toContain(
     "import('@/features/desktop/components/desk-loading')",
   );
-  expect(source('src/features/desktop/pages/desktop-page.tsx')).toContain(
-    "from '@/features/desktop/components/desk-pool-icon'",
+  expect(source('src/features/desktop/components/desktop-resource-cards.tsx')).toContain(
+    "from './desk-pool-icon'",
   );
   expect(source('src/features/desktop/pages/desktop-detail-page.tsx')).toContain(
     "from '@/features/desktop/components/detail-close-icon'",
@@ -1480,7 +1489,7 @@ test('keeps the login page hero and footer controls minimal', () => {
 test('keeps the final server action menu from being clipped', () => {
   const serverSettingSource = source('src/features/settings/pages/server-setting/index.tsx');
   const serverSettingStyles = source('src/features/settings/pages/server-setting/index.scss');
-  const uiSource = source('src/shared/ui/index.tsx');
+  const dropdownSource = source('src/shared/ui/dropdown.tsx');
   const uiStyles = source('src/shared/ui/styles.scss');
 
   expect(serverSettingSource).toContain('gatewayList.map((g, index)');
@@ -1489,7 +1498,7 @@ test('keeps the final server action menu from being clipped', () => {
   );
   expect(serverSettingStyles).toContain('.vd-settings-group__content');
   expect(serverSettingStyles).toContain('overflow: visible');
-  expect(uiSource).toContain('`vdui-dropdown--${placement}`');
+  expect(dropdownSource).toContain('`vdui-dropdown--${placement}`');
   expect(uiStyles).toContain('.vdui-dropdown--topRight');
   expect(uiStyles).toContain('bottom: calc(100% + 8px)');
 });
@@ -1585,22 +1594,22 @@ test('keeps the main Tauri window opaque for low-power Linux compositors', () =>
 });
 
 test('notifies only changed form fields while typing', () => {
-  const uiSource = source('src/shared/ui/index.tsx');
+  const formSource = source('src/shared/ui/form.tsx');
 
-  expect(uiSource).toContain('fieldListeners');
-  expect(uiSource).toContain('notifyField');
-  expect(uiSource).toContain('_subscribeField');
-  expect(uiSource).not.toContain('form._subscribe?.(() => force((value) => value + 1))');
+  expect(formSource).toContain('fieldListeners');
+  expect(formSource).toContain('notifyField');
+  expect(formSource).toContain('_subscribeField');
+  expect(formSource).not.toContain('form._subscribe?.(() => force((value) => value + 1))');
 });
 
 test('filters form layout-only props before rendering the native form element', () => {
-  const uiSource = source('src/shared/ui/index.tsx');
-  const formPropsStart = uiSource.indexOf('interface FormProps');
-  const formPropsEnd = uiSource.indexOf('\ninterface FormItemProps', formPropsStart);
-  const formPropsSource = uiSource.slice(formPropsStart, formPropsEnd);
-  const formComponentStart = uiSource.indexOf('function FormComponent');
-  const formComponentEnd = uiSource.indexOf('\n  } as FormComponentType', formComponentStart);
-  const formComponentSource = uiSource.slice(formComponentStart, formComponentEnd);
+  const formSource = source('src/shared/ui/form.tsx');
+  const formPropsStart = formSource.indexOf('interface FormProps');
+  const formPropsEnd = formSource.indexOf('\ninterface FormItemProps', formPropsStart);
+  const formPropsSource = formSource.slice(formPropsStart, formPropsEnd);
+  const formComponentStart = formSource.indexOf('function FormComponent');
+  const formComponentEnd = formSource.indexOf('\n  } as FormComponentType', formComponentStart);
+  const formComponentSource = formSource.slice(formComponentStart, formComponentEnd);
 
   expect(formPropsSource).toContain('labelAlign?:');
   expect(formComponentSource).toContain('labelAlign: _labelAlign');
@@ -1608,10 +1617,10 @@ test('filters form layout-only props before rendering the native form element', 
 });
 
 test('keeps textarea native value props mutually exclusive', () => {
-  const uiSource = source('src/shared/ui/index.tsx');
-  const textAreaStart = uiSource.indexOf('InputBase.TextArea = forwardRef');
-  const textAreaEnd = uiSource.indexOf('\nInputBase.Search', textAreaStart);
-  const textAreaSource = uiSource.slice(textAreaStart, textAreaEnd);
+  const inputSource = source('src/shared/ui/input.tsx');
+  const textAreaStart = inputSource.indexOf('InputBase.TextArea = forwardRef');
+  const textAreaEnd = inputSource.indexOf('\nInputBase.Search', textAreaStart);
+  const textAreaSource = inputSource.slice(textAreaStart, textAreaEnd);
 
   expect(textAreaSource).toContain('value: textAreaValue');
   expect(textAreaSource).toContain('defaultValue: textAreaDefaultValue');
@@ -1623,12 +1632,12 @@ test('keeps textarea native value props mutually exclusive', () => {
 });
 
 test('allows login text fields to avoid controlled React value writes while typing', () => {
-  const uiSource = source('src/shared/ui/index.tsx');
+  const formSource = source('src/shared/ui/form.tsx');
   const usernamePasswordSource = source('src/features/auth/components/username-password/index.tsx');
 
-  expect(uiSource).toContain('liveValue?: boolean');
-  expect(uiSource).toContain('_setFieldValueSilently');
-  expect(uiSource).toContain('defaultValue');
+  expect(formSource).toContain('liveValue?: boolean');
+  expect(formSource).toContain('_setFieldValueSilently');
+  expect(formSource).toContain('defaultValue');
   expect(usernamePasswordSource).toContain('liveValue={false}');
 });
 
@@ -1731,10 +1740,12 @@ test('keeps authenticated shell slots stable across route content renders', () =
 
 test('keeps desk resource cards memoized away from page-level refresh state', () => {
   const deskPageSource = source('src/features/desktop/pages/desktop-page.tsx');
+  const desktopCardSource = source('src/features/desktop/components/desktop-resource-cards.tsx');
 
-  expect(deskPageSource).toContain('memo(');
-  expect(deskPageSource).toContain('function DesktopCard');
-  expect(deskPageSource).toContain('function DeskPoolCard');
+  expect(deskPageSource).toContain("from '../components/desktop-resource-cards'");
+  expect(desktopCardSource).toContain('memo(');
+  expect(desktopCardSource).toContain('function DesktopCard');
+  expect(desktopCardSource).toContain('function DeskPoolCard');
   expect(deskPageSource).toContain('useCallback');
   expect(deskPageSource).toContain('useMemo');
 });
@@ -1776,8 +1787,12 @@ test('removes authenticated message notification feature from the client', () =>
   const appSliceSource = source('src/store/feature/app/appSlice.ts');
   const appInitStateSource = source('src/store/feature/app/initState.ts');
   const appTypesSource = source('src/store/feature/app/types.ts');
-  const publicServiceSource = source('src/services/public.ts');
-  const resourceServiceSource = source('src/services/resource.ts');
+  const domainApiSources = [
+    'src/services/api/account/index.ts',
+    'src/services/api/session/index.ts',
+  ]
+    .map((path) => source(path))
+    .join('\n');
   const localeSources = [locale('zh-CN'), locale('zh-TW'), locale('en-US')]
     .map((resource) => JSON.stringify(resource))
     .join('\n');
@@ -1801,16 +1816,18 @@ test('removes authenticated message notification feature from the client', () =>
   expect(appSliceSource).not.toContain('selectMsg');
   expect(appInitStateSource).not.toContain('msg');
   expect(appTypesSource).not.toContain('msg');
-  expect(publicServiceSource).not.toContain('listHistoryMessage');
-  expect(publicServiceSource).not.toContain('deleteHistoryMsg');
-  expect(publicServiceSource).not.toContain('listHistoryNotice');
-  expect(resourceServiceSource).not.toContain('listNotice');
+  expect(domainApiSources).not.toContain('listHistoryMessage');
+  expect(domainApiSources).not.toContain('deleteHistoryMsg');
+  expect(domainApiSources).not.toContain('listHistoryNotice');
+  expect(domainApiSources).not.toContain('listNotice');
   expect(localeSources).not.toContain('common.message_modal');
   expect(localeSources).not.toContain('"MSG"');
   expect(localeSources).not.toContain('login_page.message_announcement');
   for (const removedPath of removedPaths) {
     expect(existsSync(join(process.cwd(), removedPath)), removedPath).toBe(false);
   }
+  expect(existsSync(join(process.cwd(), 'src/services/public.ts'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/services/user.ts'))).toBe(false);
 });
 
 test('keeps account workbench code out of the sidebar shell', () => {
@@ -1839,36 +1856,42 @@ test('keeps account workbench code out of the sidebar shell', () => {
 });
 
 test('keeps account controls inside the left-bottom workbench', () => {
-  const uiSource = source('src/shared/ui/index.tsx');
+  const overlaySource = source('src/shared/ui/overlay.tsx');
   const sidebarSource = source('src/features/shell/components/sidebar/index.tsx');
   const workbenchPath = 'src/features/account/components/account-workbench/index.tsx';
+  const workbenchViewsPath =
+    'src/features/account/components/account-workbench/account-workbench-views.tsx';
   const workbenchStylesPath = 'src/features/account/components/account-workbench/index.scss';
   const workbenchSource = source(workbenchPath);
+  const workbenchViewsSource = source(workbenchViewsPath);
   const workbenchStyles = source(workbenchStylesPath);
   const zhCNCore = source('src/assets/locales/zh-CN/core.json');
   const zhTWCore = source('src/assets/locales/zh-TW/core.json');
   const enUSCore = source('src/assets/locales/en-US/core.json');
 
-  expect(uiSource).toContain('rootRef.current?.contains(target)');
-  expect(uiSource).toContain("document.addEventListener('pointerdown', handlePointerDown, true)");
-  expect(uiSource).toContain("document.addEventListener('keydown', handleKeyDown)");
-  expect(uiSource).toContain("event.key === 'Escape'");
-  expect(uiSource).toContain('onOpenChange?.(false)');
+  expect(overlaySource).toContain('rootRef.current?.contains(target)');
+  expect(overlaySource).toContain(
+    "document.addEventListener('pointerdown', handlePointerDown, true)",
+  );
+  expect(overlaySource).toContain("document.addEventListener('keydown', handleKeyDown)");
+  expect(overlaySource).toContain("event.key === 'Escape'");
+  expect(overlaySource).toContain('onOpenChange?.(false)');
   expect(existsSync(join(process.cwd(), workbenchPath)), workbenchPath).toBe(true);
+  expect(existsSync(join(process.cwd(), workbenchViewsPath)), workbenchViewsPath).toBe(true);
   expect(existsSync(join(process.cwd(), workbenchStylesPath)), workbenchStylesPath).toBe(true);
   expect(sidebarSource).not.toContain('<Popover');
   expect(sidebarSource).not.toContain('userMenus');
   expect(sidebarSource).not.toContain('setUserInfoVisible');
   expect(sidebarSource).not.toContain('setChangePhoneVisible');
   expect(workbenchSource).toContain('account-workbench__panel');
-  expect(workbenchSource).toContain('account-workbench__view');
+  expect(workbenchViewsSource).toContain('account-workbench__view');
   expect(workbenchSource).toContain("setView('password')");
   expect(workbenchSource).toContain("setView('phone')");
   expect(workbenchSource).not.toContain("setView('profile')");
   expect(workbenchSource).not.toContain("'profile'");
   expect(workbenchSource).not.toContain('view_profile');
   expect(workbenchSource).not.toContain('profile_title');
-  expect(workbenchSource).toContain('className="account-workbench__footer vdui-modal-footer"');
+  expect(workbenchViewsSource).toContain('className="account-workbench__footer vdui-modal-footer"');
   expect(workbenchSource).toContain('LoginUserType.LOCAL');
   expect(workbenchSource).toContain('LEGACY_PASSWORD_PREFIX');
   expect(workbenchSource).toContain(
@@ -1899,7 +1922,8 @@ test('keeps shared action controls visually consistent', () => {
     'src/features/malfunction/components/create-fault-modal/index.tsx',
   );
   const uiStyles = source('src/shared/ui/styles.scss');
-  const uiSource = source('src/shared/ui/index.tsx');
+  const selectSource = source('src/shared/ui/select.tsx');
+  const inputSource = source('src/shared/ui/input.tsx');
   const commonZh = source('src/shared/ui/i18n/locales/zh-CN/common.json');
   const publishAppStyles = source(
     'src/features/application/components/add-from-self-modal/index.scss',
@@ -1934,10 +1958,10 @@ test('keeps shared action controls visually consistent', () => {
   expect(uiStyles).toContain('--vdui-modal-primary-bg:');
   expect(uiStyles).toContain('--vdui-switch-checked-bg: #3f9f68;');
   expect(uiStyles).toContain('background: var(--vdui-switch-checked-bg, #4d7c3f);');
-  expect(uiSource).not.toContain('selectedLabel ?? props.placeholder');
-  expect(uiSource).toContain('selectedValues.length > 0 ? (');
-  expect(uiSource).toContain('showCount: _showCount');
-  expect(uiSource).toContain('rows={rows ?? minRows}');
+  expect(selectSource).not.toContain('selectedLabel ?? props.placeholder');
+  expect(selectSource).toContain('selectedValues.length > 0 ? (');
+  expect(inputSource).toContain('showCount: _showCount');
+  expect(inputSource).toContain('rows={rows ?? minRows}');
   expect(createFaultBaseFormSource).toContain('const { key, ...resProps } = props;');
   expect(createFaultBaseFormSource).toContain('<Select key={key} {...resProps} />');
   expect(publishAppStyles).toContain('.vdui-modal-body {');
@@ -1996,12 +2020,15 @@ test('keeps authenticated client bootstrap centralized outside ClientLayout rend
 
 test('does not statically bundle every locale at startup', () => {
   const i18nSource = source('src/utils/i18n.ts');
+  const packageJson = source('package.json');
 
   expect(i18nSource).not.toContain("from '@/assets/locales/zh-CN.json'");
   expect(i18nSource).not.toContain("from '@/assets/locales/zh-TW.json'");
   expect(i18nSource).not.toContain("from '@/assets/locales/en-US.json'");
   expect(i18nSource).not.toContain("from '@/ui/i18n/locales/zh-CN/common.json'");
   expect(i18nSource).not.toContain("from '@/ui/i18n/locales/zh-CN/assistant.json'");
+  expect(i18nSource).not.toContain('LanguageDetector');
+  expect(packageJson).not.toContain('i18next-browser-languagedetector');
 });
 
 test('keeps async route styles split from the startup stylesheet', () => {
@@ -2034,9 +2061,27 @@ test('removes custom scrollbar and lodash runtimes from the frontend bundle', ()
   expect(packageJson).not.toContain('@types/react-custom-scrollbars');
   expect(packageJson).not.toContain('"lodash-es"');
   expect(packageJson).not.toContain('@types/lodash-es');
+  expect(packageJson).not.toContain('"classnames"');
+  expect(packageJson).not.toContain('"qs"');
+  expect(packageJson).not.toContain('@types/qs');
+  expect(packageJson).not.toContain('"uuid"');
+  expect(packageJson).not.toContain('crypto-browserify');
+  expect(packageJson).not.toContain('stream-browserify');
   expect(viteConfig).not.toContain('vendor-scrollbars');
   expect(searchableSources).not.toContain('react-custom-scrollbars');
   expect(searchableSources).not.toContain("from 'lodash-es'");
+  expect(searchableSources).not.toContain("from 'classnames'");
+  expect(searchableSources).not.toContain("from 'qs'");
+  expect(searchableSources).not.toContain("from 'uuid'");
+});
+
+test('keeps frontend application source TypeScript-only', () => {
+  const jsFiles = collectSourceFiles('src').filter((path) => /\.(js|jsx)$/.test(path));
+
+  expect(jsFiles).toEqual([]);
+  expect(source('tsconfig.app.json')).toContain('"allowJs": false');
+  expect(source('eslint.config.ts')).not.toContain('src/hooks/useRequest.js');
+  expect(source('eslint.config.ts')).not.toContain('src/utils/constant.js');
 });
 
 test('removes request-backed global loading subscriptions from list and modal flows', () => {
@@ -2149,6 +2194,22 @@ test('keeps request hot paths lodash-free', () => {
   expect(source('src/utils/request/index.ts')).not.toContain('isEmpty');
 });
 
+test('keeps feature API imports on domain modules', () => {
+  const featureImports = collectSourceFiles('src/features').map((path) => [path, source(path)]);
+
+  for (const [path, content] of featureImports) {
+    expect(content, path).not.toContain("@/services/resource");
+  }
+
+  expect(source('src/services/api/desktop/index.ts')).toContain('export enum DeskTopApi');
+  expect(source('src/services/api/approval/index.ts')).toContain('export enum ApprovalApi');
+  expect(source('src/services/api/account/index.ts')).toContain('export enum AccountApi');
+  expect(source('src/services/api/session/index.ts')).toContain('export enum SessionApi');
+  expect(existsSync(join(process.cwd(), 'src/services/resource.ts'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/services/public.ts'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/services/user.ts'))).toBe(false);
+});
+
 test('stages login route bootstrap after first paint without low-power visual defaults', () => {
   const bootstrapSource = source('src/app/router/bootstrap.ts');
   const preAuthLoaderStart = bootstrapSource.indexOf('export const preAuthConfigLoader');
@@ -2242,7 +2303,7 @@ test('keeps startup notifications out of the full UI component bundle', () => {
 
 test('uses a lightweight local request hook instead of the ahooks runtime', () => {
   const packageJson = source('package.json');
-  const requestHookSource = source('src/hooks/useRequest.js');
+  const requestHookSource = source('src/hooks/useRequest.ts');
 
   expect(packageJson).not.toContain('"ahooks"');
   expect(requestHookSource).not.toContain("from 'ahooks'");
@@ -2485,7 +2546,7 @@ test('defers Tauri feature modules until their methods are used', () => {
 });
 
 test('loads password crypto only when login work needs it', () => {
-  const legacyUtilsSource = source('src/utils/utils.jsx');
+  const legacyUtilsSource = source('src/utils/utils.tsx');
   const loginSuccessSource = source('src/features/auth/model/use-login-success-handler.ts');
   const apiModuleSource = source('src/native/tauri/api/index.ts');
 

@@ -4,9 +4,21 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 const DEFAULT_THROTTLE_INTERVAL = 500;
 
-const isFunction = (value) => typeof value === 'function';
+type RequestService = (...params: any[]) => Promise<any>;
 
-const isEmptyValue = (value) => {
+type UseRequestOptions = {
+  manual?: boolean;
+  defaultParams?: any[];
+  throttleInterval?: number;
+  formatResult?: (value: any) => any;
+  onSuccess?: (data: any, params?: any[]) => void;
+  onError?: (error: any) => void;
+};
+
+const isFunction = (value: unknown): value is (...args: any[]) => any =>
+  typeof value === 'function';
+
+const isEmptyValue = (value: unknown) => {
   if (value == null) return true;
   if (typeof value === 'string' || Array.isArray(value)) return value.length === 0;
   if (value instanceof Error) return false;
@@ -14,13 +26,13 @@ const isEmptyValue = (value) => {
   return false;
 };
 
-const useLatest = (value) => {
+const useLatest = <T>(value: T) => {
   const ref = useRef(value);
   ref.current = value;
   return ref;
 };
 
-const getSuccessPayload = (res) => {
+const getSuccessPayload = (res: any) => {
   if (Array.isArray(res?.data)) {
     const { requestId: _requestId, timestamp: _timestamp, ...rest } = res;
     return rest;
@@ -28,7 +40,7 @@ const getSuccessPayload = (res) => {
   return res?.data ?? res;
 };
 
-const getFormattedResult = (res, options) => {
+const getFormattedResult = (res: any, options: UseRequestOptions) => {
   const { formatResult } = options;
   if (Array.isArray(res?.data)) {
     const { requestId: _requestId, timestamp: _timestamp, ...rest } = res.data;
@@ -43,7 +55,7 @@ const getFormattedResult = (res, options) => {
   };
 };
 
-const handleRequestError = (err, options) => {
+const handleRequestError = (err: any, options: UseRequestOptions) => {
   if (isEmptyValue(err)) return;
 
   const { httpStatus } = err;
@@ -66,20 +78,20 @@ const handleRequestError = (err, options) => {
  * @param { string | object | ((...args:any) => string | object) }
  * @param {object} options useRequest options,所有的 Options 均是可选的
  */
-export default (service, options = {}) => {
+export default function useRequest(service: RequestService, options: UseRequestOptions = {}) {
   const serviceRef = useLatest(service);
   const optionsRef = useLatest(options);
   const mountedRef = useRef(true);
-  const lastParamsRef = useRef([]);
-  const throttleTimerRef = useRef(null);
+  const lastParamsRef = useRef<any[]>([]);
+  const throttleTimerRef = useRef<number | null>(null);
   const throttledRef = useRef(false);
-  const lastPromiseRef = useRef(Promise.resolve());
+  const lastPromiseRef = useRef<Promise<any>>(Promise.resolve());
 
-  const [data, setData] = useState();
-  const [error, setError] = useState();
+  const [data, setData] = useState<any>();
+  const [error, setError] = useState<any>();
   const [loading, setLoading] = useState(false);
 
-  const execute = useCallback(async (...params) => {
+  const execute = useCallback(async (...params: any[]) => {
     const currentOptions = optionsRef.current || {};
     setLoading(true);
     setError(undefined);
@@ -109,7 +121,7 @@ export default (service, options = {}) => {
   }, []);
 
   const run = useCallback(
-    (...params) => {
+    (...params: any[]) => {
       lastParamsRef.current = params;
 
       const currentOptions = optionsRef.current || {};
@@ -160,4 +172,4 @@ export default (service, options = {}) => {
     run,
     refresh,
   };
-};
+}

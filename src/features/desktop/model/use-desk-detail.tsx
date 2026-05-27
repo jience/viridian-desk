@@ -1,5 +1,5 @@
 import useRequest from '@/hooks/useRequest';
-import { listResourceUser, listVolume } from '@/services/resource';
+import { listResourceUser, listVolume } from '@/services/api/desktop';
 import { EmptyText } from '@/utils/constant';
 import { transRam } from '@/utils/utils';
 import { getPathValue, isEmptyValue } from '@/utils/value';

@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo, memo, useContext } from 'react';
-// eslint-disable-next-line import/named
-import { Table, Button, Checkbox, Row, Col, Menu, Dropdown as Dropdown } from '@/shared/ui';
+import { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import { Table, Button, Menu, Dropdown as Dropdown, Tooltip } from '@/shared/ui';
 import SearchBar from '../search-bar';
 import { clearEmpty } from '@/utils/utils';
 import { Divider } from '@/shared/ui';
@@ -62,19 +61,19 @@ const TableCommon = ({
      */
   operateButtons = [],
   // 按钮批量操作权限列表（会据此判断是否不显示checkbox）
-  titleOperationPermissions = [],
+  titleOperationPermissions: _titleOperationPermissions = [],
   // 列表操作权限列表（会据此判断是否不显示操作列）
-  operationPermissions = [],
+  operationPermissions: _operationPermissions = [],
   // 行点击回调
   onRowClick = () => {},
   // 有详情抽屉时需要传，用来显示选中行高亮
   selectedDrawerKey = '',
   // 列表总宽
-  width = null,
+  width: _width = null,
   // 不需要显示在表头搜索中的参数，请求仍会带上，只是不显示
   extraParams = [],
   // 默认隐藏的列的key
-  defaultHideKey = [],
+  defaultHideKey: _defaultHideKey = [],
   /**
      * 需要显示行tooltip时配置
      eg: [{
@@ -82,39 +81,39 @@ const TableCommon = ({
          title: '' // tooltip显示内容
      }]
      */
-  rowTips = [],
+  rowTips: _rowTips = [],
   // 组件唯一id, 用来处理缓存及推送， 需要确保唯一性，建议使用文件路径层级
-  uniqueId = '',
+  uniqueId: _uniqueId = '',
   // searchBar左侧插槽
-  slotLeft = '',
+  slotLeft: _slotLeft = '',
   // searchBar右侧插槽
   slotRight = '',
   // searchBar右侧默认setting按钮
-  showColumnsSetting = false,
+  showColumnsSetting: _showColumnsSetting = false,
   // 是否需要checkbox
   checkable = true,
   // 是否隐藏分页
   noPage = false,
   // searchBar额外参数，如果默认配置不满足需求，可用此参数自行覆盖
-  searchProps = {},
+  searchProps: _searchProps = {},
   // 如果行选择参数不满足，可用此参数自行覆盖
   rowSelectionProps = {},
   // url中不需要进入查询参数的参数
-  extraURIParams = [],
+  extraURIParams: _extraURIParams = [],
   // 是否把请求参数拼接到url上
   // 刷新时是否显示loading
-  slient = true,
+  slient: _slient = true,
   // 拖拽结束回调
-  onSortEnd = () => {},
+  onSortEnd: _onSortEnd = () => {},
   // 列表是否支持拖动
-  draggable = false,
-  onColumnChange,
+  draggable: _draggable = false,
+  onColumnChange: _onColumnChange,
   // 忽略行点击触发的刷新
-  noRowRefresh = false,
+  noRowRefresh: _noRowRefresh = false,
   // 其他参数支持本地UI table原生参数
   containerStyle = {},
   ...other
-}) => {
+}: any) => {
   const intl = useMessageFormatter();
   // 不显示的查询参数
   // 不显示的查询参数
@@ -128,30 +127,31 @@ const TableCommon = ({
     ...extraParams,
   ];
 
-  const handleAppendDefaultRender = (columns = []) => {
+  const handleAppendDefaultRender = (columns: any[] = []) => {
     return columns.map((item) => ({
       ...item,
       render:
         item.render ||
-        function (val, data) {
+        function (val: any) {
           return val || '-';
         },
     }));
   };
 
   /** 列隐藏设置start **/
-  const [finalColumns, setFinalColumns] = useState([]);
-  const [cacheData, setCacheData] = useState([]);
+  const [finalColumns, setFinalColumns] = useState<any[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [realColumns, setRealColumns] = useState([]);
 
   const batchRowOperateButtons = useMemo(
-    () => operateButtons.filter((item) => item.isBatch).map(({ isBatch, ...item }) => item),
+    () =>
+      operateButtons
+        .filter((item: any) => item.isBatch)
+        .map(({ isBatch: _isBatch, ...item }: any) => item),
     [operateButtons],
   );
 
   const otherOperateButtons = useMemo(
-    () => operateButtons.filter((item) => !item.isBatch),
+    () => operateButtons.filter((item: any) => !item.isBatch),
     [operateButtons],
   );
 
@@ -168,7 +168,7 @@ const TableCommon = ({
   // 处理参数与表头筛选的国际化映射
   const getParamsAlias = () => {
     const intl = columns.reduce(
-      (prev, curr) => {
+      (prev: any, curr: any) => {
         return {
           ...prev,
           [curr.key]: curr.title,
@@ -178,28 +178,28 @@ const TableCommon = ({
     );
 
     const filterOptions = columns
-      .filter((item) => item.filter)
-      .reduce((prev, curr) => {
+      .filter((item: any) => item.filter)
+      .reduce((prev: any, curr: any) => {
         return {
           ...prev,
           [curr.key]: getPathValue(curr, 'filter.options', []),
         };
       }, {});
     const target = clonePlainValue(params);
-    return Object.keys(target).reduce((prev, item) => {
+    return Object.keys(target).reduce((prev: any, item) => {
       const options = getPathValue(filterOptions, item, []);
-      const col = columns.find((c) => c.key === item);
+      const col = columns.find((c: any) => c.key === item);
       if (getPathValue(col, 'filter.type') === 'Cascader') {
-        const firstItem = options.find((v) => v.value === params[item][0]);
-        let secondItem = '';
-        let thirdItem = '';
+        const firstItem = options.find((v: any) => v.value === params[item][0]);
+        let secondItem: any = '';
+        let thirdItem: any = '';
         if (params[item].length > 1) {
           secondItem = getPathValue(firstItem, 'children', []).find(
-            (v) => v.value === params[item][1],
+            (v: any) => v.value === params[item][1],
           );
           if (params[item].length > 2) {
             thirdItem = getPathValue(secondItem, 'children', []).find(
-              (v) => v.value === params[item][2],
+              (v: any) => v.value === params[item][2],
             );
           }
         }
@@ -221,9 +221,9 @@ const TableCommon = ({
           [item]: {
             title: intl[item] || '',
             value: params[item]
-              .map((ch) =>
+              .map((ch: any) =>
                 getPathValue(
-                  options.find((o) => o.value === ch),
+                  options.find((o: any) => o.value === ch),
                   'title',
                   '',
                 ),
@@ -237,7 +237,7 @@ const TableCommon = ({
         [item]: {
           title: intl[item] || '',
           value: getPathValue(
-            options.find((v) => params[item] === v.value),
+            options.find((v: any) => params[item] === v.value),
             'title',
             '',
           ),
@@ -247,8 +247,8 @@ const TableCommon = ({
   };
 
   const handleChange = useCallback(
-    (type, newParams) => {
-      const queryParams = clearEmpty({ ...params, ...newParams });
+    (type: string, newParams: any) => {
+      const queryParams: Record<string, any> = clearEmpty({ ...params, ...newParams });
       if (!noPage && type !== 'pagination') {
         // 查询列表时页码重置为1
         queryParams.pageNumber = 1;
@@ -258,67 +258,24 @@ const TableCommon = ({
     [params],
   );
 
-  // 列隐藏设置
-  const getColumnSetting = () => {
-    const cols = columns;
-    const options = columns.map((item) => ({
-      label: item.title,
-      value: item.key,
-    }));
-
-    const defValue = cols.filter((item) => !item.hide).map((item) => item.key);
-
-    return (
-      <div className="table-common-column-setting">
-        <Checkbox.Group defaultValue={defValue} onChange={handleColumnChange}>
-          <Row gutter={[0, 8]}>
-            {options.map((item, i) => (
-              <Col key={i} span={24}>
-                <Checkbox
-                  disabled={defValue.length < 5 && defValue.includes(item.value)}
-                  value={item.value}
-                >
-                  {item.label}
-                </Checkbox>
-              </Col>
-            ))}
-          </Row>
-        </Checkbox.Group>
-      </div>
-    );
-  };
-
-  // 勾选列隐藏
-  const handleColumnChange = (checkedValues = []) => {
-    const tc = columns.map((col) => ({
-      key: col.key,
-      hide: !checkedValues.includes(col.key),
-    }));
-    if (typeof onColumnChange === 'function') {
-      onColumnChange(tc);
-    }
-  };
-
-  const handleColumnsChange = (columns) => {
-    setFinalColumns(columns.filter(({ hidden }) => !hidden));
-  };
-
   // 批量操作
   const renderBatchActions = () => {
-    const result = batchRowOperateButtons.filter(({ actions = [] }) => isEmptyValue(actions));
+    const result = batchRowOperateButtons.filter(({ actions = [] }: any) => isEmptyValue(actions));
     const before = result.length > 6 ? result.slice(0, 5) : result.slice(0, 6);
     const after = result.length > 6 ? result.slice(5) : [];
 
     const menu = (
       <Menu
-        onClick={(e) => {
+        onClick={(e: any) => {
           const { onClick } =
-            after.find((item) => item.key === e.key || item.id === e.key || item.name === e.key) ||
+            after.find(
+              (item: any) => item.key === e.key || item.id === e.key || item.name === e.key,
+            ) ||
             {};
-          onClick && onClick();
+          if (onClick) onClick();
         }}
       >
-        {after.map((item, index) => (
+        {after.map((item: any, index: number) => (
           <Menu.Item
             key={item.key || item.id || item.name || index}
             disabled={item.disabled || selectedDrawerKey}
@@ -330,12 +287,12 @@ const TableCommon = ({
     );
     return (
       <div className="batch-operate-btns">
-        {before.map((item, index) => (
+        {before.map((item: any, index: number) => (
           <>
             <Button
               key={index}
               type="text"
-              size="small-s"
+              size={'small-s' as any}
               {...item}
               icon={item.icon ? <i className={`iconfont icon-${item.icon}`} /> : null}
               disabled={item.disabled || selectedDrawerKey}
@@ -347,7 +304,7 @@ const TableCommon = ({
           <>
             <Divider type="vertical" />
             <Dropdown menu={menu} trigger={['click']}>
-              <Button type="text" size="small-s">
+              <Button type="text" size={'small-s' as any}>
                 {intl.formatMessage({ id: 'MoreAction' })} <i className="iconfont icon-down_t" />
               </Button>
             </Dropdown>
@@ -358,7 +315,7 @@ const TableCommon = ({
   };
 
   const renderSearchBarButton = useMemo(() => {
-    return otherOperateButtons.map((btnConfig) => {
+    return otherOperateButtons.map((btnConfig: any) => {
       switch (btnConfig.optType) {
         case 'button':
           return (
@@ -369,7 +326,7 @@ const TableCommon = ({
               icon={
                 btnConfig.icon ? <i className={`iconfont icon-${btnConfig.icon}`} /> : undefined
               }
-              onClick={(e) => btnConfig.onClick(finalColumns)}
+              onClick={(_e: any) => btnConfig.onClick(finalColumns)}
               name={btnConfig.text}
             />
           );
@@ -404,7 +361,7 @@ const TableCommon = ({
         slot={() => (
           <div className="slot-box">
             {slotRight}
-            {otherOperateButtons.map((button, index) => {
+            {otherOperateButtons.map((button: any, index: number) => {
               return (
                 <Tooltip title={button.name} key={index} color="var(--vd-color-panel, #1c211f)">
                   {renderSearchBarButton}
@@ -439,11 +396,11 @@ const TableCommon = ({
           checkable
             ? {
                 selectedRowKeys: selectedRowKeys,
-                onChange: (selectedRowKeys, selectedRows) => {
+                onChange: (selectedRowKeys: any, selectedRows: any) => {
                   onChecked(selectedRowKeys, selectedRows);
                   setSelectedRowKeys(selectedRowKeys);
                 },
-                getCheckboxProps: (record) => {
+                getCheckboxProps: (record: any) => {
                   const customProps = getCheckboxProps(record) || {};
                   return {
                     ...customProps,
@@ -454,7 +411,7 @@ const TableCommon = ({
               }
             : null
         }
-        rowClassName={(record) => {
+        rowClassName={(record: any) => {
           if (record.id === selectedDrawerKey) {
             return 'row-detail-selected';
           }
@@ -462,7 +419,7 @@ const TableCommon = ({
         showBatchAction={false}
         renderBatchActions={renderBatchActions}
         batchActionDependent={[selectedDrawerKey]}
-        onRow={(record, index) => {
+        onRow={(record: any, _index: number) => {
           return {
             onClick: () => onRowClick(record),
           };

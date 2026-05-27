@@ -1,6 +1,9 @@
 import type { ApiPageRequest, ApiPageResponse, ApiResponse } from '@/utils/request/types';
 
-export type ListResourceUserReq = ApiPageRequest & { isPublishApp?: boolean };
+export type ListResourceUserReq = ApiPageRequest &
+  Record<string, any> & {
+    isPublishApp?: boolean;
+  };
 
 export interface DeskTopItem {
   id: string;
@@ -9,3 +12,5 @@ export interface DeskTopItem {
 }
 
 export type ListResourceUserRes = ApiResponse<ApiPageResponse<DeskTopItem>>;
+
+export type DesktopApiRequest = Record<string, any>;

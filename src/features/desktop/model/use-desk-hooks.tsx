@@ -22,7 +22,7 @@ import {
   setAutoDesktop,
   shutdownDesktop,
   stopDesktop,
-} from '@/services/resource';
+} from '@/services/api/desktop';
 
 //转义桌面状态
 export const transStatus = (status: string = '', locked: boolean = false) => {
