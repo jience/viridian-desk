@@ -4,14 +4,11 @@ import regex from '@/utils/regex';
 import './index.scss';
 import { useInitData } from '../../model/init-data';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '@/store';
-import { selectLanguage } from '@/store/feature/config';
 import type { DefaultOptionType } from '@/shared/ui';
 import { listResourceUser } from '@/services/api/desktop';
 import IconChoose from './IconChoose';
 import type { CreateVappReq } from '@/services/api/vapp/types';
 import { createVapp } from '@/services/api/vapp';
-import { LanguageType } from '@/native/interfaces/config';
 
 export interface AddFromSelfModalProps {
   visible: boolean;
@@ -26,7 +23,6 @@ export const AddFromSelfModal = (props: any) => {
   const [createVappLoading, setCreateVappLoading] = useState(false);
   const { appCategoryList } = useInitData();
   const { t } = useTranslation();
-  const language = useAppSelector(selectLanguage);
 
   const getDeskList = async (_data = {}) => {
     const res = await listResourceUser({
@@ -74,7 +70,6 @@ export const AddFromSelfModal = (props: any) => {
     <Modal
       className="add-self-Modal"
       keyboard={false}
-      destroyOnHidden
       title={t('application_page.publish_application')}
       centered={true}
       open={visible}
@@ -86,7 +81,7 @@ export const AddFromSelfModal = (props: any) => {
       }}
       onOk={() => submitForm()}
     >
-      <Form form={form} labelCol={language === LanguageType.EN_US ? { span: 7 } : { span: 4 }}>
+      <Form form={form}>
         <Form.Item
           name="desktopId"
           label={t('application_page.desktop')}
@@ -99,7 +94,6 @@ export const AddFromSelfModal = (props: any) => {
         >
           <Select
             placeholder={t('application_page.please_select_virtual_desktop')}
-            getPopupContainer={(triggerNode) => triggerNode.parentElement}
             options={desktopList}
           />
         </Form.Item>
@@ -153,7 +147,6 @@ export const AddFromSelfModal = (props: any) => {
         >
           <Select
             placeholder={t('application_page.vapp_category_placeholder')}
-            getPopupContainer={(triggerNode) => triggerNode.parentElement}
             options={appCategoryList}
           />
         </Form.Item>

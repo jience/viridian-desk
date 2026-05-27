@@ -1,9 +1,7 @@
-import { ConfigProvider, Input } from '@/shared/ui';
+import { Input } from '@/shared/ui';
 import { cn } from '@/shared/ui/lib/cn';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './index.scss';
-
-const { ConfigContext } = ConfigProvider;
 
 const isIpv4Regex =
   /^((\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/;
@@ -21,8 +19,7 @@ const IPv4 = (props: any) => {
     ...restProps
   } = props;
 
-  const { getPrefixCls } = useContext(ConfigContext);
-  const prefixCls = getPrefixCls('ipv4');
+  const prefixCls = 'vdui-ipv4';
   const [arrayValue, setArrayValue] = useState(['', '', '', '']);
 
   const arrayPlaceholder = `${placeholder}...`.split('.').slice(0, 4);

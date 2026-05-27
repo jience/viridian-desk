@@ -6,7 +6,6 @@ import type { MessageFormatterShape } from '@/utils/message-format';
 import { getDeviceTypeLabels } from '../model/create-workflow';
 import { DeskPoolInfo, DiskInfo, PeripheralInfo } from './create-workflow-detail-blocks';
 
-const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 type FormatMessage = MessageFormatterShape['formatMessage'];
@@ -33,11 +32,7 @@ export function WorkflowTemplateField({
         },
       ]}
     >
-      <Select getPopupContainer={(node) => node.parentNode}>
-        {workflowTempList.map((item) => (
-          <Option key={item.id}>{item.name}</Option>
-        ))}
-      </Select>
+      <Select options={workflowTempList.map((item) => ({ value: item.id, label: item.name }))} />
     </Form.Item>
   );
 }
@@ -70,11 +65,10 @@ export function DeskPoolField({
           },
         ]}
       >
-        <Select getPopupContainer={(triggerNode) => triggerNode.parentElement} loading={loading}>
-          {deskPoolList.map((item) => (
-            <Option key={item.id}>{item.name}</Option>
-          ))}
-        </Select>
+        <Select
+          loading={loading}
+          options={deskPoolList.map((item) => ({ value: item.id, label: item.name }))}
+        />
       </Form.Item>
       {deskPoolDetail ? (
         <DeskPoolInfo detail={deskPoolDetail} formatMessage={formatMessage} />
@@ -120,11 +114,12 @@ export function DesktopField({
             : ''
         }
       >
-        <Select getPopupContainer={(node) => node.parentNode} loading={loading}>
-          {deskTopList.map((item) =>
-            item.status === 'Creating' ? '' : <Option key={item.id}>{item.name}</Option>,
-          )}
-        </Select>
+        <Select
+          loading={loading}
+          options={deskTopList
+            .filter((item) => item.status !== 'Creating')
+            .map((item) => ({ value: item.id, label: item.name }))}
+        />
       </Form.Item>
       {workflowTempValue == 'resizeDesktop' && desktopDetail ? (
         <>
@@ -176,10 +171,7 @@ export function DiskField({ formatMessage, diskList, diskDetail }: DiskFieldProp
           },
         ]}
       >
-        <Select getPopupContainer={(node) => node.parentNode}>
-          {diskList.length > 0 &&
-            diskList.map((item) => <Option key={item.id}>{item.name}</Option>)}
-        </Select>
+        <Select options={diskList.map((item) => ({ value: item.id, label: item.name }))} />
       </Form.Item>
       {diskDetail ? <DiskInfo detail={diskDetail} formatMessage={formatMessage} /> : null}
     </>
@@ -276,7 +268,12 @@ interface AppLibFieldProps {
   appLibDetail: any;
 }
 
-export function AppLibField({ formatMessage, loading, appLibList, appLibDetail }: AppLibFieldProps) {
+export function AppLibField({
+  formatMessage,
+  loading,
+  appLibList,
+  appLibDetail,
+}: AppLibFieldProps) {
   return (
     <>
       <Form.Item
@@ -292,11 +289,10 @@ export function AppLibField({ formatMessage, loading, appLibList, appLibDetail }
           },
         ]}
       >
-        <Select getPopupContainer={(node) => node.parentNode} loading={loading}>
-          {appLibList.map((item) => (
-            <Option key={item.id}>{item.name}</Option>
-          ))}
-        </Select>
+        <Select
+          loading={loading}
+          options={appLibList.map((item) => ({ value: item.id, label: item.name }))}
+        />
       </Form.Item>
       {appLibDetail && (
         <Form.Item label={formatMessage({ id: 'AppLibDesc' })}>
@@ -378,27 +374,29 @@ export function UsbPeripheralFields({
         ]}
         htmlFor="false"
       >
-        <Select getPopupContainer={(node) => node.parentNode}>
-          {peripheralList.map((item) => (
-            <Option
-              key={`${item['DEVICE_NAME']}|${item['PID']}|${item['VID']}|${item['DEVICE_TYPE']}`}
-            >
-              <div
-                className="approval-peripheral-option"
-                title={`${item['DEVICE_NAME']}|${getDeviceTypeLabels(item['DEVICE_TYPE']).join(
-                  ',',
-                )}`}
-              >
-                {`${item['DEVICE_NAME']}`}
-                {getDeviceTypeLabels(item['DEVICE_TYPE']).map((type) => (
-                  <Tag key={type} className="usb-type-tag">
-                    {type}
-                  </Tag>
-                ))}
-              </div>
-            </Option>
-          ))}
-        </Select>
+        <Select
+          options={peripheralList.map((item) => {
+            const deviceTypes = getDeviceTypeLabels(item['DEVICE_TYPE']);
+            const value = `${item['DEVICE_NAME']}|${item['PID']}|${item['VID']}|${item['DEVICE_TYPE']}`;
+
+            return {
+              value,
+              label: (
+                <div
+                  className="approval-peripheral-option"
+                  title={`${item['DEVICE_NAME']}|${deviceTypes.join(',')}`}
+                >
+                  {`${item['DEVICE_NAME']}`}
+                  {deviceTypes.map((type) => (
+                    <Tag key={type} className="usb-type-tag">
+                      {type}
+                    </Tag>
+                  ))}
+                </div>
+              ),
+            };
+          })}
+        />
       </Form.Item>
       {peripheralDetail ? <PeripheralInfo detail={peripheralDetail} /> : null}
       <Form.Item
@@ -414,11 +412,12 @@ export function UsbPeripheralFields({
           },
         ]}
       >
-        <Select mode="multiple" getPopupContainer={(node) => node.parentNode}>
-          {deskTopList.map((item) =>
-            item.status === 'Creating' ? '' : <Option key={item.id}>{item.name}</Option>,
-          )}
-        </Select>
+        <Select
+          mode="multiple"
+          options={deskTopList
+            .filter((item) => item.status !== 'Creating')
+            .map((item) => ({ value: item.id, label: item.name }))}
+        />
       </Form.Item>
 
       <Form.Item
@@ -501,7 +500,6 @@ export function ReasonField({ formatMessage, workflowTempValue, disabled }: Reas
     >
       <Input.TextArea
         defaultValue=""
-        showCount
         minLength={0}
         maxLength={200}
         autoSize={{ minRows: 2, maxRows: 6 }}

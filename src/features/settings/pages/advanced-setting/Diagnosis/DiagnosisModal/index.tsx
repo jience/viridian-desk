@@ -161,7 +161,6 @@ const DiagnosisModal: FC<DiagnosisModalProps> = ({ ref }) => {
       keyboard={false}
       maskClosable={false}
       closable={false}
-      destroyOnHidden
       className="diagnosis-modal-wrapper"
       afterClose={() => {
         resetData();

@@ -1,13 +1,12 @@
-import { useEffect, useRef, useState, useContext } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { Button, Input, Switch, InputNumber, Table, ConfigProvider } from '@/shared/ui';
+import { Button, Input, Switch, InputNumber, Table } from '@/shared/ui';
 import IPv4Cidr from '../ipv4-cidr';
 import IPv4 from '../ipv4';
 import IPv6Cidr from '../ipv6-cidr';
 import IPv6 from '../ipv6';
 import { cn } from '@/shared/ui/lib/cn';
 import './index.scss';
-const { ConfigContext } = ConfigProvider;
 
 const deferredInlineEditTypes = new Set(['input', 'input.password', 'input.textArea']);
 
@@ -33,8 +32,7 @@ const FormTable = (props: any) => {
    * @version V..
    * @description hooks
    */
-  const { getPrefixCls } = useContext(ConfigContext);
-  const prefixCls = getPrefixCls('formtable');
+  const prefixCls = 'vdui-formtable';
   const eventRef = useRef(null);
 
   /**

@@ -171,7 +171,6 @@ export const AddFromSysModal: FC<AddFromSysModalProps> = (props) => {
   return (
     <Modal
       open={visible}
-      destroyOnHidden
       keyboard={false}
       footer={renderFooter()}
       onCancel={() => cancelModal()}

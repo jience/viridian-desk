@@ -22,15 +22,12 @@ export type SelectProps<ValueType = UiValue> = {
   value?: ValueType;
   defaultValue?: ValueType;
   options?: DefaultOptionType[];
-  children?: ReactNode;
   placeholder?: string;
   disabled?: boolean;
   loading?: boolean;
-  allowClear?: boolean;
   mode?: 'multiple' | 'tags';
   size?: 'small' | 'middle' | 'large';
   className?: string;
-  popupClassName?: string;
   classNames?: {
     root?: string;
     popup?: string;
@@ -40,9 +37,6 @@ export type SelectProps<ValueType = UiValue> = {
   style?: CSSProperties;
   onChange?: (value: ValueType, option?: DefaultOptionType) => void;
   onSelect?: (value: ValueType, option?: DefaultOptionType) => void;
-  getPopupContainer?: (node: HTMLElement) => ParentNode | HTMLElement | null;
-  showSearch?: boolean | { onSearch?: (value: string) => void };
-  filterOption?: boolean | ((input: string, option?: DefaultOptionType) => boolean);
   maxLength?: number;
   [key: string]: unknown;
 };

@@ -171,7 +171,6 @@ export function Component() {
             id: 'PleaseInput',
           })} ${formatMessage({ id: 'FaultContent' })}`,
           maxLength: 200,
-          showCount: true,
           autoSize: {
             minRows: 6,
             maxRows: 8,

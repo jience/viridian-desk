@@ -97,7 +97,6 @@ Button.displayName = 'Button';
 
 export interface ModalProps {
   open?: boolean;
-  visible?: boolean;
   title?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
@@ -110,8 +109,6 @@ export interface ModalProps {
   width?: number | string;
   centered?: boolean;
   className?: string;
-  destroyOnHidden?: boolean;
-  destroyOnClose?: boolean;
   keyboard?: boolean;
   maskClosable?: boolean;
   okButtonProps?: AnyRecord;
@@ -137,7 +134,7 @@ const getFocusableElements = (container: HTMLElement) =>
 
 export const Modal = Object.assign(
   function ModalComponent(props: ModalProps) {
-    const open = props.open ?? props.visible;
+    const open = props.open;
     const titleId = useId();
     const dialogRef = useRef<HTMLElement>(null);
     const onCancelRef = useRef(props.onCancel);
@@ -190,7 +187,6 @@ export const Modal = Object.assign(
       };
     }, [open]);
 
-    if (!open && (props.destroyOnHidden || props.destroyOnClose)) return null;
     if (!open) return null;
 
     const footer =
@@ -277,194 +273,169 @@ export const Modal = Object.assign(
   },
 );
 
-const readOptions = (options?: DefaultOptionType[], children?: ReactNode): DefaultOptionType[] => {
-  if (options) return options;
-  const list: DefaultOptionType[] = [];
-  (Array.isArray(children) ? children : [children]).forEach((child: any) => {
-    if (!isValidElement(child)) return;
-    const props = child.props as any;
-    list.push({
-      value: props.value ?? child.key,
-      key: child.key ?? undefined,
-      label: props.children,
-      disabled: props.disabled,
-    });
-  });
-  return list;
-};
-
 type SelectComponentType = {
   <ValueType = any>(props: SelectProps<ValueType>): ReactElement | null;
-  Option: (props: any) => ReactElement;
 };
 
-export const Select = Object.assign(
-  function SelectComponent<ValueType = any>(props: SelectProps<ValueType>) {
-    const options = readOptions(props.options, props.children);
-    const multiple = props.mode === 'multiple' || props.mode === 'tags';
-    const isControlled = props.value !== undefined;
-    const [internalValue, setInternalValue] = useState<any>(
-      props.defaultValue ?? (multiple ? [] : ''),
-    );
-    const [open, setOpen] = useState(false);
-    const rootRef = useRef<HTMLSpanElement>(null);
-    const value = isControlled ? props.value : internalValue;
-    const currentValues = multiple ? (Array.isArray(value) ? value : []) : [];
-    const selectedValues = multiple
-      ? currentValues.map(String)
-      : value === undefined || value === null || value === ''
-        ? []
-        : [String(value)];
-    const selectedOptions = options.filter((option) =>
-      selectedValues.includes(String(option.value)),
-    );
-    const selectedLabel = multiple
-      ? selectedOptions.map((option) => option.label).join(', ')
-      : selectedOptions[0]?.label;
-    const disabled = props.disabled || props.loading;
+export const Select = function SelectComponent<ValueType = any>(props: SelectProps<ValueType>) {
+  const options = props.options ?? [];
+  const multiple = props.mode === 'multiple' || props.mode === 'tags';
+  const isControlled = props.value !== undefined;
+  const [internalValue, setInternalValue] = useState<any>(
+    props.defaultValue ?? (multiple ? [] : ''),
+  );
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLSpanElement>(null);
+  const value = isControlled ? props.value : internalValue;
+  const currentValues = multiple ? (Array.isArray(value) ? value : []) : [];
+  const selectedValues = multiple
+    ? currentValues.map(String)
+    : value === undefined || value === null || value === ''
+      ? []
+      : [String(value)];
+  const selectedOptions = options.filter((option) => selectedValues.includes(String(option.value)));
+  const selectedLabel = multiple
+    ? selectedOptions.map((option) => option.label).join(', ')
+    : selectedOptions[0]?.label;
+  const disabled = props.disabled || props.loading;
 
-    useEffect(() => {
-      if (!open) return;
+  useEffect(() => {
+    if (!open) return;
 
-      const handlePointerDown = (event: PointerEvent) => {
-        if (!rootRef.current?.contains(event.target as Node)) {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
+  }, [open]);
+
+  const commitValue = (nextValue: any, option?: DefaultOptionType) => {
+    if (!isControlled) setInternalValue(nextValue);
+    props.onChange?.(nextValue as ValueType, option);
+    props.onSelect?.(nextValue as ValueType, option);
+  };
+
+  const handleOptionClick = (option: DefaultOptionType) => {
+    if (option.disabled) return;
+    if (multiple) {
+      const optionValue = String(option.value);
+      const nextValues = selectedValues.includes(optionValue)
+        ? currentValues.filter((item) => String(item) !== optionValue)
+        : [...currentValues, option.value];
+      commitValue(nextValues, option);
+      return;
+    }
+
+    commitValue(option.value, option);
+    setOpen(false);
+  };
+
+  return (
+    <span
+      ref={rootRef}
+      className={cn(
+        'vdui-select',
+        `vdui-select-${props.size ?? 'middle'}`,
+        open && 'vdui-select-open',
+        props.disabled && 'vdui-select-disabled',
+        props.className,
+        props.classNames?.root,
+      )}
+      role="combobox"
+      aria-expanded={open}
+      aria-haspopup="listbox"
+      aria-disabled={disabled}
+      tabIndex={disabled ? -1 : 0}
+      style={props.style}
+      onBlur={(event) => {
+        if (
+          event.relatedTarget instanceof Node &&
+          event.currentTarget.contains(event.relatedTarget)
+        ) {
+          return;
+        }
+        setOpen(false);
+      }}
+      onClick={(event) => {
+        event.stopPropagation();
+        if (!disabled) setOpen((value) => !value);
+      }}
+      onKeyDown={(event) => {
+        if (disabled) return;
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          setOpen((value) => !value);
+        }
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          setOpen(true);
+          window.setTimeout(() => {
+            rootRef.current
+              ?.querySelector<HTMLButtonElement>('.vdui-select-option:not(:disabled)')
+              ?.focus();
+          }, 0);
+        }
+        if (event.key === 'Escape') {
+          event.preventDefault();
           setOpen(false);
         }
-      };
+      }}
+    >
+      <span className="vdui-select-selection-item">{selectedLabel ?? props.placeholder}</span>
+      {props.placeholder && selectedValues.length === 0 ? (
+        <span className="vdui-select-placeholder">{props.placeholder}</span>
+      ) : null}
+      {props.suffixIcon === null ? null : (
+        <span className="vdui-select-arrow" aria-hidden="true">
+          {props.suffixIcon ?? '▾'}
+        </span>
+      )}
+      {open && (
+        <div
+          className={cn(
+            'vdui-select-dropdown',
+            props.placement && `vdui-select-dropdown--${props.placement}`,
+            props.classNames?.popup,
+          )}
+          role="listbox"
+          aria-multiselectable={multiple || undefined}
+        >
+          {options.map((option) => {
+            const selected = selectedValues.includes(String(option.value));
 
-      document.addEventListener('pointerdown', handlePointerDown);
-      return () => document.removeEventListener('pointerdown', handlePointerDown);
-    }, [open]);
-
-    const commitValue = (nextValue: any, option?: DefaultOptionType) => {
-      if (!isControlled) setInternalValue(nextValue);
-      props.onChange?.(nextValue as ValueType, option);
-      props.onSelect?.(nextValue as ValueType, option);
-    };
-
-    const handleOptionClick = (option: DefaultOptionType) => {
-      if (option.disabled) return;
-      if (multiple) {
-        const optionValue = String(option.value);
-        const nextValues = selectedValues.includes(optionValue)
-          ? currentValues.filter((item) => String(item) !== optionValue)
-          : [...currentValues, option.value];
-        commitValue(nextValues, option);
-        return;
-      }
-
-      commitValue(option.value, option);
-      setOpen(false);
-    };
-
-    return (
-      <span
-        ref={rootRef}
-        className={cn(
-          'vdui-select',
-          `vdui-select-${props.size ?? 'middle'}`,
-          open && 'vdui-select-open',
-          props.disabled && 'vdui-select-disabled',
-          props.className,
-          props.classNames?.root,
-        )}
-        role="combobox"
-        aria-expanded={open}
-        aria-haspopup="listbox"
-        aria-disabled={disabled}
-        tabIndex={disabled ? -1 : 0}
-        style={props.style}
-        onBlur={(event) => {
-          if (
-            event.relatedTarget instanceof Node &&
-            event.currentTarget.contains(event.relatedTarget)
-          ) {
-            return;
-          }
-          setOpen(false);
-        }}
-        onClick={(event) => {
-          event.stopPropagation();
-          if (!disabled) setOpen((value) => !value);
-        }}
-        onKeyDown={(event) => {
-          if (disabled) return;
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            setOpen((value) => !value);
-          }
-          if (event.key === 'ArrowDown') {
-            event.preventDefault();
-            setOpen(true);
-            window.setTimeout(() => {
-              rootRef.current
-                ?.querySelector<HTMLButtonElement>('.vdui-select-option:not(:disabled)')
-                ?.focus();
-            }, 0);
-          }
-          if (event.key === 'Escape') {
-            event.preventDefault();
-            setOpen(false);
-          }
-        }}
-      >
-        <span className="vdui-select-selection-item">{selectedLabel ?? props.placeholder}</span>
-        {props.placeholder && selectedValues.length === 0 ? (
-          <span className="vdui-select-placeholder">{props.placeholder}</span>
-        ) : null}
-        {props.suffixIcon === null ? null : (
-          <span className="vdui-select-arrow" aria-hidden="true">
-            {props.suffixIcon ?? '▾'}
-          </span>
-        )}
-        {open && (
-          <div
-            className={cn(
-              'vdui-select-dropdown',
-              props.placement && `vdui-select-dropdown--${props.placement}`,
-              props.popupClassName,
-              props.classNames?.popup,
-            )}
-            role="listbox"
-            aria-multiselectable={multiple || undefined}
-          >
-            {options.map((option) => {
-              const selected = selectedValues.includes(String(option.value));
-
-              return (
-                <button
-                  key={String(option.key ?? option.value)}
-                  className={cn('vdui-select-option', selected && 'is-selected')}
-                  type="button"
-                  role="option"
-                  aria-selected={selected}
-                  disabled={option.disabled}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    handleOptionClick(option);
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Escape') {
-                      event.preventDefault();
-                      setOpen(false);
-                      rootRef.current?.focus();
-                    }
-                  }}
-                >
-                  <span className="vdui-select-option-label">{option.label}</span>
-                  {selected && <span className="vdui-select-option-check">✓</span>}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </span>
-    );
-  } as SelectComponentType,
-  {
-    Option: ({ children }: any) => <>{children}</>,
-  },
-);
+            return (
+              <button
+                key={String(option.key ?? option.value)}
+                className={cn('vdui-select-option', selected && 'is-selected')}
+                type="button"
+                role="option"
+                aria-selected={selected}
+                disabled={option.disabled}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleOptionClick(option);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Escape') {
+                    event.preventDefault();
+                    setOpen(false);
+                    rootRef.current?.focus();
+                  }
+                }}
+              >
+                <span className="vdui-select-option-label">{option.label}</span>
+                {selected && <span className="vdui-select-option-check">✓</span>}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </span>
+  );
+} as SelectComponentType;
 
 export function Dropdown({ menu, children, classNames, placement = 'bottomRight' }: any) {
   const [open, setOpen] = useState(false);

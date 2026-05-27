@@ -97,8 +97,6 @@ export const ServerEditModal: FC<ServerEditModalProps> = ({ ref }) => {
         initialValues={{
           isPublic: false,
         }}
-        colon={false}
-        labelCol={{ span: 5 }}
       >
         <Form.Item
           name="name"

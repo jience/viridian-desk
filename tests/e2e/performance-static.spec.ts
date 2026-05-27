@@ -310,7 +310,9 @@ test('keeps locale file key sets aligned across supported languages', () => {
 test('keeps runtime API error translations on the error_code namespace', () => {
   const legacyRequestErrorHandler = source('src/utils/requestErrorHandler.ts');
   const nativeRequestErrorHandler = source('src/services/requestErrorHandler.ts');
-  const createSnapSource = source('src/features/desktop/components/create-snapshot-modal/index.tsx');
+  const createSnapSource = source(
+    'src/features/desktop/components/create-snapshot-modal/index.tsx',
+  );
 
   expect(legacyRequestErrorHandler).toContain('`error_code.${errorCode}`');
   expect(legacyRequestErrorHandler).toContain('`error_code.${httpStatus}`');
@@ -351,7 +353,9 @@ test('keeps low-frequency modal components lazy-loaded', () => {
 test('loads the desk connection overlay only while connecting', () => {
   const deskPageSource = source('src/features/desktop/pages/desktop-page.tsx');
 
-  expect(deskPageSource).not.toContain("import DeskLoading from '@/features/desktop/components/desk-loading'");
+  expect(deskPageSource).not.toContain(
+    "import DeskLoading from '@/features/desktop/components/desk-loading'",
+  );
   expect(deskPageSource).toContain("import('@/features/desktop/components/desk-loading')");
 });
 
@@ -880,9 +884,9 @@ test('keeps configuration form controls inside the settings feature', () => {
   expect(source('src/features/settings/components/configuration-form/index.tsx')).toContain(
     "from './slider-with-input-number'",
   );
-  expect(source('src/features/settings/components/configuration-form/form-table/index.tsx')).toContain(
-    "from '../ipv4-cidr'",
-  );
+  expect(
+    source('src/features/settings/components/configuration-form/form-table/index.tsx'),
+  ).toContain("from '../ipv4-cidr'");
 });
 
 test('keeps application implementation inside the application feature', () => {
@@ -1161,7 +1165,9 @@ test('keeps app layouts inside the app layer', () => {
   }
 
   expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/app/layouts/app-layout')");
-  expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/app/layouts/client-layout')");
+  expect(source('src/app/router/lazy-pages.tsx')).toContain(
+    "import('@/app/layouts/client-layout')",
+  );
   expect(source('src/app/router/lazy-pages.tsx')).not.toContain("import('@/pages/");
   expect(existsSync(join(process.cwd(), 'src/layouts'))).toBe(false);
   expect(existsSync(join(process.cwd(), 'src/pages'))).toBe(false);
@@ -1429,7 +1435,9 @@ test('keeps login window controls local to the lightweight login route', () => {
   const loginPageSource = source('src/features/auth/pages/login-page.tsx');
   const loginPageStyles = source('src/features/auth/pages/login-page.scss');
 
-  expect(loginPageSource).toContain("import ControlWindow from '@/features/shell/components/control-window'");
+  expect(loginPageSource).toContain(
+    "import ControlWindow from '@/features/shell/components/control-window'",
+  );
   expect(loginPageSource).toContain('auth-page__drag-region');
   expect(loginPageSource).toContain('<ControlWindow />');
   expect(loginPageStyles).toContain('.auth-page__controls');
@@ -1637,7 +1645,7 @@ test('notifies only changed form fields while typing', () => {
   expect(formSource).not.toContain('form._subscribe?.(() => force((value) => value + 1))');
 });
 
-test('filters form layout-only props before rendering the native form element', () => {
+test('does not keep ignored AntD form layout props in the shared form API', () => {
   const formSource = source('src/shared/ui/form.tsx');
   const formPropsStart = formSource.indexOf('interface FormProps');
   const formPropsEnd = formSource.indexOf('\ninterface FormItemProps', formPropsStart);
@@ -1646,9 +1654,51 @@ test('filters form layout-only props before rendering the native form element', 
   const formComponentEnd = formSource.indexOf('\n  } as FormComponentType', formComponentStart);
   const formComponentSource = formSource.slice(formComponentStart, formComponentEnd);
 
-  expect(formPropsSource).toContain('labelAlign?:');
-  expect(formComponentSource).toContain('labelAlign: _labelAlign');
-  expect(formComponentSource).toMatch(/labelAlign: _labelAlign[\s\S]*\.{3}props/);
+  for (const propName of ['colon', 'labelCol', 'labelAlign', 'wrapperCol', 'requiredMark']) {
+    expect(formPropsSource).not.toContain(`${propName}?:`);
+    expect(formComponentSource).not.toContain(`${propName}: _${propName}`);
+  }
+});
+
+test('does not keep unused AntD select and config-provider compatibility APIs', () => {
+  const selectTypesSource = source('src/shared/ui/types.ts');
+  const selectSource = source('src/shared/ui/select.tsx');
+  const sharedUiIndexSource = source('src/shared/ui/index.tsx');
+  const configSource = source('src/shared/ui/config.tsx');
+  const selectPropsStart = selectTypesSource.indexOf('export type SelectProps');
+  const selectPropsEnd = selectTypesSource.indexOf('\nexport type ItemType', selectPropsStart);
+  const selectPropsSource = selectTypesSource.slice(selectPropsStart, selectPropsEnd);
+
+  for (const propName of [
+    'allowClear',
+    'getPopupContainer',
+    'popupClassName',
+    'showSearch',
+    'filterOption',
+  ]) {
+    expect(selectTypesSource).not.toContain(`${propName}?:`);
+  }
+
+  expect(selectPropsSource).not.toContain('children?:');
+  expect(selectSource).not.toContain('Option:');
+  expect(selectSource).not.toContain('readOptions');
+  expect(selectSource).not.toContain('props.children');
+  expect(selectSource).not.toContain('export function AutoComplete');
+  expect(selectSource).not.toContain('export const TreeSelect');
+  expect(sharedUiIndexSource).not.toContain('AutoComplete');
+  expect(sharedUiIndexSource).not.toContain('TreeSelect');
+  expect(sharedUiIndexSource).not.toContain('ConfigProvider');
+  expect(configSource).not.toContain('ConfigProvider');
+  expect(configSource).not.toContain('ConfigContext');
+});
+
+test('does not keep legacy AntD modal visibility aliases', () => {
+  const modalSource = source('src/shared/ui/modal.tsx');
+
+  expect(modalSource).not.toContain('visible?:');
+  expect(modalSource).not.toContain('props.visible');
+  expect(modalSource).not.toContain('destroyOnHidden');
+  expect(modalSource).not.toContain('destroyOnClose');
 });
 
 test('keeps textarea native value props mutually exclusive', () => {
@@ -1892,11 +1942,15 @@ test('removes authenticated message notification feature from the client', () =>
 
 test('keeps account workbench code out of the sidebar shell', () => {
   const sidebarSource = source('src/features/shell/components/sidebar/index.tsx');
-  const accountWorkbenchSource = source('src/features/account/components/account-workbench/index.tsx');
+  const accountWorkbenchSource = source(
+    'src/features/account/components/account-workbench/index.tsx',
+  );
 
   expect(sidebarSource).not.toContain("import ChangePhone from '@/components/ChangePhone'");
   expect(sidebarSource).not.toContain("import ComModal from '@/components/ComModal'");
-  expect(sidebarSource).not.toContain("import DiffLoginTip from '@/features/account/components/diff-login-tip'");
+  expect(sidebarSource).not.toContain(
+    "import DiffLoginTip from '@/features/account/components/diff-login-tip'",
+  );
   expect(sidebarSource).not.toContain("import PwdForm from '@/components/PwdForm'");
   expect(sidebarSource).not.toContain("import UserInfo from '@/components/UserInfo'");
   expect(sidebarSource).not.toContain("import useRequest from '@/hooks/useRequest'");
@@ -2020,7 +2074,7 @@ test('keeps shared action controls visually consistent', () => {
   expect(uiStyles).toContain('background: var(--vdui-switch-checked-bg, #4d7c3f);');
   expect(selectSource).not.toContain('selectedLabel ?? props.placeholder');
   expect(selectSource).toContain('selectedValues.length > 0 ? (');
-  expect(inputSource).toContain('showCount: _showCount');
+  expect(inputSource).not.toContain('showCount');
   expect(inputSource).toContain('rows={rows ?? minRows}');
   expect(createFaultBaseFormSource).toContain('const { key, ...resProps } = props;');
   expect(createFaultBaseFormSource).toContain('<Select key={key} {...resProps} />');
@@ -2066,7 +2120,9 @@ test('keeps authenticated client bootstrap centralized outside ClientLayout rend
 
   expect(clientLayoutLoaderBlock).toContain('scheduleAuthenticatedClientBootstrap');
   expect(bootstrapSource).toContain('let authenticatedClientBootstrapScheduled = false');
-  expect(authenticatedBootstrapBlock).toContain('if (authenticatedClientBootstrapScheduled) return');
+  expect(authenticatedBootstrapBlock).toContain(
+    'if (authenticatedClientBootstrapScheduled) return',
+  );
   expect(authenticatedBootstrapBlock).toContain('fetchGatewayList');
   expect(authenticatedBootstrapBlock).toContain('fetchClientOnlineStatus');
   expect(authenticatedBootstrapBlock).toContain('fetchClientInfo');
@@ -2255,7 +2311,7 @@ test('keeps feature API imports on domain modules', () => {
   const featureImports = collectSourceFiles('src/features').map((path) => [path, source(path)]);
 
   for (const [path, content] of featureImports) {
-    expect(content, path).not.toContain("@/services/resource");
+    expect(content, path).not.toContain('@/services/resource');
   }
 
   expect(source('src/services/api/desktop/index.ts')).toContain('export enum DeskTopApi');
@@ -2564,8 +2620,12 @@ test('routes high-frequency text inputs through the low-power lean input path', 
   const leanInputPath = 'src/shared/ui/lean-input.tsx';
   const uiSource = source('src/shared/ui/index.tsx');
   const loginSource = source('src/features/auth/components/login-auth-panel.tsx');
-  const configurationFormSource = source('src/features/settings/components/configuration-form/index.tsx');
-  const formTableSource = source('src/features/settings/components/configuration-form/form-table/index.tsx');
+  const configurationFormSource = source(
+    'src/features/settings/components/configuration-form/index.tsx',
+  );
+  const formTableSource = source(
+    'src/features/settings/components/configuration-form/form-table/index.tsx',
+  );
   const lowPowerStyles = source('src/styles/low-power-defaults.scss');
 
   expect(existsSync(join(process.cwd(), leanInputPath)), leanInputPath).toBe(true);
@@ -2806,7 +2866,10 @@ test('progressively renders large authenticated card collections', () => {
 test('stages login route bootstrap after first paint and avoids duplicate authenticated requests', () => {
   const routerSource = source('src/app/router/bootstrap.ts');
   const preAuthLoaderStart = routerSource.indexOf('export const preAuthConfigLoader');
-  const preAuthLoaderEnd = routerSource.indexOf('export const clientLayoutLoader', preAuthLoaderStart);
+  const preAuthLoaderEnd = routerSource.indexOf(
+    'export const clientLayoutLoader',
+    preAuthLoaderStart,
+  );
   const preAuthLoaderBlock = routerSource.slice(preAuthLoaderStart, preAuthLoaderEnd);
   const bootstrapStart = routerSource.indexOf('function scheduleAuthenticatedClientBootstrap()');
   const bootstrapBlock = routerSource.slice(bootstrapStart);

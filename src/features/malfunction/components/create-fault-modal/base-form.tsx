@@ -59,7 +59,7 @@ const BaseForm = (props: any, ref: any) => {
    * @version V..
    * @description props
    */
-  const { labelType, formFeatures, defaultFormValues, initialValues } = props;
+  const { formFeatures, defaultFormValues, initialValues } = props;
   const withElementKey = (props: any, render: (key: any, props: any) => any) => {
     const { key, ...resProps } = props;
     return render(key, resProps);
@@ -118,52 +118,6 @@ const BaseForm = (props: any, ref: any) => {
       setFormValuesCopy(initialValues);
     },
   }));
-
-  // 常规含label样式设置
-  const formLayout_right = useMemo(
-    () =>
-      ({
-        labelCol: { span: 4 },
-        wrapperCol: { span: 20 },
-        labelAlign: 'right',
-      }) as const,
-    [],
-  );
-
-  // 常规含label样式设置
-  const formLayout_left = useMemo(
-    () =>
-      ({
-        labelCol: { span: 4 },
-        wrapperCol: { span: 20 },
-        labelAlign: 'left',
-      }) as const,
-    [],
-  );
-
-  // 无label样式设置
-  const formNolabel = useMemo(
-    () =>
-      ({
-        labelCol: { span: 0 },
-        wrapperCol: { span: 240 },
-        labelAlign: 'left',
-      }) as const,
-    [],
-  );
-
-  // 根据入参赋值表单label预制样式
-  const labelStyle = useMemo(() => {
-    switch (labelType) {
-      case 'left':
-        return formLayout_left;
-      case 'right':
-        return formLayout_right;
-      case 'nolabel':
-      default:
-        return formNolabel;
-    }
-  }, [formLayout_left, formLayout_right, formNolabel, labelType]);
 
   /**
    * @author QL
@@ -227,10 +181,8 @@ const BaseForm = (props: any, ref: any) => {
       <Form
         key="baseFrom"
         form={form}
-        {...labelStyle}
         initialValues={initialValues}
         onValuesChange={handleImpact}
-        colon={false}
       >
         {FormFeatures.map((itemFeature: any) => {
           if (itemFeature.type === 'button') {

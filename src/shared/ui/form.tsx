@@ -187,11 +187,6 @@ interface FormProps extends Omit<HTMLAttributes<HTMLFormElement>, 'onChange'> {
   onFinish?: (values: AnyRecord) => void;
   onValuesChange?: (changed: AnyRecord, values: AnyRecord) => void;
   layout?: 'horizontal' | 'vertical' | 'inline';
-  colon?: boolean;
-  labelCol?: AnyRecord;
-  labelAlign?: 'left' | 'right';
-  wrapperCol?: AnyRecord;
-  requiredMark?: boolean;
 }
 
 interface FormItemProps extends HTMLAttributes<HTMLDivElement> {
@@ -304,11 +299,6 @@ export const Form = Object.assign(
     onFinish,
     onSubmit,
     onValuesChange: _onValuesChange,
-    colon: _colon,
-    labelCol: _labelCol,
-    labelAlign: _labelAlign,
-    wrapperCol: _wrapperCol,
-    requiredMark: _requiredMark,
     ...props
   }: FormProps) {
     const ownFormRef = useRef<FormInstance | null>(null);

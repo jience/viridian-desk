@@ -23,7 +23,6 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 
 type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   autoSize?: boolean | { minRows?: number; maxRows?: number };
-  showCount?: boolean;
 };
 
 type InputGroupProps = {
@@ -98,7 +97,6 @@ InputBase.TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     {
       className,
       autoSize,
-      showCount: _showCount,
       rows,
       value: textAreaValue,
       defaultValue: textAreaDefaultValue,

@@ -118,7 +118,7 @@ export const LogConfigModal: FC<LogConfigModalProps> = ({ ref }) => {
       keyboard={false}
       className="log-config-modal"
     >
-      <Form<LogConfigFormValues> form={form} colon={false} labelCol={{ span: 5 }}>
+      <Form<LogConfigFormValues> form={form}>
         <Form.Item
           name="logSaveMaxSize"
           label={t('config_page.advanced_setting.log_max_size')}
