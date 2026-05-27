@@ -320,16 +320,16 @@ test('keeps runtime API error translations on the error_code namespace', () => {
 });
 
 test('keeps low-frequency modal components lazy-loaded', () => {
-  expect(source('src/pages/approval/index.tsx')).not.toContain(
+  expect(source('src/features/approval/routes/approval-route.tsx')).not.toContain(
     "import Create from './component/create'",
   );
-  expect(source('src/pages/application/index.tsx')).not.toContain(
+  expect(source('src/features/application/routes/application-route.tsx')).not.toContain(
     "import { AddFromSysModal } from './component/AddFromSysModal'",
   );
-  expect(source('src/pages/application/index.tsx')).not.toContain(
+  expect(source('src/features/application/routes/application-route.tsx')).not.toContain(
     "import { AddFromSelfModal } from './component/AddFromSelfModal'",
   );
-  expect(source('src/pages/malfunction/index.tsx')).not.toContain(
+  expect(source('src/features/malfunction/routes/malfunction-route.tsx')).not.toContain(
     "import CreatedModal from './create'",
   );
   expect(source('src/features/desktop/pages/desktop-page.tsx')).not.toContain(
@@ -863,10 +863,7 @@ test('keeps application implementation inside the application feature', () => {
     expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
   }
 
-  expect(collectSourceFiles('src/pages/application')).toEqual(['src/pages/application/index.tsx']);
-  expect(source('src/pages/application/index.tsx')).toContain(
-    "from '@/features/application/routes/application-route'",
-  );
+  expect(existsSync(join(process.cwd(), 'src/pages/application'))).toBe(false);
   expect(source('src/features/application/routes/application-route.tsx')).toContain(
     "from '../model/init-data'",
   );
@@ -922,14 +919,8 @@ test('keeps approval and malfunction implementations inside feature domains', ()
     expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
   }
 
-  expect(collectSourceFiles('src/pages/approval')).toEqual(['src/pages/approval/index.tsx']);
-  expect(collectSourceFiles('src/pages/malfunction')).toEqual(['src/pages/malfunction/index.tsx']);
-  expect(source('src/pages/approval/index.tsx')).toContain(
-    "from '@/features/approval/routes/approval-route'",
-  );
-  expect(source('src/pages/malfunction/index.tsx')).toContain(
-    "from '@/features/malfunction/routes/malfunction-route'",
-  );
+  expect(existsSync(join(process.cwd(), 'src/pages/approval'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/pages/malfunction'))).toBe(false);
   expect(source('src/features/approval/routes/approval-route.tsx')).toContain(
     "from '../model/approval-utils'",
   );
@@ -976,16 +967,14 @@ test('keeps desktop implementations inside the desktop feature', () => {
     expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
   }
 
-  expect(collectSourceFiles('src/pages/desk')).toEqual(['src/pages/desk/index.tsx']);
-  expect(collectSourceFiles('src/pages/deskDetail')).toEqual(['src/pages/deskDetail/index.tsx']);
-  expect(source('src/pages/desk/index.tsx')).toContain(
-    "from '@/features/desktop/routes/desktop-route'",
+  expect(existsSync(join(process.cwd(), 'src/pages/desk'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/pages/deskDetail'))).toBe(false);
+  expect(source('src/app/router/lazy-pages.tsx')).toContain(
+    "import('@/features/desktop/routes/desktop-route')",
   );
-  expect(source('src/pages/deskDetail/index.tsx')).toContain(
-    "from '@/features/desktop/routes/desktop-detail-route'",
+  expect(source('src/app/router/lazy-pages.tsx')).toContain(
+    "import('@/features/desktop/routes/desktop-detail-route')",
   );
-  expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/pages/desk')");
-  expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/pages/deskDetail')");
 });
 
 test('keeps peripheral implementation inside the peripheral feature', () => {
@@ -1008,12 +997,7 @@ test('keeps peripheral implementation inside the peripheral feature', () => {
     expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
   }
 
-  expect(collectSourceFiles('src/pages/peripheralSetting')).toEqual([
-    'src/pages/peripheralSetting/index.tsx',
-  ]);
-  expect(source('src/pages/peripheralSetting/index.tsx')).toContain(
-    "from '@/features/peripheral/routes/peripheral-route'",
-  );
+  expect(existsSync(join(process.cwd(), 'src/pages/peripheralSetting'))).toBe(false);
   expect(source('src/features/peripheral/pages/peripheral-page.tsx')).toContain(
     "from '../components/integrated-card'",
   );
@@ -1054,16 +1038,7 @@ test('keeps settings implementation inside the settings feature', () => {
     expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
   }
 
-  expect(collectSourceFiles('src/pages/configPage')).toEqual([
-    'src/pages/configPage/about/index.tsx',
-    'src/pages/configPage/advancedSetting/index.tsx',
-    'src/pages/configPage/commonSetting/index.tsx',
-    'src/pages/configPage/index.tsx',
-    'src/pages/configPage/serverSetting/index.tsx',
-  ]);
-  expect(source('src/pages/configPage/index.tsx')).toContain(
-    "from '@/features/settings/routes/settings-route'",
-  );
+  expect(existsSync(join(process.cwd(), 'src/pages/configPage'))).toBe(false);
   expect(source('src/features/settings/pages/settings-page.tsx')).toContain(
     "from '../components/form-modal'",
   );
@@ -1106,14 +1081,8 @@ test('keeps auth and empty implementations inside feature domains', () => {
     expect(existsSync(join(process.cwd(), legacyPath)), legacyPath).toBe(false);
   }
 
-  expect(collectSourceFiles('src/pages/login')).toEqual(['src/pages/login/index.tsx']);
-  expect(collectSourceFiles('src/pages/empty')).toEqual(['src/pages/empty/index.tsx']);
-  expect(source('src/pages/login/index.tsx')).toContain(
-    "from '@/features/auth/routes/login-route'",
-  );
-  expect(source('src/pages/empty/index.tsx')).toContain(
-    "from '@/features/empty/routes/empty-route'",
-  );
+  expect(existsSync(join(process.cwd(), 'src/pages/login'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/pages/empty'))).toBe(false);
 });
 
 test('keeps app layouts inside the app layer', () => {
@@ -1140,7 +1109,9 @@ test('keeps app layouts inside the app layer', () => {
 
   expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/app/layouts/app-layout')");
   expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/app/layouts/client-layout')");
+  expect(source('src/app/router/lazy-pages.tsx')).not.toContain("import('@/pages/");
   expect(existsSync(join(process.cwd(), 'src/layouts'))).toBe(false);
+  expect(existsSync(join(process.cwd(), 'src/pages'))).toBe(false);
 });
 
 test('removes deprecated non-local login copy and auth types from the client', () => {
