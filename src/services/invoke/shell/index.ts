@@ -1,3 +1,4 @@
+import { hasTauriInternals } from '@/native/tauri-globals';
 import { invoke } from '@/utils/invoke';
 import type { ListUsbDevicesResp } from './types';
 
@@ -12,7 +13,7 @@ export const killAllHdpViewers = async () => {
 };
 
 export const listUsbDevices = async () => {
-  if (!(window as any).__TAURI_INTERNALS__) {
+  if (!hasTauriInternals()) {
     return [];
   }
   return await invoke<ListUsbDevicesResp>(ShellInvoke.LIST_USB_DEVICES);

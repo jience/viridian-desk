@@ -314,7 +314,9 @@ test('keeps runtime API error translations on the error_code namespace', () => {
 
   expect(legacyRequestErrorHandler).toContain('`error_code.${errorCode}`');
   expect(legacyRequestErrorHandler).toContain('`error_code.${httpStatus}`');
-  expect(legacyRequestErrorHandler).toContain('return (t as any)(errorMessageKey, { sec: seconds });');
+  expect(legacyRequestErrorHandler).toContain(
+    'return translateDynamic(errorMessageKey, { sec: seconds });',
+  );
   expect(legacyRequestErrorHandler).not.toContain('formatI18NKey(errorCode');
   expect(legacyRequestErrorHandler).not.toContain('formatI18NKey(res.errorCode');
   expect(nativeRequestErrorHandler).toContain('`error_code.${res.code}`');
@@ -698,10 +700,10 @@ test('keeps shared ui internal modules behind public entrypoints', () => {
 test('keeps TypeScript escape hatches under tracked frontend budgets', () => {
   const eslintConfig = source('eslint.config.ts');
   const budgets = {
-    'src/features': 400,
-    'src/shared/ui': 180,
-    'src/native': 30,
-    'src/services': 20,
+    'src/features': 360,
+    'src/shared/ui': 165,
+    'src/native': 0,
+    'src/services': 0,
     'src/store': 0,
   };
 

@@ -27,12 +27,12 @@ export interface ApiPageRequest {
 /**
  * ApiResponse err的类型守卫
  */
-export const isApiErrResponse = <T = EmptyObject>(
-  res: ApiResponse<T> | ApiErrResponse<T>,
-): res is ApiErrResponse<T> => {
+export const isApiErrResponse = <T = EmptyObject>(res: unknown): res is ApiErrResponse<T> => {
+  if (typeof res !== 'object' || res === null) return false;
+  const value = res as Partial<ApiErrResponse<T>>;
   return (
-    typeof (res as ApiErrResponse<T>).errorCode === 'string' &&
-    typeof (res as ApiErrResponse<T>).errorMessage === 'string' &&
-    typeof (res as ApiErrResponse<T>).requestId === 'string'
+    typeof value.errorCode === 'string' &&
+    typeof value.errorMessage === 'string' &&
+    typeof value.requestId === 'string'
   );
 };

@@ -15,11 +15,13 @@ export interface ApiErrResponse<T = EmptyObject> {
 /**
  * ApiResponse err的类型守卫
  */
-export const isApiErrResponse = <T = EmptyObject>(res: any): res is ApiErrResponse<T> => {
+export const isApiErrResponse = <T = EmptyObject>(res: unknown): res is ApiErrResponse<T> => {
+  if (typeof res !== 'object' || res === null) return false;
+  const value = res as Partial<ApiErrResponse<T>>;
   return (
-    typeof (res as ApiErrResponse<T>).errorCode === 'string' &&
-    typeof (res as ApiErrResponse<T>).errorMessage === 'string' &&
-    typeof (res as ApiErrResponse<T>).requestId === 'string'
+    typeof value.errorCode === 'string' &&
+    typeof value.errorMessage === 'string' &&
+    typeof value.requestId === 'string'
   );
 };
 
@@ -34,11 +36,11 @@ export const LoginAuthType = {
 export type LoginAuthType = (typeof LoginAuthType)[keyof typeof LoginAuthType];
 
 export type UserPolicy = {
-  session?: any;
+  session?: unknown;
   accessLimit: {
     terminal: string[];
   };
-  visitorLimit?: any;
+  visitorLimit?: unknown;
 };
 export interface LoginUserInfo {
   userId?: string;

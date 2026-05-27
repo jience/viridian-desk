@@ -1,10 +1,12 @@
 import type { NativeResponse } from './interfaces/types';
 import { logger } from '@/utils/logger';
 
+type NativeMethod = (...args: unknown[]) => unknown;
+
 export interface InterceptorContext {
   module?: string;
   method: string;
-  args: any[];
+  args: unknown[];
 }
 
 export interface IInterceptor {
@@ -19,21 +21,21 @@ export interface IInterceptor {
    * 可以修改返回数据
    */
   onResponse?: (
-    response: NativeResponse<any>,
+    response: NativeResponse<unknown>,
     ctx: InterceptorContext,
-  ) => Promise<NativeResponse<any>> | NativeResponse<any>;
+  ) => Promise<NativeResponse<unknown>> | NativeResponse<unknown>;
 
   /**
    * 错误拦截
    * 可以统一处理异常，如弹窗提示
    */
-  onError?: (error: any, ctx: InterceptorContext) => Promise<any> | any;
+  onError?: (error: unknown, ctx: InterceptorContext) => Promise<unknown> | unknown;
 
   /**
    * 事件触发拦截
    * 当通过 onEvent 监听到消息时触发
    */
-  onEventTrigger?: (eventName: string, payload: any) => void;
+  onEventTrigger?: (eventName: string, payload: unknown) => void;
 }
 
 /**
@@ -53,8 +55,8 @@ class InterceptorManager {
 
 export const globalInterceptors = new InterceptorManager();
 
-const wrapEventCallback = (eventName: string, callback: (payload: any) => void) => {
-  return (payload: any) => {
+const wrapEventCallback = (eventName: string, callback: (payload: unknown) => void) => {
+  return (payload: unknown) => {
     for (const interceptor of globalInterceptors.getInterceptors()) {
       if (!interceptor.onEventTrigger) continue;
       try {
@@ -83,7 +85,10 @@ export async function runNativeMethod<T>(
 
     for (const interceptor of interceptors) {
       if (interceptor.onResponse) {
-        result = (await interceptor.onResponse(result as NativeResponse<any>, ctx)) as Awaited<T>;
+        result = (await interceptor.onResponse(
+          result as NativeResponse<unknown>,
+          ctx,
+        )) as Awaited<T>;
       }
     }
 
@@ -116,15 +121,17 @@ export function withNativeInterceptors<T extends Record<string, unknown>>(
 
   for (const [key, value] of Object.entries(target)) {
     if (typeof value === 'function') {
-      wrapped[key] = (...args: any[]) => {
+      wrapped[key] = (...args: unknown[]) => {
         const nextArgs = [...args];
         if (
           key === 'onEvent' &&
           typeof nextArgs[0] === 'string' &&
           typeof nextArgs[1] === 'function'
         ) {
-          nextArgs[1] = wrapEventCallback(nextArgs[0], nextArgs[1]);
+          nextArgs[1] = wrapEventCallback(nextArgs[0], nextArgs[1] as (payload: unknown) => void);
         }
+
+        const method = value as NativeMethod;
 
         return runNativeMethod(
           {
@@ -132,7 +139,7 @@ export function withNativeInterceptors<T extends Record<string, unknown>>(
             method: key,
             args,
           },
-          () => value(...nextArgs),
+          () => method(...nextArgs),
         );
       };
       continue;

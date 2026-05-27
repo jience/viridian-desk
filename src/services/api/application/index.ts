@@ -1,6 +1,6 @@
 import { request } from '@/utils/request';
 
-type ApplicationApiRequest = Record<string, any>;
+type ApplicationApiRequest = Record<string, unknown>;
 
 export enum ApplicationApi {
   LIST_APP_LIB = '/listAppLib',

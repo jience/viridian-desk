@@ -1,26 +1,18 @@
 import type { ApiResponse } from '@/native/interfaces/api';
 import { getStoreState, handleStoreUnauthorized } from '@/store/runtime-access';
+import { isFormDataBody, normalizeRequestBody, shouldEncodeJsonBody } from '@/utils/request/body';
 import type { ClientOptions } from '@tauri-apps/plugin-http';
 
 type FetchOpt = RequestInit & ClientOptions;
-export interface RequestOptions<B = any> extends Omit<FetchOpt, 'body'> {
+export interface RequestOptions<B = unknown> extends Omit<FetchOpt, 'body'> {
   body?: B;
 }
-
-const shouldEncodeJsonBody = (body: unknown) => {
-  if (body === null || body === undefined || body instanceof FormData) return false;
-  if (typeof Blob !== 'undefined' && body instanceof Blob) return false;
-  if (typeof ArrayBuffer !== 'undefined' && body instanceof ArrayBuffer) return false;
-  if (Array.isArray(body)) return body.length > 0;
-  if (typeof body === 'object') return Object.keys(body).length > 0;
-  return false;
-};
 
 /**
  * 请求前的处理
  */
 const beforeRequest = async (config?: RequestOptions): Promise<FetchOpt> => {
-  const { headers, ...resConfig } = config || {};
+  const { body, headers, ...resConfig } = config || {};
   const state = getStoreState();
 
   const newHeaders: HeadersInit = {
@@ -34,14 +26,12 @@ const beforeRequest = async (config?: RequestOptions): Promise<FetchOpt> => {
   if (userId) h['VisitorId'] = userId;
 
   // 如果body是FormData类型
-  if (resConfig?.body instanceof FormData) {
+  if (isFormDataBody(body)) {
     h['Content-Type'] = 'multipart/form-data';
   }
   // 如果body是对象
-  if (shouldEncodeJsonBody(resConfig?.body)) {
+  if (shouldEncodeJsonBody(body)) {
     h['Content-Type'] = 'application/json';
-    // 如果是对象，且不是FormData类型，则转换为JSON字符串
-    resConfig.body = JSON.stringify(resConfig.body);
   }
 
   const resOpt: FetchOpt = {
@@ -52,6 +42,7 @@ const beforeRequest = async (config?: RequestOptions): Promise<FetchOpt> => {
     },
     headers: newHeaders,
     method: 'POST',
+    body: normalizeRequestBody(body),
     ...resConfig,
   };
 
@@ -71,7 +62,7 @@ const fetchHttp = async (url: string, opts: FetchOpt) => {
   return fetch(url, opts);
 };
 
-export const request = async <RESP = ApiResponse, REQ = any>(
+export const request = async <RESP = ApiResponse, REQ = unknown>(
   api: string,
   opt?: RequestOptions<REQ>,
 ) => {

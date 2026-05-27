@@ -3,6 +3,11 @@ import { message as uiMessage } from '@/shared/ui/message';
 import { logger } from '@/utils/logger';
 import { t, type Resources } from 'i18next';
 
+type ErrorDataRecord = Record<string, unknown> & {
+  remainingSeconds?: string | number;
+  remainLoginCount?: string | number;
+};
+
 const hasErrorData = (value: unknown) => {
   if (value === null || value === undefined) return false;
   if (typeof value === 'string') return value.length > 0;
@@ -11,12 +16,18 @@ const hasErrorData = (value: unknown) => {
   return true;
 };
 
+const isErrorDataRecord = (value: unknown): value is ErrorDataRecord =>
+  typeof value === 'object' &&
+  value !== null &&
+  !Array.isArray(value) &&
+  Object.keys(value).length > 0;
+
 function getLoginErrorTimesExceedErrorMessage(
-  { remainingSeconds }: { remainingSeconds: string },
+  { remainingSeconds }: { remainingSeconds?: string | number },
   errorMessage: string,
 ) {
   // 处理remainingSeconds
-  const intRemainingSeconds = parseInt(remainingSeconds);
+  const intRemainingSeconds = parseInt(String(remainingSeconds));
   if (!isNaN(intRemainingSeconds)) {
     const minute = Math.floor(intRemainingSeconds / 60);
     const seconds = intRemainingSeconds % 60;
@@ -41,12 +52,12 @@ function getLoginErrorTimesExceedErrorMessage(
  * @description 错误方法处理
  * @param {*} res
  */
-function handleError(res: NativeResponse<any>) {
+function handleError(res: NativeResponse<unknown>) {
   let message = '';
 
   const { data } = res;
   const errorCode = `error_code.${res.code}` as keyof Resources['translation'];
-  if (errorCode) {
+  if (res.code) {
     // 默认初始翻译
     message = t(errorCode);
 
@@ -56,23 +67,24 @@ function handleError(res: NativeResponse<any>) {
       localStorage.removeItem('userName');
       localStorage.removeItem('isLocal');
     }
-    if (hasErrorData(data)) {
-      message = t(errorCode, { ...(data as any) });
+    if (hasErrorData(data) && isErrorDataRecord(data)) {
+      message = t(errorCode, data);
       logger.debug('message', message);
     }
 
     // 登录密码错误次数特殊翻译
     if (res.code === 'LoginErrorTimesExceed') {
-      if (res?.data) {
-        message = getLoginErrorTimesExceedErrorMessage(res.data as any, res.msg || '');
+      if (isErrorDataRecord(data)) {
+        message = getLoginErrorTimesExceedErrorMessage(data, res.msg || '');
       }
     }
 
     // 用户密码不正确错误次数
     if (res.code === 'UserNamePasswordNotMatch') {
-      const errorMessage = res?.data?.remainLoginCount
+      const remainLoginCount = isErrorDataRecord(data) ? data.remainLoginCount : undefined;
+      const errorMessage = remainLoginCount
         ? t('error_code.NamePasswordNotMatchWithCount', {
-            remainLoginCount: res?.data?.remainLoginCount,
+            remainLoginCount,
           })
         : t(errorCode);
       message = errorMessage;

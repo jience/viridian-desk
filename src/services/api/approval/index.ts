@@ -1,6 +1,6 @@
 import { request } from '@/utils/request';
 
-type ApprovalApiRequest = Record<string, any>;
+type ApprovalApiRequest = Record<string, unknown>;
 
 export enum ApprovalApi {
   LIST_WORKFLOW = '/listWorkflow',

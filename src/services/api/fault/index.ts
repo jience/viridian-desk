@@ -23,8 +23,8 @@ export const revokeFault = (data: RevokeFaultRequest) => {
   });
 };
 
-export const createFault = (data: Record<string, any>) => {
-  return request<ApiResponse, Record<string, any>>(FaultApi.CREATE_FAULT, {
+export const createFault = (data: Record<string, unknown>) => {
+  return request<ApiResponse, Record<string, unknown>>(FaultApi.CREATE_FAULT, {
     method: 'POST',
     body: data,
   });
