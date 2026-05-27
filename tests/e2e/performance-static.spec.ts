@@ -2556,9 +2556,9 @@ test('routes high-frequency text inputs through the low-power lean input path', 
   expect(leanInputSource).toContain('autoCorrect="off"');
   expect(leanInputSource).toContain('autoCapitalize="none"');
   expect(leanInputSource).toContain('data-lean-input');
-  expect(uiSource).toContain("from './lean-input'");
-  expect(uiSource).toContain('<LeanInput');
-  expect(uiSource).toContain('<LeanTextarea');
+  expect(uiSource).not.toContain("from './lean-input'");
+  expect(uiSource).not.toContain('<LeanInput');
+  expect(uiSource).not.toContain('<LeanTextarea');
   expect(loginSource).toContain('@/shared/ui/lean-input');
   expect(loginSource).toContain('<LeanInput');
   expect(loginSource).not.toContain('setPasswordVisible');
