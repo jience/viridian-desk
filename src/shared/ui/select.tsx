@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState, type ReactElement } from 'react';
+import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import * as SelectPrimitive from '@radix-ui/react-select';
+import { useState, type ReactElement, type ReactNode } from 'react';
 
 import { cn } from './lib/cn';
 import type { DefaultOptionType, SelectProps } from './types';
@@ -7,167 +9,202 @@ type SelectComponentType = {
   <ValueType = unknown>(props: SelectProps<ValueType>): ReactElement | null;
 };
 
-export const Select = function SelectComponent<ValueType = unknown>(
-  props: SelectProps<ValueType>,
-) {
-    const options = props.options ?? [];
-    const multiple = props.mode === 'multiple' || props.mode === 'tags';
-    const isControlled = props.value !== undefined;
-    const [internalValue, setInternalValue] = useState<unknown>(
-      props.defaultValue ?? (multiple ? [] : ''),
-    );
-    const [open, setOpen] = useState(false);
-    const rootRef = useRef<HTMLSpanElement>(null);
-    const value = isControlled ? props.value : internalValue;
-    const currentValues = multiple ? (Array.isArray(value) ? value : []) : [];
-    const selectedValues = multiple
-      ? currentValues.map(String)
-      : value === undefined || value === null || value === ''
-        ? []
-        : [String(value)];
-    const selectedOptions = options.filter((option) =>
-      selectedValues.includes(String(option.value)),
-    );
-    const selectedLabel = multiple
-      ? selectedOptions.map((option) => option.label).join(', ')
-      : selectedOptions[0]?.label;
-    const disabled = props.disabled || props.loading;
+type FloatingSide = 'top' | 'right' | 'bottom' | 'left';
+type FloatingAlign = 'start' | 'center' | 'end';
 
-    useEffect(() => {
-      if (!open) return;
+const getSide = (placement?: string): FloatingSide => {
+  if (placement?.startsWith('top')) return 'top';
+  if (placement?.startsWith('right')) return 'right';
+  if (placement?.startsWith('left')) return 'left';
+  return 'bottom';
+};
 
-      const handlePointerDown = (event: PointerEvent) => {
-        if (!rootRef.current?.contains(event.target as Node)) {
-          setOpen(false);
-        }
-      };
+const getAlign = (placement?: string): FloatingAlign => {
+  if (placement?.endsWith('Left')) return 'start';
+  if (placement?.endsWith('Right')) return 'end';
+  return 'center';
+};
 
-      document.addEventListener('pointerdown', handlePointerDown);
-      return () => document.removeEventListener('pointerdown', handlePointerDown);
-    }, [open]);
+const optionId = (option: DefaultOptionType, index: number) => {
+  const rawValue = option.value ?? option.key ?? index;
+  const value = String(rawValue);
+  return value || `vdui-empty-${index}`;
+};
 
-    const commitValue = (nextValue: unknown, option?: DefaultOptionType) => {
-      if (!isControlled) setInternalValue(nextValue);
-      props.onChange?.(nextValue as ValueType, option);
-      props.onSelect?.(nextValue as ValueType, option);
-    };
+const optionLabel = (option?: DefaultOptionType): ReactNode => option?.label ?? option?.key;
 
-    const handleOptionClick = (option: DefaultOptionType) => {
-      if (option.disabled) return;
-      if (multiple) {
-        const optionValue = String(option.value);
-        const nextValues = selectedValues.includes(optionValue)
-          ? currentValues.filter((item) => String(item) !== optionValue)
-          : [...currentValues, option.value];
-        commitValue(nextValues, option);
-        return;
-      }
+export const Select = function SelectComponent<ValueType = unknown>(props: SelectProps<ValueType>) {
+  const options = props.options ?? [];
+  const normalizedOptions = options.map((option, index) => ({
+    id: optionId(option, index),
+    option,
+  }));
+  const multiple = props.mode === 'multiple' || props.mode === 'tags';
+  const isControlled = props.value !== undefined;
+  const [internalValue, setInternalValue] = useState<unknown>(
+    props.defaultValue ?? (multiple ? [] : undefined),
+  );
+  const [open, setOpen] = useState(false);
+  const value = isControlled ? props.value : internalValue;
+  const currentValues = multiple ? (Array.isArray(value) ? value : []) : [];
+  const selectedValues = multiple
+    ? currentValues.map(String)
+    : value === undefined || value === null || value === ''
+      ? []
+      : [String(value)];
+  const selectedOptions = normalizedOptions.filter(({ id }) => selectedValues.includes(id));
+  const selectedLabels = selectedOptions
+    .map(({ option }) => optionLabel(option))
+    .filter((label): label is Exclude<ReactNode, boolean | null | undefined> => !!label);
+  const disabled = props.disabled || props.loading;
+  const popupClassName = cn(
+    'vdui-select-dropdown',
+    props.placement && `vdui-select-dropdown--${props.placement}`,
+    props.classNames?.popup,
+  );
+  const triggerClassName = cn(
+    'vdui-select',
+    `vdui-select-${props.size ?? 'middle'}`,
+    open && 'vdui-select-open',
+    disabled && 'vdui-select-disabled',
+    props.className,
+    props.classNames?.root,
+  );
 
-      commitValue(option.value, option);
-      setOpen(false);
-    };
+  const commitValue = (nextValue: unknown, option?: DefaultOptionType) => {
+    if (!isControlled) setInternalValue(nextValue);
+    props.onChange?.(nextValue as ValueType, option);
+    props.onSelect?.(nextValue as ValueType, option);
+  };
 
+  if (multiple) {
     return (
-      <span
-        ref={rootRef}
-        className={cn(
-          'vdui-select',
-          `vdui-select-${props.size ?? 'middle'}`,
-          open && 'vdui-select-open',
-          props.disabled && 'vdui-select-disabled',
-          props.className,
-          props.classNames?.root,
-        )}
-        role="combobox"
-        aria-expanded={open}
-        aria-haspopup="listbox"
-        aria-disabled={disabled}
-        tabIndex={disabled ? -1 : 0}
-        style={props.style}
-        onBlur={(event) => {
-          if (
-            event.relatedTarget instanceof Node &&
-            event.currentTarget.contains(event.relatedTarget)
-          ) {
-            return;
-          }
-          setOpen(false);
-        }}
-        onClick={(event) => {
-          event.stopPropagation();
-          if (!disabled) setOpen((value) => !value);
-        }}
-        onKeyDown={(event) => {
-          if (disabled) return;
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            setOpen((value) => !value);
-          }
-          if (event.key === 'ArrowDown') {
-            event.preventDefault();
-            setOpen(true);
-            window.setTimeout(() => {
-              rootRef.current
-                ?.querySelector<HTMLButtonElement>('.vdui-select-option:not(:disabled)')
-                ?.focus();
-            }, 0);
-          }
-          if (event.key === 'Escape') {
-            event.preventDefault();
-            setOpen(false);
-          }
-        }}
-      >
-        {selectedValues.length > 0 ? (
-          <span className="vdui-select-selection-item">{selectedLabel}</span>
-        ) : props.placeholder ? (
-          <span className="vdui-select-placeholder">{props.placeholder}</span>
-        ) : null}
-        {props.suffixIcon === null ? null : (
-          <span className="vdui-select-arrow" aria-hidden="true">
-            {props.suffixIcon ?? '▾'}
-          </span>
-        )}
-        {open && (
-          <div
-            className={cn(
-              'vdui-select-dropdown',
-              props.placement && `vdui-select-dropdown--${props.placement}`,
-              props.classNames?.popup,
-            )}
-            role="listbox"
-            aria-multiselectable={multiple || undefined}
+      <DropdownMenuPrimitive.Root open={open} onOpenChange={setOpen} modal={false}>
+        <DropdownMenuPrimitive.Trigger asChild disabled={disabled}>
+          <button
+            type="button"
+            className={triggerClassName}
+            disabled={disabled}
+            style={props.style}
+            aria-haspopup="listbox"
           >
-            {options.map((option) => {
-              const selected = selectedValues.includes(String(option.value));
+            {selectedValues.length > 0 ? (
+              <span className="vdui-select-selection-item">
+                {selectedLabels.map((label, index) => (
+                  <span key={selectedValues[index]}>
+                    {index > 0 ? ', ' : null}
+                    {label}
+                  </span>
+                ))}
+              </span>
+            ) : props.placeholder ? (
+              <span className="vdui-select-placeholder">{props.placeholder}</span>
+            ) : null}
+            {props.suffixIcon === null ? null : (
+              <span className="vdui-select-arrow" aria-hidden="true">
+                {props.suffixIcon ?? '▾'}
+              </span>
+            )}
+          </button>
+        </DropdownMenuPrimitive.Trigger>
+        <DropdownMenuPrimitive.Portal>
+          <DropdownMenuPrimitive.Content
+            className={popupClassName}
+            side={getSide(props.placement)}
+            align={getAlign(props.placement)}
+            sideOffset={8}
+          >
+            {normalizedOptions.map(({ id, option }) => {
+              const selected = selectedValues.includes(id);
 
               return (
-                <button
-                  key={String(option.key ?? option.value)}
+                <DropdownMenuPrimitive.CheckboxItem
+                  key={String(option.key ?? id)}
                   className={cn('vdui-select-option', selected && 'is-selected')}
-                  type="button"
-                  role="option"
-                  aria-selected={selected}
+                  checked={selected}
                   disabled={option.disabled}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    handleOptionClick(option);
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Escape') {
-                      event.preventDefault();
-                      setOpen(false);
-                      rootRef.current?.focus();
-                    }
+                  onSelect={(event) => event.preventDefault()}
+                  onCheckedChange={() => {
+                    const nextValues = selected
+                      ? currentValues.filter((item) => String(item) !== id)
+                      : [...currentValues, option.value];
+                    commitValue(nextValues, option);
                   }}
                 >
                   <span className="vdui-select-option-label">{option.label}</span>
-                  {selected && <span className="vdui-select-option-check">✓</span>}
-                </button>
+                  <DropdownMenuPrimitive.ItemIndicator className="vdui-select-option-check">
+                    ✓
+                  </DropdownMenuPrimitive.ItemIndicator>
+                </DropdownMenuPrimitive.CheckboxItem>
               );
             })}
-          </div>
-        )}
-      </span>
+          </DropdownMenuPrimitive.Content>
+        </DropdownMenuPrimitive.Portal>
+      </DropdownMenuPrimitive.Root>
     );
-  } as SelectComponentType;
+  }
+
+  const selectedValue = selectedValues[0];
+  const rootValueProps = isControlled
+    ? { value: selectedValue ?? '' }
+    : { defaultValue: props.defaultValue === undefined ? undefined : String(props.defaultValue) };
+
+  return (
+    <SelectPrimitive.Root
+      {...rootValueProps}
+      open={open}
+      disabled={disabled}
+      onOpenChange={setOpen}
+      onValueChange={(nextValue) => {
+        const selectedOption = normalizedOptions.find(({ id }) => id === nextValue)?.option;
+        commitValue(selectedOption?.value, selectedOption);
+      }}
+    >
+      <SelectPrimitive.Trigger
+        className={triggerClassName}
+        style={props.style}
+        aria-label={props.placeholder}
+      >
+        <SelectPrimitive.Value
+          className={cn(
+            'vdui-select-value',
+            selectedValue ? 'vdui-select-selection-item' : 'vdui-select-placeholder',
+          )}
+          placeholder={props.placeholder}
+        />
+        {props.suffixIcon === null ? null : (
+          <SelectPrimitive.Icon className="vdui-select-arrow">
+            {props.suffixIcon ?? '▾'}
+          </SelectPrimitive.Icon>
+        )}
+      </SelectPrimitive.Trigger>
+      <SelectPrimitive.Portal>
+        <SelectPrimitive.Content
+          className={popupClassName}
+          position="popper"
+          side={getSide(props.placement)}
+          align={getAlign(props.placement)}
+          sideOffset={8}
+        >
+          <SelectPrimitive.Viewport className="vdui-select-viewport">
+            {normalizedOptions.map(({ id, option }) => (
+              <SelectPrimitive.Item
+                key={String(option.key ?? id)}
+                className={cn('vdui-select-option', selectedValue === id && 'is-selected')}
+                value={id}
+                disabled={option.disabled}
+              >
+                <SelectPrimitive.ItemText className="vdui-select-option-label">
+                  {option.label}
+                </SelectPrimitive.ItemText>
+                <SelectPrimitive.ItemIndicator className="vdui-select-option-check">
+                  ✓
+                </SelectPrimitive.ItemIndicator>
+              </SelectPrimitive.Item>
+            ))}
+          </SelectPrimitive.Viewport>
+        </SelectPrimitive.Content>
+      </SelectPrimitive.Portal>
+    </SelectPrimitive.Root>
+  );
+} as SelectComponentType;

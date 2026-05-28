@@ -234,6 +234,7 @@
 }
 
 .vdui-select-selection-item,
+.vdui-select-value,
 .vdui-select-placeholder {
   min-width: 0;
   max-width: 100%;
@@ -326,7 +327,8 @@
     transform 150ms ease;
 
   &:not(:disabled):hover,
-  &:not(:disabled):focus-visible {
+  &:not(:disabled):focus-visible,
+  &[data-highlighted] {
     outline: 0;
     color: var(--vd-color-accent, #69d99a);
     background: color-mix(in srgb, var(--vd-color-accent, #69d99a) 12%, transparent);
@@ -336,10 +338,16 @@
     transform: translateY(1px);
   }
 
-  &:disabled {
+  &:disabled,
+  &[data-disabled] {
     cursor: not-allowed;
     opacity: 0.52;
   }
+}
+
+.vdui-select-viewport {
+  display: grid;
+  gap: 3px;
 }
 
 .vdui-select-option.is-selected {
@@ -902,7 +910,9 @@
     color 150ms ease,
     transform 150ms ease;
 
-  &:not(:disabled):hover {
+  &:not(:disabled):hover,
+  &[data-highlighted] {
+    outline: 0;
     color: var(--vd-color-accent, #69d99a);
     background: color-mix(in srgb, var(--vd-color-accent, #69d99a) 10%, transparent);
   }
@@ -911,7 +921,8 @@
     transform: translateY(1px);
   }
 
-  &:disabled {
+  &:disabled,
+  &[data-disabled] {
     color: var(--vd-color-muted, rgba(148, 163, 184, 0.6));
     cursor: not-allowed;
     opacity: 0.58;
@@ -1037,7 +1048,8 @@
   cursor: pointer;
   transition: background-color 160ms ease;
 
-  span {
+  span,
+  .vdui-switch-thumb {
     width: 16px;
     height: 16px;
     border-radius: 999px;
@@ -1050,7 +1062,8 @@
 .vdui-switch-checked {
   background: var(--vdui-switch-checked-bg, #4d7c3f);
 
-  span {
+  span,
+  .vdui-switch-thumb {
     transform: translateX(16px);
   }
 }

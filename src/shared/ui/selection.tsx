@@ -1,3 +1,4 @@
+import * as SwitchPrimitive from '@radix-ui/react-switch';
 import type { ChangeEvent, ReactNode } from 'react';
 
 import { cn } from './lib/cn';
@@ -24,16 +25,14 @@ export function Switch({
   [key: string]: unknown;
 }) {
   return (
-    <button
-      type="button"
+    <SwitchPrimitive.Root
       disabled={disabled}
-      role="switch"
-      aria-checked={!!checked}
+      checked={!!checked}
       className={cn('vdui-switch', checked && 'vdui-switch-checked', className)}
-      onClick={() => onChange?.(!checked)}
+      onCheckedChange={onChange}
     >
-      <span />
-    </button>
+      <SwitchPrimitive.Thumb className="vdui-switch-thumb" />
+    </SwitchPrimitive.Root>
   );
 }
 

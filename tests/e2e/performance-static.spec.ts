@@ -310,7 +310,9 @@ test('keeps locale file key sets aligned across supported languages', () => {
 test('keeps runtime API error translations on the error_code namespace', () => {
   const legacyRequestErrorHandler = source('src/utils/requestErrorHandler.ts');
   const nativeRequestErrorHandler = source('src/services/requestErrorHandler.ts');
-  const createSnapSource = source('src/features/desktop/components/create-snapshot-modal/index.tsx');
+  const createSnapSource = source(
+    'src/features/desktop/components/create-snapshot-modal/index.tsx',
+  );
 
   expect(legacyRequestErrorHandler).toContain('`error_code.${errorCode}`');
   expect(legacyRequestErrorHandler).toContain('`error_code.${httpStatus}`');
@@ -357,9 +359,15 @@ test('uses mature headless primitives behind the shared ui boundary', () => {
   const overlaySource = source('src/shared/ui/overlay.tsx');
   const tableSource = source('src/shared/ui/table.tsx');
   const formSource = source('src/shared/ui/form.tsx');
+  const selectSource = source('src/shared/ui/select.tsx');
+  const dropdownSource = source('src/shared/ui/dropdown.tsx');
+  const selectionSource = source('src/shared/ui/selection.tsx');
   const boundaryDependencies = [
     '@radix-ui/react-dialog',
+    '@radix-ui/react-dropdown-menu',
     '@radix-ui/react-popover',
+    '@radix-ui/react-select',
+    '@radix-ui/react-switch',
     '@radix-ui/react-tooltip',
     '@tanstack/react-table',
     '@tanstack/react-virtual',
@@ -385,6 +393,18 @@ test('uses mature headless primitives behind the shared ui boundary', () => {
   expect(formSource).toContain("from 'react-hook-form'");
   expect(formSource).toContain('createFormControl');
 
+  expect(selectSource).toContain("from '@radix-ui/react-select'");
+  expect(selectSource).toContain('<SelectPrimitive.Root');
+  expect(selectSource).not.toContain("document.addEventListener('pointerdown'");
+
+  expect(dropdownSource).toContain("from '@radix-ui/react-dropdown-menu'");
+  expect(dropdownSource).toContain('<DropdownMenuPrimitive.Root');
+  expect(dropdownSource).not.toContain("document.addEventListener('pointerdown'");
+  expect(dropdownSource).not.toContain("document.addEventListener('keydown'");
+
+  expect(selectionSource).toContain("from '@radix-ui/react-switch'");
+  expect(selectionSource).toContain('<SwitchPrimitive.Root');
+
   for (const file of collectSourceFiles('src')) {
     if (file.startsWith('src/shared/ui/')) continue;
     const fileSource = source(file);
@@ -397,7 +417,9 @@ test('uses mature headless primitives behind the shared ui boundary', () => {
 test('loads the desk connection overlay only while connecting', () => {
   const deskPageSource = source('src/features/desktop/pages/desktop-page.tsx');
 
-  expect(deskPageSource).not.toContain("import DeskLoading from '@/features/desktop/components/desk-loading'");
+  expect(deskPageSource).not.toContain(
+    "import DeskLoading from '@/features/desktop/components/desk-loading'",
+  );
   expect(deskPageSource).toContain("import('@/features/desktop/components/desk-loading')");
 });
 
@@ -923,9 +945,9 @@ test('keeps configuration form controls inside the settings feature', () => {
   expect(source('src/features/settings/components/configuration-form/index.tsx')).toContain(
     "from './slider-with-input-number'",
   );
-  expect(source('src/features/settings/components/configuration-form/form-table/index.tsx')).toContain(
-    "from '../ipv4-cidr'",
-  );
+  expect(
+    source('src/features/settings/components/configuration-form/form-table/index.tsx'),
+  ).toContain("from '../ipv4-cidr'");
 });
 
 test('keeps application implementation inside the application feature', () => {
@@ -1204,7 +1226,9 @@ test('keeps app layouts inside the app layer', () => {
   }
 
   expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/app/layouts/app-layout')");
-  expect(source('src/app/router/lazy-pages.tsx')).toContain("import('@/app/layouts/client-layout')");
+  expect(source('src/app/router/lazy-pages.tsx')).toContain(
+    "import('@/app/layouts/client-layout')",
+  );
   expect(source('src/app/router/lazy-pages.tsx')).not.toContain("import('@/pages/");
   expect(existsSync(join(process.cwd(), 'src/layouts'))).toBe(false);
   expect(existsSync(join(process.cwd(), 'src/pages'))).toBe(false);
@@ -1472,7 +1496,9 @@ test('keeps login window controls local to the lightweight login route', () => {
   const loginPageSource = source('src/features/auth/pages/login-page.tsx');
   const loginPageStyles = source('src/features/auth/pages/login-page.scss');
 
-  expect(loginPageSource).toContain("import ControlWindow from '@/features/shell/components/control-window'");
+  expect(loginPageSource).toContain(
+    "import ControlWindow from '@/features/shell/components/control-window'",
+  );
   expect(loginPageSource).toContain('auth-page__drag-region');
   expect(loginPageSource).toContain('<ControlWindow />');
   expect(loginPageStyles).toContain('.auth-page__controls');
@@ -1760,7 +1786,9 @@ test('keeps login key handling off the per-character DOM query path', () => {
 });
 
 test('keeps login enter repeat guard out of React state updates', () => {
-  const enterGuardSource = source('src/features/auth/components/username-password/use-prevent-enter-key-long-press.ts');
+  const enterGuardSource = source(
+    'src/features/auth/components/username-password/use-prevent-enter-key-long-press.ts',
+  );
 
   expect(enterGuardSource).toContain('useRef');
   expect(enterGuardSource).not.toContain('useState');
@@ -1944,11 +1972,15 @@ test('removes authenticated message notification feature from the client', () =>
 
 test('keeps account workbench code out of the sidebar shell', () => {
   const sidebarSource = source('src/features/shell/components/sidebar/index.tsx');
-  const accountWorkbenchSource = source('src/features/account/components/account-workbench/index.tsx');
+  const accountWorkbenchSource = source(
+    'src/features/account/components/account-workbench/index.tsx',
+  );
 
   expect(sidebarSource).not.toContain("import ChangePhone from '@/components/ChangePhone'");
   expect(sidebarSource).not.toContain("import ComModal from '@/components/ComModal'");
-  expect(sidebarSource).not.toContain("import DiffLoginTip from '@/features/account/components/diff-login-tip'");
+  expect(sidebarSource).not.toContain(
+    "import DiffLoginTip from '@/features/account/components/diff-login-tip'",
+  );
   expect(sidebarSource).not.toContain("import PwdForm from '@/components/PwdForm'");
   expect(sidebarSource).not.toContain("import UserInfo from '@/components/UserInfo'");
   expect(sidebarSource).not.toContain("import useRequest from '@/hooks/useRequest'");
@@ -1982,7 +2014,9 @@ test('keeps account controls inside the left-bottom workbench', () => {
   const enUSCore = source('src/assets/locales/en-US/core.json');
 
   expect(overlaySource).toContain("from '@radix-ui/react-popover'");
-  expect(overlaySource).toContain('<PopoverPrimitive.Root open={visible} onOpenChange={setVisible}>');
+  expect(overlaySource).toContain(
+    '<PopoverPrimitive.Root open={visible} onOpenChange={setVisible}>',
+  );
   expect(overlaySource).toContain('onOpenChange?.(nextOpen)');
   expect(overlaySource).not.toContain("document.addEventListener('pointerdown'");
   expect(overlaySource).not.toContain("document.addEventListener('keydown'");
@@ -2116,7 +2150,9 @@ test('keeps authenticated client bootstrap centralized outside ClientLayout rend
 
   expect(clientLayoutLoaderBlock).toContain('scheduleAuthenticatedClientBootstrap');
   expect(bootstrapSource).toContain('let authenticatedClientBootstrapScheduled = false');
-  expect(authenticatedBootstrapBlock).toContain('if (authenticatedClientBootstrapScheduled) return');
+  expect(authenticatedBootstrapBlock).toContain(
+    'if (authenticatedClientBootstrapScheduled) return',
+  );
   expect(authenticatedBootstrapBlock).toContain('fetchGatewayList');
   expect(authenticatedBootstrapBlock).toContain('fetchClientOnlineStatus');
   expect(authenticatedBootstrapBlock).toContain('fetchClientInfo');
@@ -2312,7 +2348,7 @@ test('keeps feature API imports on domain modules', () => {
   const featureImports = collectSourceFiles('src/features').map((path) => [path, source(path)]);
 
   for (const [path, content] of featureImports) {
-    expect(content, path).not.toContain("@/services/resource");
+    expect(content, path).not.toContain('@/services/resource');
   }
 
   expect(source('src/services/api/desktop/index.ts')).toContain('export enum DeskTopApi');
