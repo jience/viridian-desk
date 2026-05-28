@@ -3,7 +3,6 @@ import * as Dialog from '@radix-ui/react-dialog';
 import {
   useCallback,
   useEffect,
-  useId,
   useRef,
   useState,
   type ButtonHTMLAttributes,
@@ -103,8 +102,6 @@ function ConfirmDialog({
   open: boolean;
   props: ConfirmProps;
 }) {
-  const titleId = useId();
-  const descriptionId = useId();
   const contentRef = useRef<HTMLElement>(null);
   const mountedRef = useRef(true);
   const [pending, setPending] = useState(false);
@@ -198,8 +195,6 @@ function ConfirmDialog({
                 role="alertdialog"
                 aria-modal="true"
                 aria-live="polite"
-                aria-labelledby={titleId}
-                aria-describedby={content ? descriptionId : undefined}
                 tabIndex={-1}
               >
                 {props.closable !== false && (
@@ -225,15 +220,13 @@ function ConfirmDialog({
                   )}
                   <div className="vdui-confirm-modal__copy">
                     <Dialog.Title asChild>
-                      <div className="vdui-modal-title vdui-confirm-modal__title" id={titleId}>
+                      <div className="vdui-modal-title vdui-confirm-modal__title">
                         {props.title ?? 'Confirm'}
                       </div>
                     </Dialog.Title>
                     {content && (
                       <Dialog.Description asChild>
-                        <div className="vdui-confirm-modal__description" id={descriptionId}>
-                          {content}
-                        </div>
+                        <div className="vdui-confirm-modal__description">{content}</div>
                       </Dialog.Description>
                     )}
                   </div>
