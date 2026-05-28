@@ -699,9 +699,13 @@ test('keeps system prompt surfaces visually unified', () => {
     expect(fastSource).toContain("import { showConfirm } from './confirm'");
   }
   expect(confirmSource).toContain("import('react-dom/client')");
+  expect(confirmSource).toContain("from '@radix-ui/react-dialog'");
+  expect(confirmSource).toContain('<Dialog.Root');
   expect(confirmSource).toContain('role="alertdialog"');
   expect(confirmSource).toContain('className="vdui-modal-footer vdui-confirm-modal__footer"');
   expect(confirmSource).toContain('aria-live="polite"');
+  expect(confirmSource).not.toContain("document.addEventListener('keydown'");
+  expect(confirmSource).not.toContain('focusableSelector');
 
   expect(messageSource).toContain("container.setAttribute('role'");
   expect(messageSource).toContain("container.setAttribute('aria-live'");
