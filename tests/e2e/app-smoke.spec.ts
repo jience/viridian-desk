@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const ignoredConsoleFragments = [
   'WwLogin had destroyed',
@@ -26,7 +26,10 @@ test.beforeEach(async ({ page }) => {
     let callbackId = 0;
     let listenerId = 0;
     let requestId = 0;
-    const callbacks = new Map<number, { callback: (...args: unknown[]) => unknown; once?: boolean }>();
+    const callbacks = new Map<
+      number,
+      { callback: (...args: unknown[]) => unknown; once?: boolean }
+    >();
     const httpRequests = new Map<number, string>();
 
     const smokeConfig = {
@@ -285,7 +288,9 @@ test.beforeEach(async ({ page }) => {
             };
           case 'plugin:http|fetch_read_body': {
             const url = httpRequests.get(Number(args?.rid)) || '';
-            const bodyBytes = Array.from(new TextEncoder().encode(JSON.stringify(getHttpPayload(url))));
+            const bodyBytes = Array.from(
+              new TextEncoder().encode(JSON.stringify(getHttpPayload(url))),
+            );
             args?.streamChannel?.onmessage?.([...bodyBytes, 0]);
             args?.streamChannel?.onmessage?.([1]);
             return null;
@@ -301,6 +306,36 @@ test.beforeEach(async ({ page }) => {
     expect(consoleErrors).toEqual([]);
   });
 });
+
+const useGatewayActionFixture = async (page: Page) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'viridian.web.config',
+      JSON.stringify({
+        gateway: [
+          {
+            uuid: 'keyboard-gateway-a',
+            name: 'Keyboard Gateway A',
+            address: 'gateway-a.local',
+            port: 443,
+            isPublic: true,
+            auto: true,
+          },
+          {
+            uuid: 'keyboard-gateway-b',
+            name: 'Keyboard Gateway B',
+            address: 'gateway-b.local',
+            port: 443,
+            isPublic: true,
+            auto: false,
+          },
+        ],
+        language: 'zh-CN',
+        theme: 'dark',
+      }),
+    );
+  });
+};
 
 test('renders login page shell', async ({ page }) => {
   await page.goto('/login');
@@ -318,7 +353,9 @@ test('keeps login layout scaled to the desktop viewport', async ({ page }) => {
   await page.goto('/login');
 
   await expect
-    .poll(() => page.evaluate(() => Number.parseFloat(getComputedStyle(document.documentElement).fontSize)))
+    .poll(() =>
+      page.evaluate(() => Number.parseFloat(getComputedStyle(document.documentElement).fontSize)),
+    )
     .toBeGreaterThan(80);
   const rootFontSize = await page.evaluate(() =>
     Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
@@ -356,7 +393,9 @@ test('keeps login layout scaled to the desktop viewport', async ({ page }) => {
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });
 
-test('keeps login hero and feature cards separated in fullscreen desktop height', async ({ page }) => {
+test('keeps login hero and feature cards separated in fullscreen desktop height', async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 1280, height: 640 });
   await page.goto('/login');
 
@@ -506,33 +545,7 @@ test('validates and creates a gateway from settings modal', async ({ page }) => 
 });
 
 test('opens gateway action menu with keyboard', async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem(
-      'viridian.web.config',
-      JSON.stringify({
-        gateway: [
-          {
-            uuid: 'keyboard-gateway-a',
-            name: 'Keyboard Gateway A',
-            address: 'gateway-a.local',
-            port: 443,
-            isPublic: true,
-            auto: true,
-          },
-          {
-            uuid: 'keyboard-gateway-b',
-            name: 'Keyboard Gateway B',
-            address: 'gateway-b.local',
-            port: 443,
-            isPublic: true,
-            auto: false,
-          },
-        ],
-        language: 'zh-CN',
-        theme: 'dark',
-      }),
-    );
-  });
+  await useGatewayActionFixture(page);
   await page.goto('/configPage/serverSetting');
 
   const moreButton = page
@@ -561,6 +574,100 @@ test('opens gateway action menu with keyboard', async ({ page }) => {
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });
 
+test('closes gateway action menu on outside pointer without triggering an action', async ({
+  page,
+}) => {
+  await useGatewayActionFixture(page);
+  await page.goto('/configPage/serverSetting');
+
+  const targetRow = page.locator('.server-setting-gateway-row', { hasText: 'Keyboard Gateway B' });
+  await targetRow.getByRole('button', { name: /更多/ }).click();
+
+  const menu = page.getByRole('menu');
+  await expect(menu).toBeVisible();
+
+  await page.mouse.click(24, 24);
+
+  await expect(menu).toBeHidden();
+  await expect(targetRow).toBeVisible();
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => JSON.parse(localStorage.getItem('viridian.web.config') || '{}').gateway?.length,
+      ),
+    )
+    .toBe(2);
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
+test('keeps confirm prompts focus-trapped and cancelable by keyboard', async ({ page }) => {
+  await useGatewayActionFixture(page);
+  await page.goto('/configPage/serverSetting');
+
+  const targetRow = page.locator('.server-setting-gateway-row', { hasText: 'Keyboard Gateway B' });
+  await targetRow.getByRole('button', { name: /更多/ }).click();
+  await page.getByRole('menuitem', { name: /删除/ }).click();
+
+  const dialog = page.getByRole('alertdialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText('Keyboard Gateway B')).toBeVisible();
+  await expect
+    .poll(() => dialog.evaluate((element) => element.contains(document.activeElement)))
+    .toBe(true);
+
+  for (let index = 0; index < 5; index += 1) {
+    await page.keyboard.press('Tab');
+    await expect
+      .poll(() => dialog.evaluate((element) => element.contains(document.activeElement)))
+      .toBe(true);
+  }
+
+  await page.keyboard.press('Escape');
+
+  await expect(dialog).toBeHidden();
+  await expect(targetRow).toBeVisible();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        JSON.parse(localStorage.getItem('viridian.web.config') || '{}').gateway?.some(
+          (gateway: { uuid?: string }) => gateway.uuid === 'keyboard-gateway-b',
+        ),
+      ),
+    )
+    .toBe(true);
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
+test('keeps language select keyboard dismissal and selection stable', async ({ page }) => {
+  await page.goto('/configPage/commonSetting');
+
+  const languageSelect = page.getByRole('combobox').first();
+  await languageSelect.focus();
+  await page.keyboard.press('Enter');
+
+  const listbox = page.getByRole('listbox');
+  await expect(listbox).toBeVisible();
+
+  await page.keyboard.press('Escape');
+
+  await expect(listbox).toBeHidden();
+  await expect(languageSelect).toBeFocused();
+
+  await languageSelect.press('Enter');
+  await page.getByRole('option', { name: /English/ }).click();
+
+  await expect(listbox).toBeHidden();
+  await expect
+    .poll(() =>
+      page.evaluate(() => JSON.parse(localStorage.getItem('viridian.web.config') || '{}').language),
+    )
+    .toBe('en-US');
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
 test('keeps login submit disabled when gateway is disconnected', async ({ page }) => {
   await page.goto('/login');
 
@@ -568,7 +675,9 @@ test('keeps login submit disabled when gateway is disconnected', async ({ page }
   await page.getByPlaceholder('请输入密码').fill('demo-password');
 
   await expect(page.getByRole('button', { name: /^登录$/ })).toBeDisabled();
-  await expect(page.locator('.auth-page__status-card').filter({ hasText: 'TLS 保护' })).toBeVisible();
+  await expect(
+    page.locator('.auth-page__status-card').filter({ hasText: 'TLS 保护' }),
+  ).toBeVisible();
 
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });
