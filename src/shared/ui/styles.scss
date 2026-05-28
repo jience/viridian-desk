@@ -397,7 +397,8 @@
   }
 
   .vdui-dropdown,
-  .vdui-popover-inner-content {
+  .vdui-popover-inner-content,
+  .vdui-tooltip-content {
     border-color: color-mix(in srgb, var(--vd-color-border, rgba(61, 91, 78, 0.18)) 90%, #ffffff);
     color: var(--vd-color-text, #20231e);
     background:
@@ -791,7 +792,8 @@
 }
 
 .vdui-dropdown,
-.vdui-popover-inner-content {
+.vdui-popover-inner-content,
+.vdui-tooltip-content {
   position: absolute;
   z-index: 900;
   min-width: 160px;
@@ -802,6 +804,30 @@
   background: color-mix(in srgb, var(--vd-color-panel, #121a16) 96%, transparent);
   box-shadow: 0 18px 50px color-mix(in srgb, var(--vd-color-rail, #050705) 22%, transparent);
   backdrop-filter: blur(16px);
+}
+
+.vdui-tooltip-content {
+  z-index: 1100;
+  max-width: 320px;
+  min-width: 0;
+  padding: 7px 9px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.45;
+  animation: vdSelectMenuIn 120ms ease-out;
+}
+
+.vdui-tooltip-arrow,
+.vdui-popover-arrow {
+  fill: color-mix(in srgb, var(--vd-color-panel, #121a16) 96%, transparent);
+}
+
+.vdui-popover-title {
+  padding: 6px 7px 4px;
+  color: var(--vd-color-text, inherit);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.35;
 }
 
 .vdui-dropdown {

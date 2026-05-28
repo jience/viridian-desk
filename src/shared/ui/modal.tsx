@@ -1,4 +1,5 @@
-import { useEffect, useId, useRef, type ReactNode } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { useEffect, useRef, type ReactNode } from 'react';
 
 import { Button, type ButtonProps } from './button';
 import { showConfirm } from './confirm';
@@ -31,76 +32,22 @@ export interface ModalProps {
   [key: string]: unknown;
 }
 
-const focusableSelector = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(',');
-
-const getFocusableElements = (container: HTMLElement) =>
-  Array.from(container.querySelectorAll<HTMLElement>(focusableSelector)).filter(
-    (element) => !element.hasAttribute('disabled') && element.offsetParent !== null,
-  );
-
 export const Modal = Object.assign(
   function ModalComponent(props: ModalProps) {
-    const open = props.open;
-    const titleId = useId();
-    const dialogRef = useRef<HTMLElement>(null);
-    const onCancelRef = useRef(props.onCancel);
-    const keyboardRef = useRef(props.keyboard);
+    const open = Boolean(props.open);
+    const wasOpenRef = useRef(false);
+    const contentRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
-      onCancelRef.current = props.onCancel;
-      keyboardRef.current = props.keyboard;
-    });
-
-    useEffect(() => {
-      if (!open) return;
-
-      const activeElement =
-        document.activeElement instanceof HTMLElement ? document.activeElement : null;
-      const focusTimer = window.setTimeout(() => dialogRef.current?.focus(), 0);
-      const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Escape' && keyboardRef.current !== false) {
-          event.stopPropagation();
-          onCancelRef.current?.();
-        }
-
-        if (event.key !== 'Tab' || !dialogRef.current) return;
-
-        const focusableElements = getFocusableElements(dialogRef.current);
-        if (!focusableElements.length) {
-          event.preventDefault();
-          dialogRef.current.focus();
-          return;
-        }
-
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        if (event.shiftKey && document.activeElement === firstElement) {
-          event.preventDefault();
-          lastElement.focus();
-        } else if (!event.shiftKey && document.activeElement === lastElement) {
-          event.preventDefault();
-          firstElement.focus();
-        }
-      };
-
-      document.addEventListener('keydown', handleKeyDown);
-
-      return () => {
-        window.clearTimeout(focusTimer);
-        document.removeEventListener('keydown', handleKeyDown);
-        activeElement?.focus?.();
-      };
-    }, [open]);
+      if (wasOpenRef.current && !open) {
+        props.afterClose?.();
+      }
+      wasOpenRef.current = open;
+    }, [open, props.afterClose]);
 
     if (!open) return null;
+
+    const maskClosable = props.maskClosable === true;
     const footer =
       props.footer === undefined ? (
         <div className="vdui-modal-footer">
@@ -121,42 +68,63 @@ export const Modal = Object.assign(
       );
 
     return (
-      <div className={cn('vdui-modal-root', props.centered && 'vdui-modal-root--centered')}>
-        <div
-          className="vdui-modal-mask"
-          onClick={props.maskClosable ? props.onCancel : undefined}
-        />
-        <div className={cn('vdui-modal-panel', props.className)} style={{ width: props.width }}>
-          <section
-            ref={dialogRef}
-            className="vdui-modal-content"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={props.title ? titleId : undefined}
-            tabIndex={-1}
-          >
-            {props.title && (
-              <header className="vdui-modal-header">
-                <div className="vdui-modal-title" id={titleId}>
-                  {props.title}
-                </div>
-              </header>
-            )}
-            {props.closable !== false && (
-              <button
-                aria-label="Close"
-                className="vdui-modal-close"
-                type="button"
-                onClick={props.onCancel}
+      <Dialog.Root
+        open={open}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) props.onCancel?.();
+        }}
+      >
+        <Dialog.Portal>
+          <div className={cn('vdui-modal-root', props.centered && 'vdui-modal-root--centered')}>
+            <Dialog.Overlay asChild>
+              <div className="vdui-modal-mask" />
+            </Dialog.Overlay>
+            <div
+              className={cn('vdui-modal-panel', props.className)}
+              style={{ width: props.width }}
+            >
+              <Dialog.Content
+                asChild
+                onEscapeKeyDown={(event) => {
+                  if (props.keyboard === false) event.preventDefault();
+                }}
+                onPointerDownOutside={(event) => {
+                  if (!maskClosable) event.preventDefault();
+                }}
+                onInteractOutside={(event) => {
+                  if (!maskClosable) event.preventDefault();
+                }}
+                onOpenAutoFocus={(event) => {
+                  event.preventDefault();
+                  window.requestAnimationFrame(() => contentRef.current?.focus());
+                }}
               >
-                <span aria-hidden="true" />
-              </button>
-            )}
-            <div className="vdui-modal-body">{props.children}</div>
-            {footer}
-          </section>
-        </div>
-      </div>
+                <section ref={contentRef} className="vdui-modal-content" tabIndex={-1}>
+                  {props.title && (
+                    <header className="vdui-modal-header">
+                      <Dialog.Title asChild>
+                        <div className="vdui-modal-title">{props.title}</div>
+                      </Dialog.Title>
+                    </header>
+                  )}
+                  {props.closable !== false && (
+                    <button
+                      aria-label="Close"
+                      className="vdui-modal-close"
+                      type="button"
+                      onClick={props.onCancel}
+                    >
+                      <span aria-hidden="true" />
+                    </button>
+                  )}
+                  <div className="vdui-modal-body">{props.children}</div>
+                  {footer}
+                </section>
+              </Dialog.Content>
+            </div>
+          </div>
+        </Dialog.Portal>
+      </Dialog.Root>
     );
   },
   {
