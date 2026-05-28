@@ -107,12 +107,18 @@
     height: 34px !important;
     padding: 0 !important;
     background: transparent !important;
+    color: transparent !important;
     cursor: pointer !important;
+    font-size: 0 !important;
   }
 
   .vdui-select-selection-item,
   .vdui-select-placeholder {
     display: none;
+  }
+
+  .vdui-select-value {
+    opacity: 0;
   }
 
   .vdui-select-arrow,
