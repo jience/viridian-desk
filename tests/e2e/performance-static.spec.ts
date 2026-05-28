@@ -359,9 +359,15 @@ test('uses mature headless primitives behind the shared ui boundary', () => {
   const overlaySource = source('src/shared/ui/overlay.tsx');
   const tableSource = source('src/shared/ui/table.tsx');
   const formSource = source('src/shared/ui/form.tsx');
+  const selectSource = source('src/shared/ui/select.tsx');
+  const dropdownSource = source('src/shared/ui/dropdown.tsx');
+  const selectionSource = source('src/shared/ui/selection.tsx');
   const boundaryDependencies = [
     '@radix-ui/react-dialog',
+    '@radix-ui/react-dropdown-menu',
     '@radix-ui/react-popover',
+    '@radix-ui/react-select',
+    '@radix-ui/react-switch',
     '@radix-ui/react-tooltip',
     '@tanstack/react-table',
     '@tanstack/react-virtual',
@@ -386,6 +392,18 @@ test('uses mature headless primitives behind the shared ui boundary', () => {
 
   expect(formSource).toContain("from 'react-hook-form'");
   expect(formSource).toContain('createFormControl');
+
+  expect(selectSource).toContain("from '@radix-ui/react-select'");
+  expect(selectSource).toContain('<SelectPrimitive.Root');
+  expect(selectSource).not.toContain("document.addEventListener('pointerdown'");
+
+  expect(dropdownSource).toContain("from '@radix-ui/react-dropdown-menu'");
+  expect(dropdownSource).toContain('<DropdownMenuPrimitive.Root');
+  expect(dropdownSource).not.toContain("document.addEventListener('pointerdown'");
+  expect(dropdownSource).not.toContain("document.addEventListener('keydown'");
+
+  expect(selectionSource).toContain("from '@radix-ui/react-switch'");
+  expect(selectionSource).toContain('<SwitchPrimitive.Root');
 
   for (const file of collectSourceFiles('src')) {
     if (file.startsWith('src/shared/ui/')) continue;
@@ -2030,7 +2048,9 @@ test('keeps account controls inside the left-bottom workbench', () => {
   const enUSCore = source('src/assets/locales/en-US/core.json');
 
   expect(overlaySource).toContain("from '@radix-ui/react-popover'");
-  expect(overlaySource).toContain('<PopoverPrimitive.Root open={visible} onOpenChange={setVisible}>');
+  expect(overlaySource).toContain(
+    '<PopoverPrimitive.Root open={visible} onOpenChange={setVisible}>',
+  );
   expect(overlaySource).toContain('onOpenChange?.(nextOpen)');
   expect(overlaySource).not.toContain("document.addEventListener('pointerdown'");
   expect(overlaySource).not.toContain("document.addEventListener('keydown'");
