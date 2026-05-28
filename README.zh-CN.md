@@ -55,13 +55,9 @@
 
 ## 📸 截图
 
-<p align="center">
-  <i>截图将在首次发布后补充</i>
-</p>
-
-| 登录界面 | 主界面 | 已连接 |
+| 深色登录 | 浅色登录 | 桌面工作台 |
 | :---: | :---: | :---: |
-| ![登录界面](docs/screenshots/login.png) | ![主界面](docs/screenshots/dashboard.png) | ![已连接](docs/screenshots/connected.png) |
+| ![深色登录界面](docs/preview/login-dark.png) | ![浅色登录界面](docs/preview/login-light.png) | ![桌面工作台](docs/preview/app-desk-dark.png) |
 
 ---
 
