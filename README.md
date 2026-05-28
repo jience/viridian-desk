@@ -55,13 +55,9 @@ Built with **Tauri** and **React**, Viridian Desk offers a small footprint, exce
 
 ## 📸 Screenshots
 
-<p align="center">
-  <i>Screenshots will be added after initial release</i>
-</p>
-
-| Login | Dashboard | Connected |
+| Dark Login | Light Login | Workspace |
 | :---: | :---: | :---: |
-| ![Login](docs/screenshots/login.png) | ![Dashboard](docs/screenshots/dashboard.png) | ![Connected](docs/screenshots/connected.png) |
+| ![Dark login screen](docs/preview/login-dark.png) | ![Light login screen](docs/preview/login-light.png) | ![Desktop workspace](docs/preview/app-desk-dark.png) |
 
 ---
 
