@@ -65,6 +65,12 @@ export default defineConfig({
           if (packageName?.startsWith('@radix-ui/')) {
             return 'vendor-radix';
           }
+          if (packageName?.startsWith('@tanstack/')) {
+            return 'vendor-data';
+          }
+          if (packageName === 'react-hook-form') {
+            return 'vendor-form';
+          }
           if (packageName === 'lucide-react' || packageName === 'lucide') {
             return 'vendor-icons';
           }

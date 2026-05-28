@@ -1,4 +1,14 @@
-import pxtorem from 'postcss-pxtorem';
+import { createRequire } from 'node:module';
+
+type PxToRemOptions = {
+  rootValue: number;
+  propList: string[];
+};
+
+type PxToRemFactory = (options: PxToRemOptions) => unknown;
+
+const require = createRequire(import.meta.url);
+const pxtorem = require('postcss-pxtorem') as PxToRemFactory;
 
 export default {
   plugins: [

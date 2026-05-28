@@ -11,6 +11,12 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
+import {
+  createFormControl,
+  type FieldValues,
+  type Path,
+  type PathValue,
+} from 'react-hook-form';
 
 import { cn } from './lib/cn';
 import type { AnyRecord } from './types';
@@ -77,8 +83,12 @@ const validateRule = async (rule: FormRule, value: any): Promise<ReactNode | nul
   }
 };
 
-const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
-  const values: AnyRecord = {};
+const createForm = <T extends AnyRecord & FieldValues = AnyRecord>(): FormInstance<T> => {
+  const formControl = createFormControl<T>();
+  formControl.subscribe({
+    formState: { values: true },
+    callback: () => undefined,
+  });
   const initial: AnyRecord = {};
   const rules = new Map<string, RuleInput[]>();
   const errors = new Map<string, ReactNode[]>();
@@ -89,35 +99,44 @@ const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
     fieldListeners.get(name)?.forEach((listener) => listener());
     notify();
   };
+  const getValue = (name: keyof T | string) => formControl.getValues(String(name) as Path<T>);
+  const getValues = () => formControl.getValues() as T;
+  const writeValue = (name: keyof T | string, value: any) => {
+    const path = String(name) as Path<T>;
+    formControl.setValue(path, value as PathValue<T, typeof path>, {
+      shouldDirty: true,
+      shouldTouch: false,
+      shouldValidate: false,
+    });
+  };
   const setValue = (name: keyof T | string, value: any, shouldNotify: boolean) => {
     const key = String(name);
-    values[key] = value;
+    writeValue(key, value);
     errors.delete(key);
     if (shouldNotify) notifyField(key);
   };
   const api: FormInstance<T> = {
-    getFieldValue: (name) => values[String(name)],
-    getFieldsValue: () => ({ ...values }) as T,
+    getFieldValue: (name) => getValue(name),
+    getFieldsValue: () => ({ ...getValues() }) as T,
     getFieldError: (name) => errors.get(String(name)) ?? [],
     setFieldsValue: (next) => {
-      Object.assign(values, next);
+      Object.entries(next).forEach(([key, value]) => writeValue(key, value));
       Object.keys(next).forEach((key) => errors.delete(key));
       Object.keys(next).forEach((key) => notifyField(key));
     },
     setFieldValue: (name, value) => setValue(name, value, true),
     resetFields: (names) => {
+      const values = getValues();
       const changedKeys =
         names?.map(String) ??
         Array.from(new Set([...Object.keys(values), ...Object.keys(initial)]));
       if (!names) {
-        Object.keys(values).forEach((key) => delete values[key]);
-        Object.assign(values, initial);
+        formControl.reset({ ...initial } as T);
         errors.clear();
       } else {
         names.forEach((name) => {
           const key = String(name);
-          if (key in initial) values[key] = initial[key];
-          else delete values[key];
+          writeValue(key, key in initial ? initial[key] : undefined);
           errors.delete(key);
         });
       }
@@ -130,7 +149,7 @@ const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
       keys.forEach((key) => errors.delete(key));
 
       for (const key of keys) {
-        const value = values[key];
+        const value = getValue(key);
         for (const ruleInput of rules.get(key) || []) {
           const rule = typeof ruleInput === 'function' ? ruleInput(api as any) : ruleInput;
           const error = await validateRule(rule, value);
@@ -146,10 +165,10 @@ const createForm = <T extends AnyRecord = AnyRecord>(): FormInstance<T> => {
       keys.forEach((key) => notifyField(key));
 
       if (errorFields.length) {
-        throw { errorFields, values: { ...values } };
+        throw { errorFields, values: { ...getValues() } };
       }
 
-      return { ...values } as T;
+      return { ...getValues() } as T;
     },
     _register: (name, nextRules = []) => {
       rules.set(name, nextRules);

@@ -350,6 +350,52 @@ test('keeps low-frequency modal components lazy-loaded', () => {
   );
 });
 
+test('uses mature headless primitives behind the shared ui boundary', () => {
+  const packageJson = readJson('package.json') as {
+    dependencies?: Record<string, string>;
+  };
+  const deps = packageJson.dependencies ?? {};
+  const modalSource = source('src/shared/ui/modal.tsx');
+  const overlaySource = source('src/shared/ui/overlay.tsx');
+  const tableSource = source('src/shared/ui/table.tsx');
+  const formSource = source('src/shared/ui/form.tsx');
+  const boundaryDependencies = [
+    '@radix-ui/react-dialog',
+    '@radix-ui/react-popover',
+    '@radix-ui/react-tooltip',
+    '@tanstack/react-table',
+    '@tanstack/react-virtual',
+    'react-hook-form',
+  ];
+
+  for (const dep of boundaryDependencies) {
+    expect(deps[dep], dep).toBeTruthy();
+  }
+
+  expect(modalSource).toContain("from '@radix-ui/react-dialog'");
+  expect(modalSource).not.toContain("document.addEventListener('keydown'");
+  expect(modalSource).not.toContain('getFocusableElements');
+
+  expect(overlaySource).toContain("from '@radix-ui/react-popover'");
+  expect(overlaySource).toContain("from '@radix-ui/react-tooltip'");
+  expect(overlaySource).not.toContain("document.addEventListener('pointerdown'");
+  expect(overlaySource).not.toContain("document.addEventListener('keydown'");
+
+  expect(tableSource).toContain("from '@tanstack/react-table'");
+  expect(tableSource).toContain('getCoreRowModel');
+
+  expect(formSource).toContain("from 'react-hook-form'");
+  expect(formSource).toContain('createFormControl');
+
+  for (const file of collectSourceFiles('src')) {
+    if (file.startsWith('src/shared/ui/')) continue;
+    const fileSource = source(file);
+    for (const dep of boundaryDependencies) {
+      expect(fileSource, `${file} must import ${dep} through @/shared/ui`).not.toContain(dep);
+    }
+  }
+});
+
 test('loads the desk connection overlay only while connecting', () => {
   const deskPageSource = source('src/features/desktop/pages/desktop-page.tsx');
 
@@ -1983,13 +2029,11 @@ test('keeps account controls inside the left-bottom workbench', () => {
   const zhTWCore = source('src/assets/locales/zh-TW/core.json');
   const enUSCore = source('src/assets/locales/en-US/core.json');
 
-  expect(overlaySource).toContain('rootRef.current?.contains(target)');
-  expect(overlaySource).toContain(
-    "document.addEventListener('pointerdown', handlePointerDown, true)",
-  );
-  expect(overlaySource).toContain("document.addEventListener('keydown', handleKeyDown)");
-  expect(overlaySource).toContain("event.key === 'Escape'");
-  expect(overlaySource).toContain('onOpenChange?.(false)');
+  expect(overlaySource).toContain("from '@radix-ui/react-popover'");
+  expect(overlaySource).toContain('<PopoverPrimitive.Root open={visible} onOpenChange={setVisible}>');
+  expect(overlaySource).toContain('onOpenChange?.(nextOpen)');
+  expect(overlaySource).not.toContain("document.addEventListener('pointerdown'");
+  expect(overlaySource).not.toContain("document.addEventListener('keydown'");
   expect(existsSync(join(process.cwd(), workbenchPath)), workbenchPath).toBe(true);
   expect(existsSync(join(process.cwd(), workbenchViewsPath)), workbenchViewsPath).toBe(true);
   expect(existsSync(join(process.cwd(), workbenchStylesPath)), workbenchStylesPath).toBe(true);
@@ -2176,6 +2220,10 @@ test('splits vendor chunks by exact package name to avoid production init cycles
 
   expect(viteConfig).toContain('function getNodePackageName');
   expect(viteConfig).toContain("packageName === 'react-i18next'");
+  expect(viteConfig).toContain("packageName?.startsWith('@tanstack/')");
+  expect(viteConfig).toContain("packageName === 'react-hook-form'");
+  expect(viteConfig).toContain("return 'vendor-data'");
+  expect(viteConfig).toContain("return 'vendor-form'");
   expect(viteConfig).toContain("return 'vendor-icons'");
   expect(viteConfig).toContain("return 'vendor-state'");
   expect(viteConfig).not.toContain("return 'vendor-scrollbars'");
