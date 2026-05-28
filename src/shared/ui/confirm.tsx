@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
+import * as Dialog from '@radix-ui/react-dialog';
 import {
   useCallback,
   useEffect,
@@ -49,15 +50,6 @@ export type ConfirmController = {
   destroy: () => void;
   update: (props?: Partial<ConfirmProps>) => void;
 };
-
-const focusableSelector = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(',');
 
 const variantIcon: Record<ConfirmVariant, string> = {
   confirm: '?',
@@ -113,7 +105,7 @@ function ConfirmDialog({
 }) {
   const titleId = useId();
   const descriptionId = useId();
-  const dialogRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLElement>(null);
   const mountedRef = useRef(true);
   const [pending, setPending] = useState(false);
   const variant = props.variant ?? props.type ?? 'confirm';
@@ -161,125 +153,118 @@ function ConfirmDialog({
     };
   }, []);
 
-  useEffect(() => {
-    const activeElement =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const focusTimer = window.setTimeout(() => dialogRef.current?.focus(), 0);
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && props.keyboard !== false) {
-        event.stopPropagation();
-        handleCancel();
-        return;
-      }
-
-      if (event.key !== 'Tab' || !dialogRef.current) return;
-      const focusableElements = Array.from(
-        dialogRef.current.querySelectorAll<HTMLElement>(focusableSelector),
-      ).filter((element) => element.offsetParent !== null);
-      if (!focusableElements.length) {
-        event.preventDefault();
-        dialogRef.current.focus();
-        return;
-      }
-
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
-      if (event.shiftKey && document.activeElement === firstElement) {
-        event.preventDefault();
-        lastElement.focus();
-      } else if (!event.shiftKey && document.activeElement === lastElement) {
-        event.preventDefault();
-        firstElement.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.clearTimeout(focusTimer);
-      document.removeEventListener('keydown', handleKeyDown);
-      activeElement?.focus?.();
-    };
-  }, [handleCancel, props.keyboard]);
-
   return (
-    <div
-      className={joinClassNames(
-        'vdui-modal-root vdui-confirm-root',
-        props.centered !== false && 'vdui-modal-root--centered',
-        !open && 'vdui-confirm-root--leaving',
-      )}
+    <Dialog.Root
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) handleCancel();
+      }}
     >
-      <div className="vdui-modal-mask" onClick={props.maskClosable ? handleCancel : undefined} />
-      <div
-        className={joinClassNames('vdui-modal-panel vdui-confirm-panel', props.className)}
-        style={{ width: toCssSize(props.width ?? 440) }}
-      >
-        <section
-          ref={dialogRef}
-          className={joinClassNames('vdui-modal-content vdui-confirm-modal', `is-${variant}`)}
-          role="alertdialog"
-          aria-modal="true"
-          aria-live="polite"
-          aria-labelledby={titleId}
-          aria-describedby={content ? descriptionId : undefined}
-          tabIndex={-1}
-        >
-          {props.closable !== false && (
-            <button
-              aria-label="Close"
-              className="vdui-modal-close vdui-confirm-modal__close"
-              type="button"
-              onClick={handleCancel}
-            >
-              <span aria-hidden="true" />
-            </button>
+      <Dialog.Portal forceMount>
+        <div
+          className={joinClassNames(
+            'vdui-modal-root vdui-confirm-root',
+            props.centered !== false && 'vdui-modal-root--centered',
+            !open && 'vdui-confirm-root--leaving',
           )}
+        >
+          <Dialog.Overlay asChild forceMount>
+            <div className="vdui-modal-mask" />
+          </Dialog.Overlay>
           <div
-            className={joinClassNames(
-              'vdui-confirm-modal__body',
-              !showIcon && 'vdui-confirm-modal__body--no-icon',
-            )}
+            className={joinClassNames('vdui-modal-panel vdui-confirm-panel', props.className)}
+            style={{ width: toCssSize(props.width ?? 440) }}
           >
-            {showIcon && (
-              <div className="vdui-confirm-modal__icon" aria-hidden="true">
-                {props.icon ?? variantIcon[variant]}
-              </div>
-            )}
-            <div className="vdui-confirm-modal__copy">
-              <div className="vdui-modal-title vdui-confirm-modal__title" id={titleId}>
-                {props.title ?? 'Confirm'}
-              </div>
-              {content && (
-                <div className="vdui-confirm-modal__description" id={descriptionId}>
-                  {content}
+            <Dialog.Content
+              asChild
+              forceMount
+              onEscapeKeyDown={(event) => {
+                if (props.keyboard === false) event.preventDefault();
+              }}
+              onPointerDownOutside={(event) => {
+                if (!props.maskClosable) event.preventDefault();
+              }}
+              onInteractOutside={(event) => {
+                if (!props.maskClosable) event.preventDefault();
+              }}
+              onOpenAutoFocus={(event) => {
+                event.preventDefault();
+                window.requestAnimationFrame(() => contentRef.current?.focus());
+              }}
+            >
+              <section
+                ref={contentRef}
+                className={joinClassNames('vdui-modal-content vdui-confirm-modal', `is-${variant}`)}
+                role="alertdialog"
+                aria-modal="true"
+                aria-live="polite"
+                aria-labelledby={titleId}
+                aria-describedby={content ? descriptionId : undefined}
+                tabIndex={-1}
+              >
+                {props.closable !== false && (
+                  <button
+                    aria-label="Close"
+                    className="vdui-modal-close vdui-confirm-modal__close"
+                    type="button"
+                    onClick={handleCancel}
+                  >
+                    <span aria-hidden="true" />
+                  </button>
+                )}
+                <div
+                  className={joinClassNames(
+                    'vdui-confirm-modal__body',
+                    !showIcon && 'vdui-confirm-modal__body--no-icon',
+                  )}
+                >
+                  {showIcon && (
+                    <div className="vdui-confirm-modal__icon" aria-hidden="true">
+                      {props.icon ?? variantIcon[variant]}
+                    </div>
+                  )}
+                  <div className="vdui-confirm-modal__copy">
+                    <Dialog.Title asChild>
+                      <div className="vdui-modal-title vdui-confirm-modal__title" id={titleId}>
+                        {props.title ?? 'Confirm'}
+                      </div>
+                    </Dialog.Title>
+                    {content && (
+                      <Dialog.Description asChild>
+                        <div className="vdui-confirm-modal__description" id={descriptionId}>
+                          {content}
+                        </div>
+                      </Dialog.Description>
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
+                <div className="vdui-modal-footer vdui-confirm-modal__footer">
+                  <button
+                    {...cancelButtonProps}
+                    className={joinClassNames('vdui-btn vdui-btn-normal', cancelClassName)}
+                    disabled={cancelDisabled}
+                    type="button"
+                    onClick={handleCancel}
+                  >
+                    <span>{props.cancelText ?? 'Cancel'}</span>
+                  </button>
+                  <button
+                    {...okButtonProps}
+                    className={joinClassNames('vdui-btn vdui-btn-primary', okClassName)}
+                    disabled={okDisabled}
+                    type="button"
+                    onClick={handleOk}
+                  >
+                    {okLoading && <span className="vd-spinner vd-spinner--inline" />}
+                    <span>{props.okText ?? 'OK'}</span>
+                  </button>
+                </div>
+              </section>
+            </Dialog.Content>
           </div>
-          <div className="vdui-modal-footer vdui-confirm-modal__footer">
-            <button
-              {...cancelButtonProps}
-              className={joinClassNames('vdui-btn vdui-btn-normal', cancelClassName)}
-              disabled={cancelDisabled}
-              type="button"
-              onClick={handleCancel}
-            >
-              <span>{props.cancelText ?? 'Cancel'}</span>
-            </button>
-            <button
-              {...okButtonProps}
-              className={joinClassNames('vdui-btn vdui-btn-primary', okClassName)}
-              disabled={okDisabled}
-              type="button"
-              onClick={handleOk}
-            >
-              {okLoading && <span className="vd-spinner vd-spinner--inline" />}
-              <span>{props.okText ?? 'OK'}</span>
-            </button>
-          </div>
-        </section>
-      </div>
-    </div>
+        </div>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }
 
