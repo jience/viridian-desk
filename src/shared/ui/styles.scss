@@ -954,6 +954,14 @@
   background: color-mix(in srgb, var(--vd-color-surface, #fff) 4%, transparent);
 }
 
+.vdui-table-cell-ellipsis {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .vdui-pagination {
   margin-top: 12px;
   display: flex;
