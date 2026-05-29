@@ -814,7 +814,10 @@ test('updates create ticket form fields after selecting a ticket type', async ({
   await loginWithPermissions(page, smokePermissions.malfunction);
   await expect(page).toHaveURL(/\/app\/malfunction$/);
 
-  await page.getByRole('button', { name: /创建工单/ }).click();
+  await page
+    .locator('.malfunction-page__actions')
+    .getByRole('button', { name: /创建工单/ })
+    .click();
   const dialog = page.getByRole('dialog', { name: /创建工单/ });
   const desktopFieldLabel = dialog.locator('.vdui-form-item-label', { hasText: '问题桌面' });
   await expect(dialog).toBeVisible();
