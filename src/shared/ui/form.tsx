@@ -198,7 +198,12 @@ const createForm = <T extends AnyRecord & FieldValues = AnyRecord>(): FormInstan
   return api;
 };
 
-const FormContext = createContext<FormInstance | null>(null);
+type FormContextValue = {
+  form: FormInstance;
+  onValuesChange?: (changed: AnyRecord, values: AnyRecord) => void;
+};
+
+const FormContext = createContext<FormContextValue | null>(null);
 
 interface FormProps extends Omit<HTMLAttributes<HTMLFormElement>, 'onChange'> {
   form?: FormInstance;
@@ -226,8 +231,10 @@ function FormItem({
   liveValue = true,
   children,
   className,
+  hidden,
 }: FormItemProps) {
-  const form = useContext(FormContext);
+  const formContext = useContext(FormContext);
+  const form = formContext?.form;
   const [, force] = useState(0);
   const fieldId = useId();
   const errorId = `${fieldId}-error`;
@@ -270,6 +277,7 @@ function FormItem({
                   : event;
             if (shouldWriteLiveValue) {
               form.setFieldValue(key, value);
+              formContext?.onValuesChange?.({ [key]: value }, form.getFieldsValue());
             } else {
               form._setFieldValueSilently?.(key, value);
             }
@@ -285,7 +293,10 @@ function FormItem({
       : children;
 
   return (
-    <div className={cn('vdui-form-item', hasError && 'vdui-form-item-has-error', className)}>
+    <div
+      className={cn('vdui-form-item', hasError && 'vdui-form-item-has-error', className)}
+      hidden={hidden}
+    >
       {label && (
         <label className="vdui-form-item-label" htmlFor={key ? fieldId : undefined}>
           {label}
@@ -317,7 +328,7 @@ export const Form = Object.assign(
     layout = 'horizontal',
     onFinish,
     onSubmit,
-    onValuesChange: _onValuesChange,
+    onValuesChange,
     ...props
   }: FormProps) {
     const ownFormRef = useRef<FormInstance | null>(null);
@@ -330,7 +341,7 @@ export const Form = Object.assign(
       }
     }, [formInstance, initialValues]);
     return (
-      <FormContext.Provider value={formInstance}>
+      <FormContext.Provider value={{ form: formInstance, onValuesChange }}>
         <form
           className={cn('vdui-form', `vdui-form-layout-${layout}`, className)}
           onSubmit={(event) => {

@@ -218,14 +218,12 @@
   .vdui-select-clear {
     display: none;
   }
+}
 
-  .vdui-select-dropdown {
-    right: 0;
-    left: auto;
-    width: min(248px, 72vw);
-    min-width: 190px;
-    max-width: 248px;
-  }
+.vdui-select-dropdown.login-gateway-dock__menu {
+  width: min(248px, calc(100vw - 24px)) !important;
+  min-width: min(190px, calc(100vw - 24px)) !important;
+  max-width: min(248px, calc(100vw - 24px)) !important;
 }
 
 .login-gateway-dock--readonly {

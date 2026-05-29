@@ -78,7 +78,10 @@ export function LoginGatewayDock({ readonly = false }: LoginGatewayDockProps) {
           suffixIcon={null}
           size="small"
           className="login-gateway-dock__select"
-          classNames={{ root: 'login-gateway-dock__select' }}
+          classNames={{
+            root: 'login-gateway-dock__select',
+            popup: 'login-gateway-dock__menu',
+          }}
           options={options}
         />
       )}
