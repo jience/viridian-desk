@@ -4,16 +4,14 @@ import { bridge } from '@/native';
 import { Outlet } from 'react-router';
 import { globalEmitter } from '@/utils/mitt';
 import { message } from '@/shared/ui/message';
-import { useAppDispatch, useAppSelector } from '@/store';
+import { useAppSelector } from '@/store';
 import { selectIsThin } from '@/store/feature/terminal';
 import ControlWindow from '@/features/shell/components/control-window';
-import { setConnected } from '@/store/feature/gateway';
 import type { UnlistenFn } from '@/native/interfaces/types';
 import { useTranslation } from 'react-i18next';
 import { logger } from '@/utils/logger';
 
 const ClientLayout = () => {
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const isThin = useAppSelector(selectIsThin);
@@ -31,24 +29,9 @@ const ClientLayout = () => {
 
   useEffect(() => {
     let disposed = false;
-    let clientOnlineUnlisten: UnlistenFn | null = null;
     let desktopConnectUnlisten: UnlistenFn | null = null;
 
     const setupListeners = async () => {
-      try {
-        const unlisten = await bridge.onEvent('client-online', (payload) => {
-          const { is_online } = payload;
-          dispatch(setConnected(is_online));
-        });
-        if (disposed) {
-          unlisten();
-        } else {
-          clientOnlineUnlisten = unlisten;
-        }
-      } catch (error) {
-        logger.debug('client-online listener unavailable', error);
-      }
-
       try {
         const unlisten = await bridge.onEvent('desktop-connect', (payload) => {
           logger.debug('desktopConnectMonitor', payload);
@@ -67,10 +50,9 @@ const ClientLayout = () => {
 
     return () => {
       disposed = true;
-      clientOnlineUnlisten?.();
       desktopConnectUnlisten?.();
     };
-  }, [dispatch]);
+  }, []);
 
   const dragAttr = useMemo(() => {
     return !isThin ? { 'data-tauri-drag-region': 'true' } : { 'none-drag-region': 'true' };

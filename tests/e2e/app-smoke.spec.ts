@@ -30,6 +30,7 @@ test.beforeEach(async ({ page }) => {
       number,
       { callback: (...args: unknown[]) => unknown; once?: boolean }
     >();
+    const eventListeners = new Map<number, { event: string; handler: number }>();
     const httpRequests = new Map<number, string>();
 
     const smokeConfig = {
@@ -78,6 +79,16 @@ test.beforeEach(async ({ page }) => {
     };
     const getGatewayList = () => readConfig().gateway || [];
     const setGatewayList = (gateway: unknown[]) => writeConfig({ gateway });
+    const getSelectedGatewayOnline = () =>
+      Boolean(getGatewayList().find((gateway: any) => gateway.auto)?.online);
+    const emitTauriEvent = (event: string, payload: unknown) => {
+      for (const [id, listener] of eventListeners.entries()) {
+        if (listener.event !== event) continue;
+        const callback = callbacks.get(listener.handler);
+        callback?.callback({ event, id, payload });
+        if (callback?.once) callbacks.delete(listener.handler);
+      }
+    };
     const getAppConf = () => {
       const config = readConfig();
       return {
@@ -262,10 +273,14 @@ test.beforeEach(async ({ page }) => {
           case 'set_autoupdate':
           case 'login':
           case 'logout':
-          case 'plugin:event|unlisten':
           case 'plugin:window|minimize':
           case 'plugin:window|maximize':
           case 'plugin:window|close':
+            return null;
+          case 'reconnect_ws':
+            window.setTimeout(() => {
+              emitTauriEvent('client-online', { is_online: getSelectedGatewayOnline() });
+            }, 0);
             return null;
           case 'plugin:window|is_maximized':
           case 'plugin:window|is_fullscreen':
@@ -273,7 +288,14 @@ test.beforeEach(async ({ page }) => {
             return false;
           case 'plugin:event|listen':
             listenerId += 1;
+            eventListeners.set(listenerId, {
+              event: String(args?.event || ''),
+              handler: Number(args?.handler),
+            });
             return listenerId;
+          case 'plugin:event|unlisten':
+            eventListeners.delete(Number(args?.eventId ?? args?.id));
+            return null;
           case 'plugin:http|fetch':
             requestId += 1;
             httpRequests.set(requestId, String(args?.clientConfig?.url || ''));
