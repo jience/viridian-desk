@@ -1588,6 +1588,8 @@ test('keeps the login page hero and footer controls minimal', () => {
   expect(footerSource).not.toContain('setMsgModalShow');
   expect(footerSource).not.toContain('selectMsgDot');
   expect(footerSource).not.toContain('openDocs');
+  expect(footerSource).not.toContain('<Tooltip');
+  expect(footerSource).not.toContain('title={action.label}');
   expect(footerStyles).not.toContain('login-footer__action--unread');
 });
 

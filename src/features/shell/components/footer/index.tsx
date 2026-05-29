@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { useNavigate } from 'react-router';
-import { Tooltip, Modal } from '@/shared/ui';
+import { Modal } from '@/shared/ui';
 import './index.scss';
 import { useAppSelector } from '@/store';
 import { selectIsThin } from '@/store/feature/terminal/terminalSlice';
@@ -83,19 +83,18 @@ const Footer: FC<FooterProps> = ({ rightSlot }) => {
         <div className="login-footer__actions">
           {actions.map((action) => {
             return (
-              <Tooltip key={action.key} placement="top" title={action.label} arrow={false}>
-                <button
-                  type="button"
-                  aria-label={action.label}
-                  className={cn(
-                    'login-footer__action',
-                    action.tone === 'danger' && 'login-footer__action--danger',
-                  )}
-                  onClick={action.onClick}
-                >
-                  {action.icon}
-                </button>
-              </Tooltip>
+              <button
+                key={action.key}
+                type="button"
+                aria-label={action.label}
+                className={cn(
+                  'login-footer__action',
+                  action.tone === 'danger' && 'login-footer__action--danger',
+                )}
+                onClick={action.onClick}
+              >
+                {action.icon}
+              </button>
             );
           })}
         </div>
