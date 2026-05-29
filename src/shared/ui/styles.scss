@@ -1039,6 +1039,69 @@
   gap: 7px;
 }
 
+.vdui-checkbox-wrapper {
+  min-height: 30px;
+  color: var(--vd-color-text, inherit);
+  font-size: 13px;
+  line-height: 1.35;
+  cursor: pointer;
+  user-select: none;
+
+  input[type='checkbox'] {
+    appearance: none;
+    position: relative;
+    display: inline-grid;
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    place-items: center;
+    border: 1px solid var(--vd-color-border, rgba(148, 163, 184, 0.28));
+    border-radius: 5px;
+    background: color-mix(in srgb, var(--vd-color-panel, #fff) 72%, transparent);
+    cursor: inherit;
+    transition:
+      border-color 150ms ease,
+      background-color 150ms ease,
+      box-shadow 150ms ease;
+
+    &::after {
+      width: 4px;
+      height: 8px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      content: '';
+      transform: translateY(-1px) rotate(45deg) scale(0);
+      transition: transform 150ms ease;
+    }
+
+    &:checked {
+      border-color: var(--vd-color-accent, #69d99a);
+      background: var(--vd-color-accent, #69d99a);
+    }
+
+    &:checked::after {
+      transform: translateY(-1px) rotate(45deg) scale(1);
+    }
+
+    &:focus-visible {
+      outline: 0;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--vd-color-accent, #69d99a) 18%, transparent);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+    }
+  }
+}
+
+.vdui-checkbox-wrapper-disabled {
+  color: var(--vd-color-muted, rgba(148, 163, 184, 0.62));
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
 .vdui-radio-group {
   display: inline-flex;
   flex-wrap: wrap;
@@ -1095,6 +1158,18 @@
       outline: 0;
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--vd-color-accent, #69d99a) 18%, transparent);
     }
+  }
+}
+
+.vdui-table-selection-column {
+  width: 42px;
+  text-align: center;
+
+  .vdui-checkbox-wrapper,
+  .vdui-radio-wrapper {
+    min-height: 16px;
+    justify-content: center;
+    gap: 0;
   }
 }
 
