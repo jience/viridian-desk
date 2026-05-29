@@ -13,6 +13,7 @@
   "ApprovalWorkbenchEmptyDescription": "当前筛选条件下没有申请，可以刷新列表或创建新的流程申请。",
   "ApprovalWorkbenchEmptyTitle": "暂无审批申请",
   "ApprovalWorkbenchEyebrow": "流程审批",
+  "ApprovalWorkbenchSummary": "当前状态：{{status}}，共 {{count}} 条申请，待审批 {{pending}} 条",
   "ApprovalWorkbenchTitle": "审批工作台",
   "CANCEL_DEFAULT": "取消默认",
   "CancedFaultBatchMsg": "确定撤回【{{count}}】个工单吗?",

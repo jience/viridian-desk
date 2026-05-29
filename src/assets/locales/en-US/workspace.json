@@ -13,6 +13,7 @@
   "ApprovalWorkbenchEmptyDescription": "No requests match the current filters. Refresh the list or create a new workflow request.",
   "ApprovalWorkbenchEmptyTitle": "No approval requests",
   "ApprovalWorkbenchEyebrow": "Workflow approvals",
+  "ApprovalWorkbenchSummary": "Current status: {{status}}, {{count}} requests, {{pending}} pending",
   "ApprovalWorkbenchTitle": "Approval workbench",
   "CANCEL_DEFAULT": "Unset default",
   "CancedFaultBatchMsg": "Are you sure to withdraw [{{count}}] work orders?",

@@ -73,6 +73,7 @@
   "MalfunctionEmptyDescription": "当前筛选条件下没有工单，可以刷新列表或创建新的故障工单。",
   "MalfunctionEmptyTitle": "暂无故障工单",
   "MalfunctionWorkbenchEyebrow": "故障工单",
+  "MalfunctionWorkbenchSummary": "当前类型：{{type}}，状态：{{status}}，共 {{count}} 个工单",
   "MalfunctionWorkbenchTitle": "故障工作台",
   "More": "更多",
   "MoreAction": "更多操作",

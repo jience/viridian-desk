@@ -73,6 +73,7 @@
   "MalfunctionEmptyDescription": "No tickets match the current filters. Refresh the list or create a new fault ticket.",
   "MalfunctionEmptyTitle": "No fault tickets",
   "MalfunctionWorkbenchEyebrow": "Fault tickets",
+  "MalfunctionWorkbenchSummary": "Current type: {{type}}, status: {{status}}, {{count}} tickets",
   "MalfunctionWorkbenchTitle": "Fault workbench",
   "NAME": "Name",
   "More": "More",
