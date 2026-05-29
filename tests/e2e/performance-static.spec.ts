@@ -54,8 +54,8 @@ const countExplicitAny = (dir: string) =>
 const collectStaticTranslationKeys = () => {
   const keys = new Set<string>();
   const patterns = [
-    /formatMessage\(\{\s*id:\s*['"`]([^'"`$]+)['"`]/g,
-    /intl\.formatMessage\(\{\s*id:\s*['"`]([^'"`$]+)['"`]/g,
+    /formatMessage\(\s*\{\s*id:\s*['"`]([^'"`$]+)['"`]/g,
+    /intl\.formatMessage\(\s*\{\s*id:\s*['"`]([^'"`$]+)['"`]/g,
     /formatI18NKey\(\s*['"`]([^'"`$]+)['"`]/g,
     /\bt\(\s*['"]([^'"]+)['"]/g,
     /i18nKey="([^"]+)"/g,
@@ -307,6 +307,32 @@ test('keeps locale file key sets aligned across supported languages', () => {
       );
     }
   }
+});
+
+test('translates workbench summaries in every supported locale', () => {
+  const approvalPageSource = source('src/features/approval/pages/approval-page.tsx');
+  const malfunctionPageSource = source('src/features/malfunction/pages/malfunction-page.tsx');
+
+  expect(approvalPageSource).toContain("id: 'ApprovalWorkbenchSummary'");
+  expect(malfunctionPageSource).toContain("id: 'MalfunctionWorkbenchSummary'");
+  expect(locale('zh-CN').ApprovalWorkbenchSummary).toBe(
+    '当前状态：{{status}}，共 {{count}} 条申请，待审批 {{pending}} 条',
+  );
+  expect(locale('zh-CN').MalfunctionWorkbenchSummary).toBe(
+    '当前类型：{{type}}，状态：{{status}}，共 {{count}} 个工单',
+  );
+  expect(locale('zh-TW').ApprovalWorkbenchSummary).toBe(
+    '當前狀態：{{status}}，共 {{count}} 筆申請，待審批 {{pending}} 筆',
+  );
+  expect(locale('zh-TW').MalfunctionWorkbenchSummary).toBe(
+    '當前類型：{{type}}，狀態：{{status}}，共 {{count}} 個工單',
+  );
+  expect(locale('en-US').ApprovalWorkbenchSummary).toBe(
+    'Current status: {{status}}, {{count}} requests, {{pending}} pending',
+  );
+  expect(locale('en-US').MalfunctionWorkbenchSummary).toBe(
+    'Current type: {{type}}, status: {{status}}, {{count}} tickets',
+  );
 });
 
 test('keeps runtime API error translations on the error_code namespace', () => {
