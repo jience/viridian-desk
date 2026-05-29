@@ -135,6 +135,26 @@ const BaseForm = (props: any, ref: any) => {
     setFormValuesCopy(formValues);
   };
 
+  const getImpactValue = (key: string) => {
+    const formValue = form.getFieldValue(key);
+    if (formValue !== undefined && formValue !== '') return formValue;
+    if (
+      formValuesCopy &&
+      Object.prototype.hasOwnProperty.call(formValuesCopy, key) &&
+      formValuesCopy[key] !== ''
+    ) {
+      return formValuesCopy[key];
+    }
+    if (
+      defaultFormValues &&
+      Object.prototype.hasOwnProperty.call(defaultFormValues, key) &&
+      defaultFormValues[key] !== ''
+    ) {
+      return defaultFormValues[key];
+    }
+    return initialValues?.[key];
+  };
+
   // 表单项获取是否隐藏的条件判断方法
   const getHiddenActive = (itemFeature: any) => {
     let impactHiddenRes = itemFeature.impactHiddenAndOr;
@@ -142,10 +162,10 @@ const BaseForm = (props: any, ref: any) => {
       itemFeature.impactHidden.forEach((impactItem: any) => {
         if (itemFeature.impactHiddenAndOr) {
           impactHiddenRes =
-            impactHiddenRes && impactItem.hiddenRule(formValuesCopy[impactItem.key]);
+            impactHiddenRes && impactItem.hiddenRule(getImpactValue(impactItem.key));
         } else {
           impactHiddenRes =
-            impactHiddenRes || impactItem.hiddenRule(formValuesCopy[impactItem.key]);
+            impactHiddenRes || impactItem.hiddenRule(getImpactValue(impactItem.key));
         }
       });
     }
@@ -157,7 +177,7 @@ const BaseForm = (props: any, ref: any) => {
     const impactProps = itemFeature.impactProps;
     if (!isEmptyValue(impactProps)) {
       impactProps.forEach((impact: any) => {
-        itemFeature.comProps[impact.propKey] = impact.impactAction(formValuesCopy[impact.key]);
+        itemFeature.comProps[impact.propKey] = impact.impactAction(getImpactValue(impact.key));
       });
     }
 

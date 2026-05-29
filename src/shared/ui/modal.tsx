@@ -85,6 +85,7 @@ export const Modal = Object.assign(
             >
               <Dialog.Content
                 asChild
+                aria-describedby={undefined}
                 onEscapeKeyDown={(event) => {
                   if (props.keyboard === false) event.preventDefault();
                 }}

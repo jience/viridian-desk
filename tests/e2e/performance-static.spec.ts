@@ -1669,8 +1669,43 @@ test('keeps the final server action menu from being clipped', () => {
   expect(serverSettingStyles).toContain('.vd-settings-group__content');
   expect(serverSettingStyles).toContain('overflow: visible');
   expect(dropdownSource).toContain('`vdui-dropdown--${placement}`');
-  expect(uiStyles).toContain('.vdui-dropdown--topRight');
-  expect(uiStyles).toContain('bottom: calc(100% + 8px)');
+  expect(uiStyles).toContain('transform-origin: var(--radix-dropdown-menu-content-transform-origin)');
+  expect(uiStyles).not.toContain('.vdui-dropdown--topRight');
+  expect(uiStyles).not.toContain('bottom: calc(100% + 8px)');
+});
+
+test('lets Radix position portaled select and dropdown menus', () => {
+  const selectSource = source('src/shared/ui/select.tsx');
+  const dropdownSource = source('src/shared/ui/dropdown.tsx');
+  const uiStyles = source('src/shared/ui/styles.scss');
+  const gatewayDockSource = source('src/features/shell/components/gateway-dock/index.tsx');
+  const gatewayDockStyles = source('src/features/shell/components/gateway-dock/index.scss');
+  const selectDropdownBlock = uiStyles.slice(
+    uiStyles.indexOf('.vdui-select-dropdown {'),
+    uiStyles.indexOf('\n.vdui-select-option {'),
+  );
+  const dropdownBlock = uiStyles.slice(
+    uiStyles.indexOf('.vdui-dropdown {'),
+    uiStyles.indexOf('\n.vdui-popover-inner-content'),
+  );
+  const gatewaySelectBlock = gatewayDockStyles.slice(
+    gatewayDockStyles.indexOf('.login-gateway-dock__select {'),
+    gatewayDockStyles.indexOf('\n.login-gateway-dock--readonly'),
+  );
+
+  expect(selectSource).toContain('<SelectPrimitive.Portal>');
+  expect(dropdownSource).toContain('<DropdownMenuPrimitive.Portal>');
+  expect(selectDropdownBlock).not.toMatch(/\b(position|top|right|bottom|left):/);
+  expect(selectDropdownBlock).toContain('min-width: var(--radix-select-trigger-width');
+  expect(selectDropdownBlock).toContain('transform-origin: var(');
+  expect(selectDropdownBlock).toContain('--radix-select-content-transform-origin');
+  expect(dropdownBlock).not.toMatch(/\b(position|top|right|bottom|left):/);
+  expect(dropdownBlock).toContain(
+    'transform-origin: var(--radix-dropdown-menu-content-transform-origin)',
+  );
+  expect(gatewayDockSource).toContain("popup: 'login-gateway-dock__menu'");
+  expect(gatewayDockStyles).toContain('.login-gateway-dock__menu');
+  expect(gatewaySelectBlock).not.toMatch(/\n\s+\.vdui-select-dropdown\s*\{/);
 });
 
 test('shows restrained icons on login feature cards', () => {
@@ -1834,6 +1869,14 @@ test('does not keep legacy AntD modal visibility aliases', () => {
   expect(modalSource).not.toContain('props.visible');
   expect(modalSource).not.toContain('destroyOnHidden');
   expect(modalSource).not.toContain('destroyOnClose');
+});
+
+test('marks plain dialogs as intentionally undescribed for Radix accessibility checks', () => {
+  const modalSource = source('src/shared/ui/modal.tsx');
+  const confirmSource = source('src/shared/ui/confirm.tsx');
+
+  expect(modalSource).toContain('aria-describedby={undefined}');
+  expect(confirmSource).toContain('<Dialog.Description asChild>');
 });
 
 test('keeps textarea native value props mutually exclusive', () => {

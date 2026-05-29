@@ -8,6 +8,32 @@ const ignoredConsoleFragments = [
   '[Services Error] getClientOnlineStatus',
 ];
 
+const smokePermissions = {
+  app: ['Terminal::RO::App::Read', 'Terminal::RW::App::AddCustom'],
+  malfunction: ['Terminal::RO::Malfunction::Read', 'Terminal::RW::Malfunction::Report'],
+} as const;
+
+const loginWithPermissions = async (page: Page, permissions: readonly string[]) => {
+  await page.addInitScript((nextPermissions) => {
+    localStorage.setItem('smoke.permissions', JSON.stringify(nextPermissions));
+    const config = JSON.parse(localStorage.getItem('viridian.web.config') || '{}');
+    localStorage.setItem(
+      'viridian.web.config',
+      JSON.stringify({
+        ...config,
+        gateway: (config.gateway || []).map((gateway: any) => ({
+          ...gateway,
+          online: gateway.auto ? true : gateway.online,
+        })),
+      }),
+    );
+  }, permissions);
+  await page.goto('/login');
+  await page.getByPlaceholder('请输入用户名').fill('demo');
+  await page.getByPlaceholder('请输入密码').fill('demo-password');
+  await page.getByRole('button', { name: /^登录$/ }).click();
+};
+
 test.beforeEach(async ({ page }) => {
   const consoleErrors: string[] = [];
 
@@ -42,6 +68,7 @@ test.beforeEach(async ({ page }) => {
           port: 443,
           isPublic: true,
           auto: true,
+          online: true,
         },
       ],
       language: 'zh-CN',
@@ -81,6 +108,8 @@ test.beforeEach(async ({ page }) => {
     const setGatewayList = (gateway: unknown[]) => writeConfig({ gateway });
     const getSelectedGatewayOnline = () =>
       Boolean(getGatewayList().find((gateway: any) => gateway.auto)?.online);
+    const getSmokePermissions = () =>
+      JSON.parse(localStorage.getItem('smoke.permissions') || '[]');
     const emitTauriEvent = (event: string, payload: unknown) => {
       for (const [id, listener] of eventListeners.entries()) {
         if (listener.event !== event) continue;
@@ -121,7 +150,30 @@ test.beforeEach(async ({ page }) => {
             loginName: 'demo',
             userName: 'Demo User',
             type: 'Local',
-            permissions: [],
+            passwordIsUpdated: true,
+            passwordIsExpire: false,
+            permissions: getSmokePermissions(),
+          },
+        };
+      }
+      if (url.includes('/listResourceUser')) {
+        return {
+          requestId: 'smoke-desktops',
+          data: {
+            results: [
+              {
+                id: 'smoke-windows-7',
+                name: 'Smoke Windows 7',
+                os: 'Windows 7 Enterprise',
+              },
+              {
+                id: 'smoke-linux',
+                name: 'Smoke Linux',
+                os: 'Linux',
+              },
+            ],
+            total: 2,
+            totalCount: 2,
           },
         };
       }
@@ -623,6 +675,49 @@ test('closes gateway action menu on outside pointer without triggering an action
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });
 
+test('positions portaled dropdown menus next to their triggers', async ({ page }) => {
+  await useGatewayActionFixture(page);
+  await page.goto('/configPage/serverSetting');
+
+  const targetRow = page.locator('.server-setting-gateway-row', { hasText: 'Keyboard Gateway B' });
+  const moreButton = targetRow.getByRole('button', { name: /更多/ });
+  await moreButton.click();
+
+  const menu = page.getByRole('menu');
+  await expect(menu).toBeVisible();
+
+  const buttonBox = await moreButton.boundingBox();
+  const menuBox = await menu.boundingBox();
+  if (!buttonBox || !menuBox) throw new Error('Gateway action menu was not measurable');
+
+  expect(menuBox.y + menuBox.height).toBeLessThanOrEqual(buttonBox.y - 4);
+  expect(Math.abs(menuBox.x + menuBox.width - (buttonBox.x + buttonBox.width))).toBeLessThanOrEqual(
+    12,
+  );
+
+  await page.keyboard.press('Escape');
+  await page.goto('/login');
+
+  const gatewayDock = page.locator('.login-gateway-dock');
+  await gatewayDock.click();
+
+  const selectMenu = page.locator('.vdui-select-dropdown.login-gateway-dock__menu');
+  await expect(selectMenu).toBeVisible();
+
+  const dockBox = await gatewayDock.boundingBox();
+  const selectMenuBox = await selectMenu.boundingBox();
+  if (!dockBox || !selectMenuBox) throw new Error('Login gateway menu was not measurable');
+
+  expect(selectMenuBox.y + selectMenuBox.height).toBeLessThanOrEqual(dockBox.y - 4);
+  expect(
+    Math.abs(selectMenuBox.x + selectMenuBox.width - (dockBox.x + dockBox.width)),
+  ).toBeLessThanOrEqual(12);
+  expect(selectMenuBox.width).toBeGreaterThanOrEqual(188);
+  expect(selectMenuBox.width).toBeLessThanOrEqual(280);
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
 test('keeps confirm prompts focus-trapped and cancelable by keyboard', async ({ page }) => {
   await useGatewayActionFixture(page);
   await page.goto('/configPage/serverSetting');
@@ -690,7 +785,64 @@ test('keeps language select keyboard dismissal and selection stable', async ({ p
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });
 
+test('shows desktop options inside the publish application modal', async ({ page }) => {
+  await loginWithPermissions(page, smokePermissions.app);
+  await expect(page).toHaveURL(/\/app\/application$/);
+
+  await page.getByRole('button', { name: /自定义发布/ }).click();
+  const dialog = page.getByRole('dialog', { name: /发布应用/ });
+  await expect(dialog).toBeVisible();
+  const dialogBox = await dialog.boundingBox();
+
+  const desktopSelect = dialog.getByRole('combobox').first();
+  await desktopSelect.click();
+
+  const listbox = page.getByRole('listbox');
+  await expect(listbox).toBeVisible();
+  await expect(page.getByRole('option', { name: 'Smoke Windows 7' })).toBeVisible();
+
+  const selectBox = await listbox.boundingBox();
+  if (!selectBox || !dialogBox) throw new Error('Publish application select was not measurable');
+
+  expect(selectBox.y).toBeGreaterThanOrEqual(dialogBox.y - 8);
+  expect(selectBox.y).toBeLessThan(dialogBox.y + dialogBox.height);
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
+test('updates create ticket form fields after selecting a ticket type', async ({ page }) => {
+  await loginWithPermissions(page, smokePermissions.malfunction);
+  await expect(page).toHaveURL(/\/app\/malfunction$/);
+
+  await page.getByRole('button', { name: /创建工单/ }).click();
+  const dialog = page.getByRole('dialog', { name: /创建工单/ });
+  const desktopFieldLabel = dialog.locator('.vdui-form-item-label', { hasText: '问题桌面' });
+  await expect(dialog).toBeVisible();
+  await expect(desktopFieldLabel).toBeVisible();
+
+  await dialog.getByRole('combobox').first().click();
+  await page.getByRole('option', { name: '终端' }).click();
+
+  await expect(desktopFieldLabel).toBeHidden();
+  await expect(dialog.getByPlaceholder('请输入 工单内容')).toBeVisible();
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
 test('keeps login submit disabled when gateway is disconnected', async ({ page }) => {
+  await page.addInitScript(() => {
+    const config = JSON.parse(localStorage.getItem('viridian.web.config') || '{}');
+    localStorage.setItem(
+      'viridian.web.config',
+      JSON.stringify({
+        ...config,
+        gateway: (config.gateway || []).map((gateway: any) => ({
+          ...gateway,
+          online: false,
+        })),
+      }),
+    );
+  });
   await page.goto('/login');
 
   await page.getByPlaceholder('请输入用户名').fill('demo');

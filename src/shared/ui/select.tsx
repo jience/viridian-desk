@@ -157,6 +157,7 @@ export const Select = function SelectComponent<ValueType = unknown>(props: Selec
       onOpenChange={setOpen}
       onValueChange={(nextValue) => {
         const selectedOption = normalizedOptions.find(({ id }) => id === nextValue)?.option;
+        if (!selectedOption) return;
         commitValue(selectedOption?.value, selectedOption);
       }}
     >
