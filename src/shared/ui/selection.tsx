@@ -1,5 +1,5 @@
 import * as SwitchPrimitive from '@radix-ui/react-switch';
-import type { ChangeEvent, ReactNode } from 'react';
+import type { InputHTMLAttributes, ReactNode } from 'react';
 
 import { cn } from './lib/cn';
 
@@ -39,25 +39,28 @@ export function Switch({
 export const Checkbox = Object.assign(
   ({
     checked,
-    onChange,
     children,
     disabled,
     className,
-  }: {
-    checked?: boolean;
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    ...inputProps
+  }: Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
     children?: ReactNode;
-    disabled?: boolean;
-    className?: string;
   }) => (
-    <label className={cn('vdui-checkbox-wrapper', className)}>
+    <label
+      className={cn(
+        'vdui-checkbox-wrapper',
+        checked && 'vdui-checkbox-wrapper-checked',
+        disabled && 'vdui-checkbox-wrapper-disabled',
+        className,
+      )}
+    >
       <input
+        {...inputProps}
         type="checkbox"
         checked={checked}
         disabled={disabled}
-        onChange={(event) => onChange?.(event)}
       />
-      <span>{children}</span>
+      {children !== undefined && <span>{children}</span>}
     </label>
   ),
   {
@@ -114,6 +117,8 @@ export const Radio = Object.assign(
     value,
     name,
     optionType,
+    inputProps,
+    className,
   }: {
     checked?: boolean;
     disabled?: boolean;
@@ -122,6 +127,11 @@ export const Radio = Object.assign(
     value?: unknown;
     name?: string;
     optionType?: 'button' | 'default';
+    className?: string;
+    inputProps?: Omit<
+      InputHTMLAttributes<HTMLInputElement>,
+      'type' | 'checked' | 'disabled' | 'name' | 'onChange' | 'value'
+    >;
   }) => (
     <label
       className={cn(
@@ -130,9 +140,11 @@ export const Radio = Object.assign(
         disabled && 'vdui-radio-wrapper-disabled',
         optionType === 'button' && 'vdui-radio-button-wrapper',
         optionType === 'button' && checked && 'vdui-radio-button-wrapper-checked',
+        className,
       )}
     >
       <input
+        {...inputProps}
         type="radio"
         checked={checked}
         disabled={disabled}

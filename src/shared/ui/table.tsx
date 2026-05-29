@@ -15,6 +15,7 @@ import {
 import { Button } from './button';
 import { Empty } from './display';
 import { cn } from './lib/cn';
+import { Checkbox, Radio } from './selection';
 import type { AnyRecord, ColumnType, TableProps, UiValue } from './types';
 
 type TableColumnMeta<T extends AnyRecord> = Pick<
@@ -127,6 +128,8 @@ export function Table<T extends AnyRecord = AnyRecord>(props: TableProps<T>) {
             <tbody className="vdui-table-tbody">
               {table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => {
+                  const rowKey = keyOf(row.original, row.index);
+                  const selected = selectedKeys.includes(rowKey);
                   const rowProps = props.onRow?.(row.original, row.index) || {};
                   const {
                     className: rowPropsClassName,
@@ -137,6 +140,22 @@ export function Table<T extends AnyRecord = AnyRecord>(props: TableProps<T>) {
                     typeof props.rowClassName === 'function'
                       ? props.rowClassName(row.original, row.index)
                       : props.rowClassName;
+                  const rawSelectionProps =
+                    (props.rowSelection?.getCheckboxProps?.(row.original) as
+                      | InputHTMLAttributes<HTMLInputElement>
+                      | undefined) ?? {};
+                  const {
+                    checked: _customChecked,
+                    className: selectionClassName,
+                    defaultChecked: _customDefaultChecked,
+                    onChange: _customOnChange,
+                    type: _customType,
+                    value: _customValue,
+                    disabled,
+                    name,
+                    ...selectionInputProps
+                  } = rawSelectionProps;
+                  const selectionLabel = `Select row ${row.index + 1}`;
 
                   return (
                     <tr
@@ -150,17 +169,31 @@ export function Table<T extends AnyRecord = AnyRecord>(props: TableProps<T>) {
                     >
                       {props.rowSelection && (
                         <td className="vdui-table-cell vdui-table-selection-column">
-                          <input
-                            type={props.rowSelection.type === 'radio' ? 'radio' : 'checkbox'}
-                            aria-label={`Select row ${row.index + 1}`}
-                            checked={selectedKeys.includes(keyOf(row.original, row.index))}
-                            onChange={(event) =>
-                              setSelected(row.original, row.index, event.target.checked)
-                            }
-                            {...(props.rowSelection.getCheckboxProps?.(
-                              row.original,
-                            ) as InputHTMLAttributes<HTMLInputElement> | undefined)}
-                          />
+                          {props.rowSelection.type === 'radio' ? (
+                            <Radio
+                              checked={selected}
+                              className={selectionClassName}
+                              disabled={disabled}
+                              inputProps={{
+                                ...selectionInputProps,
+                                'aria-label': selectionLabel,
+                              }}
+                              name={name}
+                              value={rowKey}
+                              onChange={() => setSelected(row.original, row.index, true)}
+                            />
+                          ) : (
+                            <Checkbox
+                              {...selectionInputProps}
+                              aria-label={selectionLabel}
+                              checked={selected}
+                              className={selectionClassName}
+                              disabled={disabled}
+                              onChange={(event) =>
+                                setSelected(row.original, row.index, event.target.checked)
+                              }
+                            />
+                          )}
                         </td>
                       )}
                       {row.getVisibleCells().map((cell) => {

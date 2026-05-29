@@ -335,6 +335,17 @@ test('translates workbench summaries in every supported locale', () => {
   );
 });
 
+test('renders table row selection with shared selection controls', () => {
+  const tableSource = source('src/shared/ui/table.tsx');
+  const stylesSource = source('src/shared/ui/styles.scss');
+
+  expect(tableSource).toContain("import { Checkbox, Radio } from './selection';");
+  expect(tableSource).toContain('<Checkbox');
+  expect(tableSource).toContain('<Radio');
+  expect(tableSource).not.toMatch(/<input\s+[^>]*type=\{props\.rowSelection\.type/);
+  expect(stylesSource).toMatch(/\.vdui-checkbox-wrapper[\s\S]*appearance:\s*none/);
+});
+
 test('keeps runtime API error translations on the error_code namespace', () => {
   const legacyRequestErrorHandler = source('src/utils/requestErrorHandler.ts');
   const nativeRequestErrorHandler = source('src/services/requestErrorHandler.ts');
