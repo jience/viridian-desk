@@ -10,6 +10,13 @@
     var(--vd-color-success, var(--vd-color-accent, #37b56d))
   );
   --login-gateway-danger: var(--auth-danger, var(--vd-color-danger, #cf4f45));
+  --login-gateway-checking: #c6922f;
+  --login-gateway-state: var(--login-gateway-muted);
+  --login-gateway-state-text: var(--login-gateway-muted);
+  --login-gateway-state-soft: color-mix(in srgb, var(--login-gateway-state) 10%, transparent);
+  --login-gateway-state-border: color-mix(in srgb, var(--login-gateway-state) 20%, transparent);
+  --login-gateway-badge-bg: color-mix(in srgb, var(--login-gateway-state) 8%, transparent);
+  --login-gateway-badge-border: color-mix(in srgb, var(--login-gateway-state) 18%, transparent);
 
   position: relative;
   display: grid;
@@ -28,7 +35,7 @@
   background:
     linear-gradient(
       90deg,
-      color-mix(in srgb, var(--login-gateway-accent) 8%, transparent),
+      var(--login-gateway-state-soft),
       transparent 38%
     ),
     color-mix(in srgb, var(--login-gateway-panel) 86%, var(--auth-bg, transparent));
@@ -52,7 +59,7 @@
     background:
       linear-gradient(
         90deg,
-        color-mix(in srgb, var(--login-gateway-accent) 16%, transparent),
+        color-mix(in srgb, var(--login-gateway-state) 14%, transparent),
         color-mix(in srgb, var(--login-gateway-panel) 24%, transparent) 54%,
         transparent
       ),
@@ -72,7 +79,7 @@
     &:hover,
     &:has(.login-gateway-dock__select:focus-visible),
     &:has(.login-gateway-dock__select.vdui-select-open) {
-      border-color: color-mix(in srgb, var(--login-gateway-accent) 34%, transparent);
+      border-color: color-mix(in srgb, var(--login-gateway-state) 34%, transparent);
       box-shadow:
         inset 0 1px 0 color-mix(in srgb, #ffffff 12%, transparent),
         0 10px 24px rgba(55, 48, 38, 0.1);
@@ -88,15 +95,38 @@
     }
 
     &:has(.login-gateway-dock__select:focus-visible) {
-      outline: 2px solid color-mix(in srgb, var(--login-gateway-accent) 22%, transparent);
+      outline: 2px solid color-mix(in srgb, var(--login-gateway-state) 22%, transparent);
       outline-offset: 2px;
     }
 
     &:active {
-      border-color: color-mix(in srgb, var(--login-gateway-accent) 42%, transparent);
+      border-color: color-mix(in srgb, var(--login-gateway-state) 42%, transparent);
       transform: translateY(1px) scale(0.985);
     }
   }
+}
+
+.login-gateway-dock--info {
+  --login-gateway-state: var(--login-gateway-muted);
+  --login-gateway-state-text: var(--login-gateway-muted);
+}
+
+.login-gateway-dock--checking {
+  --login-gateway-state: var(--login-gateway-checking);
+  --login-gateway-state-text: color-mix(in srgb, var(--login-gateway-checking) 86%, #7a5d20);
+  --login-gateway-state-soft: color-mix(in srgb, var(--login-gateway-checking) 12%, transparent);
+}
+
+.login-gateway-dock--success {
+  --login-gateway-state: var(--login-gateway-success);
+  --login-gateway-state-text: color-mix(in srgb, var(--login-gateway-success) 88%, #315f48);
+  --login-gateway-state-soft: color-mix(in srgb, var(--login-gateway-success) 11%, transparent);
+}
+
+.login-gateway-dock--danger {
+  --login-gateway-state: var(--login-gateway-danger);
+  --login-gateway-state-text: color-mix(in srgb, var(--login-gateway-danger) 88%, #7b352f);
+  --login-gateway-state-soft: color-mix(in srgb, var(--login-gateway-danger) 12%, transparent);
 }
 
 .login-gateway-dock__signal {
@@ -105,18 +135,17 @@
   width: 8px;
   height: 8px;
   border-radius: 999px;
-  background: var(--login-gateway-muted);
-  box-shadow: 0 0 0 5px color-mix(in srgb, var(--login-gateway-muted) 11%, transparent);
+  background: var(--login-gateway-state);
+  box-shadow: 0 0 0 5px var(--login-gateway-state-soft);
 }
 
-.login-gateway-dock--success .login-gateway-dock__signal {
-  background: var(--login-gateway-success);
-  box-shadow: 0 0 0 5px color-mix(in srgb, var(--login-gateway-success) 14%, transparent);
-}
-
-.login-gateway-dock--danger .login-gateway-dock__signal {
-  background: var(--login-gateway-danger);
-  box-shadow: 0 0 0 5px color-mix(in srgb, var(--login-gateway-danger) 14%, transparent);
+.login-gateway-dock--checking .login-gateway-dock__signal::after {
+  position: absolute;
+  inset: -5px;
+  border: 1px solid color-mix(in srgb, var(--login-gateway-state) 42%, transparent);
+  border-radius: inherit;
+  content: '';
+  animation: loginGatewayChecking 1.1s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
 .login-gateway-dock__copy {
@@ -137,11 +166,11 @@
 
   span {
     flex: 0 0 auto;
-    border: 1px solid color-mix(in srgb, var(--login-gateway-accent) 18%, transparent);
+    border: 1px solid var(--login-gateway-badge-border);
     border-radius: 999px;
     padding: 2px 7px;
-    color: color-mix(in srgb, var(--login-gateway-accent-strong) 90%, var(--login-gateway-muted));
-    background: color-mix(in srgb, var(--login-gateway-accent) 8%, transparent);
+    color: var(--login-gateway-state-text);
+    background: var(--login-gateway-badge-bg);
     font-size: 10px;
     font-weight: 760;
   }
@@ -211,5 +240,17 @@
 @media (max-width: 620px) {
   .auth-page .login-gateway-dock {
     width: 100%;
+  }
+}
+
+@keyframes loginGatewayChecking {
+  0% {
+    opacity: 0.58;
+    transform: scale(0.86);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.85);
   }
 }

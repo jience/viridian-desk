@@ -7,6 +7,7 @@ import {
   selectAutoGateway,
   selectConnected,
   selectGatewayList,
+  selectGatewayStatusChecking,
   selectNetwork,
   switchGateway,
 } from '@/store/feature/gateway';
@@ -24,11 +25,17 @@ export function LoginGatewayDock({ readonly = false }: LoginGatewayDockProps) {
   const gatewayList = useAppSelector(selectGatewayList);
   const connected = useAppSelector(selectConnected);
   const network = useAppSelector(selectNetwork);
+  const checking = useAppSelector(selectGatewayStatusChecking);
 
-  const tone = !autoGateway ? 'info' : connected && network ? 'success' : 'danger';
+  const tone = (() => {
+    if (!autoGateway) return 'info';
+    return checking ? 'checking' : connected && network ? 'success' : 'danger';
+  })();
   const statusText = !autoGateway
     ? t('login_page.please_select_gateway')
-    : !network
+    : checking
+      ? t('login_page.gateway_status_checking')
+      : !network
       ? t('login_page.local_network_not_connected')
       : !connected
         ? t('login_page.server_connection_failed')

@@ -10,6 +10,10 @@ export interface GatewayState {
    */
   connected: boolean;
   /**
+   * 网关连接状态检测中
+   */
+  gatewayStatusChecking: boolean;
+  /**
    * 网络连接状态(依赖浏览器navigator.onLine)
    */
   network: boolean;
