@@ -330,7 +330,7 @@ const useDeskHooks = (props: any) => {
   );
 
   const distribute = useCallback(
-    (data: any, key: any, clickActions?: any) => {
+    (data: any, key: any) => {
       switch (key) {
         case 'cancelDefaultItem':
           setAutoDesktopFun('', data.name);
@@ -344,31 +344,13 @@ const useDeskHooks = (props: any) => {
         case 'forcerShutdown':
           shutDownDesktopForce(data);
           break;
-        case 'unmountItem':
-          clickActions.map((clickAction: any) => {
-            if (clickAction.actionId === 'PersonalDiskManagement') {
-              clickAction.action('unmount', data);
-            }
-          });
-          break;
-        case 'mountItem':
-          clickActions.map((clickAction: any) => {
-            if (clickAction.actionId === 'PersonalDiskManagement') {
-              clickAction.action('mount', data);
-            }
-          });
-          break;
       }
     },
     [restartDesk, setAutoDesktopFun, shutDownDesktopForce],
   );
   //生成操作菜单
   const generateMenus = useCallback(
-    (data: any, clickActions: Array<any>): MenuProps => {
-      const personalDisk = data.disks
-        ? data.disks.filter((disk: any) => disk.attribute === 'personal')
-        : [];
-
+    (data: any): MenuProps => {
       const items: MenuProps['items'] = [];
 
       // 取消/设置默认
@@ -404,32 +386,12 @@ const useDeskHooks = (props: any) => {
         });
       }
 
-      // 个人盘挂载/卸载
-      if (authActionShow([Actions.TerminalRWDesktopAttachOrDetachPrivateDisk])) {
-        items.push({
-          key: personalDisk.length ? 'unmountItem' : 'mountItem',
-          label: (
-            <p>
-              {intl.formatMessage({
-                id: personalDisk.length ? 'PersonalDiskUnmounted' : 'PersonalDiskMounted',
-              })}
-            </p>
-          ),
-          disabled:
-            data.locked ||
-            (personalDisk.length
-              ? ![DESK_STATUS.STOP].includes(data.status)
-              : ![DESK_STATUS.START, DESK_STATUS.STOP].includes(data.status)) ||
-            data.desktopPool.type === 'SHARE',
-        });
-      }
-
       return {
         items,
         className: 'deskAcitonMenu',
         onClick: ({ domEvent, key }) => {
           domEvent.stopPropagation();
-          distribute(data, key, clickActions);
+          distribute(data, key);
         },
       };
     },

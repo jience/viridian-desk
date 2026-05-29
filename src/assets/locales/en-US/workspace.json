@@ -40,8 +40,6 @@
   "FaultType": "Ticket type",
   "NotResizeDiskForWin2000": "Windows 2000 does not support disk expansion",
   "OnlySystemDisk": "System disk only",
-  "PersonalDiskMounted": "Mount personal disk",
-  "PersonalDiskUnmounted": "Unmount personal disk",
   "PeripheralName": "Peripheral name",
   "ResizeDesktopCPUorMemoryError": "CPU cores or memory must differ from the current configuration",
   "ResizeDisk": "Resize disk",

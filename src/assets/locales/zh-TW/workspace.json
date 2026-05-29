@@ -40,8 +40,6 @@
   "FaultType": "工單類型",
   "NotResizeDiskForWin2000": "windows2000系統不支持擴容",
   "OnlySystemDisk": "僅系統盤",
-  "PersonalDiskMounted": "掛載個人盤",
-  "PersonalDiskUnmounted": "卸載個人盤",
   "PeripheralName": "外設名稱",
   "ResizeDesktopCPUorMemoryError": "CPU核数及內存必須有一個和原配置不同",
   "ResizeDisk": "磁盤擴容",

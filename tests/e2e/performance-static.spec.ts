@@ -93,8 +93,6 @@ const dynamicTranslationKeys = [
   'LoginFeatureWorkspaceDescription',
   'LoginFeatureWorkspaceTag',
   'LoginFeatureWorkspaceTitle',
-  'PersonalDiskMounted',
-  'PersonalDiskUnmounted',
   'RESTORE',
   'ResizeDisk',
   'SET_DEFAULT',
@@ -2968,12 +2966,7 @@ test('stages login route bootstrap after first paint and avoids duplicate authen
 });
 
 test('translates desktop card menu actions in every supported locale', () => {
-  const requiredDesktopMenuKeys = [
-    'SET_DEFAULT',
-    'CANCEL_DEFAULT',
-    'PersonalDiskMounted',
-    'PersonalDiskUnmounted',
-  ];
+  const requiredDesktopMenuKeys = ['SET_DEFAULT', 'CANCEL_DEFAULT'];
 
   for (const language of localeLanguages) {
     const messages = locale(language);
@@ -2982,6 +2975,44 @@ test('translates desktop card menu actions in every supported locale', () => {
       expect(messages[key], `${language} ${key}`).not.toBe(key);
     }
   }
+});
+
+test('removes desktop personal disk mount and unmount flows from the client', () => {
+  const desktopPageSource = source('src/features/desktop/pages/desktop-page.tsx');
+  const deskHooksSource = source('src/features/desktop/model/use-desk-hooks.tsx');
+  const desktopApiSource = source('src/services/api/desktop/index.ts');
+  const actionsSource = source('src/utils/actions.ts');
+  const allLocaleText = [
+    ...localeLanguages.flatMap((language) => [
+      source(`src/assets/locales/${language}/core.json`),
+      source(`src/assets/locales/${language}/workspace.json`),
+      source(`src/assets/locales/${language}/error.json`),
+    ]),
+  ].join('\n');
+
+  expect(desktopPageSource).not.toContain('PersonalDiskManagement');
+  expect(desktopPageSource).not.toContain('detachVolume');
+  expect(desktopPageSource).not.toContain('setAttachIds');
+  expect(desktopPageSource).not.toContain('Windows Server 2000');
+
+  expect(deskHooksSource).not.toContain('TerminalRWDesktopAttachOrDetachPrivateDisk');
+  expect(deskHooksSource).not.toContain('PersonalDiskMounted');
+  expect(deskHooksSource).not.toContain('PersonalDiskUnmounted');
+  expect(deskHooksSource).not.toContain('mountItem');
+  expect(deskHooksSource).not.toContain('unmountItem');
+
+  expect(desktopApiSource).not.toContain('ATTACH_VOLUME');
+  expect(desktopApiSource).not.toContain('DETACH_VOLUME');
+  expect(desktopApiSource).not.toContain('attachVolume');
+  expect(desktopApiSource).not.toContain('detachVolume');
+  expect(actionsSource).not.toContain('AttachOrDetachPrivateDisk');
+
+  expect(allLocaleText).not.toContain('PersonalDiskMounted');
+  expect(allLocaleText).not.toContain('PersonalDiskUnmounted');
+  expect(allLocaleText).not.toContain('DETACH_VOLUME_GATEWAY');
+  expect(allLocaleText).not.toContain('DETACH_VOLUME_MSG');
+  expect(allLocaleText).not.toContain('AttachPersonalVolume');
+  expect(allLocaleText).not.toContain('InvalidDisk.MustOffineInWin');
 });
 
 test('keeps select dropdown portals above modal overlays', () => {

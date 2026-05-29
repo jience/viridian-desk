@@ -27,7 +27,6 @@ export default {
   TerminalRWDesktopSetOrUnsetDefault: 'Terminal::RW::Desktop::SetOrUnsetDefault',
   TerminalRWDesktopForceReboot: 'Terminal::RW::Desktop::ForceReboot',
   TerminalRWDesktopShutdown: 'Terminal::RW::Desktop::Shutdown',
-  TerminalRWDesktopAttachOrDetachPrivateDisk: 'Terminal::RW::Desktop::AttachOrDetachPrivateDisk',
 
   // 工单
   TerminalROMalfunctionRead: 'Terminal::RO::Malfunction::Read',

@@ -13,8 +13,6 @@ export enum DeskTopApi {
   GET_SNAPSHOT = '/getSnapshot',
   DELETE_SNAPSHOT = '/deleteSnapshot',
   APPLY_SNAPSHOT = '/applySnapshot',
-  ATTACH_VOLUME = '/attachVolume',
-  DETACH_VOLUME = '/detachVolume',
   LIST_STORAGE = '/listStorage',
   CREATE_DESKTOP_FROM_POOL = '/createDesktopFromPool',
   GET_DESKTOP_VNC_ADDRESS = '/getDesktopVncAddress',
@@ -56,12 +54,6 @@ export const deleteSnapshot = (data: DesktopApiRequest) =>
 
 export const applySnapshot = (data: DesktopApiRequest) =>
   request(DeskTopApi.APPLY_SNAPSHOT, { method: 'POST', body: data });
-
-export const attachVolume = (data: DesktopApiRequest) =>
-  request(DeskTopApi.ATTACH_VOLUME, { method: 'POST', body: data });
-
-export const detachVolume = (data: DesktopApiRequest) =>
-  request(DeskTopApi.DETACH_VOLUME, { method: 'POST', body: data });
 
 export const listStorage = (data: DesktopApiRequest) =>
   request(DeskTopApi.LIST_STORAGE, { method: 'POST', body: data });

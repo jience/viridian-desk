@@ -1,11 +1,9 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { useMessageFormatter } from '@/utils/message-format';
 import { useNavigate } from 'react-router';
-import { Button, Empty, Modal, Spin } from '@/shared/ui/fast';
+import { Button, Empty, Spin } from '@/shared/ui/fast';
 import { message } from '@/shared/ui/message';
-import useRequest from '@/hooks/useRequest';
 import { useProgressiveItems } from '@/hooks/useProgressiveItems';
-import { detachVolume } from '@/services/api/desktop';
 import { bridge } from '@/native';
 import { useAppSelector } from '@/store';
 import { selectFullScreen } from '@/store/feature/config';
@@ -25,13 +23,6 @@ export function DeskPage() {
   const { formatMessage } = useMessageFormatter();
   const navigate = useNavigate();
   const isFullScreen = useAppSelector(selectFullScreen);
-  const [_attachIds, setAttachIds] = useState({
-    desktopId: '',
-    iaasId: '',
-    storageType: '',
-    hostName: '',
-    encrypt: false,
-  });
   const [poolDetailVisible, setPoolDetailVisible] = useState(false);
 
   const {
@@ -47,8 +38,6 @@ export function DeskPage() {
     checkDeskPoolItem,
     setCheckDeskPoolItem,
     getDeskPoolDetail,
-    getDeskList,
-    getDeskPoolList,
     deskLoading,
     deskPoolLoading,
     listResourceUserRefresh,
@@ -179,103 +168,14 @@ export function DeskPage() {
     };
   }, [listDesktopPoolRefresh, listResourceUserRefresh, setIsLoadingDesk]);
 
-  const { run: detachVolumeRun } = useRequest(detachVolume, {
-    manual: true,
-    onSuccess: () => {
-      getDeskList();
-      getDeskPoolList();
-    },
-  });
-
   const refreshDeskResources = useCallback(() => {
     listResourceUserRefresh();
     listDesktopPoolRefresh();
   }, [listDesktopPoolRefresh, listResourceUserRefresh]);
 
-  const handleDetach = useCallback(
-    (desk: any) => {
-      Modal.confirm({
-        title: (
-          <span>
-            <i className="iconfont icon-malfunction1 modal-confirm-icon" />
-            {formatMessage({ id: 'DETACH_VOLUME_GATEWAY' })}
-          </span>
-        ),
-        centered: true,
-        className: 'confirm-modal',
-        content: formatMessage({ id: 'DETACH_VOLUME_MSG' }),
-        okText: formatMessage({ id: 'DETACH' }),
-        cancelText: formatMessage({ id: 'CANCEL' }),
-        onOk: () => {
-          detachVolumeRun({
-            desktopId: desk.id,
-            iaasId: desk.iaas.id,
-            volumeId: desk?.disks?.find((disk: any) => disk?.attribute === 'personal')?.id,
-          });
-        },
-      });
-    },
-    [detachVolumeRun, formatMessage],
-  );
-
-  const personalDiskMenuActions = useMemo(
-    () => [
-      {
-        actionId: 'PersonalDiskManagement',
-        action: (type: any, desktop: any) => {
-          switch (type) {
-            case 'mount': {
-              const dataDisk = (desktop?.disks ?? []).filter(
-                (disk: any) => disk.isSystem == false,
-              ).length;
-              if (dataDisk >= 2 && desktop?.os?.includes('Windows Server 2000')) {
-                message.error({
-                  content: 'Windows Server 2000 已挂满2个数据盘无法继续挂载个人盘',
-                });
-                break;
-              }
-
-              if (
-                desktop?.os?.includes('Windows Server 2000') &&
-                desktop.status !== DESK_STATUS.STOP
-              ) {
-                message.error({
-                  content: 'Windows Server 2000 未关机，请先执行关机后再操作挂载个人盘',
-                });
-                break;
-              }
-
-              setAttachIds({
-                desktopId: desktop.id,
-                iaasId: desktop.iaas.id,
-                storageType: desktop.storageType,
-                hostName: desktop.hostName ? desktop.hostName : '',
-                encrypt: desktop.encrypt,
-              });
-              break;
-            }
-            case 'unmount':
-              if (
-                desktop?.os?.includes('Windows Server 2000') &&
-                desktop.status !== DESK_STATUS.STOP
-              ) {
-                message.error({
-                  content: 'Windows Server 2000 未关机，请先执行关机后再操作卸载个人盘',
-                });
-                break;
-              }
-              handleDetach(desktop);
-              break;
-          }
-        },
-      },
-    ],
-    [handleDetach],
-  );
-
   const getDesktopMenu = useCallback(
     (item: any) => {
-      const originalMenu = generateMenus(item, personalDiskMenuActions);
+      const originalMenu = generateMenus(item);
       const menuItems = [
         {
           key: 'detail',
@@ -335,7 +235,6 @@ export function DeskPage() {
       detailLabel,
       generateMenus,
       navigate,
-      personalDiskMenuActions,
       restartDesk,
       restartLabel,
       shutDownDesktop,
