@@ -346,6 +346,18 @@ test('renders table row selection with shared selection controls', () => {
   expect(stylesSource).toMatch(/\.vdui-checkbox-wrapper[\s\S]*appearance:\s*none/);
 });
 
+test('clips ellipsis table cells before adjacent columns', () => {
+  const malfunctionPageSource = source('src/features/malfunction/pages/malfunction-page.tsx');
+  const stylesSource = source('src/shared/ui/styles.scss');
+
+  expect(malfunctionPageSource).toMatch(
+    /title:\s*props\.formatMessage\(\{\s*id:\s*'FaultContent'\s*\}\)[\s\S]*ellipsis:\s*true/,
+  );
+  expect(stylesSource).toMatch(
+    /\.vdui-table-cell-ellipsis\s*\{[\s\S]*overflow:\s*hidden[\s\S]*text-overflow:\s*ellipsis[\s\S]*white-space:\s*nowrap/,
+  );
+});
+
 test('keeps runtime API error translations on the error_code namespace', () => {
   const legacyRequestErrorHandler = source('src/utils/requestErrorHandler.ts');
   const nativeRequestErrorHandler = source('src/services/requestErrorHandler.ts');
