@@ -1482,6 +1482,9 @@ test('keeps network status synced before authenticated layout loads', () => {
   expect(appSource).toContain('setNetwork(navigator.onLine)');
   expect(appSource).toContain("window.addEventListener('online', handleNetworkChange)");
   expect(appSource).toContain("window.addEventListener('offline', handleNetworkChange)");
+  expect(appSource).toContain("bridge.onEvent('client-online'");
+  expect(appSource).toContain('dispatch(setConnected(is_online))');
+  expect(clientLayoutSource).not.toContain("bridge.onEvent('client-online'");
   expect(clientLayoutSource).not.toContain('useInitState');
   expect(
     existsSync(join(process.cwd(), clientLayoutNetworkHookPath)),
@@ -1585,6 +1588,8 @@ test('keeps the login gateway selector tactile without expensive motion', () => 
 
 test('refreshes gateway connection health after switching gateways', () => {
   const gatewaySource = source('src/store/feature/gateway/gatewaySlice.ts');
+  const appSource = source('src/app/App.tsx');
+  const wsSource = source('src-tauri/src/app/ws.rs');
   const switchGatewayBlock = gatewaySource.slice(
     gatewaySource.indexOf('export const switchGateway'),
     gatewaySource.indexOf('export const updateGateway'),
@@ -1596,14 +1601,19 @@ test('refreshes gateway connection health after switching gateways', () => {
 
   expect(switchGatewayBlock).toContain('await bridge.config.switchGatewayServer(gwid)');
   expect(switchGatewayBlock).toContain('await reconnectWs()');
-  expect(switchGatewayBlock).toContain('bridge.cmd.getClientOnlineStatus()');
-  expect(switchGatewayBlock).toContain('connected: onlineResponse.data');
-  expect(switchGatewayBlock).toContain('connected: false');
+  expect(switchGatewayBlock).not.toContain('bridge.cmd.getClientOnlineStatus()');
+  expect(switchGatewayBlock).not.toContain('connected: onlineResponse.data');
   expect(switchGatewayReducerBlock).toContain('.addCase(switchGateway.pending');
   expect(switchGatewayReducerBlock).toContain('state.gatewayStatusChecking = true');
   expect(switchGatewayReducerBlock).toContain('state.connected = false');
-  expect(switchGatewayReducerBlock).toContain('state.connected = action.payload.connected');
+  expect(switchGatewayReducerBlock).not.toContain('state.connected = action.payload.connected');
+  expect(switchGatewayReducerBlock).toContain('state.gatewayStatusChecking = false');
   expect(switchGatewayReducerBlock).toContain('.addCase(switchGateway.rejected');
+  expect(appSource).toContain("bridge.onEvent('client-online'");
+  expect(wsSource).toContain('pub async fn reconnect_ws(');
+  expect(wsSource).toContain('win: tauri::WebviewWindow');
+  expect(wsSource).toContain('state.is_online = false');
+  expect(wsSource).toContain('send_online_event(&win, false).await');
 });
 
 test('uses distinct login gateway dock visual states', () => {

@@ -38,19 +38,8 @@ export const switchGateway = createAsyncThunk('gateway/switchGateway', async (gw
   await bridge.config.switchGatewayServer(gwid);
   // 切换成功后重新获取列表
   const response = await bridge.config.getGatewayServer();
-  try {
-    await reconnectWs();
-    const onlineResponse = await bridge.cmd.getClientOnlineStatus();
-    return {
-      gatewayList: response.data,
-      connected: onlineResponse.data,
-    };
-  } catch {
-    return {
-      gatewayList: response.data,
-      connected: false,
-    };
-  }
+  await reconnectWs();
+  return response.data;
 });
 
 export const updateGateway = createAsyncThunk(
@@ -118,10 +107,9 @@ const gatewaySlice = createSlice({
         state.gatewayStatusChecking = true;
       })
       .addCase(switchGateway.fulfilled, (state, action) => {
-        state.gatewayList = action.payload.gatewayList;
-        const autoGateway = action.payload.gatewayList.find((item) => item.auto);
+        state.gatewayList = action.payload;
+        const autoGateway = action.payload.find((item) => item.auto);
         state.autoGateway = autoGateway || null;
-        state.connected = action.payload.connected;
         state.gatewayStatusChecking = false;
       })
       .addCase(switchGateway.rejected, (state) => {

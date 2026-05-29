@@ -101,11 +101,19 @@ impl From<&str> for KnownWsEvent {
 static WS_TX: Lazy<Mutex<Option<mpsc::Sender<WsCommand>>>> = Lazy::new(|| Mutex::new(None));
 
 #[tauri::command]
-pub async fn reconnect_ws(app_state: tauri::State<'_, AppState>) -> Result<(), WsError> {
+pub async fn reconnect_ws(
+    win: tauri::WebviewWindow,
+    app_state: tauri::State<'_, AppState>,
+) -> Result<(), WsError> {
     info!("Received reconnect request.");
     let online_state_cloned = Arc::clone(&app_state.online_state);
-    let state = online_state_cloned.lock().await;
-    state.reconnect_notifier.notify_one();
+    let reconnect_notifier = {
+        let mut state = online_state_cloned.lock().await;
+        state.is_online = false;
+        Arc::clone(&state.reconnect_notifier)
+    };
+    send_online_event(&win, false).await;
+    reconnect_notifier.notify_one();
 
     if let Some(tx) = WS_TX.lock().await.take() {
         info!("Sending close command to WebSocket writer task.");
