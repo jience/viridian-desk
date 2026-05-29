@@ -18,6 +18,7 @@
   "login_page.developer_mode_enabled": "Developer mode is enabled",
   "login_page.developer_mode_toast_description": "Debug logs, developer tools, and diagnostics are available",
   "login_page.footer_controls": "Login controls",
+  "login_page.gateway_status_checking": "Checking gateway connection",
   "login_page.local_network_not_connected": "Local network not connected, please check network settings",
   "login_page.network": "Network",
   "login_page.password_label": "Password",

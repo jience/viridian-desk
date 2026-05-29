@@ -38,8 +38,19 @@ export const switchGateway = createAsyncThunk('gateway/switchGateway', async (gw
   await bridge.config.switchGatewayServer(gwid);
   // 切换成功后重新获取列表
   const response = await bridge.config.getGatewayServer();
-  await reconnectWs();
-  return response.data;
+  try {
+    await reconnectWs();
+    const onlineResponse = await bridge.cmd.getClientOnlineStatus();
+    return {
+      gatewayList: response.data,
+      connected: onlineResponse.data,
+    };
+  } catch {
+    return {
+      gatewayList: response.data,
+      connected: false,
+    };
+  }
 });
 
 export const updateGateway = createAsyncThunk(
@@ -65,6 +76,7 @@ const gatewaySlice = createSlice({
   reducers: {
     setConnected(state, res: PayloadAction<boolean>) {
       state.connected = res.payload;
+      state.gatewayStatusChecking = false;
     },
     setNetwork(state, res: PayloadAction<boolean>) {
       state.network = res.payload;
@@ -81,8 +93,16 @@ const gatewaySlice = createSlice({
         const autoGateway = action.payload.find((item) => item.auto);
         state.autoGateway = autoGateway || null;
       })
+      .addCase(fetchClientOnlineStatus.pending, (state) => {
+        state.gatewayStatusChecking = true;
+      })
       .addCase(fetchClientOnlineStatus.fulfilled, (state, action) => {
         state.connected = action.payload;
+        state.gatewayStatusChecking = false;
+      })
+      .addCase(fetchClientOnlineStatus.rejected, (state) => {
+        state.connected = false;
+        state.gatewayStatusChecking = false;
       })
 
       // 添加网关
@@ -93,10 +113,20 @@ const gatewaySlice = createSlice({
       })
 
       // 切换网关
+      .addCase(switchGateway.pending, (state) => {
+        state.connected = false;
+        state.gatewayStatusChecking = true;
+      })
       .addCase(switchGateway.fulfilled, (state, action) => {
-        state.gatewayList = action.payload;
-        const autoGateway = action.payload.find((item) => item.auto);
+        state.gatewayList = action.payload.gatewayList;
+        const autoGateway = action.payload.gatewayList.find((item) => item.auto);
         state.autoGateway = autoGateway || null;
+        state.connected = action.payload.connected;
+        state.gatewayStatusChecking = false;
+      })
+      .addCase(switchGateway.rejected, (state) => {
+        state.connected = false;
+        state.gatewayStatusChecking = false;
       })
 
       // 更新网关
@@ -127,6 +157,11 @@ export const selectAutoGateway = createSelector(
 export const selectConnected = createSelector(
   [(state: AppState) => state.gateway],
   (gateway) => gateway.connected,
+);
+
+export const selectGatewayStatusChecking = createSelector(
+  [(state: AppState) => state.gateway],
+  (gateway) => gateway.gatewayStatusChecking,
 );
 
 export const selectNetwork = createSelector(

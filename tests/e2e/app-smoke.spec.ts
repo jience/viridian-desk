@@ -203,7 +203,7 @@ test.beforeEach(async ({ page }) => {
           case 'get_app_conf':
             return getAppConf();
           case 'get_client_online_status':
-            return false;
+            return Boolean(getGatewayList().find((gateway: any) => gateway.auto)?.online);
           case 'list_usb_devices':
             return [];
           case 'kill_all_hdp_viewers':
@@ -678,6 +678,49 @@ test('keeps login submit disabled when gateway is disconnected', async ({ page }
   await expect(
     page.locator('.auth-page__status-card').filter({ hasText: 'TLS 保护' }),
   ).toBeVisible();
+
+  await page.evaluate(() => window.__assertNoConsoleErrors());
+});
+
+test('updates login gateway dock status after switching gateways', async ({ page }) => {
+  await page.addInitScript(() => {
+    const config = JSON.parse(localStorage.getItem('viridian.web.config') || '{}');
+    const nextConfig = {
+      ...config,
+      gateway: [
+        {
+          uuid: 'online-gateway',
+          name: 'Online Gateway',
+          address: 'online.gateway.local',
+          port: 443,
+          isPublic: true,
+          auto: true,
+          online: true,
+        },
+        {
+          uuid: 'offline-gateway',
+          name: 'Offline Gateway',
+          address: 'offline.gateway.local',
+          port: 443,
+          isPublic: true,
+          auto: false,
+          online: false,
+        },
+      ],
+    };
+    localStorage.setItem('viridian.web.config', JSON.stringify(nextConfig));
+  });
+
+  await page.goto('/login');
+
+  const gatewayDock = page.locator('.login-gateway-dock');
+  await expect(gatewayDock).toHaveClass(/login-gateway-dock--success/);
+
+  await gatewayDock.click();
+  await page.getByRole('option', { name: 'Offline Gateway' }).click();
+
+  await expect(gatewayDock).toHaveClass(/login-gateway-dock--danger/);
+  await expect(gatewayDock.locator('strong')).toHaveText('Offline Gateway');
 
   await page.evaluate(() => window.__assertNoConsoleErrors());
 });

@@ -18,6 +18,7 @@
   "login_page.developer_mode_enabled": "開發者模式已開啟",
   "login_page.developer_mode_toast_description": "調試日誌、開發者工具和診斷能力可用",
   "login_page.footer_controls": "登錄頁控制欄",
+  "login_page.gateway_status_checking": "正在檢測網關連接",
   "login_page.local_network_not_connected": "本地網絡未連接，請檢查網絡設置",
   "login_page.network": "網絡",
   "login_page.password_label": "密碼",

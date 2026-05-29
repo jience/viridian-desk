@@ -1586,6 +1586,45 @@ test('keeps the login gateway selector tactile without expensive motion', () => 
   expect(gatewayStyles).not.toContain('transition: all');
 });
 
+test('refreshes gateway connection health after switching gateways', () => {
+  const gatewaySource = source('src/store/feature/gateway/gatewaySlice.ts');
+  const switchGatewayBlock = gatewaySource.slice(
+    gatewaySource.indexOf('export const switchGateway'),
+    gatewaySource.indexOf('export const updateGateway'),
+  );
+  const switchGatewayReducerBlock = gatewaySource.slice(
+    gatewaySource.indexOf('.addCase(switchGateway.pending'),
+    gatewaySource.indexOf('// 更新网关'),
+  );
+
+  expect(switchGatewayBlock).toContain('await bridge.config.switchGatewayServer(gwid)');
+  expect(switchGatewayBlock).toContain('await reconnectWs()');
+  expect(switchGatewayBlock).toContain('bridge.cmd.getClientOnlineStatus()');
+  expect(switchGatewayBlock).toContain('connected: onlineResponse.data');
+  expect(switchGatewayBlock).toContain('connected: false');
+  expect(switchGatewayReducerBlock).toContain('.addCase(switchGateway.pending');
+  expect(switchGatewayReducerBlock).toContain('state.gatewayStatusChecking = true');
+  expect(switchGatewayReducerBlock).toContain('state.connected = false');
+  expect(switchGatewayReducerBlock).toContain('state.connected = action.payload.connected');
+  expect(switchGatewayReducerBlock).toContain('.addCase(switchGateway.rejected');
+});
+
+test('uses distinct login gateway dock visual states', () => {
+  const gatewayDockSource = source('src/features/shell/components/gateway-dock/index.tsx');
+  const gatewayStyles = source('src/features/shell/components/gateway-dock/index.scss');
+
+  expect(gatewayDockSource).toContain('selectGatewayStatusChecking');
+  expect(gatewayDockSource).toContain("checking ? 'checking'");
+  expect(gatewayStyles).toContain('--login-gateway-state');
+  expect(gatewayStyles).toContain('--login-gateway-state-soft');
+  expect(gatewayStyles).toContain('.login-gateway-dock--info');
+  expect(gatewayStyles).toContain('.login-gateway-dock--checking');
+  expect(gatewayStyles).toContain('.login-gateway-dock--success');
+  expect(gatewayStyles).toContain('.login-gateway-dock--danger');
+  expect(gatewayStyles).toContain('@keyframes loginGatewayChecking');
+  expect(gatewayStyles).not.toContain('color-mix(in srgb, var(--login-gateway-accent-strong)');
+});
+
 test('keeps the login page hero and footer controls minimal', () => {
   const loginPageSource = source('src/features/auth/pages/login-page.tsx');
   const loginPageStyles = source('src/features/auth/pages/login-page.scss');
