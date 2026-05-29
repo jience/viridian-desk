@@ -80,6 +80,7 @@ const dynamicTranslationKeys = [
   'ApplyDataDisk',
   'ApplyForDesk',
   'ApplyUSB',
+  'CANCEL_DEFAULT',
   'ChangeConfig',
   'Error',
   'EXCLUSIVE',
@@ -92,8 +93,11 @@ const dynamicTranslationKeys = [
   'LoginFeatureWorkspaceDescription',
   'LoginFeatureWorkspaceTag',
   'LoginFeatureWorkspaceTitle',
+  'PersonalDiskMounted',
+  'PersonalDiskUnmounted',
   'RESTORE',
   'ResizeDisk',
+  'SET_DEFAULT',
   'SHARE',
   'SendPhoneLable',
   'SUCCESS_DESKTOP_CANCEL_AUTO',
@@ -2961,4 +2965,37 @@ test('stages login route bootstrap after first paint and avoids duplicate authen
   expect(bootstrapBlock).toContain('if (state.gateway.connected === false)');
   expect(bootstrapBlock).toContain('if (!state.config.client_id)');
   expect(bootstrapBlock).toContain('if (!state.client)');
+});
+
+test('translates desktop card menu actions in every supported locale', () => {
+  const requiredDesktopMenuKeys = [
+    'SET_DEFAULT',
+    'CANCEL_DEFAULT',
+    'PersonalDiskMounted',
+    'PersonalDiskUnmounted',
+  ];
+
+  for (const language of localeLanguages) {
+    const messages = locale(language);
+    for (const key of requiredDesktopMenuKeys) {
+      expect(messages[key], `${language} ${key}`).toBeTruthy();
+      expect(messages[key], `${language} ${key}`).not.toBe(key);
+    }
+  }
+});
+
+test('keeps select dropdown portals above modal overlays', () => {
+  const sharedUiStyles = source('src/shared/ui/styles.scss');
+  const modalRootZIndex = Number(
+    sharedUiStyles.match(/\.vdui-modal-root\s*\{[\s\S]*?z-index:\s*(\d+)/)?.[1],
+  );
+  const selectDropdownZIndex = Number(
+    sharedUiStyles.match(/\.vdui-select-dropdown\s*\{[\s\S]*?z-index:\s*(\d+)/)?.[1],
+  );
+  const confirmRootZIndex = Number(
+    sharedUiStyles.match(/\.vdui-confirm-root\s*\{[\s\S]*?z-index:\s*(\d+)/)?.[1],
+  );
+
+  expect(selectDropdownZIndex).toBeGreaterThan(modalRootZIndex);
+  expect(selectDropdownZIndex).toBeLessThan(confirmRootZIndex);
 });
