@@ -1572,6 +1572,20 @@ test('keeps the login typing path free of expensive live filters', () => {
   expect(loginCriticalStyles).not.toContain('filter:');
 });
 
+test('keeps the login gateway selector tactile without expensive motion', () => {
+  const gatewayStyles = source('src/features/shell/components/gateway-dock/index.scss');
+
+  expect(gatewayStyles).toContain('&:hover,');
+  expect(gatewayStyles).toContain('&:has(.login-gateway-dock__select:focus-visible),');
+  expect(gatewayStyles).toContain('&:has(.login-gateway-dock__select.vdui-select-open)');
+  expect(gatewayStyles).toContain('&:active');
+  expect(gatewayStyles).toContain('transform: translateY(1px) scale(0.985);');
+  expect(gatewayStyles).toContain('will-change: transform;');
+  expect(gatewayStyles).not.toContain('&:focus-within,');
+  expect(gatewayStyles).not.toContain('&:focus-within::before');
+  expect(gatewayStyles).not.toContain('transition: all');
+});
+
 test('keeps the login page hero and footer controls minimal', () => {
   const loginPageSource = source('src/features/auth/pages/login-page.tsx');
   const loginPageStyles = source('src/features/auth/pages/login-page.scss');
